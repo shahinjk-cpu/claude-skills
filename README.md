@@ -1,8 +1,8 @@
 # claude-skills
 
-Backup of Shahin's Claude Code and AI Coding Agent skills (428+ skills).
+Backup of Shahin's Claude Code and AI Coding Agent skills (433+ skills).
 
-Includes full engineering, UI/UX, animations (GSAP, Emil Kowalski, Scrolltide), Design Galleries (Navbar Gallery, Footer Design, CTA Gallery, Supahero, Refero Styles 30+ brand systems, 3DIcons), 3D graphics, GameDev (Godot, Unity, Unreal, Phaser, Three.js), and Open Design suites.
+Includes full engineering, UI/UX, animations (GSAP, Emil Kowalski, Scrolltide), Design Galleries (Navbar Gallery, Footer Design, CTA Gallery, Supahero, Refero Styles 30+ brand systems, 3DIcons), 3D graphics, GameDev (Godot, Unity, Unreal, Phaser, Three.js), Open Design suites, and the Viral AI Boost Lab Suite (Chief of Staff, Anatomy, Teach, Marketing Psychology, Last 30 Days).
 
 ## Restore on new machine
 
@@ -23,4 +23,4 @@ cd ~/.claude/skills/gstack && ./setup
 
 ## Skills count
 
-428 skills (excludes `gstack` and `gstack.bak` which are separate git repos).
+433 skills (excludes `gstack` and `gstack.bak` which are separate git repos).
