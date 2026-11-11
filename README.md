@@ -1,6 +1,6 @@
 # claude-skills
 
-Universal Backup & Multi-Tool Hub of Shahin's AI Coding Agent skills (**524+ universal skills**).
+Universal Backup & Multi-Tool Hub of Shahin's AI Coding Agent skills (**724+ universal skills**).
 
 Universally compatible with:
 - **Anthropic Claude Code / Claude Desktop** (`~/.claude/skills` & `~/.claude/agents`)
@@ -11,11 +11,22 @@ Universally compatible with:
 - **Cursor IDE** (`~/.cursor/rules/ai-skills-hub.mdc`)
 - **GitHub Copilot** (`~/.copilot/copilot-instructions.md`)
 
-Includes full engineering, UI/UX, animations (GSAP Official AI suite, Emil Kowalski, Scrolltide), React Bits (216+ component specs), **video-use** (browser-use AI automated video editing & Manim animation engine), Design Galleries (Navbar Gallery, Footer Design, CTA Gallery, Supahero, Refero Styles 30+ brand systems, 3DIcons), 3D graphics, Open Design suites, the Viral AI Boost Lab Suite (Chief of Staff, Anatomy, Teach, Marketing Psychology, Last 30 Days), and the complete **Claude Code Game Studios (49 Specialized AI Agents & 74 Studio Workflow Skills)**.
+## Newly Added Major Skill Suites (724 Total Skills)
+- **Superpowers Suite (15 skills)**: Brainstorming, subagent-driven development, systematic debugging, plan execution, git worktrees, verification gates, parallel agents.
+- **Blender 3D Skills Suite (180+ skills)**: Complete 3D pipeline (modeling, rigging, lighting, procedural geometry nodes, rendering, physics sim, lookdev, character & creature art, indie horror & retro styles).
+- **OpenMontage Video Studio**: 12-pipeline agentic video production system (script-to-video, short drama, commercial ads, podcast repurposing, Remotion & FFmpeg rendering, subtitle sync).
+- **Tstack Suite (9 skills)**: Babysit PR, council review, file PR, full send, full stop, modernize, PR takeover.
+- **Claude Ads Suite (23 skills)**: Automated advertising, creative analysis, budget planning, landing page CRO, multi-channel ads (Google, Meta, Amazon, TikTok, YouTube, LinkedIn).
+- **Claude SEO Suite (6 skills)**: AEO, backlinks, content optimization, keywords research, local SEO, technical audits.
+- **AI Memory & Persistence (7 skills)**: Long-term memory layers, cross-agent handoff, durable pages, routing, retrieval.
+- **Animation, Motion & Video**: Stickman Video Director, Lemo-Opuscar, Rea-Video, PixelFX, Rossark Motion, Motionmaxxing, Earshot & Real-Sound (Foley AI), Animated Shorts.
+- **Diagrams & System Architecture**: Stack Diagram, Drawio Skill, Floorplan.
+- **AI Safety & Defense**: Unbla (Anti-BLA Shield against prompt injections & bankrupt bloat), Stop-Slop, Unslop, Prompt-Master, Caveman mode.
+- **3D & Neural Graphics**: OpenDLSS-NR (DLSS 5 Neural Rendering & Vulkan shaders), ThreeUI (interactive 3D components), Craft-Anything.
 
 ## Auto-setup for all AI tools (Windows)
 
-To link all 524+ skills into all installed AI tools automatically:
+To link all 724+ skills into all installed AI tools automatically:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File setup-all-ai-tools.ps1
@@ -29,6 +40,5 @@ cd claude-skills
 bash install.sh
 ```
 
-## Skills count
-
-**524+ universal skills** and **49 game studio subagents** configured with cross-agent aliases and zero-duplication NTFS directory junctions.
+## Total Count
+**724+ universal skills** and **49 game studio subagents** configured with cross-agent aliases and zero-duplication NTFS directory junctions.
