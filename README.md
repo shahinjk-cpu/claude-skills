@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-914-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-916-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (914 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (916 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **914 skills** in this repository are active, mirrored, and directly executable across:
+All **916 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -43,7 +43,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
-## 📊 Complete Categorized Directory (913 Skills)
+## 📊 Complete Categorized Directory (916 Skills)
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
@@ -260,7 +260,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`login-flow`](skills/login-flow/SKILL.md) | Mobile login and authentication flow screens |
 | [`push-notifications`](skills/push-notifications/SKILL.md) | FCM/APNs push notifications, Expo Notifications, topic subscriptions, notification templates |
 
-### ⚙️ Harness Engineering & Agent Reliability Loops (22 Skills)
+### ⚙️ Harness Engineering & Agent Reliability Loops (23 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
@@ -287,7 +287,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`land-and-deploy`](skills/land-and-deploy/SKILL.md) | Land and deploy workflow. (gstack) |
 | [`landing-report`](skills/landing-report/SKILL.md) | Read-only queue dashboard for workspace-aware ship. (gstack) |
 
-### 🎨 UI/UX, Design Systems & Frontend Engineering (51 Skills)
+### 🎨 UI/UX, Design Systems & Frontend Engineering (52 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
