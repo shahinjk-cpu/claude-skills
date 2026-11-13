@@ -1,0 +1,27 @@
+{
+  "mode": "object-swap",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "targets": [
+      {
+        "target": "the black-and-tan miniature pinscher dog standing on the left at the desk",
+        "images": [
+          1
+        ],
+        "who": "a fluffy tricolor Pembroke Welsh corgi"
+      },
+      {
+        "target": "the orange tabby cat standing on the right at the desk",
+        "images": [
+          2
+        ],
+        "who": "a fluffy white ragdoll cat with blue eyes"
+      }
+    ],
+    "constraints": [
+      "No text, captions or watermarks."
+    ]
+  }
+}

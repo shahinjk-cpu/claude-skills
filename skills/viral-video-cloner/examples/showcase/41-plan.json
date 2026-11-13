@@ -1,0 +1,39 @@
+{
+  "mode": "motion-transfer",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "scene": "Top-down view of a vintage red-patterned rug beside a cream sofa on a wooden floor, warm sunlight streaks across the floor, a dark wooden ceiling fan spins between the camera and the floor.",
+    "shots": [
+      {
+        "start": 0,
+        "end": 2.42,
+        "what": "the woman lies on her back on the rug holding a TV remote, wearing a black hoodie and baggy dark jeans; a fan blade sweeps across the lens"
+      },
+      {
+        "start": 2.42,
+        "end": 6.08,
+        "what": "after the wipe the woman lies in the same pose wearing a camouflage jacket and camouflage shorts"
+      },
+      {
+        "start": 6.08,
+        "end": 8,
+        "what": "after the next wipe the woman lies there wearing a red varsity jacket with cream sleeves and white trousers"
+      }
+    ],
+    "subjects": [
+      {
+        "role": "the person lying on the rug",
+        "traits": "a young woman with long straight black hair and blunt bangs",
+        "images": [
+          1
+        ]
+      }
+    ],
+    "constraints": [
+      "Her outfit changes at each ceiling fan wipe exactly as the shots describe.",
+      "No text, captions or watermarks."
+    ]
+  }
+}

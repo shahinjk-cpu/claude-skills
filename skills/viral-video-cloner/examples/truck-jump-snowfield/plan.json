@@ -1,0 +1,42 @@
+{
+  "mode": "motion-transfer",
+  "start": 0,
+  "end": 8,
+  "resolution": "1080p",
+  "plan": {
+    "scene": "A snow-covered plain at sunrise: smooth deep snow with wind ripples, a low snowy mound behind her, frosted pine trees and pale blue mountains far away, pink and gold sunrise light.",
+    "shots": [
+      {
+        "start": 0,
+        "end": 8,
+        "what": "one continuous locked-off shot: the woman sits calmly in a folding chair facing the camera, salutes casually, a truck launches over the mound behind her, soars through the air and slams down right behind her chair in a huge cloud of snow, she lowers her sunglasses and smirks"
+      }
+    ],
+    "subjects": [
+      {
+        "role": "the person sitting calmly in the folding chair at the centre, facing the camera",
+        "traits": "a young woman with a sleek platinum-blonde bob and silver mirrored sunglasses, wearing a long cream-white puffer coat, white wide trousers and white boots, sitting in a white folding chair",
+        "images": [
+          1
+        ]
+      },
+      {
+        "role": "the pickup truck that jumps over the mound and lands behind the chair",
+        "traits": "a bright papaya-orange off-road rally pickup truck with chunky black tyres, a black roof light bar and black fender flares",
+        "images": [
+          2
+        ]
+      }
+    ],
+    "place": {
+      "images": [
+        3
+      ]
+    },
+    "constraints": [
+      "No text, captions, logos, badges, license plates or watermarks.",
+      "Snow and powdery snow spray everywhere instead of grass, dirt and dust.",
+      "She stays seated and calm the whole time."
+    ]
+  }
+}

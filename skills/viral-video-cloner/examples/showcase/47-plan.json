@@ -1,0 +1,33 @@
+{
+  "mode": "motion-transfer",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "scene": "A Manhattan avenue between glass skyscrapers in bright hazy daylight, yellow taxis on cracked asphalt, small helicopters circling overhead.",
+    "shots": [
+      {
+        "start": 0,
+        "end": 2.63,
+        "what": "street level, the giant woman's huge red rain boots stomp down onto the cracked avenue while pedestrians flee and yellow taxis swerve"
+      },
+      {
+        "start": 2.63,
+        "end": 8,
+        "what": "from beside a yellow taxi, a startled man looks up as the giant woman walks past between the skyscrapers, helicopters circling her head"
+      }
+    ],
+    "subjects": [
+      {
+        "role": "the giant walking through the city, taller than the buildings",
+        "traits": "a cheerful young woman with a high ponytail, wearing a bright yellow raincoat, blue jeans and red rain boots",
+        "images": [
+          1
+        ]
+      }
+    ],
+    "constraints": [
+      "No text, captions or watermarks."
+    ]
+  }
+}

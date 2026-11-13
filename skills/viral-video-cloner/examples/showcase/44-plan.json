@@ -1,0 +1,20 @@
+{
+  "mode": "object-swap",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "targets": [
+      {
+        "target": "the large yellow plastic canister with a handle: on the car's back seat, and later carried in the woman's arms",
+        "images": [
+          1
+        ],
+        "who": "a large rectangular pastel pink gift box with a white ribbon handle"
+      }
+    ],
+    "constraints": [
+      "No text, captions or watermarks."
+    ]
+  }
+}

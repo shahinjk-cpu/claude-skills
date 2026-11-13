@@ -1,0 +1,28 @@
+{
+  "mode": "motion-transfer",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "scene": "A luxury penthouse living room at dusk with floor-to-ceiling windows overlooking a glittering city skyline, warm interior lights.",
+    "shots": [
+      {
+        "start": 0,
+        "end": 8,
+        "what": "the woman fans out a thick stack of banknotes, tosses some bills toward the camera, then fans the stack right in front of the lens"
+      }
+    ],
+    "subjects": [
+      {
+        "role": "the person holding the stack of banknotes at the centre",
+        "traits": "a young woman with long auburn hair and gold hoop earrings, wearing an oversized lavender sweatshirt and light jeans",
+        "images": [
+          1
+        ]
+      }
+    ],
+    "constraints": [
+      "No text, captions or watermarks."
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Viral Video Cloner"
+  short_description: "Recreate a viral video with your people, products or world"
+  default_prompt: "Use $viral-video-cloner to recreate a viral video with my photos: keep the moves, camera and cuts."

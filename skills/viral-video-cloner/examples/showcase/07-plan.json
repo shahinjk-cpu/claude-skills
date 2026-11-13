@@ -1,0 +1,21 @@
+{
+  "mode": "object-swap",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "targets": [
+      {
+        "target": "the hundreds of motionless faceless figures draped head to toe in white hooded robes standing in rows behind and around the young man (not the young man himself)",
+        "images": [
+          1
+        ],
+        "who": "motionless figures draped head to toe in deep crimson red hooded robes, faces hidden"
+      }
+    ],
+    "constraints": [
+      "The young man with dark curly hair wears a black suit and black shirt in every shot, with no robe and no hood, and his face is visible.",
+      "No text, captions or watermarks."
+    ]
+  }
+}
