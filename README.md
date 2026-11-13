@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-949-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-990-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (949 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (990 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **949 skills** in this repository are active, mirrored, and directly executable across:
+All **990 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -43,7 +43,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
-## 📊 Complete Categorized Directory (949 Skills)
+## 📊 Complete Categorized Directory (990 Skills)
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
@@ -286,6 +286,57 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`benchmark-models`](skills/benchmark-models/SKILL.md) | Cross-model benchmark for gstack skills. (gstack) |
 | [`land-and-deploy`](skills/land-and-deploy/SKILL.md) | Land and deploy workflow. (gstack) |
 | [`landing-report`](skills/landing-report/SKILL.md) | Read-only queue dashboard for workspace-aware ship. (gstack) |
+
+### 🤖 Advanced Model Architectures, In-Browser AI & Work-Partners (6 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`qwenputer`](skills/qwenputer/SKILL.md) | Compiled 32-bit RISC-V CPU inside Qwen3.5-4B neural weights with Gated DeltaNet state as exact RAM |
+| [`open-duet`](skills/open-duet/SKILL.md) | Proactive work-partner AI agent architecture (CopilotKit OpenDuet) with supervisory human-in-the-loop loops |
+| [`opera-webai`](skills/opera-webai/SKILL.md) | Opera WebAI & Opera Neon DevTools MCP integration: in-browser AI actions, research, and deep performance profiling |
+| [`chrome-devtools-cli`](skills/chrome-devtools-cli/SKILL.md) | Headless DevTools CLI controller for live browser inspection and script automation |
+| [`mesh-llm`](skills/mesh-llm/SKILL.md) | Distributed P2P AI inference cloud & compute pooling (Skippy / llama.cpp) across multi-device GPUs |
+| [`nanbeige`](skills/nanbeige/SKILL.md) | Nanbeige LLM Lab reasoning models with Depth-Hybrid-Attention, 512K context, and deep-search tool reasoning |
+
+### 🌌 NVIDIA Omniverse OpenUSD 3D Content Agents & SimReady Assets (35 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`nvidia-3d-assets`](skills/nvidia-3d-assets/SKILL.md) | **Master Orchestrator**: NVIDIA's complete 3D asset, SimReady robotics, and OpenUSD content agent suite |
+| [`content-workflow-asset`](skills/content-workflow-asset/SKILL.md) | End-to-end 3D asset lifecycle management and metadata authoring in OpenUSD |
+| [`content-workflow-simready`](skills/content-workflow-simready/SKILL.md) | NVIDIA SimReady robotics simulation compliance, physics verification, and asset hardening |
+| [`content-workflow-convert-to-usd`](skills/content-workflow-convert-to-usd/SKILL.md) | Lossless 3D mesh format conversion (OBJ, FBX, GLTF, STL) to OpenUSD (.usd, .usda, .usdc, .usdz) |
+| [`content-workflow-geometry`](skills/content-workflow-geometry/SKILL.md) | Geometry topology audit, surface area calculation, and bounding volume extraction |
+| [`content-workflow-geometry-repair`](skills/content-workflow-geometry-repair/SKILL.md) | Automated non-manifold edge fixing, watertight hole healing, and normal recalculation |
+| [`content-workflow-mesh-segmentation`](skills/content-workflow-mesh-segmentation/SKILL.md) | Semantic sub-mesh partitioning for robotics articulation and independent physics colliders |
+| [`content-workflow-material`](skills/content-workflow-material/SKILL.md) | NVIDIA Material Definition Language (MDL) assignment and photorealistic PBR shader graphs |
+| [`content-workflow-texture`](skills/content-workflow-texture/SKILL.md) | Texture generation, UV unwrapping, baking, and runtime memory optimization |
+| [`content-texture-candidate`](skills/content-texture-candidate/SKILL.md) | VLM-evaluated texture generation matching target design references |
+| [`content-texture-quality`](skills/content-texture-quality/SKILL.md) | Texture seam audits, mipmap validation, and compression fidelity verification |
+| [`content-texture-scope`](skills/content-texture-scope/SKILL.md) | Texture memory budgeting and mipmap resolution scaling for target simulation engines |
+| [`content-texture-publish`](skills/content-texture-publish/SKILL.md) | Publishing and cataloging verified texture packages into shared enterprise asset registries |
+| [`content-workflow-physics`](skills/content-workflow-physics/SKILL.md) | Rigid body dynamics, collision hull authoring (convex, mesh, compound primitives) |
+| [`content-workflow-physics-external-tuning`](skills/content-workflow-physics-external-tuning/SKILL.md) | PhysX engine parameter tuning (friction, restitution, mass, inertia tensor, damping) |
+| [`content-sdf-operations`](skills/content-sdf-operations/SKILL.md) | Volumetric Signed Distance Field (SDF) generation for hyper-accurate collision in robotics |
+| [`content-workflow-articulation`](skills/content-workflow-articulation/SKILL.md) | End-to-end mechanical articulation authoring (kinematic chains, joints, degrees of freedom) |
+| [`content-articulation-authoring`](skills/content-articulation-authoring/SKILL.md) | Setting joint limits, axes of freedom, drive motors, and compliance boundaries |
+| [`content-articulation-inspection`](skills/content-articulation-inspection/SKILL.md) | Validating kinematics trees and testing collision-free mechanical motion ranges |
+| [`content-articulation-proposal`](skills/content-articulation-proposal/SKILL.md) | Automated joint proposal from segmented 3D mesh geometric relationships |
+| [`content-articulation-review`](skills/content-articulation-review/SKILL.md) | Operational kinematics verification and sign-off for digital twin simulation |
+| [`content-workflow-scene-collection`](skills/content-workflow-scene-collection/SKILL.md) | Assembling large-scale digital twins, factory layouts, and complex 3D environments |
+| [`content-workflow-scene-decomposition`](skills/content-workflow-scene-decomposition/SKILL.md) | Deconstructing complex compound stages into modular, reusable OpenUSD sub-layers |
+| [`content-workflow-large-scene`](skills/content-workflow-large-scene/SKILL.md) | High-polygon streaming and Level of Detail (LOD) hierarchies for massive digital twins |
+| [`content-workflow-validation`](skills/content-workflow-validation/SKILL.md) | Strict schema verification against NVIDIA Omniverse and Pixar OpenUSD asset specifications |
+| [`content-workflow-asset-task-processing`](skills/content-workflow-asset-task-processing/SKILL.md) | Asynchronous batch queue processing for enterprise 3D asset conversion pipelines |
+| [`content-workflow-cli`](skills/content-workflow-cli/SKILL.md) | Omniverse USD command-line automation and headless batch execution |
+| [`fixed-pipeline`](skills/fixed-pipeline/SKILL.md) | Deterministic batch processing pipeline for standardized 3D asset ingestion |
+| [`geometry-evidence-review`](skills/geometry-evidence-review/SKILL.md) | Visual evidence capture and geometric artifact reviews |
+| [`geometry-source-intake`](skills/geometry-source-intake/SKILL.md) | Ingestion and boundary integrity validation for external CAD, OBJ, and FBX meshes |
+| [`image-generation`](skills/image-generation/SKILL.md) | VLM texture map, normal map, and visual reference generation |
+| [`product-image-decomposer`](skills/product-image-decomposer/SKILL.md) | Reconstructing 3D object geometry from multi-view product photography |
+| [`usd-cli`](skills/usd-cli/SKILL.md) | Pixar and NVIDIA USD command-line toolchain (usdview, usdedit, usdcat, usdzip, usddiff) |
+| [`brev-cli`](skills/brev-cli/SKILL.md) | GPU cloud compute orchestration for scalable headless 3D asset processing |
+| [`quickstart`](skills/quickstart/SKILL.md) | Rapid onboarding guide for authoring OpenUSD content with NVIDIA agent workflows |
 
 ### 🎬 Motion Graphics, Video Animation & AI Motion (Motion Skills & MotionClone Suite) (33 Skills)
 
