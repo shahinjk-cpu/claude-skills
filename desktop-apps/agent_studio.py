@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 import threading
+import webbrowser
 import customtkinter as ctk
 
 APPS_DIR = r"C:\Users\sahin\AI-Agent-Desktop-Apps"
@@ -13,9 +14,9 @@ class AIAgentMasterStudio(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("🚀 AI Agent Master Studio — Browser-Use, Microsoft UFO & Composio")
-        self.geometry("1100x780")
-        self.minsize(920, 650)
+        self.title("🚀 AI Agent Master Studio — Browser-Use, UFO, Composio & ODS V3")
+        self.geometry("1120x800")
+        self.minsize(940, 680)
 
         self.setup_ui()
 
@@ -24,9 +25,9 @@ class AIAgentMasterStudio(ctk.CTk):
         self.grid_rowconfigure(0, weight=1)
 
         # Left Navigation Sidebar
-        sidebar = ctk.CTkFrame(self, width=260, corner_radius=0, fg_color="#13161c")
+        sidebar = ctk.CTkFrame(self, width=270, corner_radius=0, fg_color="#13161c")
         sidebar.grid(row=0, column=0, sticky="nsew")
-        sidebar.grid_rowconfigure(6, weight=1)
+        sidebar.grid_rowconfigure(8, weight=1)
 
         logo_lbl = ctk.CTkLabel(
             sidebar,
@@ -41,6 +42,7 @@ class AIAgentMasterStudio(ctk.CTk):
             ("🌐 Browser-Use", "browser"),
             ("🛸 Microsoft UFO", "ufo"),
             ("🔌 Composio Hub", "composio"),
+            ("🌌 Osmantic ODS V3", "ods"),
             ("🔑 API & Parametrlər", "settings")
         ]
 
@@ -57,42 +59,52 @@ class AIAgentMasterStudio(ctk.CTk):
                 anchor="w",
                 command=lambda t=tag: self.switch_tab(t)
             )
-            btn.grid(row=i, column=0, padx=15, pady=5, sticky="ew")
+            btn.grid(row=i, column=0, padx=15, pady=4, sticky="ew")
             self.nav_btns[tag] = btn
 
-        # Bottom Quick Launch Buttons
+        # Quick Launch Header
         quick_hdr = ctk.CTkLabel(sidebar, text="Masaüstü Pəncərələri:", font=ctk.CTkFont(size=12, weight="bold"), text_color="#64748b")
-        quick_hdr.grid(row=5, column=0, padx=20, pady=(30, 8), sticky="w")
+        quick_hdr.grid(row=6, column=0, padx=20, pady=(25, 6), sticky="w")
 
         ctk.CTkButton(
             sidebar,
             text="🌐 Browser-Use Aç",
-            height=32,
+            height=30,
             font=ctk.CTkFont(size=12),
             fg_color="#1e3a8a",
             hover_color="#1d4ed8",
             command=lambda: self.launch_standalone("browser_use_app.py")
-        ).grid(row=6, column=0, padx=15, pady=4, sticky="ew")
+        ).grid(row=7, column=0, padx=15, pady=3, sticky="ew")
 
         ctk.CTkButton(
             sidebar,
             text="🛸 Microsoft UFO Aç",
-            height=32,
+            height=30,
             font=ctk.CTkFont(size=12),
             fg_color="#0369a1",
             hover_color="#0284c7",
             command=lambda: self.launch_standalone("ufo_app.py")
-        ).grid(row=7, column=0, padx=15, pady=4, sticky="ew")
+        ).grid(row=8, column=0, padx=15, pady=3, sticky="ew")
 
         ctk.CTkButton(
             sidebar,
             text="🔌 Composio Aç",
-            height=32,
+            height=30,
             font=ctk.CTkFont(size=12),
             fg_color="#065f46",
             hover_color="#059669",
             command=lambda: self.launch_standalone("composio_app.py")
-        ).grid(row=8, column=0, padx=15, pady=(4, 20), sticky="ew")
+        ).grid(row=9, column=0, padx=15, pady=3, sticky="ew")
+
+        ctk.CTkButton(
+            sidebar,
+            text="🌌 Osmantic ODS Aç",
+            height=30,
+            font=ctk.CTkFont(size=12),
+            fg_color="#7c2d12",
+            hover_color="#b45309",
+            command=lambda: self.launch_standalone("ods_app.py")
+        ).grid(row=10, column=0, padx=15, pady=(3, 20), sticky="ew")
 
         # Main Content Area
         self.content_container = ctk.CTkFrame(self, corner_radius=0, fg_color="#181c24")
@@ -104,6 +116,7 @@ class AIAgentMasterStudio(ctk.CTk):
         self.build_browser_tab()
         self.build_ufo_tab()
         self.build_composio_tab()
+        self.build_ods_tab()
         self.build_settings_tab()
 
         self.switch_tab("browser")
@@ -158,25 +171,26 @@ class AIAgentMasterStudio(ctk.CTk):
 
         ctk.CTkLabel(features_frame, text="✨ Əsas Xüsusiyyətlər:", font=ctk.CTkFont(size=14, weight="bold"), text_color="#38bdf8").pack(padx=15, pady=(12, 6), anchor="w")
         points = [
-            "• Canlı brauzer rejimi (Headless=False) ilə süni intellektin hərəkətlərini ekranda izləmək.",
-            "• CAPTCHA və bot qorunmalarını insan davranışına uyğun aşmaq.",
-            "• Google Axtarış, GitHub, Xəbər və elektron ticarət saytlarından dəqiq məlumat çıxarışı.",
-            "• Google Gemini 2.5 Flash və Gemini 1.5 Flash modelləri ilə yüksək sürətli icra."
+            "• Canlı brauzer vizualizasiyası (Gözünüzün qarşısında saytları gəzir)",
+            "• Google Gemini 2.5 Flash / Pro ilə super-sürətli planlama və icra",
+            "• Kompleks axtarış, e-ticarət qiymət müqayisəsi, qeydiyyat və testlər",
+            "• Çıxarılmış məlumatların fayla yazılması və konsol hesabatı"
         ]
         for p in points:
-            ctk.CTkLabel(features_frame, text=p, font=ctk.CTkFont(size=12), text_color="#cbd5e1").pack(padx=20, pady=2, anchor="w")
-        features_frame.pack_configure(pady=(0, 20))
+            ctk.CTkLabel(features_frame, text=p, font=ctk.CTkFont(size=13), text_color="#cbd5e1").pack(padx=20, pady=2, anchor="w")
 
-        launch_btn = ctk.CTkButton(
+        ctk.CTkLabel(features_frame, text="", height=10).pack()
+
+        btn_launch = ctk.CTkButton(
             card,
-            text="🚀 Browser-Use Studio-nu Başlat və İdarə Et",
-            font=ctk.CTkFont(size=15, weight="bold"),
-            height=46,
-            fg_color="#10b981",
-            hover_color="#059669",
+            text="🚀 Browser-Use Studio-nu Başlat",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            height=44,
+            fg_color="#2563eb",
+            hover_color="#1d4ed8",
             command=lambda: self.launch_standalone("browser_use_app.py")
         )
-        launch_btn.pack(padx=20, pady=20, fill="x")
+        btn_launch.pack(padx=20, pady=25, fill="x")
 
     def build_ufo_tab(self):
         f = ctk.CTkFrame(self.content_container, fg_color="transparent")
@@ -185,7 +199,7 @@ class AIAgentMasterStudio(ctk.CTk):
 
         header = ctk.CTkFrame(f, fg_color="transparent")
         header.pack(fill="x", pady=(0, 15))
-        ctk.CTkLabel(header, text="🛸 Microsoft UFO Desktop AgentOS", font=ctk.CTkFont(size=22, weight="bold"), text_color="#38bdf8").pack(side="left")
+        ctk.CTkLabel(header, text="🛸 Microsoft UFO Studio", font=ctk.CTkFont(size=22, weight="bold"), text_color="#38bdf8").pack(side="left")
         ctk.CTkButton(
             header,
             text="📂 Ayrı Pəncərədə Aç",
@@ -198,38 +212,39 @@ class AIAgentMasterStudio(ctk.CTk):
         card = ctk.CTkFrame(f, fg_color="#1e2430", corner_radius=10)
         card.pack(fill="both", expand=True, pady=10)
 
-        ctk.CTkLabel(card, text="Windows Əməliyyat Sistemi Avtomatlaşdırması", font=ctk.CTkFont(size=16, weight="bold"), text_color="#e2e8f0").pack(padx=20, pady=(20, 10), anchor="w")
+        ctk.CTkLabel(card, text="Windows ƏS və Desktop Tətbiqlərinin İdarəsi", font=ctk.CTkFont(size=16, weight="bold"), text_color="#e2e8f0").pack(padx=20, pady=(20, 10), anchor="w")
         desc = (
-            "Microsoft UFO Windows masaüstü tətbiqlərini birbaşa idarə edən ilk rəsmi süni intellekt agentidir.\n"
-            "HostAgent ekranı nəzərdən keçirib tətbiqləri seçir, AppAgent isə tətbiqdaxili düymələri, menyuları\n"
-            "və sahələri Windows UIAutomation və vizual görmə qabiliyyəti ilə taparaq idarə edir."
+            "Microsoft UFO (UI-Focused Agent) Windows əməliyyat sisteminin daxilindəki bütün desktop proqramları\n"
+            "(Office, Notepad, Paint, Explorer, Brauzer və s.) vizual olaraq analiz edir və idarə edir.\n"
+            "HostAgent və AppAgent ikili agent arxitekturası sayəsində pəncərələri tanıyır, idarə elementlərinə klikləyir."
         )
         ctk.CTkLabel(card, text=desc, font=ctk.CTkFont(size=13), text_color="#94a3b8", justify="left").pack(padx=20, pady=(0, 20), anchor="w")
 
         features_frame = ctk.CTkFrame(card, fg_color="#151922", corner_radius=8)
         features_frame.pack(fill="x", padx=20, pady=10)
 
-        ctk.CTkLabel(features_frame, text="✨ Nələri Avtomatlaşdıra Bilir:", font=ctk.CTkFont(size=14, weight="bold"), text_color="#38bdf8").pack(padx=15, pady=(12, 6), anchor="w")
+        ctk.CTkLabel(features_frame, text="✨ Əsas Xüsusiyyətlər:", font=ctk.CTkFont(size=14, weight="bold"), text_color="#38bdf8").pack(padx=15, pady=(12, 6), anchor="w")
         points = [
-            "• Microsoft Office (Word sənədləri, Excel cədvəlləri, PowerPoint slaydları).",
-            "• Windows Parametrləri, Fayl Bələdçisi (Explorer), Notepad, Kalkulyator.",
-            "• Hibrid UIAutomation və Multimodal görmə: xüsusi dizayn edilmiş desktop proqramlar.",
-            "• Addım-addım skrinşot arxivlənməsi və qərar qəbuletmə jurnalı."
+            "• Windows UI Automation API və Win32 inteqrasiyası",
+            "• İkili Agent sistemi: HostAgent (qlobal plan) və AppAgent (tətbiq daxili icra)",
+            "• İstənilən desktop proqramında mətn yazmaq, menyuları açmaq və faylları saxlamaq",
+            "• Təbii dildə əmr: 'Notepad-i aç və xülasəni yaz', 'Faylı Word-ə çevir' və s."
         ]
         for p in points:
-            ctk.CTkLabel(features_frame, text=p, font=ctk.CTkFont(size=12), text_color="#cbd5e1").pack(padx=20, pady=2, anchor="w")
-        features_frame.pack_configure(pady=(0, 20))
+            ctk.CTkLabel(features_frame, text=p, font=ctk.CTkFont(size=13), text_color="#cbd5e1").pack(padx=20, pady=2, anchor="w")
 
-        launch_btn = ctk.CTkButton(
+        ctk.CTkLabel(features_frame, text="", height=10).pack()
+
+        btn_launch = ctk.CTkButton(
             card,
-            text="🚀 Microsoft UFO Desktop Tətbiqini Başlat",
-            font=ctk.CTkFont(size=15, weight="bold"),
-            height=46,
+            text="🚀 Microsoft UFO Desktop-u Başlat",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            height=44,
             fg_color="#0284c7",
             hover_color="#0369a1",
             command=lambda: self.launch_standalone("ufo_app.py")
         )
-        launch_btn.pack(padx=20, pady=20, fill="x")
+        btn_launch.pack(padx=20, pady=25, fill="x")
 
     def build_composio_tab(self):
         f = ctk.CTkFrame(self.content_container, fg_color="transparent")
@@ -238,7 +253,7 @@ class AIAgentMasterStudio(ctk.CTk):
 
         header = ctk.CTkFrame(f, fg_color="transparent")
         header.pack(fill="x", pady=(0, 15))
-        ctk.CTkLabel(header, text="🔌 Composio 1000+ Tools Hub", font=ctk.CTkFont(size=22, weight="bold"), text_color="#34d399").pack(side="left")
+        ctk.CTkLabel(header, text="🔌 Composio Toolset Hub", font=ctk.CTkFont(size=22, weight="bold"), text_color="#34d399").pack(side="left")
         ctk.CTkButton(
             header,
             text="📂 Ayrı Pəncərədə Aç",
@@ -251,50 +266,123 @@ class AIAgentMasterStudio(ctk.CTk):
         card = ctk.CTkFrame(f, fg_color="#1e2430", corner_radius=10)
         card.pack(fill="both", expand=True, pady=10)
 
-        ctk.CTkLabel(card, text="Süni İntellekt üçün 1000+ Real Dünya Tətbiqi", font=ctk.CTkFont(size=16, weight="bold"), text_color="#e2e8f0").pack(padx=20, pady=(20, 10), anchor="w")
+        ctk.CTkLabel(card, text="250+ Xidmət və Alət İnteqrasiyası", font=ctk.CTkFont(size=16, weight="bold"), text_color="#e2e8f0").pack(padx=20, pady=(20, 10), anchor="w")
         desc = (
-            "Composio AI agentləri real bulud servislərinə və proqramlarına bağlayan ən zəngin alət qovşağıdır.\n"
-            "GitHub-da repozitoriya ulduzlamaqdan Slack-də mesaj göndərməyə, Gmail-dən məktub oxumaqdan\n"
-            "Google Calendar-da görüş təyin etməyə qədər hər bir əməliyyatı Gemini üçün hazır alətə çevirir."
+            "Composio süni intellekt agentlərinə GitHub, Gmail, Slack, Notion, Linear, Trello, Google Calendar\n"
+            "və 250-dən çox digər xidmətlə birbaşa API səviyyəsində əlaqə qurmaq və işləmək imkanı verir.\n"
+            "Google Gemini modeli ilə hazır Function Calling və Alət icrası təmin edilir."
         )
         ctk.CTkLabel(card, text=desc, font=ctk.CTkFont(size=13), text_color="#94a3b8", justify="left").pack(padx=20, pady=(0, 20), anchor="w")
 
         features_frame = ctk.CTkFrame(card, fg_color="#151922", corner_radius=8)
         features_frame.pack(fill="x", padx=20, pady=10)
 
-        ctk.CTkLabel(features_frame, text="✨ Dəstəklənən Əsas İnteqrasiyalar:", font=ctk.CTkFont(size=14, weight="bold"), text_color="#34d399").pack(padx=15, pady=(12, 6), anchor="w")
+        ctk.CTkLabel(features_frame, text="✨ Əsas Xüsusiyyətlər:", font=ctk.CTkFont(size=14, weight="bold"), text_color="#34d399").pack(padx=15, pady=(12, 6), anchor="w")
         points = [
-            "• Gelişdirici: GitHub, GitLab, Jira, Linear, Sentry, Postman.",
-            "• Əməkdaşlıq: Slack, Discord, Microsoft Teams, Notion, Google Docs.",
-            "• Şəxsi köməkçi: Gmail, Google Calendar, Outlook, ClickUp, Trello.",
-            "• MCP (Model Context Protocol) və Gemini SDK ilə 100% uyğunluq."
+            "• GitHub repozitoriyaları, Pull Request və Issue-lərin idarəsi",
+            "• Gmail və Slack üzərindən avtomatlaşdırılmış bildirişlər və mesaj göndərişi",
+            "• Google Calendar görüşlərinin təyini və sənədlərin sinxronizasiyası",
+            "• Bütün alətlər üçün təhlükəsiz OAuth və API açar idarəetməsi"
         ]
         for p in points:
-            ctk.CTkLabel(features_frame, text=p, font=ctk.CTkFont(size=12), text_color="#cbd5e1").pack(padx=20, pady=2, anchor="w")
-        features_frame.pack_configure(pady=(0, 20))
+            ctk.CTkLabel(features_frame, text=p, font=ctk.CTkFont(size=13), text_color="#cbd5e1").pack(padx=20, pady=2, anchor="w")
 
-        launch_btn = ctk.CTkButton(
+        ctk.CTkLabel(features_frame, text="", height=10).pack()
+
+        btn_launch = ctk.CTkButton(
             card,
-            text="🚀 Composio Desktop Hub-ı Başlat",
-            font=ctk.CTkFont(size=15, weight="bold"),
-            height=46,
+            text="🚀 Composio Studio-nu Başlat",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            height=44,
             fg_color="#059669",
             hover_color="#047857",
             command=lambda: self.launch_standalone("composio_app.py")
         )
-        launch_btn.pack(padx=20, pady=20, fill="x")
+        btn_launch.pack(padx=20, pady=25, fill="x")
+
+    def build_ods_tab(self):
+        f = ctk.CTkFrame(self.content_container, fg_color="transparent")
+        self.frames["ods"] = f
+        f.grid_columnconfigure(0, weight=1)
+
+        header = ctk.CTkFrame(f, fg_color="transparent")
+        header.pack(fill="x", pady=(0, 15))
+        ctk.CTkLabel(header, text="🌌 Osmantic ODS V3 AI Server", font=ctk.CTkFont(size=22, weight="bold"), text_color="#f59e0b").pack(side="left")
+        ctk.CTkButton(
+            header,
+            text="📂 ODS Studio Aç",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            fg_color="#d97706",
+            hover_color="#b45309",
+            command=lambda: self.launch_standalone("ods_app.py")
+        ).pack(side="right")
+
+        card = ctk.CTkFrame(f, fg_color="#1e2430", corner_radius=10)
+        card.pack(fill="both", expand=True, pady=10)
+
+        ctk.CTkLabel(card, text="Şəxsi Süni İntellekt Serveri & Homelab", font=ctk.CTkFont(size=16, weight="bold"), text_color="#e2e8f0").pack(padx=20, pady=(20, 10), anchor="w")
+        desc = (
+            "Osmantic Deployment System (ODS V3) kompüterinizi tam müstəqil, təhlükəsiz və suveren süni intellekt\n"
+            "serverinə çevirir. Heç bir bulud abunəliyi və ya telemetriya olmadan lokal modelləri işlədir,\n"
+            "Open WebUI, Pixel Agent, Qdrant RAG, SearXNG, n8n və ComfyUI xidmətlərini vahid bir sistemdə birləşdirir."
+        )
+        ctk.CTkLabel(card, text=desc, font=ctk.CTkFont(size=13), text_color="#94a3b8", justify="left").pack(padx=20, pady=(0, 15), anchor="w")
+
+        # Quick Web Links
+        link_frame = ctk.CTkFrame(card, fg_color="#151922", corner_radius=8)
+        link_frame.pack(fill="x", padx=20, pady=5)
+        ctk.CTkLabel(link_frame, text="🔗 Veb Giriş Nöqtələri:", font=ctk.CTkFont(size=14, weight="bold"), text_color="#f59e0b").pack(padx=15, pady=(10, 6), anchor="w")
+
+        row = ctk.CTkFrame(link_frame, fg_color="transparent")
+        row.pack(fill="x", padx=15, pady=(0, 10))
+
+        ctk.CTkButton(
+            row,
+            text="🚀 Pixel Agent Portalı",
+            fg_color="#8b5cf6",
+            hover_color="#7c3aed",
+            command=lambda: webbrowser.open("http://localhost:3021/pixel")
+        ).pack(side="left", padx=(0, 10))
+
+        ctk.CTkButton(
+            row,
+            text="🖥️ ODS Dashboard",
+            fg_color="#3b82f6",
+            hover_color="#2563eb",
+            command=lambda: webbrowser.open("http://localhost:3021")
+        ).pack(side="left", padx=(0, 10))
+
+        ctk.CTkButton(
+            row,
+            text="💬 Open WebUI",
+            fg_color="#06b6d4",
+            hover_color="#0891b2",
+            command=lambda: webbrowser.open("http://localhost:3000")
+        ).pack(side="left")
+
+        btn_launch = ctk.CTkButton(
+            card,
+            text="🚀 Osmantic ODS Nəzarət Panelini Aç",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            height=44,
+            fg_color="#f59e0b",
+            hover_color="#d97706",
+            command=lambda: self.launch_standalone("ods_app.py")
+        )
+        btn_launch.pack(padx=20, pady=20, fill="x")
 
     def build_settings_tab(self):
         f = ctk.CTkFrame(self.content_container, fg_color="transparent")
         self.frames["settings"] = f
         f.grid_columnconfigure(0, weight=1)
 
-        ctk.CTkLabel(f, text="🔑 API Açar & Sistem Parametrləri", font=ctk.CTkFont(size=22, weight="bold"), text_color="#f8fafc").pack(pady=(0, 15), anchor="w")
+        ctk.CTkLabel(f, text="🔑 API və Əlaqə Parametrləri", font=ctk.CTkFont(size=22, weight="bold"), text_color="#f8fafc").pack(anchor="w", pady=(0, 15))
 
         card = ctk.CTkFrame(f, fg_color="#1e2430", corner_radius=10)
         card.pack(fill="both", expand=True, pady=10)
 
-        ctk.CTkLabel(card, text="Google Gemini API Açar İdarəsi", font=ctk.CTkFont(size=16, weight="bold"), text_color="#e2e8f0").pack(padx=20, pady=(20, 10), anchor="w")
+        ctk.CTkLabel(card, text="Google Gemini API Açarı", font=ctk.CTkFont(size=16, weight="bold"), text_color="#e2e8f0").pack(padx=20, pady=(20, 5), anchor="w")
+        ctk.CTkLabel(card, text="Bu açar Browser-Use, Microsoft UFO və Composio sistemlərinin hər 3-nü hərəkətə gətirir.", font=ctk.CTkFont(size=13), text_color="#94a3b8").pack(padx=20, pady=(0, 15), anchor="w")
 
         current_key = os.environ.get("GEMINI_API_KEY", os.environ.get("GOOGLE_API_KEY", ""))
         self.key_entry = ctk.CTkEntry(card, font=ctk.CTkFont(size=13), show="*")
@@ -325,10 +413,8 @@ class AIAgentMasterStudio(ctk.CTk):
                 req = urllib.request.Request(url)
                 with urllib.request.urlopen(req) as resp:
                     if resp.status == 200:
-                        # Save in files
                         os.environ["GEMINI_API_KEY"] = new_key
                         os.environ["GOOGLE_API_KEY"] = new_key
-                        # Update repos
                         for p in [
                             r"C:\Users\sahin\.gemini\antigravity\scratch\repos\browser-use\.env",
                             r"C:\Users\sahin\.gemini\antigravity\scratch\repos\UFO\.env",
@@ -336,13 +422,13 @@ class AIAgentMasterStudio(ctk.CTk):
                         ]:
                             with open(p, "w", encoding="utf-8") as env_f:
                                 env_f.write(f"GOOGLE_API_KEY={new_key}\nGEMINI_API_KEY={new_key}\n")
-                        status_lbl.configure(text="✅ Açar uğurla yoxlanıldı və bütün 3 tətbiqdə yeniləndi!", text_color="#34d399")
+                        status_lbl.configure(text="✅ Açar uğurla yoxlanıldı və bütün tətbiqlərdə yeniləndi!", text_color="#34d399")
             except Exception as e:
                 status_lbl.configure(text=f"❌ Açar etibarsızdır: {e}", text_color="#f87171")
 
         ctk.CTkButton(btn_row, text="💾 Yadda Saxla və Yoxla", fg_color="#10b981", hover_color="#059669", command=save_and_test).pack(side="left", padx=(0, 10))
 
-        status_lbl = ctk.CTkLabel(card, text="🟢 Cari açar aktivdir və bütün 3 sistemlə əlaqələndirilib.", font=ctk.CTkFont(size=13), text_color="#34d399")
+        status_lbl = ctk.CTkLabel(card, text="🟢 Cari açar aktivdir və bütün sistemlərlə əlaqələndirilib.", font=ctk.CTkFont(size=13), text_color="#34d399")
         status_lbl.pack(padx=20, pady=10, anchor="w")
 
 if __name__ == "__main__":

@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-913-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-914-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (913 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (914 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **913 skills** in this repository are active, mirrored, and directly executable across:
+All **914 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -117,6 +117,12 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
 | [`composio`](skills/composio/SKILL.md) | Route and complete Composio work across Composio For You and Composio Platform. Use when the user mentions Composio; wants an agent to use a |
+
+### 🌌 Private AI Server & Homelab (Osmantic ODS V3) (1 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`osmantic-ods`](skills/osmantic-ods/SKILL.md) | Osmantic Deployment System (ODS V3) private AI server: local model inference (llama.cpp/vLLM), Portal/Pixel agent, Open WebUI, LiteLLM, n8n workflows, Qdrant RAG, SearXNG, ComfyUI, and extensions. |
 
 ### 🧠 Agent Memory, Context & OpenViking Suite (18 Skills)
 
@@ -1028,14 +1034,15 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ## 🖥️ Hazır Desktop Tətbiqləri (Standalone GUI Apps)
 
-Kompüterinizin Masaüstündə (Desktop) birbaşa 2 dəfə klikləməklə işə salına bilən 4 ədəd xüsusi interfeys yaradılmışdır:
+Kompüterinizin Masaüstündə (Desktop) birbaşa 2 dəfə klikləməklə işə salına bilən 5 ədəd xüsusi interfeys yaradılmışdır:
 
 | Desktop Tətbiq | Fayl Yolu | Funksiyası |
 |---|---|---|
 | 🌐 **Browser-Use Studio** | `desktop-apps/browser_use_app.py` | Google Gemini ilə Chrome/Chromium veb brauzerini canlı idarə edir, saytlarda axtarış aparır və formaları doldurur. |
 | 🛸 **Microsoft UFO Desktop** | `desktop-apps/ufo_app.py` | Windows OS pəncərələrini, Word, Excel, Parametrlər və proqramları vizual olaraq avtomatlaşdırır. |
 | 🔌 **Composio Studio Hub** | `desktop-apps/composio_app.py` | GitHub, Slack, Gmail və 1000+ tətbiq alətini Gemini modeli ilə birləşdirir və idarə edir. |
-| 🚀 **AI Agent Master Studio** | `desktop-apps/agent_studio.py` | Hər 3 aləti tək bir müasir paneldə birləşdirən və vahid API açar idarəsi təmin edən ana mərkəz. |
+| 🌌 **Osmantic ODS V3 Studio** | `desktop-apps/ods_app.py` | Şəxsi suveren AI serveri: Portal / Pixel agent, Open WebUI, Dashboard, Docker xidmətlərini və modelləri idarə edir. |
+| 🚀 **AI Agent Master Studio** | `desktop-apps/agent_studio.py` | Bütün 4 aləti tək bir müasir paneldə birləşdirən və vahid API açar idarəsi təmin edən ana mərkəz. |
 
 > 💡 Bütün tətbiqlər üçün Masaüstündə (Desktop) birbaşa `.lnk` qısayolları yaradılmışdır.
 
