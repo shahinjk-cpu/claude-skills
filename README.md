@@ -1026,6 +1026,21 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
+## 🖥️ Hazır Desktop Tətbiqləri (Standalone GUI Apps)
+
+Kompüterinizin Masaüstündə (Desktop) birbaşa 2 dəfə klikləməklə işə salına bilən 4 ədəd xüsusi interfeys yaradılmışdır:
+
+| Desktop Tətbiq | Fayl Yolu | Funksiyası |
+|---|---|---|
+| 🌐 **Browser-Use Studio** | `desktop-apps/browser_use_app.py` | Google Gemini ilə Chrome/Chromium veb brauzerini canlı idarə edir, saytlarda axtarış aparır və formaları doldurur. |
+| 🛸 **Microsoft UFO Desktop** | `desktop-apps/ufo_app.py` | Windows OS pəncərələrini, Word, Excel, Parametrlər və proqramları vizual olaraq avtomatlaşdırır. |
+| 🔌 **Composio Studio Hub** | `desktop-apps/composio_app.py` | GitHub, Slack, Gmail və 1000+ tətbiq alətini Gemini modeli ilə birləşdirir və idarə edir. |
+| 🚀 **AI Agent Master Studio** | `desktop-apps/agent_studio.py` | Hər 3 aləti tək bir müasir paneldə birləşdirən və vahid API açar idarəsi təmin edən ana mərkəz. |
+
+> 💡 Bütün tətbiqlər üçün Masaüstündə (Desktop) birbaşa `.lnk` qısayolları yaradılmışdır.
+
+---
+
 ## 🛠️ Necə İstifadə Edilir (Quraşdırma & Sinxronizasiya)
 
 ### 1. Claude Desktop və Claude Code
