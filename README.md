@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-990-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-998-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (990 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (998 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **990 skills** in this repository are active, mirrored, and directly executable across:
+All **998 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -43,7 +43,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
-## 📊 Complete Categorized Directory (990 Skills)
+## 📊 Complete Categorized Directory (998 Skills)
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
@@ -259,6 +259,19 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`mobile-testing`](skills/mobile-testing/SKILL.md) | Detox E2E, Maestro testing, mobile test automation, device farm integration |
 | [`login-flow`](skills/login-flow/SKILL.md) | Mobile login and authentication flow screens |
 | [`push-notifications`](skills/push-notifications/SKILL.md) | FCM/APNs push notifications, Expo Notifications, topic subscriptions, notification templates |
+
+### 🐘 Google's Elephant-Goldfish Model (EGM) Spec-Driven Suite (8 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`elephant-goldfish-model`](skills/elephant-goldfish-model/SKILL.md) | **Master Orchestrator**: Google's spec-driven software development framework (Design with an elephant. Review with a goldfish.) |
+| [`egm-brainstorm`](skills/egm-brainstorm/SKILL.md) | **Discovery**: Brainstorming feature requirements, constraints, and architecture with the long-context Elephant |
+| [`egm-draft`](skills/egm-draft/SKILL.md) | **Authoring**: Structured section-by-section technical specification document construction |
+| [`egm-review`](skills/egm-review/SKILL.md) | **Adversarial Audit**: Fresh-eyed Goldfish sub-agents with zero context hunting for edge cases and unstated assumptions |
+| [`egm-resolve`](skills/egm-resolve/SKILL.md) | **Mediation**: Triaging Goldfish critique findings and updating the spec for human architectural approval |
+| [`egm-review-loop`](skills/egm-review-loop/SKILL.md) | **Multi-Standard Review**: Running iterative review-critique-resolve loops across arbitrary documents and standards |
+| [`egm-bootstrap`](skills/egm-bootstrap/SKILL.md) | **Onboarding**: Scaffolding specification trees and README architecture manifests across legacy codebases |
+| [`egm-drift-report`](skills/egm-drift-report/SKILL.md) | **Verification**: Auditing implementation code against approved design specifications to detect architectural drift |
 
 ### ⚙️ Harness Engineering & Agent Reliability Loops (23 Skills)
 
