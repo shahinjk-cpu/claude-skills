@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-916-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-949-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (916 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (949 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **916 skills** in this repository are active, mirrored, and directly executable across:
+All **949 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -43,7 +43,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
-## 📊 Complete Categorized Directory (916 Skills)
+## 📊 Complete Categorized Directory (949 Skills)
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
@@ -286,6 +286,44 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`benchmark-models`](skills/benchmark-models/SKILL.md) | Cross-model benchmark for gstack skills. (gstack) |
 | [`land-and-deploy`](skills/land-and-deploy/SKILL.md) | Land and deploy workflow. (gstack) |
 | [`landing-report`](skills/landing-report/SKILL.md) | Read-only queue dashboard for workspace-aware ship. (gstack) |
+
+### 🎬 Motion Graphics, Video Animation & AI Motion (Motion Skills & MotionClone Suite) (33 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`motionclone`](skills/motionclone/SKILL.md) | Training-free reference motion cloning for controllable T2V & I2V video generation (ICLR 2025) |
+| [`motion-skills`](skills/motion-skills/SKILL.md) | Master motion graphics, video animation, and creative coding suite orchestrator |
+| [`remotion-video`](skills/remotion-video/SKILL.md) | Programmatic React & TypeScript video generation with Remotion (compositions, springs, audio) |
+| [`kinetic-typography`](skills/kinetic-typography/SKILL.md) | Beat-synced animated titles, split-text staggered reveals, variable font weighting |
+| [`after-effects`](skills/after-effects/SKILL.md) | Adobe After Effects scripting (ExtendScript, JSX), expressions, and composition automation |
+| [`animation-principles`](skills/animation-principles/SKILL.md) | The 12 classic Disney animation principles (squash/stretch, staging, anticipation) in code |
+| [`motion-art-direction`](skills/motion-art-direction/SKILL.md) | Visual rhythm, easing curves, brand motion identity, and scene choreography |
+| [`beat-sync-editing`](skills/beat-sync-editing/SKILL.md) | Audio-driven video cutting, transient detection, BPM synchronization, and rhythm-locked pacing |
+| [`logo-animation`](skills/logo-animation/SKILL.md) | Animated logo reveals, stroke draw-on, SVG morphing, and brand signature stingers |
+| [`motion-background`](skills/motion-background/SKILL.md) | Seamless looping backgrounds, mesh gradients, particle fields, ambient textures |
+| [`shot-composition`](skills/shot-composition/SKILL.md) | Cinematic camera framing, rule of thirds, safe zones (16:9, 9:16), visual hierarchy |
+| [`color-motion`](skills/color-motion/SKILL.md) | Color palettes in motion, harmonious transitions, gradients, and chroma styling |
+| [`short-form-video`](skills/short-form-video/SKILL.md) | Vertical 9:16 video architecture for TikTok, Instagram Reels, and YouTube Shorts |
+| [`caption-animation`](skills/caption-animation/SKILL.md) | Word-by-word karaoke style captions with bounce highlights and text styling |
+| [`lower-thirds`](skills/lower-thirds/SKILL.md) | Broadcast-quality transparent name tags, handles, and lower third overlays |
+| [`countdown-video`](skills/countdown-video/SKILL.md) | Dynamic timers, countdown clocks, and progress circles for videos |
+| [`chart-animation`](skills/chart-animation/SKILL.md) | Animated bar charts, line plots, donut meters, and live number counters |
+| [`animated-infographic`](skills/animated-infographic/SKILL.md) | Multi-step visual data stories with staggered reveals and transitions |
+| [`diagram-animation`](skills/diagram-animation/SKILL.md) | Flowcharts, node graphs, and architectural sequence reveals |
+| [`explainer-video`](skills/explainer-video/SKILL.md) | Structured 60-90s educational and SaaS product explainer films |
+| [`isometric-animation`](skills/isometric-animation/SKILL.md) | 2.5D isometric scenes, faux 3D rotations, and building block layouts |
+| [`whiteboard-animation`](skills/whiteboard-animation/SKILL.md) | Hand-drawn write-on vectors and chalkboard explainer effects |
+| [`wrapped-video`](skills/wrapped-video/SKILL.md) | Spotify Wrapped-style personalized stat summary presentations |
+| [`presentation-video`](skills/presentation-video/SKILL.md) | Keynote-quality animated pitch decks and slide videos |
+| [`60fps-animation`](skills/60fps-animation/SKILL.md) | High-performance CSS transforms, `will-change`, composite layers, and zero jank |
+| [`gsap-web`](skills/gsap-web/SKILL.md) | GreenSock Animation Platform (ScrollTrigger, Flip, SplitText, timelines) |
+| [`svg-animation`](skills/svg-animation/SKILL.md) | Vector stroke dashes, path morphing, SMIL/CSS vector motion |
+| [`lottie-animation`](skills/lottie-animation/SKILL.md) | Web & mobile Lottie/Bodymovin integrations and event triggers |
+| [`micro-interaction`](skills/micro-interaction/SKILL.md) | Hover states, button ripples, switch bounces, and tactical UI feedback |
+| [`page-transition-animation`](skills/page-transition-animation/SKILL.md) | Smooth route changes, shared element transitions, layout animations |
+| [`accessible-animation`](skills/accessible-animation/SKILL.md) | WCAG compliance and `prefers-reduced-motion` accessible motion design |
+| [`glassmorphism`](skills/glassmorphism/SKILL.md) | Frosted glass UI cards, backdrop-filter blurs, and layered specular highlights |
+| [`ascii-animation`](skills/ascii-animation/SKILL.md) | Terminal & retro ASCII text animations and matrix effects |
 
 ### 🎨 UI/UX, Design Systems & Frontend Engineering (52 Skills)
 
