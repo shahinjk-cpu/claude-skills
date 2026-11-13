@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-906-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-913-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (906 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (913 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **906 skills** in this repository are active, mirrored, and directly executable across:
+All **913 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -43,7 +43,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
-## 📊 Complete Categorized Directory (906 Skills)
+## 📊 Complete Categorized Directory (913 Skills)
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
@@ -88,11 +88,16 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`diagnosing-superpowers`](skills/diagnosing-superpowers/SKILL.md) | Use when a superpowers session went wrong and your human partner wants to know why — repeated work, ignored plans, stumbles, poor results, a |
 | [`diagram-design`](skills/diagram-design/SKILL.md) | Create branded architecture, architecture delta, IT current-state, flowchart, sequence, state machine, ER/data model, steps, timeline, swiml |
 
-### 🌐 Browser Automation, Scraping & Real Web (8 Skills)
+### 🌐 Browser Automation & Web Agents (Browser-Use Suite) (13 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
 | [`browser-use`](skills/browser-use/SKILL.md) | Direct browser control via CDP for web interaction: automation, scraping, testing, screenshots, and site/app work. Also covers hosted cloud |
+| [`browser-use-cloud`](skills/browser-use-cloud/SKILL.md) | Documentation reference for using Browser Use Cloud — the hosted API and SDK for browser automation. Use this skill whenever the user needs |
+| [`browser-use-open-source`](skills/browser-use-open-source/SKILL.md) | Reference for writing Python code against the browser-use 1.0 open-source library (Agent, Browser, Tools, models, sensitive data, results). |
+| [`browser-use-qa`](skills/browser-use-qa/SKILL.md) | QA-test a website or web app and return a 1-5 quality score (5 = flawless, 1 = broken) with evidence. Use when the user wants to test, QA, e |
+| [`browser-use-remote-browser`](skills/browser-use-remote-browser/SKILL.md) | Controls an isolated Browser Use Cloud browser from a sandboxed machine with the current Browser Use CLI. |
+| [`browser-use-x402`](skills/browser-use-x402/SKILL.md) | Set up Browser Use Cloud payments with x402 — pay per request from a crypto wallet (USDC on Base mainnet), no signup or API key. Two setups |
 | [`agent-browser`](skills/agent-browser/SKILL.md) | Browser automation CLI for AI agents. Use when the user needs to inspect, test, or automate browser behavior: navigating pages, filling form |
 | [`browse`](skills/browse/SKILL.md) | Fast headless browser for QA testing and site dogfooding. (gstack) |
 | [`jev-ultrafast`](skills/jev-ultrafast/SKILL.md) | Ultra-fast browser automation agent built on browser-use. Operates on numbered page elements for rapid web scraping, testing, and UI navigat |
@@ -100,6 +105,18 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`setup-browser-cookies`](skills/setup-browser-cookies/SKILL.md) | Import cookies from your real Chromium browser into the headless browse session. (gstack) |
 | [`scrape`](skills/scrape/SKILL.md) | Pull data from a web page. (gstack) |
 | [`skillify`](skills/skillify/SKILL.md) | Codify the most recent successful /scrape flow into a permanent browser-skill on disk. (gstack) |
+
+### 🖥️ Windows OS & Desktop Agent Automation (Microsoft UFO³) (1 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`microsoft-ufo`](skills/microsoft-ufo/SKILL.md) | Windows OS desktop automation agent (Microsoft UFO² & UFO³ Galaxy). Automates native Windows applications (Word, Excel, PowerPoint, Edge, Fi |
+
+### 🔌 1000+ App Integrations & Toolkits (Composio Suite) (1 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`composio`](skills/composio/SKILL.md) | Route and complete Composio work across Composio For You and Composio Platform. Use when the user mentions Composio; wants an agent to use a |
 
 ### 🧠 Agent Memory, Context & OpenViking Suite (18 Skills)
 
@@ -377,14 +394,13 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`a11y-debugging`](skills/a11y-debugging/SKILL.md) | Uses Chrome DevTools MCP for accessibility (a11y) debugging and auditing based on web.dev guidelines. Use when testing semantic HTML, ARIA l |
 | [`modern-web-guidance`](skills/modern-web-guidance/SKILL.md) | Search tool for modern web development best practices. MANDATORY: Execute FIRST for all HTML/CSS and clientside JS tasks. Do NOT skip — web |
 
-### 🧱 Backend Architecture, Databases & Cloud Native (25 Skills)
+### 🧱 Backend Architecture, Databases & Cloud Native (24 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
 | [`create-architecture`](skills/create-architecture/SKILL.md) | Author the architecture blueprint before code is written. Validates decisions against the pinned engine, flags knowledge gaps." |
 | [`architecture-decision`](skills/architecture-decision/SKILL.md) | Create an ADR documenting a technical decision: context, alternatives considered, consequences." |
 | [`architecture-review`](skills/architecture-review/SKILL.md) | Traceability matrix mapping GDD requirements to ADRs. Finds gaps, cross-ADR conflicts, engine compatibility. PASS/CONCERNS/NOT ASSESSED/FAIL |
-| [`clean-architecture-dotnet`](skills/clean-architecture-dotnet/SKILL.md) | Specialized skill for clean architecture dotnet. |
 | [`database-design`](skills/database-design/SKILL.md) | PostgreSQL/MySQL schema design, Prisma migrations, index strategy, query optimization, N+1 fix |
 | [`sql-optimization`](skills/sql-optimization/SKILL.md) | PostgreSQL EXPLAIN ANALYZE, index strategy, CTE, window functions, query optimization |
 | [`pandas-analysis`](skills/pandas-analysis/SKILL.md) | Pandas/Polars data wrangling, EDA patterns, missing data handling, feature engineering |
@@ -407,7 +423,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`observability`](skills/observability/SKILL.md) | OpenTelemetry, Grafana, Prometheus, structured logging, error tracking, distributed tracing |
 | [`devex-review`](skills/devex-review/SKILL.md) | Live developer experience audit. (gstack) |
 
-### 🎨 Other Specialized, Game Dev & Creative Skills (596 Skills)
+### 🎮 Game Development, 3D Art & Other Specialized Domains (596 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
@@ -1013,10 +1029,10 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 ## 🛠️ Necə İstifadə Edilir (Quraşdırma & Sinxronizasiya)
 
 ### 1. Claude Desktop və Claude Code
-Kompüterinizdəki `~/.claude/skills` qovluğu birbaşa bu repozitoriya ilə eynidir. Claude Code işə salındıqda bütün 906 skill avtomatik aşkar edilir.
+Kompüterinizdəki `~/.claude/skills` qovluğu birbaşa bu repozitoriya ilə eynidir. Claude Code işə salındıqda bütün 913 skill avtomatik aşkar edilir.
 
 ### 2. Cursor IDE
-Cursor üçün `~/.cursor/skills` qovluğu simvolik əlaqə (junction) ilə qoşulub. Cursor-da istənilən skill-in adını çəkməklə (məsələn: `@diagram-design` və ya `@cloudflare-security-audit`) həmin qaydaları dərhal aktivləşdirə bilərsiniz.
+Cursor üçün `~/.cursor/skills` qovluğu simvolik əlaqə (junction) ilə qoşulub. Cursor-da istənilən skill-in adını çəkməklə (məsələn: `@diagram-design`, `@browser-use`, `@microsoft-ufo` və ya `@composio`) həmin qaydaları dərhal aktivləşdirə bilərsiniz.
 
 ### 3. Google Antigravity
 Antigravity bu repozitoriyanı özünün daxili bilik mərkəzi kimi oxuyur və tapşırığa uyğun skill-ləri avtomatik icra edir.
@@ -1025,4 +1041,4 @@ Antigravity bu repozitoriyanı özünün daxili bilik mərkəzi kimi oxuyur və 
 * **Primary:** `https://github.com/shahinkarimov/claude-skills.git`
 * **Secondary:** `https://github.com/shahinjk-cpu/claude-skills.git`
 
-*(Son yenilənmə tarixi: 2026-11-13 · Dəqiq skill sayı: **906**)*
+*(Son yenilənmə tarixi: 2026-11-13 · Dəqiq skill sayı: **913**)*
