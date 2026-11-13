@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-1006-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-1016-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (1006 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (1016 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **1006 skills** in this repository are active, mirrored, and directly executable across:
+All **1016 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -43,7 +43,7 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
-## 📊 Complete Categorized Directory (1006 Skills)
+## 📊 Complete Categorized Directory (1016 Skills)
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
@@ -87,6 +87,21 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`using-superpowers`](skills/using-superpowers/SKILL.md) | Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarif |
 | [`diagnosing-superpowers`](skills/diagnosing-superpowers/SKILL.md) | Use when a superpowers session went wrong and your human partner wants to know why — repeated work, ignored plans, stumbles, poor results, a |
 | [`diagram-design`](skills/diagram-design/SKILL.md) | Create branded architecture, architecture delta, IT current-state, flowchart, sequence, state machine, ER/data model, steps, timeline, swiml |
+
+### 🌐 Autonomous Agents, LLMOps & Chat Platforms (OpenHands, Dify & LibreChat Suite) (10 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`openhands`](skills/openhands/SKILL.md) | **Master Orchestrator**: OpenHands (All-Hands-AI) autonomous software development agent, Docker sandboxes, and headless CLI |
+| [`openhands-runtime`](skills/openhands-runtime/SKILL.md) | Development stack runtime, service orchestration, agent server, and ingress routing |
+| [`openhands-verify`](skills/openhands-verify/SKILL.md) | Automated UI verification, Canvas testing, and weekly feature regression audits |
+| [`openhands-desktop`](skills/openhands-desktop/SKILL.md) | Electron desktop application architecture, bundling, and platform packaging |
+| [`dify`](skills/dify/SKILL.md) | **Master Orchestrator**: Dify (LangGenius) visual LLMOps platform, RAG hybrid search pipelines, and agent DSL authoring |
+| [`dify-component`](skills/dify-component/SKILL.md) | Dify React/TypeScript UI component development and state boundary architecture |
+| [`dify-backend-review`](skills/dify-backend-review/SKILL.md) | Dify Flask, Celery, and PostgreSQL backend code review and quality gates |
+| [`dify-frontend-review`](skills/dify-frontend-review/SKILL.md) | Dify Next.js frontend code review, hook patterns, and state flow audits |
+| [`librechat`](skills/librechat/SKILL.md) | **Master Orchestrator**: LibreChat (Danny Avila) multi-model AI platform, `librechat.yaml` MCP integration, Subagents & Artifacts |
+| [`librechat-architecture`](skills/librechat-architecture/SKILL.md) | Multi-model routing, token budgeting, and real-time streaming architecture |
 
 ### 🌐 Browser Automation & Web Agents (Browser-Use Suite) (13 Skills)
 
