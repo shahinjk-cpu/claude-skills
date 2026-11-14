@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-1180-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-1187-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (1180 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (1187 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **1180 skills** in this repository are active, mirrored, and directly executable across:
+All **1187 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -44,6 +44,18 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 ---
 
 ## 📊 Complete Categorized Directory (1019 Skills)
+
+### 🏆 Top MCP Market Community Skills (OpenClaw & ECC Suite) (7 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`coding-agent`](skills/coding-agent/SKILL.md) | **Rank #1 on MCP Market (388k)**: Delegates coding to background CLI workers (Claude Code, Codex) in isolated Git worktrees |
+| [`meme-maker`](skills/meme-maker/SKILL.md) | **Rank #2 on MCP Market**: Template search, humor matching, local SVG/PNG rendering, and meme generation |
+| [`skill-creator`](skills/skill-creator/SKILL.md) | **Rank #3 on MCP Market**: Official agent skill authoring, repair, standard validation, and SKILL.md packaging |
+| [`1password`](skills/1password/SKILL.md) | **Rank #6 on MCP Market**: Secure 1Password CLI integration, biometric authentication, and secret injection |
+| [`gh-issues`](skills/gh-issues/SKILL.md) | **Rank #9 on MCP Market**: Autonomous 6-phase GitHub issue-to-PR maintainer (reproduce, test, fix, PR) |
+| [`discord`](skills/discord/SKILL.md) | **Rank #10 on MCP Market**: Full Discord community assistant, messaging, bot interactions, and channel workflows |
+| [`gateguard`](skills/gateguard/SKILL.md) | **Rank #11 on MCP Market**: PreToolUse fact-forcing gate that stops unverified edits until dependencies are proven |
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
