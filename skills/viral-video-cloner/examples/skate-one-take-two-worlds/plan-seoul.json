@@ -1,0 +1,31 @@
+{
+  "mode": "motion-transfer",
+  "start": 0,
+  "end": 10,
+  "resolution": "720p",
+  "plan": {
+    "scene": "A sunny spring afternoon on a stone-paved lane in a Seoul hanok village: traditional hanok houses with curved dark tiled roofs and stone walls on both sides, pink cherry trees in full bloom overhead under a clear blue sky, an elderly man in a grey jacket sitting on a wooden crate at the left edge, a woman in a beige trench coat walking a small white maltese dog, a flock of pigeons on the stones, three small grey stone lanterns standing in the lane, a low grey stone ledge along the right side and a small cream-colored coffee truck parked beside it; warm natural sunlight with soft shadows, filmed with a low wide-angle lens.",
+    "shots": [
+      {
+        "start": 0.0,
+        "end": 10.0,
+        "what": "one continuous low follow shot: the skateboarder pushes down the lane past the seated old man and the woman with the dog, ollies high over the three stone lanterns as the pigeons burst into the air, grinds along the low stone ledge past the coffee truck, rolls toward the camera, steps off the board and leans into the lens grinning with rock-on hand signs"
+      }
+    ],
+    "subjects": [
+      {
+        "role": "the skateboarder in every frame",
+        "traits": "a tall young Korean woman with long straight pastel pink hair under a slouchy cream knit beanie, an oversized plain white t-shirt, light-wash frayed denim short shorts showing long bare legs, white knee-high socks with two red stripes and chunky white sneakers, riding a longboard with a pastel mint deck",
+        "images": [
+          1
+        ]
+      }
+    ],
+    "constraints": [
+      "Photorealistic, natural Korean street-fashion film look: warm spring daylight, crisp sharp focus, real skin texture and fine film grain",
+      "The skateboarder is the same young woman with long pastel pink hair, bare legs and striped knee-high socks in every frame, including the final close-up of her face",
+      "A few pink cherry blossom petals drift through the air in every frame",
+      "No text, letters, signs or logos anywhere"
+    ]
+  }
+}

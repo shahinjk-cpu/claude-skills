@@ -1,0 +1,24 @@
+{
+  "mode": "object-swap",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "targets": [
+      {
+        "target": "the white boxy 1980s sedan (a small model car on the sunlit windowsill at first, the full-size car in the tunnel later)",
+        "images": [
+          1
+        ],
+        "who": "a glossy candy-red modern compact sports hatchback with a thin full-width red LED tail-light bar, a black roof spoiler and dark five-spoke wheels"
+      }
+    ],
+    "constraints": [
+      "Follow the source frame by frame: the red model car sits on the sunlit windowsill for exactly as long as the white model does, the window goes dark at the same moment, and the full-size red car appears in the tunnel only at the moment the full-size white car appears. Do not jump ahead to the tunnel.",
+      "The camera keeps pace with the red car exactly as with the white car: in every frame the red car has the same size and position in frame as the white car, seen from behind at the same rear three-quarter left angle. It never pulls away from the camera and never shrinks into the distance.",
+      "In the tunnel the warm tunnel lights reflect on the red paint the same way they reflect on the white car, so the red body stays clearly visible.",
+      "The windowsill, the forest outside, the train window, the tunnel lights and the road look exactly the same as in the source.",
+      "No text, badges, emblems, logos or license plates."
+    ]
+  }
+}
