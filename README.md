@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-1187-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-1535-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (1187 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (1535 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **1187 skills** in this repository are active, mirrored, and directly executable across:
+All **1535 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -45,7 +45,16 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ## 📊 Complete Categorized Directory (1019 Skills)
 
-### 🏆 Top MCP Market Community Skills (OpenClaw & ECC Suite) (7 Skills)
+### 🏆 MCP Market & OpenClaw Official Ecosystem Suite (52 Skills)
+
+Comprehensive OpenClaw skills covering native multi-channel chat (Telegram, Discord, Slack), developer utilities, note systems (Apple Notes, Bear, Notion, Obsidian), media & audio (Sherpa ONNX, Whisper, Spotify, Sonos), and autonomous task workflows.
+
+### ⚡ Everything Claude Code (ECC by Affaan-M) Master Suite (314 Skills)
+
+Complete enterprise-grade engineering harness, testing, verification, architectural patterns, and autonomous agent loops from the #1 rated ECC ecosystem:
+* **Framework Verifications**: Django, Laravel, Vue.js, Spring Boot, Quarkus, Bun runtime.
+* **Agentic Loops**: DevFleet parallel multi-agent orchestrator, GateGuard fact-forcing gate, Skill Comply auditor, Strategic Context Compaction.
+* **Architecture & Storage**: ClickHouse IO analytics, Rust idiomatic patterns, Swift actor persistence, Uncloud self-hosted clustering.
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
