@@ -1,11 +1,28 @@
 ---
 name: cta-gallery
-description: High-converting Call-to-Action (CTA) sections, magnetic button interactions, banner triggers, and trial onboarding blocks inspired by calltoaction.gallery. Use when building conversion-focused landing page sections, hero CTAs, bottom conversion anchors, and interactive trial triggers.
+description: High-converting Call-to-Action (CTA) sections, magnetic button interactions, banner triggers, and trial onboarding blocks inspired by cta.gallery. Powered by the ctagallery MCP server (C:\Claude\ctagallery\server.py) to generate production-ready React + Tailwind CTA components and conversion copy.
+metadata:
+  version: "1.1.0"
+  role: conversion_rate_optimizer
+  transport: stdio
+  command: python C:\Claude\ctagallery\server.py
+  triggers: cta, cta gallery, call to action, duyme dizayni, konversiya, waitlist form, bento cta, pricing cta, lead capture
 ---
 
-# Call to Action (CTA) Gallery Architecture & Patterns
+# Call to Action (CTA) Gallery Architecture & MCP Tools
 
-`cta-gallery` provides architectural patterns for high-converting, aesthetically refined Call-to-Action sections based on curated designs from [calltoaction.gallery](https://calltoaction.gallery).
+`cta-gallery` provides architectural patterns and live MCP tools for high-converting, aesthetically refined Call-to-Action sections based on curated designs from [cta.gallery](https://www.cta.gallery).
+
+## Available MCP Tools (via `ctagallery` MCP Server)
+
+1. **`get_cta_categories`**:
+   - Returns all CTA categories: `button` (glow, shimmer, 3D), `form` (waitlist, email capture), `pricing` (tier triggers), `modal-pop-up` (exit-intent), `newsletter`, `navigation`, `call-to-buy`, `templates` (full bento banners).
+2. **`get_cta_copywriting_rules`**:
+   - Returns conversion copywriting frameworks: action verbs, friction reducers ("No credit card required"), social proof anchors, and visual hierarchy rules.
+3. **`search_cta_patterns(query, category?)`**:
+   - Live lookup for Tailwind CSS and Framer Motion CTA code patterns.
+4. **`generate_cta_component(cta_type, headline, button_text, subtext)`**:
+   - Generates production-ready, beautiful React + Tailwind CTA code.
 
 ## Key CTA Archetypes
 

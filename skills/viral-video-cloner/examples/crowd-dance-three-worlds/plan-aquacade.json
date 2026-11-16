@@ -1,0 +1,70 @@
+{
+  "mode": "motion-transfer",
+  "plan": {
+    "scene": "A 1930s Hollywood aquacade soundstage built entirely in turquoise, aqua and white: a wide aqua staircase rising behind the crowd, pale turquoise satin curtains hanging in scalloped swags like waves, big white life-preserver rings with aqua stripes hanging along the set; soft, bright, even studio light, every face brightly lit.",
+    "shots": [
+      {
+        "start": 0.0,
+        "end": 2.62,
+        "what": "a frontal wide shot of the dense crowd filling the space, all raising and lowering their arms in unison"
+      },
+      {
+        "start": 2.62,
+        "end": 3.62,
+        "what": "the woman at the center deep inside the crowd as the people around her tilt their heads back in unison"
+      },
+      {
+        "start": 3.62,
+        "end": 5.62,
+        "what": "a medium shot of the woman at the center surrounded by the crowd, raising her hands beside her face and singing to the camera while the people around her look up"
+      },
+      {
+        "start": 5.62,
+        "end": 7.25,
+        "what": "a very wide symmetrical shot of the whole space: the crowd stands packed in a long rectangular block on a low platform in the middle, mirrored in the polished floor below"
+      },
+      {
+        "start": 7.25,
+        "end": 9.21,
+        "what": "the woman at the center behind a front row of people who press their palms together, everyone moving in unison"
+      },
+      {
+        "start": 9.21,
+        "end": 13.042,
+        "what": "a wide moving shot over the crowd as everyone sways and bends in unison and the woman at the center raises one arm"
+      }
+    ],
+    "subjects": [
+      {
+        "role": "the woman at the center of the crowd who sings to the camera",
+        "traits": "a young East Asian woman with a sharp silver-white jaw-length bob, a soft side-swept fringe and a thin crystal headband, no cap, in a white one-piece swimsuit with a sweetheart neckline and wide straps covered all over in tiny silver crystals and seed pearls, bare arms, bare shoulders and bare legs, pearl drop earrings and crimson lips",
+        "images": [
+          1
+        ]
+      },
+      {
+        "role": "every other person in the crowd",
+        "traits": "a dance line of young women of many different ethnicities and faces, every one in a mint-aqua one-piece swimsuit with a sweetheart neckline, a short sheer mint organza hooded jacket with big translucent puff sleeves cropped above the waist, a close-fitting swim cap covered in aqua sequins and rhinestones under the sheer hood, pearl earrings and crimson lips, bare legs and small silver dance shoes",
+        "images": [
+          2,
+          4
+        ]
+      }
+    ],
+    "place": {
+      "images": [
+        3
+      ]
+    },
+    "constraints": [
+      "Photorealistic live-action footage that looks shot on 35mm motion-picture film: real people with natural skin texture, visible pores and fine flyaway hairs, real fabric texture, organic film grain and soft halation; nothing CG, airbrushed, plastic or doll-like",
+      "The woman at the center is the same woman with the silver-white bob in the white crystal swimsuit in every frame, including the close-ups: the only figure in white and the only uncovered head in a sea of mint swimsuits and aqua sequin swim caps",
+      "The woman at the center has her own face, which appears on nobody else: every other person in the crowd has a clearly different face of their own, with many ethnicities, face shapes, eye shapes, noses and lips; no repeated, cloned or twin faces anywhere",
+      "Every other dancer wears the mint swimsuit, the sheer mint organza hooded jacket and the aqua sequin swim cap in every frame; the swimsuit always shows through and below the sheer organza. No fur, no feathers, no boas, no coats anywhere",
+      "Below the swimsuit every dancer's legs are bare skin from the hips to the ankles in every shot, from the front, the side and from behind, including the final shot where the crowd turns away and sways; small silver dance shoes. No trousers, no pants, no leggings, no tights, no skirts at any moment",
+      "Bright and clean, tonal aqua and white everywhere, never murky",
+      "Every person, position, movement, camera move and cut follows the guide exactly",
+      "No text, letters, signs or logos anywhere"
+    ]
+  }
+}

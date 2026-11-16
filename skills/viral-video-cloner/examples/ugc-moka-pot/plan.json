@@ -1,0 +1,22 @@
+{
+  "mode": "object-swap",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "targets": [
+      {
+        "target": "the pastel yellow tumbler with the light-blue side handle, clear lid, yellow straw and small blue charms hanging from the lid, which the woman holds up beside her face by its handle, tilts and turns toward the camera to show the top, in every moment it appears",
+        "images": [
+          1
+        ],
+        "who": "a matte sage-green enamel stovetop moka pot with an eight-sided hourglass body, a tiny spout at its top rim, a light-wood side handle and a wood lid knob, held by its wooden handle in her raised hand"
+      }
+    ],
+    "constraints": [
+      "Keep the woman, her face, expressions and mouth movements, her hair, black t-shirt, the couch and the room exactly as they are.",
+      "Nothing of the tumbler remains: no straw, no clear lid, no blue handle and no blue charms anywhere.",
+      "No text, captions, labels, logos or watermarks anywhere, including on the moka pot."
+    ]
+  }
+}

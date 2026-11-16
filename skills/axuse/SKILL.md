@@ -1,3 +1,8 @@
+---
+name: axuse
+description: Accessibility-first browser and computer use over MCP using CDP with structured accessibility snapshots.
+---
+
 # axuse — browser & computer use, done right
 
 Accessibility-first browser/computer use over MCP. Works in any MCP-capable

@@ -1,0 +1,43 @@
+{
+  "mode": "motion-transfer",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "scene": "A bright minimalist cafe by a large sunny window: pale wood tables, white walls and green potted plants.",
+    "shots": [
+      {
+        "start": 0,
+        "end": 8,
+        "what": "one continuous arm's-length front-camera phone selfie, chest-up: she holds the tumbler by its blue handle beside her face and talks to the camera, tips the lid toward the camera, keeps talking, takes a sip through the straw and lowers the cup beside her face with a smile"
+      }
+    ],
+    "subjects": [
+      {
+        "role": "the woman filming the selfie and talking to the camera",
+        "traits": "an East Asian woman in her mid-20s with straight shoulder-length black hair, wearing a plain white crew-neck t-shirt",
+        "images": [
+          1
+        ]
+      },
+      {
+        "role": "the tumbler she holds by its handle",
+        "traits": "a butter-yellow tapered insulated tumbler with a large powder-blue side handle, a clear round lid with a powder-blue rim, a yellow straw with a blue base, and a powder-blue tethered cap with a small pale-yellow star charm",
+        "images": [
+          2
+        ]
+      }
+    ],
+    "place": {
+      "images": [
+        3
+      ]
+    },
+    "constraints": [
+      "Exactly the same head, arm, hand and cup movements with the same timing as the source; she holds the tumbler by its handle in the same one hand the whole time and never uses a second hand.",
+      "The tumbler keeps the exact butter-yellow and powder-blue colours and shape of the reference.",
+      "No text, captions, logos or watermarks.",
+      "Authentic phone-selfie look with natural daylight."
+    ]
+  }
+}

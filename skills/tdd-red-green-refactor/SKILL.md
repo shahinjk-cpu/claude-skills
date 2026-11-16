@@ -1,81 +1,38 @@
 ---
-name: tdd-red-green-refactor
-description: >
-  Enforces a disciplined Red-Green-Refactor (TDD) workflow in TypeScript/Node.js. 
-  Use this whenever creating new features, fixing bugs, or migrating logic to ensure 
-  high-quality, verifiable implementations.
+name: tdd
+description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
 ---
 
-# Red-Green-Refactor (TDD) Skill: TypeScript Edition
+# Test-Driven Development
 
-This skill implements a structural framework for AI-assisted programming to ensure every line of code is verifiable, typed, and purposeful.
+TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle: consult them before and during the loop, not after.
 
-## The Three-Phase Cycle
+When exploring the codebase, read `GLOSSARY.md` (if it exists) so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
 
-### Phase 1: Red (Establish Failure)
-You must prove the feature does not exist and that your test is valid.
-1. **Write One Test**: Create a single test case (e.g., in Vitest or Jest) for the next small piece of behavior.
-2. **Execute & Fail**: Run the test. It must fail. 
-3. **Verify**: Ensure the failure is related to the missing logic (e.g., `ReferenceError: add is not defined`) and not a configuration error.
+## What a good test is
 
-### Phase 2: Green (Minimal Pass)
-Make the test pass as quickly and simply as possible.
-1. **Minimal Implementation**: Write the simplest code that satisfies the test. Do not build for the future; focus strictly on the current "Red" test.
-2. **Run Tests**: Execute the suite. All tests must be Green.
-3. **Evidence**: The transition from Red to Green is the "Proof of Work" for the developer.
+Tests verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't. A good test reads like a specification: "user can checkout with valid cart" tells you exactly what capability exists, and it survives refactors because it doesn't care about internal structure.
 
-### Phase 3: Refactor (Clean Up)
-Improve the code structure while maintaining the "Green" state.
-1. **Clean Up**: Improve naming, remove duplication, and optimize the code written in Phase 2.
-2. **Safety Net**: Rerun the tests after every change. If they turn Red, revert the change immediately.
+See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
 
----
+## Seams: where tests go
 
-## Core Operational Rules
+A **seam** is the public boundary you test at: the interface where you observe behavior without reaching inside. Tests live at seams, never against internals.
 
-### 1. No "Horizontal Splurging"
-You are strictly forbidden from writing a large "splurge" of multiple tests at once. You must follow a strictly incremental loop:
-- **Write 1 Test -> See it Fail -> Write 1 Fix -> See it Pass**.
-- Repeat this loop for every sub-feature.
+**Test only at pre-agreed seams.** Before writing any test, write down the seams under test and confirm them with the user. No test is written at an unconfirmed seam. You can't test everything, so agreeing the seams up front is how testing effort lands on the critical paths and complex logic instead of every edge case.
 
-### 2. Impose Backpressure
-Use automated assertions and strong typing (TypeScript) as backpressure to prevent the AI from "guessing" the solution or "playing in the mud" with low-quality code.
+Ask: "What's the public interface, and which seams should we test?" Give each proposed seam a one-line note on what it catches and what it misses.
 
-### 3. Verification of Integrity
-Never modify an existing test to make a failing implementation pass. If a test must change, it must be because the requirement changed, not because the code is difficult to write.
+When the shape of that interface is itself in question (how deep the module is, where the seam belongs, what the interface should expose), call the Skill tool with "codebase-design" for the vocabulary. It is the shared source of the module, interface, depth, seam, adapter, leverage and locality terms, and it is a reference to consult, not a session to run.
 
----
+## Anti-patterns
 
-## Example Workflow (TypeScript + Vitest)
+- **Implementation-coupled**: mocks internal collaborators, tests private methods, or verifies through a side channel (querying the database instead of using the interface). The tell: the test breaks when you refactor but behavior hasn't changed.
+- **Tautological**: the assertion recomputes the expected value the way the code does (`expect(add(a, b)).toBe(a + b)`, a snapshot derived by hand the same way, a constant asserted equal to itself), so it passes by construction and can never disagree with the code. Expected values must come from an independent source of truth: a known-good literal, a worked example, the spec.
+- **Horizontal slicing**: writing all tests first, then all implementation. Bulk tests verify _imagined_ behavior: you test the _shape_ of things rather than user-facing behavior, the tests go insensitive to real changes, and you commit to test structure before understanding the implementation. Work in **vertical slices** instead: one test → one implementation → repeat, each test a **tracer bullet** that responds to what the last cycle taught you.
 
-**Step 1: Red**
-```typescript
-// math.test.ts
-import { describe, it, expect } from 'vitest';
-import { add } from './math';
+## Rules of the loop
 
-describe('add', () => {
-  it('should sum two numbers', () => {
-    expect(add(2, 2)).toBe(4); // Fails: ReferenceError: add is not defined
-  });
-});
-```
-
-**Step 2: Green**
-```typescript
-// math.ts
-export const add = (a: any, b: any) => {
-  return 4; // Passes: Minimal code to satisfy the test
-};
-```
-
-**Step 3: Refactor**
-```typescript
-// math.ts
-/**
- * Sums two numbers with explicit type safety.
- */
-export const add = (a: number, b: number): number => {
-  return a + b; // Passes: Proper implementation with safety net
-};
-```
+- **Red before green.** Write the failing test first, then only enough code to pass it. Don't anticipate future tests or add speculative features.
+- **One slice at a time.** One seam, one test, one minimal implementation per cycle.
+- **Refactoring is not part of the loop.** It belongs to the review stage (see the `code-review` skill), not the red → green implementation cycle.

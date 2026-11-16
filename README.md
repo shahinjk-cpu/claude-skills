@@ -1,18 +1,18 @@
 # 🧠 Universal AI Agent Skills Repository
 
-[![Skills](https://img.shields.io/badge/Total%20Skills-913-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
+[![Skills](https://img.shields.io/badge/Total%20Skills-1535-brightgreen.svg?style=for-the-badge&logo=anthropic)](https://github.com/shahinkarimov/claude-skills)
 [![SkillLeaderboard](https://img.shields.io/badge/SkillLeaderboard%20Top%2010-100%25%20Installed-orange.svg?style=for-the-badge)](https://skillleaderboard.com)
 [![Universal Compatibility](https://img.shields.io/badge/Ecosystem-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-blue.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 [![Sync Status](https://img.shields.io/badge/Dual%20Sync-shahinkarimov%20%26%20shahinjk--cpu-purple.svg?style=for-the-badge)](https://github.com/shahinkarimov/claude-skills)
 
-> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (913 Verified & Active Skills).**  
+> **Universal Backup, Multi-Tool Hub & Standardized Catalog of Shahin's AI Coding Agent Skills (1535 Verified & Active Skills).**  
 > Every skill adheres to the open `SKILL.md` Agent Skills standard and is 100% interoperable across leading AI coding platforms.
 
 ---
 
 ## 🌟 Universally Supported AI Environments
 
-All **913 skills** in this repository are active, mirrored, and directly executable across:
+All **1535 skills** in this repository are active, mirrored, and directly executable across:
 * 🤖 **Anthropic Claude Code & Claude Desktop** (`~/.claude/skills`)
 * 🚀 **Google Antigravity / Gemini CLI** (`~/.gemini/antigravity` & plugins)
 * ⚡ **Cursor IDE** (`~/.cursor/skills`)
@@ -43,7 +43,28 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ---
 
-## 📊 Complete Categorized Directory (913 Skills)
+## 📊 Complete Categorized Directory (1019 Skills)
+
+### 🏆 MCP Market & OpenClaw Official Ecosystem Suite (52 Skills)
+
+Comprehensive OpenClaw skills covering native multi-channel chat (Telegram, Discord, Slack), developer utilities, note systems (Apple Notes, Bear, Notion, Obsidian), media & audio (Sherpa ONNX, Whisper, Spotify, Sonos), and autonomous task workflows.
+
+### ⚡ Everything Claude Code (ECC by Affaan-M) Master Suite (314 Skills)
+
+Complete enterprise-grade engineering harness, testing, verification, architectural patterns, and autonomous agent loops from the #1 rated ECC ecosystem:
+* **Framework Verifications**: Django, Laravel, Vue.js, Spring Boot, Quarkus, Bun runtime.
+* **Agentic Loops**: DevFleet parallel multi-agent orchestrator, GateGuard fact-forcing gate, Skill Comply auditor, Strategic Context Compaction.
+* **Architecture & Storage**: ClickHouse IO analytics, Rust idiomatic patterns, Swift actor persistence, Uncloud self-hosted clustering.
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`coding-agent`](skills/coding-agent/SKILL.md) | **Rank #1 on MCP Market (388k)**: Delegates coding to background CLI workers (Claude Code, Codex) in isolated Git worktrees |
+| [`meme-maker`](skills/meme-maker/SKILL.md) | **Rank #2 on MCP Market**: Template search, humor matching, local SVG/PNG rendering, and meme generation |
+| [`skill-creator`](skills/skill-creator/SKILL.md) | **Rank #3 on MCP Market**: Official agent skill authoring, repair, standard validation, and SKILL.md packaging |
+| [`1password`](skills/1password/SKILL.md) | **Rank #6 on MCP Market**: Secure 1Password CLI integration, biometric authentication, and secret injection |
+| [`gh-issues`](skills/gh-issues/SKILL.md) | **Rank #9 on MCP Market**: Autonomous 6-phase GitHub issue-to-PR maintainer (reproduce, test, fix, PR) |
+| [`discord`](skills/discord/SKILL.md) | **Rank #10 on MCP Market**: Full Discord community assistant, messaging, bot interactions, and channel workflows |
+| [`gateguard`](skills/gateguard/SKILL.md) | **Rank #11 on MCP Market**: PreToolUse fact-forcing gate that stops unverified edits until dependencies are proven |
 
 ### 🏆 Top 10 GitHub Leaderboard Skills (38 Skills)
 
@@ -88,10 +109,26 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`diagnosing-superpowers`](skills/diagnosing-superpowers/SKILL.md) | Use when a superpowers session went wrong and your human partner wants to know why — repeated work, ignored plans, stumbles, poor results, a |
 | [`diagram-design`](skills/diagram-design/SKILL.md) | Create branded architecture, architecture delta, IT current-state, flowchart, sequence, state machine, ER/data model, steps, timeline, swiml |
 
-### 🌐 Browser Automation & Web Agents (Browser-Use Suite) (13 Skills)
+### 🌐 Autonomous Agents, LLMOps & Chat Platforms (OpenHands, Dify & LibreChat Suite) (10 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
+| [`openhands`](skills/openhands/SKILL.md) | **Master Orchestrator**: OpenHands (All-Hands-AI) autonomous software development agent, Docker sandboxes, and headless CLI |
+| [`openhands-runtime`](skills/openhands-runtime/SKILL.md) | Development stack runtime, service orchestration, agent server, and ingress routing |
+| [`openhands-verify`](skills/openhands-verify/SKILL.md) | Automated UI verification, Canvas testing, and weekly feature regression audits |
+| [`openhands-desktop`](skills/openhands-desktop/SKILL.md) | Electron desktop application architecture, bundling, and platform packaging |
+| [`dify`](skills/dify/SKILL.md) | **Master Orchestrator**: Dify (LangGenius) visual LLMOps platform, RAG hybrid search pipelines, and agent DSL authoring |
+| [`dify-component`](skills/dify-component/SKILL.md) | Dify React/TypeScript UI component development and state boundary architecture |
+| [`dify-backend-review`](skills/dify-backend-review/SKILL.md) | Dify Flask, Celery, and PostgreSQL backend code review and quality gates |
+| [`dify-frontend-review`](skills/dify-frontend-review/SKILL.md) | Dify Next.js frontend code review, hook patterns, and state flow audits |
+| [`librechat`](skills/librechat/SKILL.md) | **Master Orchestrator**: LibreChat (Danny Avila) multi-model AI platform, `librechat.yaml` MCP integration, Subagents & Artifacts |
+| [`librechat-architecture`](skills/librechat-architecture/SKILL.md) | Multi-model routing, token budgeting, and real-time streaming architecture |
+
+### 🌐 Browser Automation & Web Agents (Browser-Use Suite) (14 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`colibri-browser`](skills/colibri-browser/SKILL.md) | Ultra-lightweight hummingbird browser agent with 89x fewer tokens, local Jev form engine, diff-only observation & safety gates |
 | [`browser-use`](skills/browser-use/SKILL.md) | Direct browser control via CDP for web interaction: automation, scraping, testing, screenshots, and site/app work. Also covers hosted cloud |
 | [`browser-use-cloud`](skills/browser-use-cloud/SKILL.md) | Documentation reference for using Browser Use Cloud — the hosted API and SDK for browser automation. Use this skill whenever the user needs |
 | [`browser-use-open-source`](skills/browser-use-open-source/SKILL.md) | Reference for writing Python code against the browser-use 1.0 open-source library (Agent, Browser, Tools, models, sensitive data, results). |
@@ -117,6 +154,12 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
 | [`composio`](skills/composio/SKILL.md) | Route and complete Composio work across Composio For You and Composio Platform. Use when the user mentions Composio; wants an agent to use a |
+
+### 🌌 Private AI Server & Homelab (Osmantic ODS V3) (1 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`osmantic-ods`](skills/osmantic-ods/SKILL.md) | Osmantic Deployment System (ODS V3) private AI server: local model inference (llama.cpp/vLLM), Portal/Pixel agent, Open WebUI, LiteLLM, n8n workflows, Qdrant RAG, SearXNG, ComfyUI, and extensions. |
 
 ### 🧠 Agent Memory, Context & OpenViking Suite (18 Skills)
 
@@ -252,9 +295,23 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`ios-sync`](skills/ios-sync/SKILL.md) | Regenerate the iOS debug bridge against the latest upstream gstack templates. (gstack) |
 | [`mobile-testing`](skills/mobile-testing/SKILL.md) | Detox E2E, Maestro testing, mobile test automation, device farm integration |
 | [`login-flow`](skills/login-flow/SKILL.md) | Mobile login and authentication flow screens |
+| [`app-store`](skills/app-store/SKILL.md) | Apple App Store & Google Play publishing, ASO keyword optimization, metadata & review compliance checks |
 | [`push-notifications`](skills/push-notifications/SKILL.md) | FCM/APNs push notifications, Expo Notifications, topic subscriptions, notification templates |
 
-### ⚙️ Harness Engineering & Agent Reliability Loops (22 Skills)
+### 🐘 Google's Elephant-Goldfish Model (EGM) Spec-Driven Suite (8 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`elephant-goldfish-model`](skills/elephant-goldfish-model/SKILL.md) | **Master Orchestrator**: Google's spec-driven software development framework (Design with an elephant. Review with a goldfish.) |
+| [`egm-brainstorm`](skills/egm-brainstorm/SKILL.md) | **Discovery**: Brainstorming feature requirements, constraints, and architecture with the long-context Elephant |
+| [`egm-draft`](skills/egm-draft/SKILL.md) | **Authoring**: Structured section-by-section technical specification document construction |
+| [`egm-review`](skills/egm-review/SKILL.md) | **Adversarial Audit**: Fresh-eyed Goldfish sub-agents with zero context hunting for edge cases and unstated assumptions |
+| [`egm-resolve`](skills/egm-resolve/SKILL.md) | **Mediation**: Triaging Goldfish critique findings and updating the spec for human architectural approval |
+| [`egm-review-loop`](skills/egm-review-loop/SKILL.md) | **Multi-Standard Review**: Running iterative review-critique-resolve loops across arbitrary documents and standards |
+| [`egm-bootstrap`](skills/egm-bootstrap/SKILL.md) | **Onboarding**: Scaffolding specification trees and README architecture manifests across legacy codebases |
+| [`egm-drift-report`](skills/egm-drift-report/SKILL.md) | **Verification**: Auditing implementation code against approved design specifications to detect architectural drift |
+
+### ⚙️ Harness Engineering & Agent Reliability Loops (23 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
@@ -281,7 +338,110 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 | [`land-and-deploy`](skills/land-and-deploy/SKILL.md) | Land and deploy workflow. (gstack) |
 | [`landing-report`](skills/landing-report/SKILL.md) | Read-only queue dashboard for workspace-aware ship. (gstack) |
 
-### 🎨 UI/UX, Design Systems & Frontend Engineering (51 Skills)
+### 🤖 Advanced Model Architectures, In-Browser AI & Work-Partners (7 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`colibri-engine`](skills/colibri-engine/SKILL.md) | Pure-C hierarchical MoE inference engine streaming massive models (GLM-5.2 744B, DeepSeek-V4, Qwen) from NVMe to RAM/GPU |
+| [`qwenputer`](skills/qwenputer/SKILL.md) | Compiled 32-bit RISC-V CPU inside Qwen3.5-4B neural weights with Gated DeltaNet state as exact RAM |
+| [`open-duet`](skills/open-duet/SKILL.md) | Proactive work-partner AI agent architecture (CopilotKit OpenDuet) with supervisory human-in-the-loop loops |
+| [`opera-webai`](skills/opera-webai/SKILL.md) | Opera WebAI & Opera Neon DevTools MCP integration: in-browser AI actions, research, and deep performance profiling |
+| [`chrome-devtools-cli`](skills/chrome-devtools-cli/SKILL.md) | Headless DevTools CLI controller for live browser inspection and script automation |
+| [`mesh-llm`](skills/mesh-llm/SKILL.md) | Distributed P2P AI inference cloud & compute pooling (Skippy / llama.cpp) across multi-device GPUs |
+| [`nanbeige`](skills/nanbeige/SKILL.md) | Nanbeige LLM Lab reasoning models with Depth-Hybrid-Attention, 512K context, and deep-search tool reasoning |
+
+### 🌌 NVIDIA Omniverse OpenUSD 3D Content Agents & SimReady Assets (35 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`nvidia-3d-assets`](skills/nvidia-3d-assets/SKILL.md) | **Master Orchestrator**: NVIDIA's complete 3D asset, SimReady robotics, and OpenUSD content agent suite |
+| [`content-workflow-asset`](skills/content-workflow-asset/SKILL.md) | End-to-end 3D asset lifecycle management and metadata authoring in OpenUSD |
+| [`content-workflow-simready`](skills/content-workflow-simready/SKILL.md) | NVIDIA SimReady robotics simulation compliance, physics verification, and asset hardening |
+| [`content-workflow-convert-to-usd`](skills/content-workflow-convert-to-usd/SKILL.md) | Lossless 3D mesh format conversion (OBJ, FBX, GLTF, STL) to OpenUSD (.usd, .usda, .usdc, .usdz) |
+| [`content-workflow-geometry`](skills/content-workflow-geometry/SKILL.md) | Geometry topology audit, surface area calculation, and bounding volume extraction |
+| [`content-workflow-geometry-repair`](skills/content-workflow-geometry-repair/SKILL.md) | Automated non-manifold edge fixing, watertight hole healing, and normal recalculation |
+| [`content-workflow-mesh-segmentation`](skills/content-workflow-mesh-segmentation/SKILL.md) | Semantic sub-mesh partitioning for robotics articulation and independent physics colliders |
+| [`content-workflow-material`](skills/content-workflow-material/SKILL.md) | NVIDIA Material Definition Language (MDL) assignment and photorealistic PBR shader graphs |
+| [`content-workflow-texture`](skills/content-workflow-texture/SKILL.md) | Texture generation, UV unwrapping, baking, and runtime memory optimization |
+| [`content-texture-candidate`](skills/content-texture-candidate/SKILL.md) | VLM-evaluated texture generation matching target design references |
+| [`content-texture-quality`](skills/content-texture-quality/SKILL.md) | Texture seam audits, mipmap validation, and compression fidelity verification |
+| [`content-texture-scope`](skills/content-texture-scope/SKILL.md) | Texture memory budgeting and mipmap resolution scaling for target simulation engines |
+| [`content-texture-publish`](skills/content-texture-publish/SKILL.md) | Publishing and cataloging verified texture packages into shared enterprise asset registries |
+| [`content-workflow-physics`](skills/content-workflow-physics/SKILL.md) | Rigid body dynamics, collision hull authoring (convex, mesh, compound primitives) |
+| [`content-workflow-physics-external-tuning`](skills/content-workflow-physics-external-tuning/SKILL.md) | PhysX engine parameter tuning (friction, restitution, mass, inertia tensor, damping) |
+| [`content-sdf-operations`](skills/content-sdf-operations/SKILL.md) | Volumetric Signed Distance Field (SDF) generation for hyper-accurate collision in robotics |
+| [`content-workflow-articulation`](skills/content-workflow-articulation/SKILL.md) | End-to-end mechanical articulation authoring (kinematic chains, joints, degrees of freedom) |
+| [`content-articulation-authoring`](skills/content-articulation-authoring/SKILL.md) | Setting joint limits, axes of freedom, drive motors, and compliance boundaries |
+| [`content-articulation-inspection`](skills/content-articulation-inspection/SKILL.md) | Validating kinematics trees and testing collision-free mechanical motion ranges |
+| [`content-articulation-proposal`](skills/content-articulation-proposal/SKILL.md) | Automated joint proposal from segmented 3D mesh geometric relationships |
+| [`content-articulation-review`](skills/content-articulation-review/SKILL.md) | Operational kinematics verification and sign-off for digital twin simulation |
+| [`content-workflow-scene-collection`](skills/content-workflow-scene-collection/SKILL.md) | Assembling large-scale digital twins, factory layouts, and complex 3D environments |
+| [`content-workflow-scene-decomposition`](skills/content-workflow-scene-decomposition/SKILL.md) | Deconstructing complex compound stages into modular, reusable OpenUSD sub-layers |
+| [`content-workflow-large-scene`](skills/content-workflow-large-scene/SKILL.md) | High-polygon streaming and Level of Detail (LOD) hierarchies for massive digital twins |
+| [`content-workflow-validation`](skills/content-workflow-validation/SKILL.md) | Strict schema verification against NVIDIA Omniverse and Pixar OpenUSD asset specifications |
+| [`content-workflow-asset-task-processing`](skills/content-workflow-asset-task-processing/SKILL.md) | Asynchronous batch queue processing for enterprise 3D asset conversion pipelines |
+| [`content-workflow-cli`](skills/content-workflow-cli/SKILL.md) | Omniverse USD command-line automation and headless batch execution |
+| [`fixed-pipeline`](skills/fixed-pipeline/SKILL.md) | Deterministic batch processing pipeline for standardized 3D asset ingestion |
+| [`geometry-evidence-review`](skills/geometry-evidence-review/SKILL.md) | Visual evidence capture and geometric artifact reviews |
+| [`geometry-source-intake`](skills/geometry-source-intake/SKILL.md) | Ingestion and boundary integrity validation for external CAD, OBJ, and FBX meshes |
+| [`image-generation`](skills/image-generation/SKILL.md) | VLM texture map, normal map, and visual reference generation |
+| [`product-image-decomposer`](skills/product-image-decomposer/SKILL.md) | Reconstructing 3D object geometry from multi-view product photography |
+| [`usd-cli`](skills/usd-cli/SKILL.md) | Pixar and NVIDIA USD command-line toolchain (usdview, usdedit, usdcat, usdzip, usddiff) |
+| [`brev-cli`](skills/brev-cli/SKILL.md) | GPU cloud compute orchestration for scalable headless 3D asset processing |
+| [`quickstart`](skills/quickstart/SKILL.md) | Rapid onboarding guide for authoring OpenUSD content with NVIDIA agent workflows |
+
+### 🎬 Motion Graphics, Video Animation & AI Motion (Motion Skills & MotionClone Suite) (34 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`motionclone`](skills/motionclone/SKILL.md) | Training-free reference motion cloning for controllable T2V & I2V video generation (ICLR 2025) |
+| [`motion-skills`](skills/motion-skills/SKILL.md) | Master motion graphics, video animation, and creative coding suite orchestrator |
+| [`remotion-video`](skills/remotion-video/SKILL.md) | Programmatic React & TypeScript video generation with Remotion (compositions, springs, audio) |
+| [`kinetic-typography`](skills/kinetic-typography/SKILL.md) | Beat-synced animated titles, split-text staggered reveals, variable font weighting |
+| [`after-effects`](skills/after-effects/SKILL.md) | Adobe After Effects scripting (ExtendScript, JSX), expressions, and composition automation |
+| [`animation-principles`](skills/animation-principles/SKILL.md) | The 12 classic Disney animation principles (squash/stretch, staging, anticipation) in code |
+| [`motion-art-direction`](skills/motion-art-direction/SKILL.md) | Visual rhythm, easing curves, brand motion identity, and scene choreography |
+| [`beat-sync-editing`](skills/beat-sync-editing/SKILL.md) | Audio-driven video cutting, transient detection, BPM synchronization, and rhythm-locked pacing |
+| [`logo-animation`](skills/logo-animation/SKILL.md) | Animated logo reveals, stroke draw-on, SVG morphing, and brand signature stingers |
+| [`motion-background`](skills/motion-background/SKILL.md) | Seamless looping backgrounds, mesh gradients, particle fields, ambient textures |
+| [`shot-composition`](skills/shot-composition/SKILL.md) | Cinematic camera framing, rule of thirds, safe zones (16:9, 9:16), visual hierarchy |
+| [`color-motion`](skills/color-motion/SKILL.md) | Color palettes in motion, harmonious transitions, gradients, and chroma styling |
+| [`short-form-video`](skills/short-form-video/SKILL.md) | Vertical 9:16 video architecture for TikTok, Instagram Reels, and YouTube Shorts |
+| [`caption-animation`](skills/caption-animation/SKILL.md) | Word-by-word karaoke style captions with bounce highlights and text styling |
+| [`lower-thirds`](skills/lower-thirds/SKILL.md) | Broadcast-quality transparent name tags, handles, and lower third overlays |
+| [`countdown-video`](skills/countdown-video/SKILL.md) | Dynamic timers, countdown clocks, and progress circles for videos |
+| [`chart-animation`](skills/chart-animation/SKILL.md) | Animated bar charts, line plots, donut meters, and live number counters |
+| [`animated-infographic`](skills/animated-infographic/SKILL.md) | Multi-step visual data stories with staggered reveals and transitions |
+| [`diagram-animation`](skills/diagram-animation/SKILL.md) | Flowcharts, node graphs, and architectural sequence reveals |
+| [`explainer-video`](skills/explainer-video/SKILL.md) | Structured 60-90s educational and SaaS product explainer films |
+| [`isometric-animation`](skills/isometric-animation/SKILL.md) | 2.5D isometric scenes, faux 3D rotations, and building block layouts |
+| [`whiteboard-animation`](skills/whiteboard-animation/SKILL.md) | Hand-drawn write-on vectors and chalkboard explainer effects |
+| [`wrapped-video`](skills/wrapped-video/SKILL.md) | Spotify Wrapped-style personalized stat summary presentations |
+| [`presentation-video`](skills/presentation-video/SKILL.md) | Keynote-quality animated pitch decks and slide videos |
+| [`60fps-animation`](skills/60fps-animation/SKILL.md) | High-performance CSS transforms, `will-change`, composite layers, and zero jank |
+| [`gsap-web`](skills/gsap-web/SKILL.md) | GreenSock Animation Platform (ScrollTrigger, Flip, SplitText, timelines) |
+| [`svg-animation`](skills/svg-animation/SKILL.md) | Vector stroke dashes, path morphing, SMIL/CSS vector motion |
+| [`lottie-animation`](skills/lottie-animation/SKILL.md) | Web & mobile Lottie/Bodymovin integrations and event triggers |
+| [`micro-interaction`](skills/micro-interaction/SKILL.md) | Hover states, button ripples, switch bounces, and tactical UI feedback |
+| [`page-transition-animation`](skills/page-transition-animation/SKILL.md) | Smooth route changes, shared element transitions, layout animations |
+| [`accessible-animation`](skills/accessible-animation/SKILL.md) | WCAG compliance and `prefers-reduced-motion` accessible motion design |
+| [`glassmorphism`](skills/glassmorphism/SKILL.md) | Frosted glass UI cards, backdrop-filter blurs, and layered specular highlights |
+| [`ascii-animation`](skills/ascii-animation/SKILL.md) | Terminal & retro ASCII text animations and matrix effects |
+
+### 🎨 21st.dev UI Component Marketplace & Magic MCP Suite (8 Skills)
+
+| Skill Adı | Təsviri və Gördüyü Əsas İş |
+|---|---|
+| [`21st-dev-mcp`](skills/21st-dev-mcp/SKILL.md) | **Master Orchestrator**: 21st.dev (Magic MCP) integration to search, generate, and install 10,000+ React/Tailwind/shadcn UI components |
+| [`21st-cli-use`](skills/21st-cli-use/SKILL.md) | **Search & Install**: Natural language search, component preview, dependencies resolution, and adding components to codebase |
+| [`21st-ai`](skills/21st-ai/SKILL.md) | **AI Generation**: In-editor iterative UI generation, visual sketching, edit-in-place, and code extraction |
+| [`21st-registry`](skills/21st-registry/SKILL.md) | **Publishing**: Managing, versioning, and publishing components to private teams or public 21st.dev registry |
+| [`21st-design-sync`](skills/21st-design-sync/SKILL.md) | **Theme Extraction**: Scanning project design tokens, CSS variables, and typography to sync as a reusable 21st theme |
+| [`21st-ui-build`](skills/21st-ui-build/SKILL.md) | **Production UI**: Building robust production screens using project tokens and components from 21st catalog |
+| [`21st-ui-explore`](skills/21st-ui-explore/SKILL.md) | **Design Variants**: Exploring and comparing multiple distinct layout and interaction directions for a feature |
+| [`21st-ui-review`](skills/21st-ui-review/SKILL.md) | **QA & Accessibility**: Auditing existing UI against design tokens, responsive breakpoints, and WCAG standards |
+
+### 🎨 UI/UX, Design Systems & Frontend Engineering (52 Skills)
 
 | Skill Adı | Təsviri və Gördüyü Əsas İş |
 |---|---|
@@ -1028,14 +1188,15 @@ Ranked by **SkillLeaderboard.com** (Top 10 star-gaining skills on GitHub):
 
 ## 🖥️ Hazır Desktop Tətbiqləri (Standalone GUI Apps)
 
-Kompüterinizin Masaüstündə (Desktop) birbaşa 2 dəfə klikləməklə işə salına bilən 4 ədəd xüsusi interfeys yaradılmışdır:
+Kompüterinizin Masaüstündə (Desktop) birbaşa 2 dəfə klikləməklə işə salına bilən 5 ədəd xüsusi interfeys yaradılmışdır:
 
 | Desktop Tətbiq | Fayl Yolu | Funksiyası |
 |---|---|---|
 | 🌐 **Browser-Use Studio** | `desktop-apps/browser_use_app.py` | Google Gemini ilə Chrome/Chromium veb brauzerini canlı idarə edir, saytlarda axtarış aparır və formaları doldurur. |
 | 🛸 **Microsoft UFO Desktop** | `desktop-apps/ufo_app.py` | Windows OS pəncərələrini, Word, Excel, Parametrlər və proqramları vizual olaraq avtomatlaşdırır. |
 | 🔌 **Composio Studio Hub** | `desktop-apps/composio_app.py` | GitHub, Slack, Gmail və 1000+ tətbiq alətini Gemini modeli ilə birləşdirir və idarə edir. |
-| 🚀 **AI Agent Master Studio** | `desktop-apps/agent_studio.py` | Hər 3 aləti tək bir müasir paneldə birləşdirən və vahid API açar idarəsi təmin edən ana mərkəz. |
+| 🌌 **Osmantic ODS V3 Studio** | `desktop-apps/ods_app.py` | Şəxsi suveren AI serveri: Portal / Pixel agent, Open WebUI, Dashboard, Docker xidmətlərini və modelləri idarə edir. |
+| 🚀 **AI Agent Master Studio** | `desktop-apps/agent_studio.py` | Bütün 4 aləti tək bir müasir paneldə birləşdirən və vahid API açar idarəsi təmin edən ana mərkəz. |
 
 > 💡 Bütün tətbiqlər üçün Masaüstündə (Desktop) birbaşa `.lnk` qısayolları yaradılmışdır.
 

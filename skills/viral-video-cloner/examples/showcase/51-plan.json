@@ -1,0 +1,20 @@
+{
+  "mode": "object-swap",
+  "start": 0,
+  "end": 8,
+  "resolution": "720p",
+  "plan": {
+    "targets": [
+      {
+        "target": "the fluffy apricot-coloured toy poodle standing behind the café counter, including its paws holding the milk pitcher and the cup",
+        "images": [
+          1
+        ],
+        "who": "a gray British shorthair cat with round orange eyes"
+      }
+    ],
+    "constraints": [
+      "No text, captions or watermarks."
+    ]
+  }
+}
