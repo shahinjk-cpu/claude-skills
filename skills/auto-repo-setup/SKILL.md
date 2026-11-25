@@ -1,0 +1,280 @@
+---
+name: auto-repo-setup
+description: >-
+  Diagnoses and repairs repository setup and guarded Git workflows for Claude Code or Codex —
+  environment repair, startup sync, hook auditing, collaborator handoff. Use when a repo won't run,
+  a teammate onboards, hook output duplicates, or commit/push/conflict needs guarding. Not for
+  lost-commit recovery (use git-safety-net), GitHub ops (use github-ops), or history scrubbing (use
+  github-sensitive-data-cleanup).
+argument-hint: "[repository path]"
+---
+
+# Auto Repo Setup
+
+Make the repository usable without changing the user's normal way of working.
+Treat setup as an evidence-driven repository task, not as a special interface for
+people with a particular job title.
+
+## Entry router
+
+Classify the request before changing anything. Do not combine modes merely because
+they all contain the word "setup".
+
+| User outcome | Mode | First action |
+|---|---|---|
+| "It won't run", missing dependency, new machine | Environment repair | Read project instructions and detect the actual stack |
+| "Sync before we work", "pull the latest", or a status question during repository maintenance | Session routine | Determine sync authority from the ongoing task and project instructions, then use Workflow B |
+| Repeated or unexpected hook output | Hook diagnosis | Count registrations and firing sessions before editing configuration |
+| A teammate needs a repeatable handoff | Repository handoff | Audit existing onboarding and fill only the missing operational contract |
+| Commit, push, conflict, leaked secret/history | Git safety | Read [references/git_safety.md](references/git_safety.md) before mutation |
+| Behavior must happen before the first prompt | Startup automation | Read [references/startup_automation.md](references/startup_automation.md) and pass its hook gate |
+
+## Operating principles
+
+1. **Do not infer competence from role.** Match the user's demonstrated altitude.
+   A collaborator can tell an agent "sync the remote first"; do not invent a
+   launcher, shortcut, or wizard unless the user asked for one.
+2. **Use the least mechanism that satisfies the outcome.** Prefer, in order:
+   direct Agent instruction → project instruction → explicit command → lifecycle
+   hook. A hook is not a more professional version of a sentence.
+3. **Inspect authority before producing.** Read the current user request, then
+   project instructions, onboarding/runbooks, manifests, lockfiles, and actual
+   command output. Do not make ONBOARDING.md, Python, uv, ffmpeg, or .env mandatory
+   for repositories that do not declare them.
+4. **Preserve user work.** Never auto-stash, merge, rebase, force, discard, or
+   overwrite local changes to make setup look successful. Already-authorized
+   delivery of this task's isolated changes may use the repository's declared
+   scoped workflow under [Authorized shared-checkout delivery](references/git_safety.md#authorized-shared-checkout-delivery);
+   this does not authorize integrating unrelated local commits or shared WIP.
+5. **Define a falsifiable success state.** "Dependencies installed" is not enough;
+   run the project's real smoke test or startup command and verify the observable
+   result.
+6. **Keep diagnosis read-only until the cause is known.** Installation, config
+   edits, hook registration, commits, and external writes require the authority
+   implied by the user's request; destructive or public actions require explicit
+   approval.
+
+## Workflow A — Environment repair
+
+### A1. Read the project map
+
+Read only files that exist, in this order:
+
+1. AGENTS.md and AGENTS.override.md
+2. CLAUDE.md and scoped project rules
+3. ONBOARDING.md or the repository's named setup/runbook
+4. README.md
+5. Manifests, lockfiles, task runners, CI, and container configuration
+6. Existing Claude/Codex settings only when the request concerns agent behavior
+
+If no onboarding guide exists, infer the setup path from authoritative manifests
+and exercised commands. Do not stop to ask whether to create documentation unless
+a durable handoff is part of the request.
+
+### A2. Run a read-only capability inventory
+
+Use the bundled scripts/check_env.py against the repository root when a Python
+3.10+ runner is already available. It detects the declared ecosystem and checks
+only the relevant toolchain; it does not install dependencies or read secret
+values. If Python is itself the missing prerequisite, perform the same read-only
+manifest inventory directly instead of installing Python merely to run the audit.
+
+~~~bash
+uv run python scripts/check_env.py --repo <repo-root>
+uv run python scripts/check_env.py --repo <repo-root> --json
+~~~
+
+Treat the inventory as evidence, not as the project setup specification. A custom
+runbook or CI workflow can require tools the generic inventory cannot infer.
+
+Expected result:
+
+- exit 0: all toolchains inferred from manifests are available;
+- exit 1: one or more inferred prerequisites are missing;
+- exit 2: the repository or its metadata could not be inspected safely.
+
+### A3. Repair the root cause
+
+For each failed requirement:
+
+1. Capture the exact command, exit code, stdout, and stderr.
+2. Trace the failure to the declaring source: project guide, manifest, lockfile,
+   configuration, or runtime log.
+3. Resolve the affected command's actual runtime from its launch configuration
+   and read-only probes: interpreter and package environment, container image,
+   or service launcher as applicable. Keep an isolated validation environment
+   distinct from that consumer. If the consumer already meets the requirement,
+   retain it and continue to A4 without reinstalling.
+4. Before changing that environment, inspect affected in-flight work and existing
+   authority. Setup authorization does not authorize interrupting other work;
+   coordinate or wait when the change would disrupt it, and report the exact
+   unresolved activation step rather than killing or restarting its processes.
+5. Apply the smallest project-consistent repair through the project's existing
+   update route, preserving valid non-target dependencies and configuration.
+6. Re-run the failed check before moving on.
+
+Do not restart, reinstall everything, or switch package managers as a first move.
+Do not print .env or credential contents; verify presence and behavior without
+echoing values.
+
+### A4. Verify the product path
+
+Run the project's documented smoke test, build, or start command. If none exists,
+derive one from CI/task-runner configuration and label the derivation. Verify the
+observable result, not merely a zero exit code.
+
+For dependency repairs, use a new process in the resolved consumer environment
+to read back the installed versions and run that product check. A changed lockfile
+or successful isolated install does not establish that the consumer was updated.
+Keep already-running processes and other machines outside the claim unless
+separately verified; do not restart them just to widen the claim. Read a hosted
+dependency alert separately before claiming it closed.
+
+Report:
+
+- what was broken and the evidence;
+- what changed;
+- the exact verification and result;
+- any remaining user action or blocked authority.
+
+## Workflow B — Routine Git sync
+
+For "sync before work", prefer a short project instruction shared by the agents
+that use the repository. The routine is:
+
+1. Determine whether the ongoing task and project instructions already authorize
+   synchronization. Treat a status question during that maintenance as a progress
+   request, not as revocation or completion of the authorized sync. For an explicit
+   read-only audit or when sync authority is absent, inspect and report only.
+2. Inspect the target branch, its upstream, and working-tree cleanliness. Fetch
+   and compare the local and freshly fetched remote histories. Treat a behind
+   count as a discovery, not a completed sync.
+3. If the task includes already-authorized delivery and the repository declares
+   usable scoped tools that preserve unrelated shared HEAD, index, and WIP, use
+   [Authorized shared-checkout delivery](references/git_safety.md#authorized-shared-checkout-delivery).
+   Dirty or divergent state alone is not a reason to leave that delivery waiting.
+4. Otherwise, use repository-declared safe sync tools when applicable; without
+   such a tool, on the target branch with a clean working tree and behind-only
+   histories, run git pull --ff-only. Before reporting synchronized, independently
+   verify the target branch, clean status, and local/remote commit equality.
+5. Outside authorized shared-checkout delivery, stop for non-target branches,
+   real WIP, ahead-only or divergent histories, locks, or active-writer conflicts;
+   explain the state. For divergence, show the graph and ask how the local commits
+   should be handled. Do not auto-stash, discard, rebase, create a non-fast-forward
+   merge, force, or absorb others' commits.
+6. If the network fails, report the remote state as unknown rather than already
+   current; continue locally only when the user's task can safely proceed on the
+   local version.
+
+A collaborator may also simply say:
+
+> Sync the latest remote version before starting.
+
+That is a normal Agent instruction, not a degraded fallback.
+
+Do not register SessionStart merely to automate this routine. Static behavior
+belongs in AGENTS.md/CLAUDE.md; the Agent can inspect context and handle exceptional
+Git states instead of hiding them in a shell process.
+
+## Workflow C — Repository handoff
+
+Create or revise onboarding only when the user wants a durable handoff and the
+existing project map does not already provide one.
+
+Use [references/onboarding_template.md](references/onboarding_template.md) as a
+checklist, not as a literal Python/video template:
+
+- derive prerequisites from manifests and actual project commands;
+- include expected output after each command;
+- separate one-time setup from daily use;
+- include recovery for real observed failures;
+- keep project instructions as the operational SSOT and avoid duplicating values.
+
+Validate every command on the target operating systems that matter to the user.
+
+## Workflow D — Startup automation and hook diagnosis
+
+Read [references/startup_automation.md](references/startup_automation.md) before
+adding or changing any hook.
+
+### Diagnose repeated output first
+
+1. Enumerate project, local, user, managed, and plugin hook registrations.
+2. Count matching entries; do not infer "three registrations" from three outputs.
+3. Identify which root sessions, resumes, compactions, or subagents fired them.
+4. Verify the event matcher and current runtime payload.
+5. State the root cause before proposing a change.
+
+For Codex hooks that are present but untrusted, read
+[native hook trust](references/codex-hook-trust.md) before choosing a repair.
+Keep trust approval separate from registration, command execution and OS permissions.
+
+### Install only after the hook gate passes
+
+The bundled initializer is Claude Code-specific and installs only a lightweight
+startup context nudge. It preserves unrelated settings, adds matcher startup,
+validates the guide path, writes atomically, and is idempotent.
+
+Preview first:
+
+~~~bash
+uv run python scripts/init_session_start_hook.py \
+  --repo <repo-root> \
+  --guide ONBOARDING.md \
+  --dry-run
+~~~
+
+After the user confirms that pre-prompt injection is genuinely required, run the
+same command without --dry-run. Remove only the managed entry with --remove.
+
+Never copy this configuration into Codex by analogy. Codex project behavior should
+normally live in AGENTS.md; if a Codex hook is truly required, verify the installed
+version's root/subagent behavior and payload first.
+
+## Git safety
+
+Read [references/git_safety.md](references/git_safety.md) before commit, push,
+conflict resolution, or history rewrite. The load-bearing rules are:
+
+- stage only intended paths;
+- never bypass hooks unless the user explicitly typed the bypass in this session;
+- verify repository visibility from the hosting service before push;
+- get explicit approval before public push, force push, or history rewrite;
+- resolve conflicts from project semantics, never by blindly choosing "ours" or
+  "theirs";
+- revoke leaked credentials before treating history cleanup as complete.
+
+Use [references/pii_guard.md](references/pii_guard.md) for public-distribution
+content review. A green scanner does not replace semantic review.
+
+For automatic artifact validation before ordinary Git commits, use the
+[commit-time check procedure](references/git_safety.md#commit-time-checks).
+It covers Git hooks across Agent and manual commits, staged-input verification
+and existing-hook preservation. Use the
+[isolated checkout preparation](references/git_safety.md#isolated-checkout-preparation)
+before creating a task copy, including storage lifetime, repository-specific LFS
+and security configuration.
+
+For a read-only history scan, the existing scripts/sanitize_history.sh remains
+available. It never rewrites history; treat its findings as candidates and do not
+execute rewrite commands without explicit approval.
+
+## Counter-review boundary
+
+Use counter-review when the approved work materially changes security policy,
+shared lifecycle hooks, CI/CD, dependencies, or destructive Git behavior. Do not
+spawn a review team for an ordinary setup check or a one-line project instruction.
+Filter every finding by probability, cost, real usage, and direct verification.
+
+## Resources
+
+- scripts/check_env.py — stack-aware, read-only repository inventory
+- scripts/init_session_start_hook.py — guarded Claude Code startup-nudge manager
+- scripts/sanitize_history.sh — read-only history candidate scan
+- [references/startup_automation.md](references/startup_automation.md) — project
+  instruction vs command vs hook decision and verification
+- [references/git_safety.md](references/git_safety.md) — sync, commit, push,
+  conflict, and history rewrite gates
+- [references/onboarding_template.md](references/onboarding_template.md) — durable
+  handoff checklist
+- [references/pii_guard.md](references/pii_guard.md) — public-content scan layers

@@ -1,0 +1,218 @@
+---
+name: tech-selection
+description: >-
+  Gated checklist to choose or review a library, framework, storage, data format, model,
+  build-vs-buy or architecture. Run favorites-search before external research when installed.
+  Compare candidates and trade-offs; select within authorization or return user-owned choices.
+  Use for 用哪个 / 选什么框架 / 要不要自建 / A 还是 B / 这个方案行不行 and before committing to one.
+  Research reports → deep-research.
+argument-hint: "<decision to make>"
+---
+
+# Tech Selection — Gated Checklist
+
+A checklist for choosing between technologies, not a scoring rubric. The core
+insight: these criteria are **filters, not sorters** — they kill candidates that
+violate a principle. Keep the candidates and trade-offs visible, then apply the
+current authorization: choose and verify an authorized reversible implementation;
+return unresolved business, product or preference trade-offs to the user.
+Candidate count, duration and confidence language do not determine who decides.
+
+These outcomes end the protocol early:
+1. **User-owned choice** — missing authorization or a genuine unresolved business,
+   product or preference trade-off. Return the evidence and recommendation.
+2. **Unverified completion claim** — withhold the claim, execute authorized
+   verification, and report any remaining acceptance gap.
+
+## Not This
+
+- Not for research reports (use deep-research), debugging or bug fixes in already-settled code, or price comparisons between vendors — none of these is choosing a technology.
+- Not an interview framework — the user delegates implementation, not direction. Don't ask "which do you prefer" when you can probe and decide.
+- Not a scoring rubric — no weighted scores, no "winner" ranking. Filters, then business anchor.
+- Not self-certifying — the "why this isn't garbage" defense is written by this skill but must be independently checkable, not self-approved.
+- Not a cost gate — budget sets execution tier (which model runs), never whether to do it. Don't use cost as a rejection reason for the user's own projects.
+- Not a scope expander — no unrequested features, frameworks, or complexity.
+- Not package-size-driven — line count and bundle size are proxies, not quality.
+
+## Execution Protocol
+
+**Lightweight path.** For a small reversible local implementation with no external
+contract, run Steps 0, 1 and the applicable Step 3 axes. Use the short output below;
+run the necessary authorized probe before claiming the result works. A JSON library
+inside a bug fix fits; the project's storage engine or external field contract
+requires the full protocol even if the change takes under 10 minutes. Duration
+estimates effort, not authorization. When unsure which path applies, take the full
+protocol. Both paths obey the stops and any explicit current-task instruction.
+
+### Step 0 · Frame
+
+Write these before comparing any candidate:
+1. The **named business result** this choice serves.
+2. The **named failure mode** — what observable phenomenon would prove the choice wrong.
+
+Before retaining an identity binding, version/path pin or backward-compatibility requirement,
+apply the [prerequisite-necessity check](references/decision-axes.md#axis-9--implementation-choice--product-justification).
+An implementation detail already present in the system is a candidate constraint to justify,
+not an additional user requirement. Honor the current task's explicit support boundary.
+
+Derive the business result from context, not from the request text. A bare "which DB" carries no result on its face — read the project's decision log, the user's recent corrections, and what this choice unblocks downstream. If no context exists to derive from, say so explicitly rather than fabricating one.
+
+> Checkpoint: Cannot derive a business result from any available context → this is an execution task, not a selection task. Exit skill. Business result written as "tests pass" or "pipeline complete" → that's a proxy metric. Rewrite.
+
+### Step 1 · Inventory Prior Art
+
+Fixed order: internal/paid assets → external world-class + community solutions → build from scratch (last resort). Tag each candidate with which layer it came from.
+
+Where to look for layer 1: existing credentials and paid-service capability catalogues, installed skills, the current repository's existing pipelines, the project's decision log, and the user's own curated favorites (run `favorites-search` first when it is installed). Do not limit layer 1 to `grep` in the current repo — that returns zero hits for paid services and skills, and a zero from a narrow search is not absence.
+
+Layer 2 has a minimum coverage requirement: use a search tool to enumerate what exists, not memory alone. "Searched, found 2" is not coverage — name the search queries run, or state explicitly that no search tool was available and this is a memory-only inventory.
+
+> Checkpoint: If the final recommendation falls to layer 3 (build) with no recorded reason from layers 1–2 → flag as 闭门造车. Zero hits from layer 1 must distinguish "searched by structural token" from "searched by remembered name" — the latter's zero hit does not mean absence.
+
+**User-named candidates.** When the user names a specific option ("use Redis or Postgres?", "should we add a vector store?"), that option enters the candidate set like any other — it is subject to the same axes and verdict. It is neither exempt from filtering (a named candidate is not a requirement) nor disposable (killing a user-named candidate requires naming the axis and the failure mode, exactly like any other). If the user named exactly two options, they are the minimum candidate set; add any layer-1 or layer-2 candidates the inventory surfaced, and say so.
+
+### Step 2 · Probe for Evidence
+
+For ingestion, indexing, storage or batch-data choices, load `references/batch-data-probes.md` and derive the representative cases from the actual consumer contract before comparing engines.
+
+For observability choices, name the business decision the missing measurement
+would change before trying another collector. Distinguish application payload,
+host/interface traffic and provider billing by direction, time window and coverage;
+a healthy collector or a more exact counter does not establish cost attribution.
+If existing signals already support the next authorized business action, integrate
+and verify that path before extending the comparison. Keep required but unmet
+coverage open; do not silently replace the user's requirement with the easier
+measurement, or promote optional all-process/wire-byte precision into a new
+requirement. Reopen selection when a concrete coverage gap changes that decision,
+not merely because another candidate can expose more metrics.
+
+Label evidence by what it establishes: observed execution proves the measured
+behavior; current official API docs or inspected source can establish a contract
+or exclude an incompatible candidate, but cannot prove runtime usability or
+business benefit. README/vendor claims alone leave those claims `unknown`.
+Termination clause: max two attempts across methods per candidate; two failures
+→ "this cannot be done now," with the unmeasured claim left `unknown`.
+
+> Checkpoint: Every load-bearing claim names its evidence and scope. Runtime and
+> business-result claims need the corresponding observation; source-contract
+> evidence must not be relabeled as an observed result.
+
+### Step 3 · Filter Each Candidate
+
+Read [decision axes](references/decision-axes.md). For each candidate, give a verdict per axis: `pass` / `fail` (name the failure mode) / `unknown` (needs probe).
+
+A `fail` on a core axis kills the candidate. A `fail` on a C-class criterion from `references/scoped-criteria.md` **does not kill** — record it as a "declared preference against" note on that candidate and continue. Only core-axis failures remove a candidate from the survivor set.
+
+> Checkpoint: `unknown` is not `pass`. A candidate carrying `unknown` **does not enter** the Step 4 survivor set. Do not output a "winner" from this step.
+
+### Step 4 · Triage Survivors — The Core Gate
+
+- **0 survivors**: Report which axis killed which candidate, and whether the axis
+  was wrong or the candidate set incomplete. Distinguish `unknown` from `fail`;
+  name the stalled probe and recovery condition. Run available authorized probes
+  before asking for information only the user can supply. Never invent a survivor.
+- **1 or more survivors**: Read `references/delegation-contract.md`. Check current
+  authorization and consequences, including maintainability and relevant industry
+  practice. For an authorized reversible implementation, choose with evidence,
+  retain alternatives and trade-offs, and execute necessary verification. For an
+  unresolved user-owned choice, return candidates + trade-offs + one recommendation
+  and stop only the dependent action. Do not silently drop rejected candidates.
+
+> Checkpoint: Can the output name which candidate was demoted and by which axis? If not, the gate was hollowed out.
+
+### Step 5 · Self-Defense Slot
+
+A full-protocol conclusion carries a "why this isn't garbage" paragraph, and it
+must **not be self-certified** by this skill alone. The lightweight route carries
+its named reason and evidence in the short output instead.
+
+> Checkpoint: Every sentence in the self-defense traces to evidence or an axis
+> verdict within that evidence's scope. Generic principles (e.g. "it's a mature
+> library") = invalid.
+
+### Step 6 · Saturate Irreversible Surfaces
+
+Scan for surfaces that cannot be patched after release: telemetry/events, field and export formats, external contracts, irreversible external actions. If any exist → saturate from v0. This axis is single-scenario evidence — apply it when the choice produces a released artifact, not to internal or revertible changes, and never use it to raise the standard on work that has no irreversible surface.
+
+> Checkpoint: Explicitly list irreversible surfaces, or explicitly write "none." Silence = not checked. Revertible local changes do not trigger this step.
+
+### Step 7 · Completion Declaration
+
+Distinguish "I verified" from "I claim." Every done statement is followed by what was actually executed and observed.
+
+> Checkpoint: Run the authorized checks the agent can perform. Label human
+> acceptance separately; unobserved acceptance stays unconfirmed and must not
+> become a completion claim or block already-authorized verification and delivery.
+
+## Output Shape
+
+**Lightweight output:** business result + falsifier; prior-art layer; chosen local
+implementation + reason and authorization; necessary probe result or `unknown`.
+Keep relevant alternatives visible without requiring the full matrix or unused
+Steps 4–6 fields.
+
+**Full-protocol output:** produce the fields below. Include actual verification
+and human-acceptance status with the decision branch.
+
+1. **Business result + failure mode** (Step 0).
+2. **Candidate table** (Steps 1–3) — each candidate with its layer tag, its
+   per-axis verdict (`pass`/`fail`/`unknown`), and the probe name behind each
+   `pass`, or authoritative source evidence for a source-contract verdict. A
+   candidate carrying `unknown` is marked, not hidden.
+3. **Survivor demotion record** (Step 4) — for each demoted candidate, which
+   axis killed it and the named failure mode. If no candidate was demoted, say
+   "no candidate eliminated" and list the axes that passed everything.
+4. **Decision branch** (Step 4) — declare exactly one of:
+   - `authorized implementation` with chosen survivor, alternatives, trade-offs,
+     authorization and the Step 5 self-defense
+   - `user-owned choice → STOP` with candidates + trade-offs + one recommendation,
+     the missing decision/authorization and the dependent action withheld
+   - `0 survivors` with the diagnosis (axis wrong vs candidate set incomplete)
+5. **Self-defense** (Step 5) — each sentence traces to a probe or an axis
+   verdict. Write for the chosen implementation or recommendation; for zero
+   survivors, carry the diagnosis instead of defending an invented winner.
+6. **Irreversible surface list** (Step 6) — the surfaces found, or the word
+   "none." Never omit.
+
+## Stops
+
+### Stop 1 · Multi-candidate human tradeoff
+
+When current authorization leaves a business, product or preference choice to the
+user, the output is:
+- Each surviving candidate
+- Its trade-offs (what it costs, what it gives up)
+- One recommendation with reasoning
+
+Do not execute that dependent choice before the user resolves it. Keep rejected
+candidates and their reasons visible; do not fabricate a ranking. Multiple
+survivors alone do not reopen authorization for a local reversible implementation.
+New scope, external commitments and irreversible actions require their actual
+authorization even when only one candidate survives. Reuse prior answers unless
+later facts or instructions change their applicability.
+
+### Stop 2 · Unverified completion claim
+
+The agent executes authorized probes and observes the actual consumer/result;
+tests passing cannot substitute for that result. If the artifact requires human
+acceptance, present the concrete result and evidence for acceptance and mark that
+status unconfirmed until observed. Withhold unsupported completion claims, continue
+independent authorized work, and identify the exact missing condition when blocked.
+
+## Agent Orchestration
+
+Before delegating, read [the orchestration contract](references/delegation-contract.md#agent-orchestration).
+
+## References
+
+| File | Read when |
+|---|---|
+| [Decision axes](references/decision-axes.md) | Step 3 — core filters |
+| [Batch-data probes](references/batch-data-probes.md) | Step 2 — ingestion/indexing/storage correctness, growth, incremental work and recovery |
+| [Scoped criteria](references/scoped-criteria.md) | Step 3 — supplementary criteria and class handling |
+| [Rejection modes](references/rejection-modes.md) | Before proposing — inspect the draft with the self-tests |
+| [Delegation contract](references/delegation-contract.md) | Step 4 — decision ownership; before delegation or resolving a scope boundary |
+
+## Boundary Quick Reference
+
+Before resolving these apparent conflicts, read [resolved scope boundaries](references/delegation-contract.md#resolved-scope-boundaries).

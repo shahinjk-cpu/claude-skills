@@ -1,0 +1,204 @@
+---
+name: local-codex
+description: >-
+  Launches and manages the local OpenAI Codex CLI as a non-interactive coding sub-agent via ChatGPT
+  OAuth, never API keys. Use to delegate coding tasks to Codex, run codex exec, generate or
+  refactor code, or get a Codex code review; phrases like 'codex', 'run codex', 'codex exec',
+  'delegate to codex'. Also route here for local Codex upgrades (including prereleases),
+  shared app-server daemon lifecycle and fault recovery:
+  daemon restart, Codex hooks or spawns failing with 'Too many open files', fd exhaustion
+  diagnostics; phrases like 'codex daemon', 'daemon 重启', 'Too many open files'.
+---
+
+# Local Codex
+
+Delegate coding tasks to the local OpenAI Codex CLI agent using the authorized ChatGPT account's OAuth access.
+
+## When to Use
+
+- User wants to generate, refactor, or review code via Codex
+- User wants to run `codex exec` for non-interactive tasks
+- User wants to use Codex's non-interactive coding agent capabilities
+- User mentions "codex", "run codex", "delegate to codex"
+
+## Authentication (ChatGPT OAuth)
+
+**CRITICAL**: Use ChatGPT OAuth through the selected credential store. **Do NOT set `OPENAI_API_KEY`, `CODEX_API_KEY`, or pass API keys** for this workflow (the bundled wrapper strips both environment variables before launching Codex). Keep the authentication route separate from the account's allowance and extra Credit policy; OAuth does not guarantee that long work cannot consume extra Credit.
+
+- Resolve the actual `CODEX_HOME` and store; the desktop app and CLI can share credentials.
+- For a session managed by a project's Account Manager, enter that project's routine-switch SOP first. Use its deployed operation with the explicit target SID or its documented current-session form; let that operation perform its own binding checks. Query and recover the original request ID. Missing deployed behavior goes to a separately scoped repair, not builds, upgrades or broad quota refreshes inside the routine switch. An unknown managed request stays with that manager; it does not authorize raw RPC or a new login.
+- For other login, account switching or token recovery, read [the OAuth guide](references/oauth-guide.md). For a running native owner, [compare its account with the saved login first](references/oauth-guide.md#existing-native-owner-recovery); choose saved-login adoption, token recovery or new authorization from the observed state. Retain [independent-grant recovery](references/oauth-guide.md#remote-account-switch-and-expired-login-recovery), explicit single-owner transfers and separate access, process-adoption and business-continuation checks.
+- Before a native quota query, read [refresh ownership](references/oauth-guide.md#bind-refresh-ownership-before-native-queries); a nominally read-only query can refresh credentials.
+- For quota-driven continuation on another authorized account, use [the included-usage check](references/oauth-guide.md#quota-driven-continuation) before substantial execution; cached login or a new default file is not that check.
+
+## Codex CLI Path
+
+The skill auto-detects Codex CLI in this order:
+1. `CODEX_BIN` env var, if set — explicit override. A non-executable path fails loudly
+   instead of silently falling through to a different build (that would make whatever
+   the wrapper measured unattributable).
+2. `which codex` — the executable first on the wrapper process's PATH, including
+   npm global installs under nvm (`~/.nvm/versions/node/*/bin/codex`). This lookup
+   does not execute an interactive shell's alias or function.
+3. `/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex` — the copy bundled inside
+   ChatGPT.app, fallback only. Its version tracks the Desktop app and can diverge from
+   the npm build, so it is deliberately last.
+
+If a bad `CODEX_BIN` was set, the wrapper exits 1 with
+`{"error": "CODEX_BIN not executable", "path": <value>}` — the offending value is in
+the error itself, and `searched_paths` is not emitted for this case (no other search
+step ran). If neither PATH nor the app bundle has a codex, the wrapper exits 1 with
+the actual search order in `searched_paths`.
+
+Whichever binary wins, attribute behaviour to it by versioning **the binary that
+ran**. An unrelated shell's `codex --version` may resolve another entry, which is
+the wrong build to quote when the fallback picked the app-bundled one. Use the
+`codex_path` field from the wrapper's status output:
+
+```
+"<codex_path from status output>" --version
+```
+
+Before using this wrapper, resolve the user's ordinary CLI entry. When that entry
+is a shell function or launcher supplying network/auth context, use it through
+its owning shell instead of silently substituting the discovered binary. On macOS
+zsh, inspect with `/bin/zsh -lic 'command -v codex; codex --version'`, then run
+`codex` inside that same shell mode. Put the finite timeout around the shell
+process: `gtimeout … codex` resolves an executable and cannot call a shell function.
+The bundled Python wrapper does not reproduce shell initialization or support
+every native flag; use native CLI invocation when those capabilities are required.
+
+### Executable identity baseline (opt-in)
+
+Before an expensive build, resume or recovery claim that depends on *which*
+codex entry is in play, freeze the identity once and compare it at claim time;
+never refresh a baseline to make a comparison pass.
+
+```bash
+# Freeze once, before the work (add --watch-file for owner-selected configs):
+python3 scripts/entry_identity.py snapshot --output <task-owned-baseline.json>
+# Compare before the expensive claim:
+python3 scripts/entry_identity.py check --baseline <task-owned-baseline.json>
+```
+
+The check separates the owning-shell dispatch entry (what `/bin/zsh -lic`
+resolves `codex` to: external, function, alias) from the wrapper-selected
+external executable (the `CODEX_BIN` > PATH > app-bundle order above). Exit
+codes: `0` unchanged, `1` drift, `2` unknown, `3` usage or baseline error.
+`unchanged` is identity-only evidence — it never proves wrapper downstream
+runtime, authentication, quota or model health. When the dispatch entry is a
+function or alias, its consumer stays opaque (the definition is hashed, never
+executed). Verify its downstream executable through the launcher's owner;
+setting `CODEX_BIN` selects the wrapper and does not prove where a function runs.
+Read [entry-identity.md](references/entry-identity.md) for
+fields, failure shapes and a startup-report example.
+
+Before attributing an account, quota, error, or process state to a session, apply
+the [existing-session evidence recipe](references/oauth-guide.md#check-existing-sessions-separately).
+Require observer proof that binds the target session ID (SID), its cwd, and
+exactly one runtime to the same session. A runtime-scoped state response alone is
+insufficient. Zero, multiple, or incomplete matches remain `unknown`; never select
+or fall back by recency, account capability, quota availability, or a healthy
+runtime. Treat a contradictory first-hand user `/status` as a stopping
+contradiction and reconcile it rather than repeating the agent inference. When
+available, Minions' public session-bound diagnostic owns the mechanical gate.
+
+## Usage Patterns
+
+### 1. Basic exec (single task)
+
+```bash
+python3 scripts/codex_wrapper.py exec "<prompt>" [<workdir>] [<model>] [<sandbox>] [<timeout>]
+```
+
+Example (pass `""` or omit `<model>` to use Codex's configured default model):
+```bash
+python3 scripts/codex_wrapper.py exec \
+  "Write a Python function to calculate fibonacci" \
+  /tmp \
+  "" \
+  workspace-write \
+  300
+```
+
+### 2. Code review
+
+```bash
+python3 scripts/codex_wrapper.py review [<workdir>] [<model>] [uncommitted:true] [<timeout>]
+```
+
+Example:
+```bash
+python3 scripts/codex_wrapper.py review \
+  /path/to/repo \
+  "" \
+  true \
+  300
+```
+
+### 3. Inspect cached login
+
+```bash
+python3 scripts/codex_wrapper.py status
+```
+
+Interpret this result using [cached login inspection](references/oauth-guide.md#cached-login-inspection).
+For an authorized real access check, follow that guide's Verification route.
+
+## Parameters and results
+
+The command arguments, defaults and JSON fields are defined by `main()`,
+`exec_codex()`, `review_codex()` and `check_auth_status()` in
+[`scripts/codex_wrapper.py`](scripts/codex_wrapper.py). Use those definitions
+rather than a second parameter or output-field table.
+
+## Safety Notes
+
+- `sandbox=read-only` for analysis/review tasks (no file writes)
+- `sandbox=workspace-write` for code generation (writes to working dir)
+- `sandbox=danger-full-access` only when explicitly needed (full system access)
+- Always use `--skip-git-repo-check` when running outside git repos
+- Use `--ephemeral` for one-off tasks (no session persistence)
+
+## Session Management
+
+For a session reporting `400 Bad Request` or another model-request failure, use
+[model-request diagnostics](references/model-request-diagnostics.md) before
+changing configuration or resuming work. It covers complete error capture,
+verified HTTP/WebSocket transport, request-byte provenance, compression controls
+and recovery checks on the original SID.
+
+For a local Codex upgrade, follow
+[the coordinated CLI and App Server upgrade](references/shared-daemon-maintenance.md#upgrade-the-cli-and-shared-app-server-together).
+
+For native automatic-update eligibility, an authorized shared-daemon restart
+or package replacement, or fault recovery when Codex hooks or spawns fail with
+`Too many open files`, read
+[shared daemon maintenance](references/shared-daemon-maintenance.md). Preserve
+affected work, retain an independent operation receipt, and verify continuation
+under the original session IDs; a new daemon is not proof that tasks resumed.
+
+For client/backend version differences or a proposed local patch, use that
+guide's [target-package assessment](references/shared-daemon-maintenance.md#assess-the-target-package-before-requiring-patches)
+before treating a custom build as necessary.
+
+For multi-step tasks, Codex supports session resume:
+```bash
+# First step
+codex exec --json "Step 1..."
+# Later, use the session ID reported by that first invocation:
+codex exec resume "${CODEX_SESSION_ID:?Set the session ID from the first invocation}" "Step 2..."
+```
+
+The wrapper currently runs single-shot exec. For multi-step workflows, use raw `codex exec` commands.
+An ephemeral invocation does not persist a session for later resume.
+`--last` is not session-selection evidence or an attribution fallback. Use it only
+after independently confirming the intended recorded session, and apply the
+SID+cwd+unique-runtime gate above before any account or process claim about it.
+
+## Limitations
+
+- Remote login can use device authorization with a browser on another machine; follow the OAuth guide instead of requiring a desktop app on the remote host.
+- Inspect the selected binary's `doctor --help` before using its diagnostics; when supported, use the full report for endpoint/remedy details rather than `--summary`. Interpret the failed check, not only the aggregate exit code, and read the emitted JSON schema instead of assuming an older build's keys.
+- Shell environment inheritance follows the selected build's `shell_environment_policy`; inspect the effective configuration. Keep credentials out of prompts.
+- Large file operations may need increased timeout
