@@ -1,0 +1,150 @@
+// CLI language: help text and argument parsing. A leading "bubble" word is optional,
+// and a whole phrase can be passed as one quoted argument: node bubble.js "move 2 to 5".
+import { parseArgs as parseFlags } from 'node:util';
+import { OWNERSHIPS, TYPES } from '../model.js';
+const OPTIONS = {
+    ascii: { type: 'boolean' },
+    fog: { type: 'boolean' },
+    force: { type: 'boolean' },
+    closed: { type: 'boolean' },
+    all: { type: 'boolean' },
+    dir: { type: 'string' },
+    at: { type: 'string' },
+    to: { type: 'string' },
+    ownership: { type: 'string' },
+    help: { type: 'boolean', short: 'h' },
+};
+/** What an option that came without its value needs, said in the bubble language. */
+const NEEDS = {
+    '--to': '--to needs a track name',
+    '--ownership': `--ownership needs a mode: ${OWNERSHIPS.join(', ')}`,
+};
+const flags = (args) => parseFlags({ args, options: OPTIONS, allowPositionals: true, tokens: true });
+export const HELP = `bubble-tracks — the bubble language
+
+  switch [name] [title]         resume track <name>, or create it; no name = the current (else default) track.
+                                A new name close to an open track (flow for flow-analysis) is refused: create makes it.
+                                Names ignore case: Dev resumes dev, and create refuses a case-only twin
+  create <name> [title]         create a new track (refuses if it exists) and make it current
+  switch <name> --ownership <MODE>
+                                set who does the bubbles' work on that track (create and init take it too):
+                                agent (the default), hybrid (the human does the bubbles they pick) or
+                                user (the human does every bubble; the agent hints and checks it).
+                                A hybrid track stays hybrid. After the first done, agent and user only
+                                move into hybrid: agent -> hybrid <- user
+  tracks [--closed | --all]     list the tracks, current marked →; closed ones are hidden unless
+                                --closed (only closed) or --all (everything)
+  close <name> --force          finish and archive a track: read-only for good, no reopen. Also closes
+                                all its forks (side tracks stay open) and pops its parent bubble
+  delete <name> --force         delete a track (not the current one)
+  fork [N] <name>               build on bubble N in a child track <name>; the bubble waits for it. Makes it current
+  diverge [N] <name> [title]    go a different direction from bubble N in a side track <name> (titled after
+                                the bubble unless given); nothing waits. Makes it current
+  init <title>                  create the default track (.bubble-tracks/track.json)
+
+  show                          render the current track + list its bubbles
+  add <title>   | add ? [why]   append a todo (or fog) bubble; a fog says in one line why it's unclear
+  insert at N <title> | insert at N ? [why]
+                                insert a todo (or fog) bubble at position N
+  remove N | N:M                delete a bubble or a range (not while its fork or side track is open)
+  move N to M | move N:M to M   move a bubble or block so it starts at M
+  move N | N:M --to <track>     move a bubble or block to the end of another track
+  rename N <title>              retitle a planned bubble
+  title <text>                  rename the track itself
+  goal <text>                   set the track's goal once: the one end result every bubble serves
+                                (a new goal is a new track; --force rewords it, after the human confirms)
+  guard <text> | guard N <text> add a guard (what not to do; read before acting), or rewrite guard N
+  guard drop N | guard drop --all
+                                drop guard N, or all of them (--all needs --force, after the human confirms)
+  guard show                    list the guards (also printed on switch and after every guard change)
+  handoff <note> | handoff -    save (or clear) the note a fresh chat reads to resume
+  hint N <text> | hint N -      attach (or clear) a note for that bubble
+  own [N | N:M] | own [N | N:M] -
+                                the human takes bubbles to do themselves (◆ ◈ ◇ on the line), or hands them
+                                back to the agent; not done ones. Any time: own on an agent track and
+                                own - on a user track switch it to hybrid, for good (needs --force,
+                                after the human confirms)
+  fog [N | N:M] [TYPE]          turn bubbles into fog (done ones need --force)
+  why [N] <text> | why [N] -    say (or clear) why a fog bubble is unclear: not what it is
+  type [N] <TYPE>               classify a fog bubble
+  answer [N] <text> | answer [N] -
+                                keep (or clear) the human's own words on a fog that stays fog
+  fill [N] <title>              the human's content for a fog bubble: fog -> todo
+  done                          pop the active bubble, then ⏸ stop. The last one closes the track (and its
+                                forks, and a parent whose last bubble it pops): no ask, no reopen
+
+  research [N] [focus]          print the research workflow and bubble N's context, to run once
+                                (subagents welcome); it changes nothing itself
+  finding N <text> | finding N M - | finding N -
+                                note what research found for bubble N (a guide or tip, with its source),
+                                drop finding M, or drop them all
+
+  abilities                     list the abilities: name, type, project or user, description
+  bubble:<ability> [text]       print an ability's workflow to run once on the active bubble or track
+                                (<name>.md in .bubble-tracks/abilities/, then ~/.bubble-tracks/abilities/)
+
+  N: position on the track (omitted = the active bubble). N:M: N through M, inclusive.
+  TYPE: ${TYPES.join(' | ')}  (or kk | ku | uk | uu)
+  MODE: ${OWNERSHIPS.join(' | ')}
+  Options: --dir <repo> (default: cwd)   --ascii (or BUBBLES_ASCII=1)   --force
+           --to <track> (or --to=<track>): add, insert and hint write into that track; the current track stays current
+           a word that starts with - is an option; put text like that after --:  hint 2 -- -v means verbose
+           options go before or after the text, each once: an option inside the text is refused
+           color on a terminal; BUBBLES_COLOR=1/0 forces it, NO_COLOR disables it
+           add <title> --at N  and  add --fog [title]  still work.
+  Exit codes: 0 ok, 1 error, 3 (show only) active bubble is fog — needs the human`;
+/** Node's parse errors are long and speak its own syntax; say them in the bubble language. */
+function flagError(err) {
+    const name = /'(-[^' ]+)/.exec(err.message)?.[1];
+    if (err.code === 'ERR_PARSE_ARGS_UNKNOWN_OPTION')
+        return new Error(`unknown option "${name}" — try: help (text starting with - goes after --)`);
+    if (err.code === 'ERR_PARSE_ARGS_INVALID_OPTION_VALUE')
+        return new Error(NEEDS[name ?? ''] ?? `${name} needs a value`);
+    return err;
+}
+/** Node keeps the last of a repeated option and lifts an option out of the text around it, both
+ *  silently: "add Move --to spacing --to x" would add "Move" to x. Refuse both instead (a repeat
+ *  with the same value changes nothing, so it passes). */
+function checkOptions(tokens) {
+    const seen = new Map();
+    let words = 0; // positionals so far, a leading "bubble" not counted; past 1 they are the text
+    for (const [i, t] of tokens.entries()) {
+        if (t.kind === 'option-terminator')
+            return;
+        if (t.kind === 'positional') {
+            if (!(words === 0 && t.value === 'bubble'))
+                words++;
+            continue;
+        }
+        if (seen.has(t.name) && seen.get(t.name) !== t.value) {
+            throw new Error(`${t.rawName} given twice — give it once (text starting with - goes after --)`);
+        }
+        seen.set(t.name, t.value);
+        if (words > 1 && tokens.slice(i + 1).some(n => n.kind === 'positional')) {
+            throw new Error(`${t.rawName} splits the text — put options after it (text starting with - goes after --)`);
+        }
+    }
+}
+export function parseArgs(argv) {
+    let parsed;
+    try {
+        parsed = flags(argv);
+    }
+    catch (err) {
+        throw flagError(err);
+    }
+    checkOptions(parsed.tokens);
+    const { values: opts, positionals } = parsed;
+    // A whole phrase passed as one argument: "move 2 to 5".
+    const pos = positionals.length === 1 ? positionals[0].trim().split(/\s+/) : positionals;
+    if (pos[0] === 'bubble')
+        pos.shift();
+    return { cmd: pos[0], args: pos.slice(1), opts };
+}
+export const isAddr = (s) => typeof s === 'string' && /^\d+$/.test(s);
+export const isRange = (s) => typeof s === 'string' && /^\d+(:\d+)?$/.test(s);
+export function needAddr(args, usage) {
+    if (!isAddr(args[0]))
+        throw new Error(`usage: ${usage}`);
+    return args.shift();
+}

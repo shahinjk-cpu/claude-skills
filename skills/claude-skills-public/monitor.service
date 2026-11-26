@@ -1,0 +1,10 @@
+[Unit]
+Description=Monitoring page on port 8765 (the monitor skill; no Claude involvement)
+
+[Service]
+ExecStart=/usr/bin/env python3 %h/.claude/skills/monitor/monitor.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

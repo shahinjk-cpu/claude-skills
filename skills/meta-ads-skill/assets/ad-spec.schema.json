@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "meta-ads/ad-spec-v1",
+  "title": "meta-ads ads.json (spec v1)",
+  "description": "Structural schema for ads.json. SPEC.md is the full contract; check.py also verifies references, files, ratios and CTA codes.",
+  "type": "object",
+  "required": [
+    "spec_version",
+    "campaign",
+    "brands",
+    "media",
+    "ads"
+  ],
+  "properties": {
+    "spec_version": {
+      "const": 1
+    },
+    "campaign": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "brands": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "page_name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "media ID of the profile picture (image) or of a 1:1 placeholder"
+          },
+          "ig_handle": {
+            "type": "string"
+          },
+          "ig_avatar": {
+            "type": "string",
+            "description": "media ID"
+          },
+          "verified": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "page_name",
+          "avatar"
+        ]
+      }
+    },
+    "media": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "placeholder"
+            ]
+          },
+          "src": {
+            "type": "string"
+          },
+          "poster": {
+            "type": "string"
+          },
+          "ratio": {
+            "type": "string",
+            "pattern": "^\\s*[0-9.]+\\s*[:x/]\\s*[0-9.]+\\s*$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "placeholder"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "ratio"
+              ]
+            },
+            "else": {
+              "required": [
+                "src"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "defaults": {
+      "$ref": "#/$defs/adFields"
+    },
+    "ads": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/adFields"
+          },
+          {
+            "required": [
+              "id",
+              "format"
+            ]
+          },
+          {
+            "if": {
+              "properties": {
+                "format": {
+                  "const": "carousel"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "cards"
+              ]
+            },
+            "else": {
+              "required": [
+                "creative"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "notes": {
+      "type": "string"
+    },
+    "source": {}
+  },
+  "$defs": {
+    "creative": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "ratio key (e.g. '4:5') -> media ID",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "engagement": {
+      "type": "object",
+      "properties": {
+        "reactions": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "comments": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "shares": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "likes": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "views": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "adFields": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,40}$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "brand": {
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "image",
+            "video",
+            "carousel"
+          ]
+        },
+        "primary_text": {
+          "type": "string"
+        },
+        "headline": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "cta": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_link": {
+          "type": "string"
+        },
+        "destination_url": {
+          "type": "string"
+        },
+        "creative": {
+          "$ref": "#/$defs/creative"
+        },
+        "cards": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "creative"
+            ],
+            "properties": {
+              "creative": {
+                "$ref": "#/$defs/creative"
+              },
+              "headline": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "destination_url": {
+                "type": "string"
+              },
+              "display_link": {
+                "type": "string"
+              },
+              "cta": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "engagement": {
+          "$ref": "#/$defs/engagement"
+        },
+        "placements": {
+          "oneOf": [
+            {
+              "const": "auto"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "exclude"
+              ],
+              "properties": {
+                "exclude": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "source": {},
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

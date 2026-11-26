@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>知识讲解动画舞台</title>
+  <style>
+    /* @fonts */
+    html, body { margin: 0; padding: 0; background: #03050a; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div id="stage"><div id="world"></div></div>
+  <script src="stage_clock.js"></script>
+  <script src="visual_kit.js"></script>
+  <script src="timing.js"></script>
+  <script>
+    (function () {
+      const S = window.SVSStage;
+      const Q = new URLSearchParams(location.search);
+      const RATIO = Q.get("ratio") || "16x9";
+      const DIMS = { "16x9": [1920, 1080], "9x16": [1080, 1920], "1x1": [1080, 1080], "3x4": [1080, 1440] };
+      const [W, H] = DIMS[RATIO] || DIMS["16x9"];
+      const TDATA = window.SVS_TIMING || {
+        title: "知识讲解示例",
+        subtitle_en: "VISUAL EXPLAINER",
+        question: "为什么越直观的印象，越容易和事实相反？",
+        font_mode: "sans",
+        total_sec: 12,
+        palette: { bg: "#05070d", ink: "#f1f5f9", sub: "#94a3b8", accent: "#5ce1e6", accent2: "#f59e0b" },
+        lines: [
+          { id: "h1", text: "第一眼看起来[一模一样]", hook: true, start: 0.3, end: 2.3 },
+          { id: "h2", text: "真实差距却高达[14 倍]", hook: true, start: 2.6, end: 4.6 },
+          { id: "card_title", text: "知识讲解示例", card: true, start: 4.9, end: 8.1 },
+          { id: "c1", text: "换一个[观察视角]，真相立刻显形", start: 8.4, end: 11.4, scene: true },
+        ],
+      };
+
+      const stage = document.getElementById("stage");
+      const K = window.SVSVisualKit.create({
+        width: W,
+        height: H,
+        stage,
+        seed: 29,
+        bloom: 0.92,
+        vignette: 0.56,
+        grain: 0.16,
+        palette: TDATA.palette,
+      });
+
+      const lines = TDATA.lines || [];
+      const totalDur = Math.max(4, Number(TDATA.total_sec || 12));
+      K.setCaptions(lines, TDATA.font_mode || "sans");
+      K.setAtmosphereKeys([
+        [0, { haze: 0.28, warm: 0.08, stars: 0.65, dust: 0.32, bokeh: 0.16, grid: 0.0 }],
+        [totalDur * 0.4, { haze: 0.42, warm: 0.16, stars: 0.72, dust: 0.42, bokeh: 0.24, grid: 0.25 }],
+        [totalDur, { haze: 0.32, warm: 0.2, stars: 0.6, dust: 0.3, bokeh: 0.18, grid: 0.0 }],
+      ]);
+
+      const titleCard = lines.find((x) => x.card);
+      const tCardStart = titleCard ? titleCard.start : 4.8;
+      const tCardEnd = titleCard ? titleCard.end : 8.0;
+
+      // 预生成确定性轨道粒子
+      const rng = S.rng(77);
+      const orbitPts = Array.from({ length: 64 }, () => ({
+        ang: rng() * S.TAU,
+        rad: 0.62 + rng() * 0.72,
+        spd: (rng() > 0.5 ? 1 : -1) * (0.18 + rng() * 0.35),
+        sz: 2 + rng() * 5,
+      }));
+
+      const scenes = lines
+        .filter((l, idx) => idx === 0 || l.card || l.scene)
+        .map((l, idx, arr) => ({
+          id: l.id || `s${idx + 1}`,
+          label: l.text.replace(/[\[\]]/g, "").slice(0, 14),
+          start: l.start,
+          end: arr[idx + 1] ? arr[idx + 1].start : totalDur,
+        }));
+
+      function render(t) {
+        K.begin(t);
+        const c = K.ctx;
+        const cx = W / 2;
+        const cy = H * (H > W ? 0.38 : 0.44);
+        const baseR = Math.min(W, H) * 0.155;
+
+        // 1) 开篇冷开场主视觉：放大材质球 + 发光轨道 + 脉冲亮核
+        const introA = S.envelope(t, 0.0, 0.55, tCardStart - 0.1, tCardStart + 0.25);
+        if (introA > 0.002) {
+          c.save();
+          c.globalAlpha = introA;
+          const grow = 0.82 + 0.18 * S.ease.outQuint(S.prog(t, 0.0, 1.4));
+          const rr = baseR * grow;
+          // 三层发光同心椭圆弧
+          for (let i = 0; i < 3; i++) {
+            const pts = [];
+            const rx = rr * (1.25 + i * 0.28);
+            const ry = rr * (0.48 + i * 0.14);
+            const rot = t * (0.16 - i * 0.04) + i * 0.7;
+            for (let k = 0; k <= 54; k++) {
+              const a = (k / 54) * S.TAU;
+              const px = Math.cos(a) * rx;
+              const py = Math.sin(a) * ry;
+              pts.push([cx + px * Math.cos(rot) - py * Math.sin(rot), cy + px * Math.sin(rot) + py * Math.cos(rot)]);
+            }
+            K.drawLuminousLine(c, pts, i === 1 ? K.P.accent2 : K.P.accent, 2.0 - i * 0.35, 0.62 - i * 0.14);
+          }
+          K.drawMaterialOrb(c, cx, cy, rr * 0.78, { color: K.P.accent, atmo: 0.95 });
+          K.drawCore(c, cx + Math.cos(t * 0.9) * rr * 1.28, cy + Math.sin(t * 0.9) * rr * 0.42, 10, 0.95, K.P.accent2);
+          c.restore();
+        }
+
+        // 2) 片名海报卡（发光宋体大字 + 英文副标 + 核心设问）
+        const cardA = S.envelope(t, tCardStart, tCardStart + 0.45, tCardEnd - 0.35, tCardEnd);
+        if (cardA > 0.002) {
+          c.save();
+          c.globalAlpha = cardA;
+          K.drawHalo(c, cx, cy, baseR * 2.2, 0.32, K.P.accent);
+          for (let i = 0; i < 3; i++) {
+            c.strokeStyle = K.rgba(K.P.accent, 0.26 - i * 0.07);
+            c.lineWidth = 1.6;
+            c.beginPath();
+            c.arc(cx, cy, baseR * (1.15 + i * 0.32 + 0.04 * Math.sin(t * 1.2 + i)), 0, S.TAU);
+            c.stroke();
+          }
+          const tMaxW = W * 0.84;
+          const fitSize = (txt, px, weight, fam, minPx) => {
+            let s = px;
+            c.font = `${weight} ${s}px ${fam}`;
+            const m = c.measureText(txt).width;
+            if (m > tMaxW && m > 0) {
+              s = Math.max(minPx, Math.floor((s * tMaxW) / m));
+              c.font = `${weight} ${s}px ${fam}`;
+            }
+            return s;
+          };
+          const tSize = fitSize(TDATA.title || "知识讲解", Math.round(Math.min(W, H) * (H > W ? 0.11 : 0.12)), 900, K.fontSerif, 48);
+          c.textAlign = "center";
+          c.textBaseline = "middle";
+          c.shadowColor = K.rgba(K.P.accent, 0.78);
+          c.shadowBlur = 36;
+          c.fillStyle = "#ffffff";
+          c.fillText(TDATA.title || "知识讲解", cx, cy - 10);
+          c.shadowBlur = 0;
+          fitSize(String(TDATA.subtitle_en || "KNOWLEDGE EXPLAINER").toUpperCase(), Math.round(tSize * 0.22), 500, K.fontSans, 16);
+          c.fillStyle = K.rgba(K.P.accent, 0.85);
+          c.fillText(String(TDATA.subtitle_en || "KNOWLEDGE EXPLAINER").toUpperCase(), cx, cy + tSize * 0.72);
+          fitSize(TDATA.question || "", Math.round(tSize * 0.26), 500, K.fontSans, 20);
+          c.fillStyle = K.rgba(K.P.ink, 0.82);
+          c.fillText(TDATA.question || "", cx, cy + tSize * 1.22);
+          c.restore();
+        }
+
+        // 3) 机制拆解阶段：双对比光体 + 发光数据连线 + 放大镜特写
+        const bodyA = S.prog(t, tCardEnd - 0.1, tCardEnd + 0.45, S.ease.outCubic);
+        if (bodyA > 0.002) {
+          c.save();
+          c.globalAlpha = bodyA;
+          const spanX = W * (H > W ? 0.24 : 0.22);
+          const lx = cx - spanX;
+          const rx = cx + spanX;
+          const pReveal = S.ease.outQuint(S.prog(t, tCardEnd, tCardEnd + 1.8));
+          const leftR = baseR * 0.50;
+          const rightR = baseR * (0.26 + 0.40 * pReveal);
+          K.drawMaterialOrb(c, lx, cy, leftR, { color: K.P.accent2, atmo: 0.62 });
+          K.drawMaterialOrb(c, rx, cy, rightR, { color: K.P.accent, atmo: 0.78 });
+
+          // 连接弧线与粒子脉冲
+          const arcPts = [];
+          for (let k = 0; k <= 36; k++) {
+            const u = k / 36;
+            const px = S.lerp(lx + leftR * 0.8, rx - rightR * 0.8, u);
+            const py = cy - Math.sin(u * Math.PI) * baseR * 0.65;
+            arcPts.push([px, py]);
+          }
+          K.drawLuminousLine(c, arcPts, K.P.accent, 2.4, 0.85);
+          const pulseU = (t * 0.45) % 1;
+          const pIdx = Math.min(arcPts.length - 1, Math.floor(pulseU * arcPts.length));
+          K.drawCore(c, arcPts[pIdx][0], arcPts[pIdx][1], 8, 1, "#ffffff");
+
+          // 动态轨道粒子
+          for (const op of orbitPts) {
+            const a = op.ang + t * op.spd;
+            const px = rx + Math.cos(a) * rightR * op.rad * 1.4;
+            const py = cy + Math.sin(a) * rightR * op.rad * 0.9;
+            K.drawSprite(c, K.P.accent, px, py, op.sz * 2.2, 0.55, "core");
+          }
+          c.restore();
+        }
+
+        K.end(t);
+      }
+
+      S.mount({ width: W, height: H, fps: 30, duration: totalDur, stage, scenes, render });
+    })();
+  </script>
+</body>
+</html>

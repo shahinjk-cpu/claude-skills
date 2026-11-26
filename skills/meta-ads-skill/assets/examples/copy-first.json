@@ -1,0 +1,122 @@
+{
+  "spec_version": 1,
+  "campaign": {
+    "name": "Copy-first test",
+    "notes": "Fictional brand. No creative exists yet; three image concepts shared by six ads."
+  },
+  "brands": {
+    "b_main": {
+      "page_name": "Northstep Shoes",
+      "ig_handle": "northstep",
+      "avatar": "m_logo_ph"
+    }
+  },
+  "media": {
+    "m_logo_ph": {
+      "kind": "placeholder",
+      "ratio": "1:1",
+      "label": "Northstep logo",
+      "color": "#ff6e40"
+    },
+    "m_trail": {
+      "kind": "placeholder",
+      "ratio": "4:5",
+      "label": "Runner on a muddy trail, low angle, morning mist",
+      "color": "#2f4a3a"
+    },
+    "m_trail_tall": {
+      "kind": "placeholder",
+      "ratio": "9:16",
+      "label": "Same trail shot, vertical crop",
+      "color": "#2f4a3a"
+    },
+    "m_sole": {
+      "kind": "placeholder",
+      "ratio": "1:1",
+      "label": "Close-up: tread pressing into a puddle",
+      "color": "#4a3a2f"
+    },
+    "m_family": {
+      "kind": "placeholder",
+      "ratio": "4:5",
+      "label": "Parent and kid walking in rain boots",
+      "color": "#2f3e4a"
+    }
+  },
+  "defaults": {
+    "cta": "SHOP_NOW",
+    "destination_url": "https://northstep.example/fall"
+  },
+  "ads": [
+    {
+      "id": "H1",
+      "group": "Trail image",
+      "label": "Curiosity",
+      "format": "image",
+      "primary_text": "What if your shoes actually liked rain?",
+      "headline": "Meet the Trail Runner",
+      "creative": {
+        "4:5": "m_trail",
+        "9:16": "m_trail_tall"
+      }
+    },
+    {
+      "id": "H2",
+      "group": "Trail image",
+      "label": "Urgency",
+      "format": "image",
+      "primary_text": "Launch pricing ends Sunday. After that the Trail Runner goes back to full price, and your feet go back to being wet.",
+      "headline": "Launch price ends Sunday",
+      "creative": {
+        "4:5": "m_trail",
+        "9:16": "m_trail_tall"
+      }
+    },
+    {
+      "id": "H3",
+      "group": "Trail image",
+      "label": "Spec-led",
+      "format": "image",
+      "primary_text": "Waterproof membrane. Recycled rubber outsole. 4 mm lugs. 280 g.\n\nEverything you need for wet miles, nothing you don't.",
+      "headline": "Built for wet miles",
+      "creative": {
+        "4:5": "m_trail",
+        "9:16": "m_trail_tall"
+      }
+    },
+    {
+      "id": "C1",
+      "group": "Sole image",
+      "label": "One-liner",
+      "format": "image",
+      "primary_text": "Puddles are optional now.",
+      "headline": "From $129",
+      "creative": {
+        "1:1": "m_sole"
+      }
+    },
+    {
+      "id": "C2",
+      "group": "Sole image",
+      "label": "Long story",
+      "format": "image",
+      "primary_text": "We spent two years testing outsoles on the wettest trails we could find. Most of them failed. One of them didn't, and it's on every pair we make this fall.\n\nTake it for a walk in the worst weather you can find.",
+      "headline": "The sole that passed",
+      "cta": "LEARN_MORE",
+      "creative": {
+        "1:1": "m_sole"
+      }
+    },
+    {
+      "id": "F1",
+      "label": "Family angle",
+      "format": "image",
+      "primary_text": "Matching pairs for every puddle-jumper in the house.",
+      "headline": "Kids' sizes now in stock",
+      "description": "Free exchanges on kids' sizes",
+      "creative": {
+        "4:5": "m_family"
+      }
+    }
+  ]
+}

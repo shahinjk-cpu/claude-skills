@@ -1,0 +1,244 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/jxy162/data-screen-skill/knowledge/data/schema.json",
+  "title": "Data Screen Snapshot",
+  "description": "数据大屏统一数据契约 v1.0。只有 meta 必填，其余模块可缺省并由前端降级。",
+  "type": "object",
+  "required": ["meta"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["updatedAt", "source"],
+      "properties": {
+        "schemaVersion": { "type": "string", "default": "1.0", "examples": ["1.0"] },
+        "screen": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "ISO 8601，必须带时区" },
+        "source": { "type": "string", "enum": ["mock", "rest", "sse", "ws", "inline", "postMessage"] },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "kpis": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/kpi" }
+    },
+    "series": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "$ref": "#/definitions/timeSeries" },
+          { "$ref": "#/definitions/itemSeries" },
+          { "$ref": "#/definitions/radarSeries" },
+          { "$ref": "#/definitions/gaugeValue" },
+          { "$ref": "#/definitions/resourceSeries" }
+        ]
+      }
+    },
+    "lists": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["rows"],
+        "properties": {
+          "columns": { "type": "array", "items": { "type": "string" } },
+          "rows": { "type": "array", "items": { "type": "object" } }
+        },
+        "additionalProperties": true
+      }
+    },
+    "geo": {
+      "type": "object",
+      "properties": {
+        "hub": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "coord": { "$ref": "#/definitions/coord" }
+          },
+          "additionalProperties": true
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+              "level": { "type": "string", "enum": ["normal", "major", "critical"] }
+            },
+            "additionalProperties": true
+          }
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["coords"],
+            "properties": {
+              "fromName": { "type": "string" },
+              "toName": { "type": "string" },
+              "coords": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/definitions/coord" } }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "title"],
+        "properties": {
+          "level": { "type": "string", "enum": ["minor", "major", "critical"] },
+          "title": { "type": "string" },
+          "area": { "type": "string" },
+          "type": { "type": "string" },
+          "time": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "ticker": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "oneOf": [
+            { "$ref": "#/definitions/timeSeries" },
+            { "$ref": "#/definitions/itemSeries" }
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": true,
+  "definitions": {
+    "kpi": {
+      "type": "object",
+      "required": ["label", "value"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "number" },
+        "unit": { "type": "string" },
+        "delta": { "type": "number", "description": "百分比数值，6.4 表示 +6.4%" },
+        "trend": { "type": "string", "enum": ["up", "down", "flat"] },
+        "precision": { "type": "integer", "minimum": 0, "maximum": 4 }
+      },
+      "additionalProperties": true
+    },
+    "timeSeries": {
+      "type": "object",
+      "required": ["categories", "series"],
+      "properties": {
+        "unit": { "type": "string" },
+        "categories": { "type": "array", "items": { "type": ["string", "number"] } },
+        "series": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type", "data"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string", "enum": ["bar", "line", "scatter", "effectScatter", "pictorialBar"] },
+              "data": { "type": "array", "items": { "type": ["number", "null"] } },
+              "stack": { "type": "string" },
+              "yAxisIndex": { "type": "integer" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "itemSeries": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "unit": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "number" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "radarSeries": {
+      "type": "object",
+      "required": ["indicators", "series"],
+      "properties": {
+        "indicators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": { "name": { "type": "string" }, "max": { "type": "number" } },
+            "additionalProperties": true
+          }
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "properties": { "name": { "type": "string" }, "value": { "type": "array", "items": { "type": "number" } } },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "gaugeValue": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "number" },
+        "label": { "type": "string" },
+        "unit": { "type": "string" },
+        "min": { "type": "number" },
+        "max": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "resourceSeries": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "done", "idle"],
+            "properties": {
+              "name": { "type": "string" },
+              "done": { "type": "number" },
+              "idle": { "type": "number" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "coord": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    }
+  }
+}

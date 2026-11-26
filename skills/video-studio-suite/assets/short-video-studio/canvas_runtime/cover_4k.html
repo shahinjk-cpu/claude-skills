@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>双比例 4K 代码封面</title>
+  <style>
+    /* @fonts */
+    html, body { margin: 0; padding: 0; background: #02040a; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div id="stage"><div id="world"></div></div>
+  <script src="stage_clock.js"></script>
+  <script src="visual_kit.js"></script>
+  <script src="cover_data.js"></script>
+  <script>
+    (function () {
+      const S = window.SVSStage;
+      const Q = new URLSearchParams(location.search);
+      const MODE = Q.get("ratio") === "3x4" ? "3x4" : "16x9";
+      const SHOW_GUIDES = Q.get("guides") === "1";
+      const [W, H] = MODE === "3x4" ? [1080, 1440] : [1920, 1080];
+      // 横版 16:9 核心内容强锁中央 4:3 (x in [240, 1680])，竖版 3:4 四周留边 >=60px
+      const SAFE_X = MODE === "16x9" ? [240, 1680] : [60, 1020];
+      const SAFE_Y = MODE === "16x9" ? [56, 1024] : [60, 1380];
+
+      const DATA = window.SVS_COVER_DATA || {
+        kicker: "一眼看穿背后真相",
+        hero_lines: ["核心金句", "直击本质"],
+        title: "知识短片",
+        font_mode: "serif",
+        palette: { bg: "#040711", ink: "#f1f5f9", sub: "#94a3b8", accent: "#5ce1e6", accent2: "#f59e0b", alert: "#ff6b57" },
+      };
+
+      const stage = document.getElementById("stage");
+      const K = window.SVSVisualKit.create({
+        width: W,
+        height: H,
+        stage,
+        seed: 41,
+        bloom: 1.15,
+        vignette: 0.52,
+        grain: 0.12,
+        palette: DATA.palette,
+      });
+      K.setAtmosphereKeys([[0, { haze: 0.34, warm: 0.18, stars: 0.72, dust: 0.32, bokeh: 0.22, camDrift: 0 }]]);
+
+      const fontFam = DATA.font_mode === "sans" ? K.fontSans : K.fontSerif;
+      const LAY =
+        MODE === "16x9"
+          ? { gx: 1210, gy: 390, gr: 330, kickSize: 48, kickY: 715, heroSize: 176, heroY: 902, titleSize: 34, titleY: 988 }
+          : { gx: 540, gy: 455, gr: 350, kickSize: 44, kickY: 865, heroSize: 188, heroY: [1068, 1265], titleSize: 34, titleY: 1352 };
+
+      function checkBounds(label, x0, x1) {
+        if (x0 < SAFE_X[0] - 0.5 || x1 > SAFE_X[1] + 0.5) {
+          console.error(`COVER_OUT_OF_SAFE(${MODE}): ${label} x=[${Math.round(x0)},${Math.round(x1)}] safe=[${SAFE_X[0]},${SAFE_X[1]}]`);
+        }
+      }
+
+      function drawGlowHeading(c, text, cx, y, maxPx, col) {
+        const room = SAFE_X[1] - SAFE_X[0] - 56;
+        let px = maxPx;
+        c.save();
+        c.textAlign = "center";
+        c.textBaseline = "alphabetic";
+        c.font = `900 ${px}px ${fontFam}`;
+        let tw = c.measureText(text).width;
+        if (tw > room) {
+          px = Math.max(48, Math.floor((px * room) / tw));
+          c.font = `900 ${px}px ${fontFam}`;
+          tw = c.measureText(text).width;
+        }
+        checkBounds(text, cx - tw / 2, cx + tw / 2);
+        c.shadowColor = K.rgba(col, 0.88);
+        c.shadowBlur = 42;
+        c.fillStyle = K.rgba(K.mix(col, "#ffffff", 0.38), 1);
+        c.fillText(text, cx, y);
+        c.shadowBlur = 0;
+        c.fillStyle = K.rgba(K.mix(col, "#ffffff", 0.82), 1);
+        c.fillText(text, cx, y);
+        c.restore();
+      }
+
+      function render(t) {
+        K.begin(t);
+        const c = K.ctx;
+        const cx = W / 2;
+
+        // 1) 主体视觉（与成片一致的发光材质球 + 光环 + 亮核）
+        const sx = Math.min(SAFE_X[1] - LAY.gr * 0.92, Math.max(SAFE_X[0] + LAY.gr * 0.92, LAY.gx));
+        K.drawHalo(c, sx, LAY.gy, LAY.gr * 1.45, 0.26, K.P.accent);
+        for (let i = 0; i < 4; i++) {
+          c.save();
+          c.translate(sx, LAY.gy);
+          c.scale(1, 0.46);
+          c.strokeStyle = K.rgba(i === 1 ? K.P.accent2 : K.P.accent, 0.54 - i * 0.11);
+          c.lineWidth = 2.0;
+          c.beginPath();
+          c.arc(0, 0, LAY.gr * (0.64 + i * 0.22), 0, S.TAU);
+          c.stroke();
+          c.restore();
+        }
+        K.drawMaterialOrb(c, sx, LAY.gy, LAY.gr * 0.56, { color: K.P.accent, atmo: 1.0 });
+        K.drawCore(c, sx + LAY.gr * 0.62, LAY.gy - LAY.gr * 0.2, LAY.gr * 0.06, 1.0, K.P.accent2);
+        checkBounds("subject", sx - LAY.gr * 0.88, sx + LAY.gr * 0.88);
+
+        // 2) 三层文字：钩子句 / 发光金句主标题 / 片名
+        c.save();
+        c.textAlign = "center";
+        c.font = `600 ${LAY.kickSize}px ${fontFam}`;
+        c.fillStyle = K.rgba(K.P.ink, 0.92);
+        c.shadowColor = "rgba(0,0,0,0.85)";
+        c.shadowBlur = 16;
+        const kickRoom = SAFE_X[1] - SAFE_X[0] - 48;
+        let kPx = LAY.kickSize;
+        if (c.measureText(DATA.kicker).width > kickRoom) {
+          kPx = Math.max(26, Math.floor((kPx * kickRoom) / c.measureText(DATA.kicker).width));
+          c.font = `600 ${kPx}px ${fontFam}`;
+        }
+        const kw = c.measureText(DATA.kicker).width;
+        checkBounds("kicker", cx - kw / 2, cx + kw / 2);
+        c.fillText(DATA.kicker, cx, LAY.kickY);
+        c.restore();
+
+        const heroColor = K.P.alert || K.P.accent2;
+        const heroLines = Array.isArray(DATA.hero_lines) ? DATA.hero_lines : [String(DATA.hero_lines || "核心金句")];
+        if (MODE === "16x9") {
+          drawGlowHeading(c, heroLines.join(""), cx, LAY.heroY, LAY.heroSize, heroColor);
+        } else {
+          heroLines.slice(0, 2).forEach((ln, idx) => {
+            drawGlowHeading(c, ln, cx, LAY.heroY[idx] || LAY.heroY[0], LAY.heroSize, heroColor);
+          });
+        }
+
+        c.save();
+        c.textAlign = "center";
+        const titleRoom = SAFE_X[1] - SAFE_X[0] - 48;
+        let tPx = LAY.titleSize;
+        c.font = `600 ${tPx}px ${fontFam}`;
+        let tw = c.measureText(DATA.title).width;
+        if (tw > titleRoom && tw > 0) {
+          tPx = Math.max(20, Math.floor((tPx * titleRoom) / tw));
+          c.font = `600 ${tPx}px ${fontFam}`;
+          tw = c.measureText(DATA.title).width;
+        }
+        c.fillStyle = K.rgba(K.P.accent2, 0.94);
+        c.shadowColor = K.rgba(K.P.accent2, 0.55);
+        c.shadowBlur = 14;
+        checkBounds("title", cx - tw / 2, cx + tw / 2);
+        c.fillText(DATA.title, cx, LAY.titleY);
+        c.restore();
+
+        K.end(t);
+
+        if (SHOW_GUIDES) {
+          c.save();
+          c.fillStyle = "rgba(244,63,94,0.16)";
+          c.strokeStyle = "#f43f5e";
+          c.lineWidth = 3;
+          if (MODE === "16x9") {
+            c.fillRect(0, 0, SAFE_X[0], H);
+            c.fillRect(SAFE_X[1], 0, W - SAFE_X[1], H);
+            c.strokeRect(SAFE_X[0], SAFE_Y[0], SAFE_X[1] - SAFE_X[0], SAFE_Y[1] - SAFE_Y[0]);
+          } else {
+            c.strokeRect(SAFE_X[0], SAFE_Y[0], SAFE_X[1] - SAFE_X[0], SAFE_Y[1] - SAFE_Y[0]);
+          }
+          c.restore();
+        }
+      }
+
+      S.mount({ width: W, height: H, fps: 30, duration: 1, stage, render });
+    })();
+  </script>
+</body>
+</html>

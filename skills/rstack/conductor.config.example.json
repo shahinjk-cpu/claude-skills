@@ -1,0 +1,189 @@
+{
+  "_comment": "Copy to <repo>/conductor.config.json or ~/.claude/conductor.config.json and edit. Model ids are examples; use what your accounts offer.",
+  "roles": {
+    "conductor": {
+      "via": "claude",
+      "model": "opus"
+    },
+    "planner": {
+      "via": "claude",
+      "model": "fable"
+    },
+    "plan_reviewer": {
+      "via": "codex",
+      "model": "gpt-6.2-astra"
+    },
+    "investigator": {
+      "via": "claude",
+      "model": "opus"
+    },
+    "builder_high_risk": {
+      "via": "claude",
+      "model": "opus"
+    },
+    "builder_normal": {
+      "via": "claude",
+      "model": "sonnet"
+    },
+    "builder_easy": {
+      "via": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free"
+    },
+    "reviewer": {
+      "via": "codex",
+      "model": ""
+    },
+    "plan_panel": [
+      {
+        "via": "claude",
+        "model": "fable"
+      },
+      {
+        "via": "codex",
+        "model": "gpt-6.2-astra"
+      },
+      {
+        "via": "claude",
+        "model": "opus"
+      },
+      {
+        "via": "openrouter-api",
+        "model": "<any OpenRouter model, e.g. google/gemini-2.5-pro>"
+      }
+    ]
+  },
+  "fallbacks": {
+    "opus": [
+      "sonnet"
+    ],
+    "codex": [
+      "claude:sonnet"
+    ],
+    "opencode/deepseek-v4.1-flash-free": [
+      "deepseek/deepseek-flash",
+      "claude:haiku"
+    ],
+    "fable": [
+      "opus"
+    ],
+    "gpt-6.2-astra": [
+      "claude:fable",
+      "claude:opus"
+    ]
+  },
+  "review_policy": {
+    "docs_wording_generated": "diff read and CI; includes fully specified test-only coverage",
+    "normal_code": "one independent review checking spec and outcome",
+    "high_impact_parts": "one stronger independent review checking the spec, real path and risky failure cases; prefer a different family from the builder",
+    "large_work_items": "one outcome review per complete item; reuse a part outcome when it covers the item",
+    "plans_and_designs": "large work only; two or three independent model families, findings combined once",
+    "p1_loops": "fix P1s inside the landing and let CI judge; for security, money, auth, data integrity or a production incident, the same reviewer checks only the fix once"
+  },
+  "autonomy": {
+    "proceed_without_asking": [
+      "branches",
+      "drafts",
+      "reads",
+      "reviews",
+      "local_runs",
+      "ci",
+      "queue_rulings",
+      "close_landed_prs"
+    ],
+    "pause_for": [
+      "passwords_mfa_sign_ins",
+      "applies",
+      "merges_to_protected_branches",
+      "org_or_security_settings",
+      "secrets_in_human_accounts",
+      "new_spend",
+      "destructive_acts"
+    ]
+  },
+  "caps": {
+    "windows": "no fixed count; limited by lanes, memory, slots and usage",
+    "running_agents_per_window": 3,
+    "local_heavy_run_slots": 2,
+    "commits_per_train": 40,
+    "prs_per_train": 6,
+    "trains_in_ci": 2
+  },
+  "merge_queue": {
+    "repository": "<owner>/<repo>",
+    "main_branch": "main",
+    "push_gate": {
+      "pr_description_command": ["<pr-description-check>"],
+      "secret_scan_command": ["<range-secret-scan>"],
+      "history_walk_command": [],
+      "test_command": ["<test-runner>"],
+      "test_paths": ["<test-directory>/*"],
+      "test_families": [
+        {"name": "<prior-failure-family>", "paths": ["<family-file-pattern>"], "min_files": 1}
+      ],
+      "reader_path_prefixes": [],
+      "module_test_names": ["test_{module}.*", "test_{module}_*", "{module}.test.*", "{module}.spec.*"],
+      "blocking_suites": [
+        {"name": "data reads", "inputs": ["<data-read-input-pattern>"], "command": ["<ci-data-read-command>"]},
+        {"name": "security scan", "inputs": ["<scanner-input-pattern>"], "command": ["<ci-pinned-scanner-command>"]}
+      ]
+    },
+    "merge_when_green": {
+      "min_workflows": 1,
+      "advisory_workflow_paths": [],
+      "deploy_workflow": "<deploy-workflow-id-or-filename>",
+      "freeze_windows": [],
+      "deploy_lead_minutes": 30,
+      "poll_seconds": 60,
+      "log_file": "<queue-log-path>"
+    }
+  },
+  "difficulty_grades": {
+    "frontier": [
+      {
+        "via": "claude",
+        "model": "fable"
+      },
+      {
+        "via": "codex",
+        "model": "gpt-6.2-astra"
+      }
+    ],
+    "hard": [
+      {
+        "via": "claude",
+        "model": "opus"
+      }
+    ],
+    "normal": [
+      {
+        "via": "claude",
+        "model": "sonnet"
+      }
+    ],
+    "easy": [
+      {
+        "via": "opencode",
+        "model": "opencode/deepseek-v4.1-flash-free"
+      },
+      {
+        "via": "opencode",
+        "model": "<a Kimi, Muse, Qwen or GLM model from `opencode models`>"
+      }
+    ]
+  },
+  "hierarchy": {
+    "main_conductor": "one window: plan, cross-lane schedule, important decisions, merge queue",
+    "lane_windows": "sub-conductors: run their own builders and reviewers, never merge, escalate important decisions",
+    "max_depth": 2
+  },
+  "planning": {
+    "plan_for": "large-scale work only (multi-area features, migrations, new subsystems, multi-day programmes)",
+    "tasks_and_bug_fixes": "no plan: a short spec straight to a builder"
+  },
+  "metrics": {
+    "parts_file": "metrics/parts.tsv",
+    "routing_review": "weekly",
+    "move_down_when": "5+ parts, first pass >= 80%, no escaped defects"
+  },
+  "trust_tiers": "references/trust.md"
+}

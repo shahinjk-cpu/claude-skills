@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- CV template. Copy to the session scratchpad, fill from curriculum/profile.md, convert with:
+     soffice --headless --convert-to pdf:writer_web_pdf_Export --outdir <workspace>/<company> cv.html
+     LibreOffice ignores CSS floats: keep title/date rows as <table width="100%">. Target: max 2 pages. -->
+<html lang="en"><head><meta charset="utf-8"><title>{{NAME}} — CV</title>
+<style>
+@page { size: A4; margin: 11mm 14mm 10mm 14mm; }
+body { font-family: Carlito, Calibri, "Liberation Sans", sans-serif; font-size: 9.5pt; color: #222; line-height: 1.3; }
+h1 { font-size: 19pt; color: #1f4e66; text-align: center; margin: 0; }
+.sub { text-align: center; font-size: 11pt; color: #1f4e66; margin: 1px 0 2px 0; font-weight: bold; }
+.contact { text-align: center; font-size: 9pt; margin: 0 0 1px 0; }
+h2 { font-size: 10.5pt; color: #1f4e66; border-bottom: 1px solid #1f4e66; margin: 8px 0 3px 0; padding-bottom: 1px; letter-spacing: 0.5px; }
+p { margin: 2px 0; text-align: justify; }
+ul { margin: 1px 0 3px 0; padding-left: 16px; }
+li { margin: 1px 0; text-align: justify; }
+table.hdr { border-collapse: collapse; margin-top: 5px; }
+table.hdr td { padding: 0; font-size: 9.5pt; }
+.meta { font-style: italic; color: #555; font-size: 9pt; margin: 0; page-break-after: avoid; }
+table.hdr, h2 { page-break-after: avoid; }  /* keep a role's title with its first bullets */
+.ref { margin: 1px 0; font-size: 9pt; }
+</style></head><body>
+<h1>{{NAME}}</h1>
+<p class="sub">{{HEADLINE_FOR_THIS_JOB}}</p>
+<p class="contact">{{LOCATION}} • {{WORK_MODE}} • {{LANGUAGES}}</p>
+<p class="contact">{{PHONE}} • {{EMAIL}} • {{LINKEDIN}}</p>
+
+<h2>SUMMARY</h2>
+<p>{{3–5 lines tailored to the posting, using only profile.md facts}}</p>
+
+<h2>SKILLS</h2>
+<ul>
+<li><b>{{Group}}:</b> {{items, posting's keywords first}}</li>
+</ul>
+
+<h2>EXPERIENCE</h2>
+<table class="hdr" width="100%"><tr><td width="75%"><b>{{Title}} | {{Company}}</b></td><td align="right">{{start}} – {{end}}</td></tr></table>
+<p class="meta">{{Employment type}} • {{Location}}</p>
+<ul>
+<li>{{factual bullet}}</li>
+</ul>
+
+<h2>EDUCATION</h2>
+<p>{{Degree — School, years}}</p>
+
+<!-- List only referees who agreed (profile.md -> References). Otherwise: <p>References available on request.</p> -->
+<h2>REFERENCES</h2>
+<p class="ref"><b>{{Name}}</b> — {{Role, Organisation}} — {{email}}</p>
+</body></html>

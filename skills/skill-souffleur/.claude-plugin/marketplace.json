@@ -1,0 +1,5 @@
+{
+  "name": "skill-souffleur",
+  "owner": { "name": "r4KK4n" },
+  "plugins": [{ "name": "skill-souffleur", "version": "0.1.0", "source": "./", "description": "Keeps the skills a session needs loaded across compaction and resume." }]
+}

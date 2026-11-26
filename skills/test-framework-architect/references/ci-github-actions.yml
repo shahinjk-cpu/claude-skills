@@ -1,0 +1,79 @@
+name: tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [staging]
+  workflow_dispatch:
+    inputs:
+      test_env:
+        description: Target environment (key in config/environments.json)
+        default: dev
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Environment-specific config comes from variables/secrets, never from code.
+  TEST_ENV: ${{ inputs.test_env || vars.TEST_ENV || 'dev' }}
+  BASE_URL: ${{ vars.BASE_URL }}
+
+jobs:
+  smoke:
+    # Every PR to main. Target: under 10 minutes.
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run smoke suite
+        run: npx playwright test tests/smoke
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-reports
+          path: |
+            reports/
+            test-results/
+          retention-days: 14
+
+  regression:
+    # Every push (merge) to staging. Target: under 40 minutes, sharded 3 ways.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run regression shard ${{ matrix.shard }}/3
+        run: npx playwright test --shard=${{ matrix.shard }}/3
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-reports-shard-${{ matrix.shard }}
+          path: |
+            reports/
+            test-results/
+          retention-days: 14

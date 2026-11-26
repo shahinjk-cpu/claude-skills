@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: audit-finds-planted-holes
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  SECURITY_AUDIT.md lists the planted holes (public read of orders with PII, client-controlled order insert, staff table without RLS, mark_paid open to anon, orders_today view bypassing RLS, reusable redeem_promo, stored XSS in admin, unawaited mark_paid call), ordered by severity with attack and fix for each, and no project files are modified.

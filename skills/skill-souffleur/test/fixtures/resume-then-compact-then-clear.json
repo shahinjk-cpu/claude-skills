@@ -1,0 +1,121 @@
+{
+  "claudeCode": "2.1.332",
+  "events": [
+    {
+      "event": "session.start",
+      "at": 0,
+      "session": "session-1",
+      "input": {
+        "cwd": "/project",
+        "surface": null,
+        "isInteractive": false,
+        "version": {
+          "version": "2.1.332",
+          "base": "2.1.332"
+        }
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 173,
+      "session": "session-1",
+      "input": {
+        "text": "Invoke the bigtest skill with the Skill tool, then reply only OK.",
+        "origin": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "event": "tool.call",
+      "at": 1296,
+      "session": "session-1",
+      "input": {
+        "skill": "bigtest",
+        "tool": "Skill",
+        "tool_use_id": "toolu_1"
+      }
+    },
+    {
+      "event": "skill.prompt",
+      "at": 1331,
+      "session": "session-1",
+      "input": {
+        "skill": "bigtest",
+        "len": 43425,
+        "head": "Base directory for this skill: /project/.claude/skills/bigtest",
+        "tail": "ps over the lazy dog.\n\nEND-MARKER-OMEGA\n"
+      }
+    },
+    {
+      "event": "session.start",
+      "at": 30398,
+      "session": "session-1",
+      "input": {
+        "cwd": "/project",
+        "surface": null,
+        "isInteractive": false,
+        "version": {
+          "version": "2.1.332",
+          "base": "2.1.332"
+        }
+      }
+    },
+    {
+      "event": "command.run",
+      "at": 30581,
+      "session": "session-1",
+      "input": {
+        "command": "compact",
+        "args": ""
+      }
+    },
+    {
+      "event": "session.compact.before",
+      "at": 30594,
+      "session": "session-1",
+      "input": {
+        "trigger": "manual"
+      }
+    },
+    {
+      "event": "session.compact.after",
+      "at": 34784,
+      "session": "session-1",
+      "input": {
+        "trigger": "manual"
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 99585,
+      "session": "session-1",
+      "input": {
+        "text": "Do not invoke any skill. Is the line END-MARKER-OMEGA visible to you in the bigt",
+        "origin": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "event": "command.run",
+      "at": 129577,
+      "session": "session-1",
+      "input": {
+        "command": "clear",
+        "args": ""
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 144628,
+      "session": "session-2",
+      "input": {
+        "text": "Reply only OK.",
+        "origin": {
+          "kind": "sdk"
+        }
+      }
+    }
+  ]
+}

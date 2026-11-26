@@ -1,0 +1,718 @@
+#!/usr/bin/env python3
+"""pf: placeforge command line. Rebuild a real place in 3D from photos, a map pin and a radius.
+
+  pf doctor [project]                       what this machine can do (Blender, GPU, ffmpeg, Chrome) and what is missing
+  pf locate "<name | maps link | lat,lon>"  find the pin
+  pf init <dir> --name N --lat A --lon B --radius M [--photos DIR] [--target FILE] [--height M] [--far M]
+  pf map <project> [--api] [--reuse]        real map data inside the radius -> map/osm.json + map/preview.png
+  pf photos <project> [--query Q] [--max N] [--browser]     find reference photos when the user gave none:
+                                            licensed sources first; --browser adds a web image search (opt-in)
+  pf refs <project>                         contact sheet of the photos + the target with a pixel grid (for measuring)
+  pf sun <project> --when "2021-03-14 15:30" --tz 5.5 [--write day|sunset]
+  pf camera <project> --horizon ROW --base-row ROW --top-row ROW --height M --col COL
+                      [--focal-mm 28 | --focal-px F] [--bearing DEG | --feature X,Y,COL]
+  pf assets <project> [--remote]            fetch CC0 / CC-BY models and textures listed in assets/assets.json
+  pf build <project> [key=value ...]        build the scene, render nothing (checks the scripts; any machine)
+  pf render <project> [--view a,b] [--name loop01] [--final] [key=value ...]
+  pf compare <project> <render> [--target FILE]      side-by-side, blend, region numbers against the photo
+  pf log <project> <loop> "<what changed>" "<next gap>" [--diff N]      one row in renders/LOOPS.md
+  pf film plan <project> --seconds 30 [--tod day,sunset,night]          -> film/shots.json (edit it)
+  pf film render <project> [--jobs N] [key=value ...]
+  pf film encode <project> [--music FILE --music-start S] [--out NAME]
+  pf web <project>                          Blender -> Three.js: web/index.html (one file)
+  pf shot <project> [view] [out.png] [--t SUN]     screenshot of the viewer (headless Chrome)
+  pf gpu <project> status|offers|up|run|bg|log|down ...     the rented / remote render machine
+
+Where renders run comes from <project>/.env: PF_COMPUTE=local (this machine: GPU if it has one, else CPU),
+vast (rent a GPU, needs VAST_API_KEY) or ssh (a machine you already have). See .env.example.
+"""
+import datetime, glob, json, math, os, re, shutil, subprocess, sys, tempfile, time, urllib.parse, urllib.request
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENGINE, TOOLS = os.path.join(ROOT, "engine"), os.path.join(ROOT, "tools")
+UA = "placeforge/0.1 (open-source 3D place builder)"
+
+
+def die(msg):
+    print("pf:", msg, file=sys.stderr)
+    sys.exit(1)
+
+
+def opt(args, name, default=None, flag=False):
+    """--name value (or a bare --name flag), removed from args."""
+    if name in args:
+        i = args.index(name)
+        args.pop(i)
+        if flag:
+            return True
+        if i >= len(args):
+            die("%s needs a value" % name)
+        return args.pop(i)
+    return False if flag else default
+
+
+def project(args):
+    if not args:
+        die("which project folder?")
+    p = os.path.abspath(args.pop(0))
+    if not os.path.exists(os.path.join(p, "place.json")):
+        die("%s has no place.json (pf init first)" % p)
+    return p
+
+
+def place(proj):
+    return json.load(open(os.path.join(proj, "place.json")))
+
+
+def save_place(proj, d):
+    json.dump(d, open(os.path.join(proj, "place.json"), "w"), indent=2)
+
+
+def env(proj, key, default=""):
+    if os.environ.get(key):
+        return os.environ[key]
+    for f in (os.path.join(proj or ".", ".env"), os.path.expanduser("~/.config/placeforge/.env")):
+        if os.path.exists(f):
+            for line in open(f):
+                m = re.match(r"\s*(?:export\s+)?%s=(.*)" % re.escape(key), line)
+                if m:
+                    return m.group(1).strip().strip("\"'")
+    return default
+
+
+def blender():
+    c = os.environ.get("PF_BLENDER") or shutil.which("blender")
+    for p in ("/Applications/Blender.app/Contents/MacOS/Blender", r"C:\Program Files\Blender Foundation\Blender\blender.exe"):
+        if not c and os.path.exists(p):
+            c = p
+    return c
+
+
+def blender_version():
+    b = blender()
+    if not b:
+        return None
+    try:
+        m = re.search(r"Blender (\d+\.\d+\.\d+)", subprocess.run([b, "--version"], capture_output=True, text=True, timeout=30).stdout)
+        return m.group(1) if m else None
+    except Exception:
+        return None
+
+
+def slug(proj):
+    return re.sub(r"[^a-z0-9]+", "-", place(proj).get("name", "place").lower()).strip("-") or "place"
+
+
+# ---------------------------------------------------------------- doctor, locate, init
+def cmd_doctor(args):
+    proj = os.path.abspath(args[0]) if args else None
+    b, v = blender(), blender_version()
+    print("Blender   :", "%s (%s)" % (v, b) if b else "NOT FOUND: install from blender.org (needed for local builds and local renders)")
+    gpu = "CPU only"
+    if sys.platform == "darwin":
+        gpu = "Apple GPU (Metal)" if os.uname().machine == "arm64" else "Mac, Metal if the GPU supports it"
+    elif shutil.which("nvidia-smi"):
+        try:
+            gpu = "NVIDIA " + subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader"], capture_output=True, text=True).stdout.strip().split("\n")[0]
+        except Exception:
+            pass
+    print("GPU here  :", gpu)
+    print("ffmpeg    :", shutil.which("ffmpeg") or "not found (needed for films)")
+    chrome = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", shutil.which("google-chrome") or "", shutil.which("chromium") or "") if p and os.path.exists(p)), None)
+    print("Chrome    :", chrome or "not found (only needed for `pf shot`)")
+    for mod, why in (("PIL", "pillow: photo tools, compare"), ("websocket", "websocket-client: pf shot")):
+        try:
+            __import__(mod)
+            print("%-10s: ok" % mod)
+        except ImportError:
+            print("%-10s: missing (pip install %s)" % (mod, why.split(":")[0]))
+    if proj:
+        mode = env(proj, "PF_COMPUTE", "local")
+        print("compute   :", mode, "(from %s/.env)" % proj if os.path.exists(os.path.join(proj, ".env")) else "(no .env yet: copy .env.example)")
+        if mode == "vast":
+            print("vast key  :", "set" if env(proj, "VAST_API_KEY") else "MISSING: add VAST_API_KEY to .env")
+    print("advice    : %s" % ("this machine can render; a rented RTX 4090 is about 5 to 20 times faster for films" if b else "install Blender, or render remotely with PF_COMPUTE=vast"))
+
+
+def cmd_locate(args):
+    q = " ".join(args).strip()
+    if not q:
+        die('pf locate "<place name | Google / OSM maps link | lat,lon>"')
+    for pat in (r"@(-?\d+\.\d+),(-?\d+\.\d+)", r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", r"[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)", r"#map=\d+/(-?\d+\.\d+)/(-?\d+\.\d+)",
+                r"mlat=(-?\d+\.\d+)&mlon=(-?\d+\.\d+)", r"^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$"):
+        m = re.search(pat, q)
+        if m:
+            print("lat %s lon %s   (read from what you gave)" % (m.group(1), m.group(2)))
+            return
+    url = "https://nominatim.openstreetmap.org/search?" + urllib.parse.urlencode({"q": q, "format": "json", "limit": 5, "extratags": 1})
+    res = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=30).read())
+    if not res:
+        die("nothing found for '%s'. Open the place in a map, copy the link or the lat,lon." % q)
+    for r in res:
+        h = (r.get("extratags") or {}).get("height")
+        print("lat %s lon %s   %s%s" % (r["lat"], r["lon"], r["display_name"][:90], "   height %s m" % h if h else ""))
+    print("(c) OpenStreetMap contributors. Check the pin on a map before trusting it.")
+
+
+def cmd_init(args):
+    if not args:
+        die("pf init <dir> --name N --lat A --lon B --radius M")
+    d = os.path.abspath(args.pop(0))
+    name, lat, lon = opt(args, "--name", os.path.basename(d)), opt(args, "--lat"), opt(args, "--lon")
+    if lat is None or lon is None:
+        die("--lat and --lon are needed (pf locate finds them)")
+    os.makedirs(d, exist_ok=True)
+    pj = os.path.join(d, "place.json")
+    if os.path.exists(pj):
+        die("%s already has a place.json" % d)
+    for sub in ("refs", "map", "renders", "film", "web", "assets"):
+        os.makedirs(os.path.join(d, sub), exist_ok=True)
+    photos, target = opt(args, "--photos"), opt(args, "--target")
+    n = 0
+    if photos:
+        for f in sorted(os.listdir(photos)):
+            if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp", ".avif", ".heic")) and not f.startswith("."):
+                shutil.copy2(os.path.join(photos, f), os.path.join(d, "refs", f))
+                n += 1
+    P = {"name": name, "lat": float(lat), "lon": float(lon), "radius_m": float(opt(args, "--radius", 800)),
+         "far_radius_m": float(opt(args, "--far", 0)) or "auto",
+         "landmark": {"height_m": float(opt(args, "--height", 0)), "clear_radius_m": 0},
+         "refs": {"target": ("refs/" + os.path.basename(target)) if target else ""}, "camera": {}, "views": {},
+         "time": {"tod": "day"}, "look": {}, "region": {}}
+    if target and not os.path.exists(os.path.join(d, "refs", os.path.basename(target))):
+        shutil.copy2(target, os.path.join(d, "refs", os.path.basename(target)))
+    save_place(d, P)
+    for src, dst in ((".env.example", ".env"), ("engine/landmark_template.py", "landmark.py"), ("assets.default.json", "assets/assets.json")):
+        s, t = os.path.join(ROOT, src), os.path.join(d, dst)
+        if os.path.exists(s) and not os.path.exists(t):
+            shutil.copy2(s, t)
+    open(os.path.join(d, ".gitignore"), "w").write(".env\n.pf/\nrefs/web_*\nrenders/\nfilm/frames/\nmap/osm*_raw.json\nassets/models/\nassets/tex/\n__pycache__/\n._*\n.DS_Store\n")
+    open(os.path.join(d, "renders", "LOOPS.md"), "w").write("# %s: perfection loop log\n\n| loop | diff | what changed | gap found next |\n|---|---|---|---|\n" % name)
+    print("project: %s (%d photos copied)\nnext: pf map %s" % (d, n, d))
+
+
+# ---------------------------------------------------------------- photos, sun, camera
+def images(proj):
+    out = []
+    for f in sorted(os.listdir(os.path.join(proj, "refs"))):
+        if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")) and not f.startswith((".", "_")):
+            out.append(os.path.join(proj, "refs", f))
+    return out
+
+
+def target_of(proj, override=None):
+    t = override or place(proj).get("refs", {}).get("target")
+    if not t:
+        die('no target photo. Set "refs": {"target": "refs/<file>"} in place.json (the one photo the render must match)')
+    t = t if os.path.isabs(t) else os.path.join(proj, t)
+    if not os.path.exists(t):
+        die("target photo not found: %s" % t)
+    return t
+
+
+def cmd_refs(args):
+    from PIL import Image, ImageDraw
+    proj = project(args)
+    ims = images(proj)
+    if not ims:
+        die("no photos in %s/refs" % proj)
+    cols = 4
+    cell, rows = 480, (len(ims) + 3) // 4
+    sheet = Image.new("RGB", (cols * cell, rows * (cell + 22)), (20, 20, 20))
+    d = ImageDraw.Draw(sheet)
+    for i, f in enumerate(ims):
+        im = Image.open(f).convert("RGB")
+        im.thumbnail((cell - 8, cell - 8))
+        x, y = (i % cols) * cell, (i // cols) * (cell + 22)
+        sheet.paste(im, (x + (cell - im.width) // 2, y + (cell - im.height) // 2))
+        d.text((x + 6, y + cell + 4), "%d  %s  %dx%d" % (i + 1, os.path.basename(f)[:44], *Image.open(f).size), fill=(230, 230, 230))
+    out = os.path.join(proj, "refs", "_contact.jpg")
+    sheet.save(out, quality=88)
+    print("contact sheet:", out)
+    t = place(proj).get("refs", {}).get("target")
+    if t:
+        im = Image.open(target_of(proj)).convert("RGB")
+        d = ImageDraw.Draw(im)
+        for x in range(0, im.width, 50):
+            d.line((x, 0, x, im.height), fill=(255, 255, 0) if x % 200 == 0 else (255, 255, 255), width=1)
+            if x % 200 == 0:
+                d.text((x + 3, 3), str(x), fill=(255, 255, 0))
+        for y in range(0, im.height, 50):
+            d.line((0, y, im.width, y), fill=(255, 255, 0) if y % 200 == 0 else (255, 255, 255), width=1)
+            if y % 200 == 0:
+                d.text((3, y + 3), str(y), fill=(255, 255, 0))
+        out = os.path.join(proj, "refs", "_target_grid.jpg")
+        im.save(out, quality=90)
+        print("target with a 50 px grid (yellow every 200): %s  (%dx%d)" % (out, im.width, im.height))
+        ex = getattr(Image.open(target_of(proj)), "_getexif", lambda: None)() or {}
+        if ex.get(41989) or ex.get(37386):
+            print("EXIF focal length: %s mm (35 mm equivalent: %s)" % (ex.get(37386), ex.get(41989)))
+
+
+def sun_position(lat, lon, when_utc):
+    """NOAA approximation: (elevation, compass bearing) in degrees."""
+    d = (when_utc - datetime.datetime(2000, 1, 1, 12)).total_seconds() / 86400.0
+    g = math.radians((357.529 + 0.98560028 * d) % 360)
+    q = (280.459 + 0.98564736 * d) % 360
+    L = math.radians((q + 1.915 * math.sin(g) + 0.020 * math.sin(2 * g)) % 360)
+    e = math.radians(23.439 - 0.00000036 * d)
+    ra, dec = math.atan2(math.cos(e) * math.sin(L), math.cos(L)), math.asin(math.sin(e) * math.sin(L))
+    gmst = (18.697374558 + 24.06570982441908 * d) % 24
+    ha = math.radians((gmst * 15 + lon) % 360) - ra
+    la = math.radians(lat)
+    el = math.asin(math.sin(la) * math.sin(dec) + math.cos(la) * math.cos(dec) * math.cos(ha))
+    az = math.atan2(-math.sin(ha), math.tan(dec) * math.cos(la) - math.sin(la) * math.cos(ha))
+    return math.degrees(el), math.degrees(az) % 360
+
+
+def cmd_sun(args):
+    proj = project(args)
+    P = place(proj)
+    when, tz, write = opt(args, "--when"), float(opt(args, "--tz", 0)), opt(args, "--write")
+    if not when:
+        die('--when "YYYY-MM-DD HH:MM" (local time) and --tz hours east of UTC')
+    t = datetime.datetime.strptime(when, "%Y-%m-%d %H:%M") - datetime.timedelta(hours=tz)
+    el, az = sun_position(P["lat"], P["lon"], t)
+    print("sun at %s (UTC%+g): elevation %.1f deg, bearing %.1f deg" % (when, tz, el, az))
+    for h in range(4, 21):
+        e2, a2 = sun_position(P["lat"], P["lon"], datetime.datetime.strptime(when[:10] + " %02d:00" % h, "%Y-%m-%d %H:%M") - datetime.timedelta(hours=tz))
+        if e2 > -6:
+            print("   %02d:00  el %5.1f  bearing %5.1f" % (h, e2, a2))
+    if write:
+        P.setdefault("time", {})[write] = {"sun_elevation": round(el, 1), "sun_bearing": round(az, 1)}
+        save_place(proj, P)
+        print("written to place.json time.%s" % write)
+
+
+def cmd_camera(args):
+    """A level camera with lens shift (verticals stay vertical, like most architecture and aerial photos)."""
+    from PIL import Image
+    proj = project(args)
+    P = place(proj)
+    W, H = Image.open(target_of(proj)).size
+    hz, vb, vt = (opt(args, k) for k in ("--horizon", "--base-row", "--top-row"))
+    Ht, col = opt(args, "--height", P.get("landmark", {}).get("height_m")), opt(args, "--col", W / 2)
+    if None in (hz, vb, vt) or not Ht:
+        die("needs --horizon ROW --base-row ROW --top-row ROW --height M (rows read on refs/_target_grid.jpg)")
+    hz, vb, vt, Ht, col = float(hz), float(vb), float(vt), float(Ht), float(col)
+    fmm, fpx = opt(args, "--focal-mm"), opt(args, "--focal-px")
+    F = float(fpx) if fpx else float(fmm or 28.0) / 36.0 * W
+    if not fpx and not fmm:
+        print("no focal length given: guessing a 28 mm lens. If the blend shows the landmark right but the surroundings too "
+              "spread or too squeezed, rerun with another --focal-mm.")
+    d = Ht * F / (vb - vt)
+    ch = (vb - hz) * d / F
+    off = (col - W / 2) / F * d
+    bearing, feat = opt(args, "--bearing"), opt(args, "--feature")
+    if feat:                                    # a map feature at world (x, y) seen at column c fixes the compass
+        fx, fy, fc = (float(v) for v in feat.split(","))
+        best = None
+        for k in range(3600):
+            b = math.radians(k / 10.0)
+            f_, r_ = (math.sin(b), math.cos(b)), (math.cos(b), -math.sin(b))
+            cx, cy = -d * f_[0] - off * r_[0], -d * f_[1] - off * r_[1]
+            dep = (fx - cx) * f_[0] + (fy - cy) * f_[1]
+            if dep <= 1:
+                continue
+            u = W / 2 + F * ((fx - cx) * r_[0] + (fy - cy) * r_[1]) / dep
+            if best is None or abs(u - fc) < best[0]:
+                best = (abs(u - fc), k / 10.0)
+        bearing = best[1]
+        print("bearing from the feature: %.1f deg (column error %.1f px)" % (bearing, best[0]))
+    if bearing is None:
+        die("needs the compass: --bearing DEG (direction the photo looks; 0 = north, 90 = east), or --feature X,Y,COL "
+            "(a building or shore corner at map metres X east, Y north of the pin, seen at photo column COL)")
+    P["camera"] = {"ref_w": W, "ref_h": H, "focal_px": round(F, 1), "horizon_row": hz, "height_m": round(ch, 1),
+                   "distance_m": round(d, 1), "bearing_deg": float(bearing), "offset_right_m": round(off, 1),
+                   "hfov_deg": round(math.degrees(2 * math.atan(W / 2 / F)), 1)}
+    P.setdefault("landmark", {})["height_m"] = Ht
+    save_place(proj, P)
+    print("camera: %.0f m from the landmark, %.1f m above its ground, looking bearing %.1f, %.1f mm lens (written to place.json)"
+          % (d, ch, float(bearing), 36.0 * F / W))
+    if os.path.exists(os.path.join(proj, "map", "osm.json")):
+        subprocess.run([sys.executable, os.path.join(TOOLS, "osm_fetch.py"), proj, "--reuse"])
+        print("check map/preview.png: the blue wedge must cover what the photo shows")
+
+
+# ---------------------------------------------------------------- compute
+def mode(proj):
+    return env(proj, "PF_COMPUTE", "local")
+
+
+def gpu(proj, *a, capture=False, name=None):
+    e = dict(os.environ, PF_PROJECT=proj)
+    if name:
+        e["PF_GPU_NAME"] = name
+    if not e.get("BLENDER_VER") and not env(proj, "BLENDER_VER") and blender_version():
+        e["BLENDER_VER"] = blender_version()
+    r = subprocess.run(["bash", os.path.join(ROOT, "compute", "gpu.sh"), *a], env=e, capture_output=capture, text=True)
+    return r
+
+
+def stage(proj):
+    """What a remote machine needs, gathered in a temp folder (small text files only; models are fetched over there)."""
+    st = tempfile.mkdtemp(prefix="pf-stage-")
+    shutil.copytree(ENGINE, os.path.join(st, "engine"), ignore=shutil.ignore_patterns("__pycache__", "._*"))
+    dst = os.path.join(st, "proj", slug(proj))
+    os.makedirs(os.path.join(dst, "map"))
+    for f in glob.glob(os.path.join(proj, "*.json")) + glob.glob(os.path.join(proj, "*.py")):
+        shutil.copy2(f, dst)
+    for rel in ("map/osm.json", "film/shots.json", "assets/assets.json"):
+        if os.path.exists(os.path.join(proj, rel)):
+            os.makedirs(os.path.dirname(os.path.join(dst, rel)), exist_ok=True)
+            shutil.copy2(os.path.join(proj, rel), os.path.join(dst, rel))
+    return st
+
+
+def remote_sync(proj, name=None):
+    st = stage(proj)
+    for i in range(3):
+        if gpu(proj, "push", st, "pf", name=name).returncode == 0:
+            shutil.rmtree(st, ignore_errors=True)
+            return
+        time.sleep(5)
+    die("could not copy the scripts to the render machine (pf gpu %s status)" % proj)
+
+
+def remote_pull(proj, sub, name=None, pattern=None):
+    tmp = tempfile.mkdtemp(prefix="pf-pull-")
+    extra = ["--include=%s" % pattern, "--exclude=*"] if pattern else []
+    for i in range(3):
+        if gpu(proj, "pull", "pf/proj/%s/%s" % (slug(proj), sub), tmp, *extra, name=name).returncode == 0:
+            break
+        time.sleep(5)
+    os.makedirs(os.path.join(proj, sub), exist_ok=True)
+    got = []
+    for f in sorted(os.listdir(tmp)):
+        if os.path.isfile(os.path.join(tmp, f)) and os.path.getsize(os.path.join(tmp, f)) > 0:
+            shutil.copy2(os.path.join(tmp, f), os.path.join(proj, sub, f))
+            got.append(f)
+    shutil.rmtree(tmp, ignore_errors=True)
+    return got
+
+
+def run_blender(proj, kv, remote=None, quiet=True):
+    """Run the engine with key=value args, here or on the render machine. Returns the output text."""
+    remote = mode(proj) != "local" if remote is None else remote
+    if not remote:
+        b = blender()
+        if not b:
+            die("Blender not found here. Install it, or set PF_COMPUTE=vast / ssh in %s/.env" % proj)
+        cmd = [b, "-b", "--python", os.path.join(ENGINE, "pf_scene.py"), "--", "project=" + proj] + kv
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        out = []
+        for line in p.stdout:
+            out.append(line)
+            if line.startswith("pf:") or "Error" in line or "Traceback" in line or line.startswith("  File") or not quiet:
+                print(line.rstrip())
+        p.wait()
+        return "".join(out)
+    q = " ".join("'%s'" % a.replace("'", "") for a in kv)
+    r = gpu(proj, "run", "blender -b --python $HOME/pf/engine/pf_scene.py -- project=$HOME/pf/proj/%s %s 2>&1 | grep -E '^pf:|Error|Traceback|^  File'" % (slug(proj), q), capture=True)
+    print(r.stdout.strip())
+    if r.returncode not in (0, 1) or not r.stdout.strip():
+        print(r.stderr.strip()[-600:])
+    return r.stdout
+
+
+def cmd_build(args):
+    proj = project(args)
+    out = run_blender(proj, ["build=1"] + args, remote=False)
+    sys.exit(0 if "BUILD OK" in out else 1)
+
+
+def cmd_render(args):
+    proj = project(args)
+    P = place(proj)
+    views = (opt(args, "--view") or ("photo" if P.get("camera", {}).get("distance_m") else "hero")).split(",")
+    name, final = opt(args, "--name", "look"), opt(args, "--final", flag=True)
+    r = dict({"preview_pct": 50, "preview_samples": 64}, **P.get("render", {}))
+    remote = mode(proj) != "local"
+    if remote:
+        remote_sync(proj)
+    for v in views:
+        kv = ["view=" + v, "name=%s_%s" % (name, v)] + ([] if final else ["pct=%d" % r["preview_pct"], "samples=%d" % r["preview_samples"]])
+        if remote and not final and not any(a.startswith("fmt=") for a in args):
+            kv.append("fmt=jpg")                # small previews travel better than 4 MB PNGs
+        run_blender(proj, kv + args, remote=remote)
+    if remote:
+        got = remote_pull(proj, "renders", pattern="%s_*" % name)
+        print("pulled:", ", ".join(got) or "nothing (check: pf gpu %s status)" % proj)
+    print("next: pf compare %s %s_%s" % (proj, name, views[0]))
+
+
+# ---------------------------------------------------------------- compare, log
+def cmd_compare(args):
+    from PIL import Image, ImageDraw, ImageStat, ImageFilter, ImageChops
+    proj = project(args)
+    tgt = target_of(proj, opt(args, "--target"))
+    if not args:
+        die("pf compare <project> <render name or file>")
+    rp = args[0]
+    if not os.path.exists(rp):
+        c = [f for e in (".png", ".jpg") for f in glob.glob(os.path.join(proj, "renders", rp + e))]
+        if not c:
+            die("no render '%s' in %s/renders" % (rp, proj))
+        rp = c[0]
+    ref = Image.open(tgt).convert("RGB")
+    if ref.width > 1600:
+        ref = ref.resize((1600, int(ref.height * 1600 / ref.width)), Image.LANCZOS)
+    ren = Image.open(rp).convert("RGB").resize(ref.size, Image.LANCZOS)
+    W, H = ref.size
+    regions = {}
+    for j in range(4):
+        for i in range(6):
+            regions["g%d%d" % (j, i)] = (i * W // 6, j * H // 4, (i + 1) * W // 6, (j + 1) * H // 4)
+    named = place(proj).get("compare", {}).get("regions", {})
+    full = Image.open(tgt).size
+    for k, b in named.items():
+        regions[k] = tuple(int(v * W / full[0]) for v in b)
+    pre = os.path.splitext(rp)[0]
+    sbs = Image.new("RGB", (W * 2, H))
+    sbs.paste(ref, (0, 0))
+    sbs.paste(ren, (W, 0))
+    d = ImageDraw.Draw(sbs)
+    for k, (a, b, c, e) in regions.items():
+        if k in named:
+            for off in (0, W):
+                d.rectangle((a + off, b, c + off, e), outline=(255, 255, 0))
+                d.text((a + off + 3, b + 2), k, fill=(255, 255, 0))
+    sbs.save(pre + "_sbs.jpg", quality=88)
+    Image.blend(ref, ren, 0.5).save(pre + "_blend.jpg", quality=88)
+    rows, tot, gtot = [], 0, 0
+    for k, box in regions.items():
+        a, b = ImageStat.Stat(ref.crop(box)).mean, ImageStat.Stat(ren.crop(box)).mean
+        df = [round(y - x) for x, y in zip(a, b)]
+        s = sum(abs(x) for x in df)
+        rows.append((s, k, [round(x) for x in a], [round(x) for x in b], df))
+        if k in named:
+            tot += s
+        else:
+            gtot += s
+    # structure: do the edges of the render fall where the photo's edges are? (camera, placement, proportions)
+    def edges(im):
+        return im.convert("L").resize((400, int(400 * H / W)), Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.5)).filter(ImageFilter.FIND_EDGES).crop((4, 4, 396, int(400 * H / W) - 4))
+    ea, eb = edges(ref), edges(ren)
+    ma, mb = ImageStat.Stat(ea).mean[0], ImageStat.Stat(eb).mean[0]
+    sa, sb_ = ImageStat.Stat(ea).stddev[0], ImageStat.Stat(eb).stddev[0]
+    mab = ImageStat.Stat(ImageChops.multiply(ea, eb)).mean[0] * 255.0
+    corr = (mab - ma * mb) / max(sa * sb_, 1e-6)
+    heat = ImageChops.difference(ref, ren).convert("L").point(lambda v: min(255, v * 3))
+    Image.merge("RGB", (heat, heat.point(lambda v: v // 3), heat.point(lambda v: 0))).save(pre + "_diff.jpg", quality=85)
+    print("%-14s %-16s %-16s %s" % ("region", "photo", "render", "render - photo"))
+    for s, k, a, b, df in sorted(rows, reverse=True)[:12] if not named else [r for r in rows if r[1] in named]:
+        print("%-14s %-16s %-16s %s" % (k, a, b, df))
+    score = tot if named else gtot
+    print("colour diff: %d (%s; lower is better)   grid total: %d   edge match: %.3f (1 = edges coincide; below 0.15 = fix camera and placement before colour)"
+          % (score, "named regions" if named else "6x4 grid", gtot, corr))
+    print("look at: %s_sbs.jpg  %s_blend.jpg  %s_diff.jpg" % ((os.path.basename(pre),) * 3))
+    json.dump({"render": rp, "diff": score, "grid": gtot, "edge": round(corr, 4)}, open(pre + "_score.json", "w"))
+
+
+def cmd_log(args):
+    proj = project(args)
+    diff = opt(args, "--diff", "")
+    if len(args) < 3:
+        die('pf log <project> <loop> "<what changed>" "<gap found next>" [--diff N]')
+    if not diff:
+        sc = sorted(glob.glob(os.path.join(proj, "renders", "%s*_score.json" % args[0])))
+        diff = str(json.load(open(sc[0]))["diff"]) if sc else ""
+    p = os.path.join(proj, "renders", "LOOPS.md")
+    open(p, "a").write("| %s | %s | %s | %s |\n" % (args[0], diff, args[1].replace("|", "/"), args[2].replace("|", "/")))
+    print("logged in", p)
+
+
+# ---------------------------------------------------------------- film
+def cmd_film(args):
+    if not args or args[0] not in ("plan", "render", "encode"):
+        die("pf film plan|render|encode <project> ...")
+    sub = args.pop(0)
+    proj = project(args)
+    P = place(proj)
+    fps = int(P.get("film", {}).get("fps", 24))
+    sp = os.path.join(proj, "film", "shots.json")
+    if sub == "plan":
+        secs = float(opt(args, "--seconds", 30))
+        tods = (opt(args, "--tod") or "day").split(",")
+        Hh = float(P.get("landmark", {}).get("height_m") or 60)
+        R = float(P.get("radius_m", 800))
+        top, mid = [0, 0, round(0.85 * Hh, 1)], [0, 0, round(0.5 * Hh, 1)]
+        r0 = round(1.5 * Hh + 80)
+        day = [("establish", 0.22, {"move": "photo", "push": 0.18, "target": mid} if P.get("camera", {}).get("distance_m") else
+                {"move": "dolly", "from": [-r0 * 1.9, -r0 * 2.2, round(0.5 * Hh + 30)], "to": [-r0 * 1.3, -r0 * 1.6, round(0.6 * Hh + 30)], "look_from": mid, "look_to": mid, "lens": [28, 32]}),
+               ("approach", 0.2, {"move": "dolly", "from": [r0 * 1.6, r0 * 1.8, 12], "to": [r0 * 0.7, r0 * 0.8, round(0.2 * Hh + 14)], "look_from": [0, 0, round(0.15 * Hh)], "look_to": top, "lens": 22}),
+               ("crown_orbit", 0.2, {"move": "orbit", "target": top, "radius": [round(0.55 * Hh + 60), round(0.5 * Hh + 50)], "height": [round(0.8 * Hh), round(0.95 * Hh)], "bearing": [200, 262], "lens": 38}),
+               ("top_down", 0.16, {"move": "topdown", "height": [round(1.6 * Hh + 220), round(1.3 * Hh + 180)], "turn": [-20, 30], "lens": 24}),
+               ("pull_back", 0.22, {"move": "orbit", "target": mid, "radius": [round(2.2 * Hh + 150), round(3.4 * Hh + 300)], "height": [round(0.5 * Hh + 30), round(0.9 * Hh + 80)], "bearing": [150, 200], "lens": 30})]
+        sunset = [("sunset", 1.0, {"move": "orbit", "target": [0, 0, round(0.6 * Hh, 1)], "radius": [round(2.0 * Hh + 160), round(1.6 * Hh + 130)], "height": [round(0.4 * Hh + 30), round(0.55 * Hh + 40)],
+                                   "bearing": [P.get("time", {}).get("sunset", {}).get("sun_bearing", 262) - 190, P.get("time", {}).get("sunset", {}).get("sun_bearing", 262) - 172], "lens": 35})]
+        night = [("night_orbit", 0.55, {"move": "orbit", "target": [0, 0, round(0.55 * Hh, 1)], "radius": [round(2.4 * Hh + 180), round(1.9 * Hh + 150)], "height": [round(0.45 * Hh + 30), round(0.6 * Hh + 50)], "bearing": [215, 262], "lens": 30}),
+                 ("night_wide", 0.45, {"move": "orbit", "target": mid, "radius": [round(2.6 * Hh + 200), round(3.8 * Hh + 350)], "height": [round(0.6 * Hh + 40), round(1.0 * Hh + 90)], "bearing": [160, 195], "lens": 28})]
+        share = {"day": 1.0, "sunset": 0.3, "night": 0.55}
+        tot = sum(share[t] for t in tods)
+        shots = []
+        for t in tods:
+            for nm, frac, mv in {"day": day, "sunset": sunset, "night": night}[t]:
+                shots.append(dict({"name": nm, "seconds": round(max(2.0, secs * share[t] / tot * frac), 2), "tod": t}, **mv))
+        k = secs / sum(s["seconds"] for s in shots)
+        for s in shots:
+            s["seconds"] = round(s["seconds"] * k, 2)
+        json.dump({"fps": fps, "note": "Edit freely. Each shot: name, seconds, tod (day|sunset|night), move (orbit|dolly|topdown|photo). Bearings are compass degrees; positions are metres east, north, up from the pin.", "shots": shots}, open(sp, "w"), indent=1)
+        print("film plan: %s  (%d shots, %.1f s, %d frames at %d fps)" % (sp, len(shots), secs, round(secs * fps), fps))
+        print("check it without rendering: pf build %s anim=1   then stills of each shot: pf render ... or `pf film render %s pick=1,100,...`" % (proj, proj))
+        return
+    if not os.path.exists(sp):
+        die("no film plan (pf film plan %s --seconds 30)" % proj)
+    shots = json.load(open(sp))["shots"]
+    segs, f = [], 1                          # one Blender process renders one time of day: group the frames
+    for s in shots:
+        n = max(2, int(round(float(s["seconds"]) * fps)))
+        if segs and segs[-1][2] == s.get("tod", "day"):
+            segs[-1][1] = f + n - 1
+        else:
+            segs.append([f, f + n - 1, s.get("tod", "day")])
+        f += n
+    total = f - 1
+    if sub == "render":
+        pick = next((a for a in args if a.startswith("pick=")), None)
+        remote = mode(proj) != "local"
+        jobs = int(opt(args, "--jobs", 2 if remote else 1))
+        film = P.get("film", {})
+        base = ["anim=1", "w=%d" % film.get("w", 1920), "h=%d" % film.get("h", 1080), "samples=%d" % film.get("samples", 64), "noise=0.02"]
+        if pick:
+            if remote:
+                remote_sync(proj)
+            run_blender(proj, base + ["fmt=jpg"] + args, remote=remote)
+            if remote:
+                print("pulled:", ", ".join(remote_pull(proj, "renders", pattern="film_f*")))
+            return
+        print("film: %d frames, %d time-of-day segment(s), %d Blender process(es) at a time on %s" % (total, len(segs), jobs, mode(proj)))
+        if not remote:
+            b = blender() or die("Blender not found")
+            for a, e, t in segs:
+                ps = [subprocess.Popen([b, "-b", "--python", os.path.join(ENGINE, "pf_scene.py"), "--", "project=" + proj] + base + ["frames=%d-%d" % (a, e)] + args,
+                                       stdout=subprocess.DEVNULL if j else None, stderr=subprocess.STDOUT) for j in range(jobs)]
+                for p in ps:
+                    p.wait()
+        else:
+            remote_sync(proj)
+            q = " ".join("'%s'" % a for a in base + args)
+            line = "cd $HOME/pf/proj/%s && find film/frames -size -1k -delete 2>/dev/null; " % slug(proj)
+            for a, e, t in segs:
+                line += "for j in $(seq %d); do blender -b --python $HOME/pf/engine/pf_scene.py -- project=$HOME/pf/proj/%s %s frames=%d-%d > $HOME/film_%d_$j.log 2>&1 & done; wait; " % (jobs, slug(proj), q, a, e, a)
+            line += "ffmpeg -y -loglevel error -framerate %d -start_number 1 -i film/frames/f%%05d.png -c:v libx264 -crf 14 -pix_fmt yuv420p film/film_raw.mp4; ls film/frames | wc -l; echo FILM DONE" % fps
+            gpu(proj, "bg", "film", line)
+            print("started on the render machine. Watch: pf gpu %s log film   (ends with FILM DONE)\nthen: pf film encode %s   (pulls film_raw.mp4), and pf gpu %s down" % (proj, proj, proj))
+        return
+    # encode
+    if not shutil.which("ffmpeg"):
+        die("ffmpeg not found")
+    raw = os.path.join(proj, "film", "film_raw.mp4")
+    frames = sorted(glob.glob(os.path.join(proj, "film", "frames", "f*.png")))
+    if mode(proj) != "local" and not os.path.exists(raw):
+        print("pulled:", remote_pull(proj, "film", pattern="film_raw.mp4"))
+    if os.path.exists(raw):
+        src = ["-i", raw]
+    elif frames:
+        bad = [f for f in frames if os.path.getsize(f) < 1000]
+        if bad or len(frames) < total:
+            die("%d of %d frames are missing or empty (delete empty ones, rerun pf film render)" % (total - len(frames) + len(bad), total))
+        src = ["-framerate", str(fps), "-start_number", "1", "-i", os.path.join(proj, "film", "frames", "f%05d.png")]
+    else:
+        die("no frames and no film_raw.mp4 in %s/film" % proj)
+    dur = total / float(fps)
+    music, ms = opt(args, "--music"), float(opt(args, "--music-start", 0))
+    out = os.path.join(proj, "film", (opt(args, "--out") or slug(proj) + "_film") + ".mp4")
+    vf = "fade=t=in:st=0:d=0.6,fade=t=out:st=%.2f:d=0.8" % (dur - 0.8)
+    cmd = ["ffmpeg", "-y", "-loglevel", "error"] + src
+    if music:
+        cmd += ["-ss", str(ms), "-i", music, "-af", "afade=t=in:st=0:d=1,afade=t=out:st=%.2f:d=2" % (dur - 2), "-c:a", "aac", "-b:a", "192k", "-shortest"]
+    cmd += ["-vf", vf, "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-t", "%.3f" % dur, out]
+    subprocess.run(cmd, check=True)
+    print("film:", out, "(%.1f s)" % dur, "| music needs a licence line in the description" if music else "")
+
+
+# ---------------------------------------------------------------- web, assets, gpu
+def cmd_web(args):
+    proj = project(args)
+    out = run_blender(proj, ["export=web"] + args, remote=False)
+    if "EXPORTED" not in out:
+        die("export failed")
+    subprocess.run([sys.executable, os.path.join(ROOT, "viewer", "build.py"), proj], check=True)
+    print("open %s/web/index.html   (check it: pf shot %s hero)" % (proj, proj))
+
+
+def cmd_shot(args):
+    proj = project(args)
+    t = opt(args, "--t")
+    view = args[0] if args else "hero"
+    out = args[1] if len(args) > 1 else os.path.join(proj, "web", "shot_%s%s.png" % (view, "_t" + t if t else ""))
+    url = "file://%s/web/index.html#%s%s" % (urllib.parse.quote(proj), view, "&t=" + t if t else "")
+    subprocess.run([sys.executable, os.path.join(TOOLS, "shot.py"), url, out, "3", "1500x1000"])
+    print("screenshot:", out)
+
+
+def cmd_assets(args):
+    proj = project(args)
+    remote = opt(args, "--remote", flag=True)
+    p = os.path.join(proj, "assets", "assets.json")
+    if not os.path.exists(p):
+        shutil.copy2(os.path.join(ROOT, "assets.default.json"), p)
+    A = json.load(open(p))
+    jobs = [("models/" + m["file"], m["url"]) for m in A.get("models", {}).values()]
+    for t in A.get("textures", []):
+        for k in ("diff", "rough"):
+            jobs.append(("tex/%s_%s_1k.jpg" % (t, k), "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/%s/%s_%s_1k.jpg" % (t, t, k)))
+    if remote:
+        remote_sync(proj)
+        sh = "cd $HOME/pf/proj/%s/assets && mkdir -p models tex; " % slug(proj)
+        for f, u in jobs:
+            sh += "[ -s '%s' ] || { curl -sL --retry 3 -A 'Mozilla/5.0' -o '%s' '%s'; sleep 2; }; " % (f, f, u)
+        sh += "ls models | wc -l; ls tex | wc -l"
+        gpu(proj, "run", sh)
+        return
+    ok = 0
+    for f, u in jobs:
+        dst = os.path.join(proj, "assets", f)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        if os.path.exists(dst) and os.path.getsize(dst) > 2000:
+            ok += 1
+            continue
+        try:
+            data = urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}), timeout=120).read()
+            if f.endswith(".glb") and data[:4] != b"glTF":
+                raise ValueError("not a GLB (the site answered with a page; retry later)")
+            open(dst, "wb").write(data)
+            ok += 1
+            print("fetched", f, "%.1f MB" % (len(data) / 1e6))
+            time.sleep(2)
+        except Exception as e:
+            print("FAILED", f, str(e)[:80])
+    print("%d of %d assets ready in %s/assets (licences: assets/assets.json; credit CC-BY authors where the result is shown)" % (ok, len(jobs), proj))
+
+
+def cmd_gpu(args):
+    proj = project(args)
+    sys.exit(gpu(proj, *args).returncode)
+
+
+def cmd_photos(args):
+    proj = project(args)
+    sys.exit(subprocess.run([sys.executable, os.path.join(TOOLS, "photos.py"), proj] + args).returncode)
+
+
+def cmd_map(args):
+    proj = project(args)
+    sys.exit(subprocess.run([sys.executable, os.path.join(TOOLS, "osm_fetch.py"), proj] + args).returncode)
+
+
+CMDS = {"photos": cmd_photos, "doctor": cmd_doctor, "locate": cmd_locate, "init": cmd_init, "map": cmd_map, "refs": cmd_refs, "sun": cmd_sun,
+        "camera": cmd_camera, "assets": cmd_assets, "build": cmd_build, "render": cmd_render, "compare": cmd_compare,
+        "log": cmd_log, "film": cmd_film, "web": cmd_web, "shot": cmd_shot, "gpu": cmd_gpu}
+
+if __name__ == "__main__":
+    a = sys.argv[1:]
+    if not a or a[0] in ("-h", "--help", "help") or a[0] not in CMDS:
+        print(__doc__)
+        sys.exit(0 if a and a[0] in ("-h", "--help", "help") else 1)
+    CMDS[a[0]](a[1:])

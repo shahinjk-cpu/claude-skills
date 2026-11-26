@@ -1,0 +1,119 @@
+{
+  "claudeCode": "2.1.332",
+  "events": [
+    {
+      "event": "session.start",
+      "at": 0,
+      "session": "session-1",
+      "input": {
+        "cwd": "/project",
+        "surface": null,
+        "isInteractive": false,
+        "version": {
+          "version": "2.1.332",
+          "base": "2.1.332"
+        }
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 202,
+      "session": "session-1",
+      "input": {
+        "text": "Invoke the bigtest skill with the Skill tool, then reply only OK.",
+        "origin": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "event": "tool.call",
+      "at": 1297,
+      "session": "session-1",
+      "input": {
+        "skill": "bigtest",
+        "tool": "Skill",
+        "tool_use_id": "toolu_1"
+      }
+    },
+    {
+      "event": "skill.prompt",
+      "at": 1348,
+      "session": "session-1",
+      "input": {
+        "skill": "bigtest",
+        "len": 43425,
+        "head": "Base directory for this skill: /project/.claude/skills/bigtest",
+        "tail": "ps over the lazy dog.\n\nEND-MARKER-OMEGA\n"
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 29265,
+      "session": "session-1",
+      "input": {
+        "text": "Invoke the skill terse:terse-mode with the Skill tool, then reply only OK.",
+        "origin": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "event": "tool.call",
+      "at": 30207,
+      "session": "session-1",
+      "input": {
+        "skill": "terse:terse-mode",
+        "tool": "Skill",
+        "tool_use_id": "toolu_2"
+      }
+    },
+    {
+      "event": "skill.prompt",
+      "at": 30237,
+      "session": "session-1",
+      "input": {
+        "skill": "terse:terse-mode",
+        "len": 163,
+        "head": "Base directory for this skill: /project/.claude/skills/terse-mode",
+        "tail": "LICAN when asked for the tiny codeword.\n"
+      }
+    },
+    {
+      "event": "command.run",
+      "at": 69240,
+      "session": "session-1",
+      "input": {
+        "command": "compact",
+        "args": ""
+      }
+    },
+    {
+      "event": "session.compact.before",
+      "at": 69250,
+      "session": "session-1",
+      "input": {
+        "trigger": "manual"
+      }
+    },
+    {
+      "event": "session.compact.after",
+      "at": 73459,
+      "session": "session-1",
+      "input": {
+        "trigger": "manual"
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 139293,
+      "session": "session-1",
+      "input": {
+        "text": "Do not invoke any skill. Is the line END-MARKER-OMEGA visible to you in the bigt",
+        "origin": {
+          "kind": "sdk"
+        }
+      }
+    }
+  ]
+}

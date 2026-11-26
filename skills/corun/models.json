@@ -1,0 +1,70 @@
+{
+  "updated": "2026-11-25",
+  "evidence": "reference/evidence.md",
+  "partners": {
+    "neon": {
+      "label": "Gemini 4 Neon",
+      "vendor": "Google",
+      "cli": "agy",
+      "model": "gemini-4-neon-high",
+      "effort": "high"
+    },
+    "sol62": {
+      "label": "GPT-6.2 Sol",
+      "vendor": "OpenAI",
+      "cli": "codex",
+      "model": "gpt-6.2-sol",
+      "effort": "high"
+    },
+    "sol61": {
+      "label": "GPT-6.1 Sol",
+      "vendor": "OpenAI",
+      "cli": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    },
+    "grok": {
+      "label": "Grok 4.7",
+      "vendor": "xAI",
+      "cli": "grok",
+      "model": "grok-4.7",
+      "effort": "high"
+    }
+  },
+  "claude_fallbacks": {
+    "claude-opus": "fresh-context Claude Opus subagent",
+    "claude-sonnet": "Claude Sonnet subagent",
+    "claude-haiku": "Claude Haiku subagent"
+  },
+  "roles": {
+    "planner": {
+      "purpose": "independent plan, copy edit",
+      "pick": 1,
+      "chain": ["neon", "sol62", "claude-opus"]
+    },
+    "worker": {
+      "purpose": "self-contained module, returned as a file or diff",
+      "pick": 1,
+      "chain": ["neon", "grok", "sol62", "claude-sonnet"]
+    },
+    "reviewer": {
+      "purpose": "merge-review gate on the final diff",
+      "pick": 2,
+      "chain": ["grok", "sol61", "neon", "claude-opus"]
+    },
+    "checker": {
+      "purpose": "fact and consistency check of a document",
+      "pick": 1,
+      "chain": ["sol62", "neon", "claude-opus"]
+    },
+    "runner": {
+      "purpose": "narrow, fixed-format searches and lookups",
+      "pick": 1,
+      "web": true,
+      "chain": ["grok", "claude-haiku"]
+    }
+  },
+  "cli_locations": {
+    "codex": ["/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex"]
+  }
+}

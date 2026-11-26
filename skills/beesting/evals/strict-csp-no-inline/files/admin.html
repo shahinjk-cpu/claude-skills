@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Pizza Napoli — заказы</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <h1>Заказы за сегодня</h1>
+  <div id="list"></div>
+  <script>
+    const sb = supabase.createClient(APP_CONFIG.SUPABASE_URL, APP_CONFIG.SUPABASE_ANON_KEY);
+    async function load() {
+      const { data } = await sb.from('orders_today').select('*').order('id', { ascending: false });
+      document.getElementById('list').innerHTML = (data || []).map(o => `
+        <div class="order">#${o.id} ${o.name} ${o.phone} — ${o.address} — ${o.total} ₸ [${o.status}]
+          <button onclick="paid(${o.id})">Оплачен</button>
+        </div>`).join('');
+    }
+    function paid(id) { sb.rpc('mark_paid', { p_order: id }); load(); }
+    load();
+  </script>
+</body>
+</html>

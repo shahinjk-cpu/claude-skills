@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>monitor</title>
+<link rel="icon" id="favicon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/uPlot.min.css">
+<link rel="stylesheet" href="/agents.css">
+<link rel="stylesheet" href="/glance.css">
+<script src="/vendor/uPlot.iife.min.js"></script>
+<link rel="stylesheet" href="/main.css"></head>
+<body data-view="main"><main>
+<h1 id="h1">monitor</h1>
+<p class="sub" id="upd">Loading…</p>
+<div class="alarm" id="alarm" role="alert" hidden></div>
+<nav class="nav" aria-label="Views"><a href="#t-needs">Needs you</a><a href="#t-missions">Missions</a><a href="#t-handoffs">Hand-offs</a><a href="#t-agents">Headless agents</a><a href="#sections">Work in progress</a><a href="#t-sys">System</a><a href="#t-disk">Disk</a><a href="#t-quota">Quota</a><a href="/page/done.html" id="nav-done">Finished</a><a href="/page/publishing.html">Publishing</a></nav>
+<section class="glance" id="glance" aria-label="At a glance"></section>
+<section class="card" aria-labelledby="t-needs">
+<h2 id="t-needs">Needs you</h2>
+<div id="needs"><p class="empty">Loading…</p></div>
+</section>
+<section class="card" aria-labelledby="t-missions">
+<h2 id="t-missions">Missions in flight</h2>
+<p class="chart-sub" id="missions-sub">Loading…</p>
+<div id="missions"></div>
+</section>
+<section class="card" aria-labelledby="t-handoffs">
+<h2 id="t-handoffs">Hand-offs</h2>
+<p class="chart-sub" id="handoffs-sub">Loading…</p>
+<div id="handoffs"></div>
+</section>
+<section class="card" aria-labelledby="t-agents">
+<h2 id="t-agents">Headless agents</h2>
+<p class="chart-sub" id="agents-sub">Loading…</p>
+<div class="qov" id="queue-ov" hidden></div>
+<div id="agents-box"></div>
+</section>
+<div id="sections"></div>
+<p class="more card" id="done-link"></p>
+<p class="meta" id="problems" hidden></p>
+<section class="card" aria-labelledby="t-sys">
+<h2 id="t-sys">System resources</h2>
+<p class="chart-sub">The whole machine, split by what uses it; sampled every 30 s · times in Berlin time (CET/CEST). Memory: each category's own process memory (file cache excluded): Lean (Lean, lake, the Lean slots), queue workers (the queue supervisor, headless agents and detached carve drivers), Claude sessions (interactive ones and their tools); the rest is everything else in use.</p>
+<div class="toolbar">
+  <div class="seg" role="group" aria-label="Time range" id="ranges"></div>
+  <button id="zoomed" hidden>Zoomed in · back to range</button>
+  <span class="hint">Drag across a chart to zoom · double-click to reset · hover for values</span>
+</div>
+<div class="grid2">
+<div class="chart"><h3>Memory in use</h3><p class="chart-sub" id="s-mem"></p><div id="c-mem"></div></div>
+<div class="chart"><h3>Swap in use</h3><p class="chart-sub" id="s-swap"></p><div id="c-swap"></div></div>
+<div class="chart"><h3>CPU in use</h3><p class="chart-sub" id="s-cpu"></p><div id="c-cpu"></div></div>
+<div class="chart"><h3>System load (1-min average)</h3><p class="chart-sub" id="s-load"></p><div id="c-load"></div></div>
+<div class="chart wide"><h3>Stall pressure</h3><p class="chart-sub" id="s-psi"></p><div id="c-psi"></div></div>
+</div>
+<h3 style="margin-top:16px">Lean processes</h3><div id="lean"></div>
+<div id="cleared-box" hidden><h3 style="margin-top:16px" id="t-cleared">Cleared alerts (last 24 h)</h3>
+<p class="chart-sub">Trouble that was in the red banner and has stopped: the condition is gone, the racing jobs are no longer both running, or an OOM kill is over an hour old. Repeats are one row with their worst reading.</p>
+<ul class="cleared" id="cleared"></ul></div>
+</section>
+<section class="card" aria-labelledby="t-disk">
+<h2 id="t-disk">Disk</h2>
+<p class="chart-sub" id="disk-sub">Loading…</p>
+<div class="toolbar">
+  <div class="seg" role="group" aria-label="Disk time range" id="disk-ranges"></div>
+  <button id="disk-zoomed" class="zoomed" hidden>Zoomed in · back to range</button>
+  <span class="hint">Drag across the chart to zoom · double-click to reset · hover for values</span>
+</div>
+<div class="chart"><h3>Disk in use, by what holds it</h3><div id="c-disk"></div></div>
+<div class="dtab" id="disk-table"></div>
+<p class="hint">Categories are measured hourly with <code>du</code> at idle I/O priority; the total and free space come from the filesystem every 30 s. Lean build output: every <code>.lake</code> under ~/claude except its <code>packages</code> (the workspace build, mission repos). Lean libraries and toolchains: <code>.lake/packages</code> (Mathlib and friends), ~/.elan, ~/.cache/mathlib. Agent job scratch: ~/.claude/jobs (carve dirs). Repos and sources: ~/claude outside <code>.lake</code>. Caches, /tmp, transcripts: the rest of ~/.cache, /tmp, and ~/.claude outside jobs. The grey rest is whatever the filesystem counts beyond these: the Nix store, the 32 GiB swap file, other home directories. The banner warns below 20 GiB free; the OAI queue stops launching below 40.</p>
+</section>
+<section class="card" aria-labelledby="t-quota">
+<h2 id="t-quota">Subscription quota</h2>
+<p class="chart-sub" id="quota-sub">Loading…</p>
+<div class="chart"><h3>7-day window (last 7 days)</h3><div id="c-q7"></div></div>
+<p class="hint">Utilization of the Claude subscription as reported in the agents' rate-limit records. Solid lines mark past resets, the dashed line the next one. Steps change only while some agent is running. The agents' records stopped reporting the 5-hour window on 31 Oct, so it is no longer charted.</p>
+</section>
+<details><summary>Adding a section</summary><p>Any job can add its own section: write <code>~/claude/monitor/sections/&lt;id&gt;.json</code>, e.g. with
+<code>python3 ~/.claude/skills/monitor/section.py set my-job --title 'My job' --phase 'Items=3/10'</code>. The <code>monitor</code> skill has the details.</p></details>
+</main>
+<script src="/main.js"></script>
+<script src="/agents.js"></script>
+<script src="/glance.js"></script></body></html>

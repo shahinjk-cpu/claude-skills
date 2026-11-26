@@ -1,0 +1,4 @@
+[
+  {"name": "Example: local employee", "contract": "employee_local", "amount": 9000, "currency": "EUR", "per": "month", "benefitsMonthly": 300},
+  {"name": "Example: foreign contract", "contract": "contractor", "amount": 120000, "currency": "USD", "per": "year", "equity": "0.05% options, 4-year vest", "billableMonths": 11}
+]

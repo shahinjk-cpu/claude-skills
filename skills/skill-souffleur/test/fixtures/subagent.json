@@ -1,0 +1,86 @@
+{
+  "claudeCode": "2.1.332",
+  "events": [
+    {
+      "event": "session.start",
+      "at": 0,
+      "session": "session-1",
+      "input": {
+        "cwd": "/project",
+        "surface": null,
+        "isInteractive": false,
+        "version": {
+          "version": "2.1.332",
+          "base": "2.1.332"
+        }
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 196,
+      "session": "session-1",
+      "input": {
+        "text": "Use the Agent tool once. Brief for the subagent: 'skills: bigtest. Invoke the bi",
+        "origin": {
+          "kind": "sdk"
+        }
+      }
+    },
+    {
+      "event": "tool.call",
+      "at": 1451,
+      "session": "session-1",
+      "input": {
+        "description": "Invoke bigtest skill",
+        "prompt": "skills: bigtest. Invoke the bigtest skill with the Skill tool, then reply only DONE.",
+        "tool": "Agent",
+        "tool_use_id": "toolu_1"
+      }
+    },
+    {
+      "event": "tool.call",
+      "at": 3788,
+      "session": "session-1",
+      "input": {
+        "skill": "bigtest",
+        "tool": "Skill",
+        "tool_use_id": "toolu_2",
+        "agentId": "agent-1"
+      }
+    },
+    {
+      "event": "skill.prompt",
+      "at": 3814,
+      "session": "session-1",
+      "input": {
+        "skill": "bigtest",
+        "len": 43425,
+        "head": "Base directory for this skill: /project/.claude/skills/bigtest",
+        "tail": "ps over the lazy dog.\n\nEND-MARKER-OMEGA\n"
+      }
+    },
+    {
+      "event": "tool.call",
+      "at": 5875,
+      "session": "session-1",
+      "input": {
+        "message": "DONE",
+        "tool": "SubagentHandback",
+        "tool_use_id": "toolu_3",
+        "agentId": "agent-1"
+      }
+    },
+    {
+      "event": "prompt.submit",
+      "at": 6549,
+      "session": "session-1",
+      "input": {
+        "text": "<agent-message from=\"agent-1\">\n[Subagent hand-back] The text below is ",
+        "isMeta": true,
+        "origin": {
+          "kind": "peer"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "War Thunder → Bambu-Druckdatei"
+  short_description: "Panzername → mehrteiliger Bausatz in einer Bambu-Datei"
+  default_prompt: "Nutze $war-thunder-tank-print, um aus meinem War-Thunder-Panzernamen einen mehrteiligen Bausatz als eine geprüfte Bambu-Druckdatei zu erstellen."

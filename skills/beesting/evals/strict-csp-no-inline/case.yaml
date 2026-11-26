@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: strict-csp-no-inline
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  No inline scripts, inline event handlers or javascript: URLs remain; vercel.json CSP has script-src without unsafe-inline, script-src-attr 'none', CDN pinned to an exact version path with SRI, connect-src limited to the Supabase project (https and wss), plus other security headers; every former handler is wired via addEventListener so features still work.

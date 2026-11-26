@@ -1,0 +1,19 @@
+{
+  "name": "skill-souffleur",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Keeps the skills a session needs loaded across compaction and resume.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "test": "node --test --experimental-strip-types 'test/**/*.spec.ts'",
+    "typecheck": "tsc -p . && tsc -p tsconfig.core.json"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^7.0.2"
+  }
+}

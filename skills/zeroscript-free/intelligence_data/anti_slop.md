@@ -1,0 +1,7 @@
+# Anti-slop production rubric
+
+Do not simply veto a style choice. Identify visible defect, intended effect, cause and smallest meaningful fix. Automatic checks use `anti_slop.py`, `visual_review.py`, motion contacts, layout checks and source scanners; none certify aesthetics. 
+
+UI: panel hierarchy and geometry must reflect actual reference; if every panel is round and gradient-heavy, redesign primary/secondary surfaces, not color. Text clipped → identify constraints and reflow. Icon family mismatch → consistent stroke, perspective and size. Modeling: silhouette weak → adjust primary mass before details; floating piece → inspect local attachment and pivot; high part count → remove invisible details and simplify collision. Animation: robotic → set key poses, arcs, rhythm and timing; foot sliding → fix root/stride/contact; random rotation → determine actual joint axes. VFX: effect hides target → reduce opaque layer, shrink silhouette and separate telegraph from impact. World: repetitive/empty → landmark, route, deliberate density and readable affordance; not random props. Code: giant mixed script → separate state, rendering and adapters; no blanket exception suppression; verify same behavior and remote authority. 
+
+At review, record severity, observed evidence, exact responsible component, repair, identical-condition retest. Fix critical correctness first, then visual hierarchy, then detail. Use only the scope authorized by user. Reject unresolved critical gates rather than average them into a pretty score.

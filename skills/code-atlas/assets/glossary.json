@@ -1,0 +1,20 @@
+{
+ "function": "A named set of steps in the code. Other code 'calls' it by name to get that job done, like asking a coworker for help.",
+ "call": "When one piece of code runs a function. On the map, a wire from the caller to the function it asks.",
+ "file": "One text file of code. On the map, a box you can open to see the functions inside it.",
+ "import": "A line at the top of a file that borrows code from another file or a library.",
+ "library": "Code written by someone else that this project borrows, such as a date or web framework.",
+ "parameter": "An input a function needs to do its job, given in the brackets when it is called.",
+ "return value": "What a function hands back when it finishes.",
+ "class": "A blueprint that groups data and the functions that work on it, like a recipe for making many similar things.",
+ "variable": "A named box that holds a value, such as a number or some text, so the code can use it later.",
+ "loop": "Code that repeats the same steps for each item in a list.",
+ "condition": "An if/else check: do one thing when something is true, another when it is not.",
+ "build": "Turning source code into the finished files that run or get published.",
+ "API": "A way for one program to ask another for something, often over the internet.",
+ "component": "A reusable piece of a user interface, like a button or a card, written once and used in many places.",
+ "config": "A settings file. The code reads it instead of having the values written into the code.",
+ "test": "Code that checks other code gives the right answers, so mistakes are caught early.",
+ "database": "Where an app keeps its data so it is still there next time.",
+ "server": "A program that waits for requests (from a browser or an app) and answers them."
+}

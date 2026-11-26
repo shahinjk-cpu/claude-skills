@@ -1,0 +1,740 @@
+{
+  "version_date": "2026-11-25",
+  "about": "Single source of placement rules for meta-ads. Numbers from Meta's Ads Guide and Business Help Center as read on version_date; see references/placements.md for sources, conflicts and assumptions. media rules: aspect = width/height; media inside [native_min, native_max] shows natively, otherwise 'outside' applies: crop (cut to the nearest bound), fill (shown smaller on a padded/blurred background) or letterbox (black bars).",
+  "ratios": {
+    "1:1": 1.0,
+    "4:5": 0.8,
+    "9:16": 0.5625,
+    "1.91:1": 1.91,
+    "16:9": 1.7778,
+    "2:3": 0.6667
+  },
+  "placements": [
+    {
+      "id": "fb_feed_mobile",
+      "short": "FB Feed",
+      "name": "Facebook Feed (mobile)",
+      "platform": "facebook",
+      "device": "mobile",
+      "template": "fb_feed",
+      "variant": "feed",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "pad"
+        },
+        "video": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "pad"
+        },
+        "carousel": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.0,
+          "outside": "pad"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 3,
+          "more": "… See more"
+        },
+        "headline": {
+          "show": true,
+          "chars": 27
+        },
+        "description": {
+          "show": true,
+          "chars": 30,
+          "lines": 2
+        }
+      }
+    },
+    {
+      "id": "fb_feed_desktop",
+      "short": "FB Desk",
+      "name": "Facebook Feed (desktop)",
+      "platform": "facebook",
+      "device": "desktop",
+      "template": "fb_feed",
+      "variant": "feed",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "pad"
+        },
+        "video": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.91,
+          "outside": "letterbox",
+          "box": 1.0
+        },
+        "carousel": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.0,
+          "outside": "pad"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 3,
+          "more": "… See more"
+        },
+        "headline": {
+          "show": true,
+          "chars": 27
+        },
+        "description": {
+          "show": true,
+          "chars": 30,
+          "lines": 2
+        }
+      }
+    },
+    {
+      "id": "fb_stories",
+      "short": "FB Story",
+      "name": "Facebook Stories",
+      "platform": "facebook",
+      "device": "mobile",
+      "template": "fb_stories",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "default": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 0.5625,
+          "outside": "fill",
+          "box": 0.4613
+        }
+      },
+      "safe_zone": {
+        "top": 0.14,
+        "bottom": 0.35,
+        "left": 0.06,
+        "right": 0.06
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 3,
+          "more": "… more"
+        },
+        "headline": {
+          "show": false,
+          "chars": 40
+        },
+        "description": {
+          "show": false
+        }
+      },
+      "carousel_min_cards": 3
+    },
+    {
+      "id": "fb_reels",
+      "short": "FB Reel",
+      "name": "Facebook Reels",
+      "platform": "facebook",
+      "device": "mobile",
+      "template": "fb_reels",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "default": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 0.5625,
+          "outside": "fill",
+          "box": 0.4613
+        }
+      },
+      "safe_zone": {
+        "top": 0.14,
+        "bottom": 0.35,
+        "left": 0.06,
+        "right": 0.06
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 40,
+          "lines": 2,
+          "more": "… more"
+        },
+        "headline": {
+          "show": true,
+          "chars": 55
+        },
+        "description": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": "fb_marketplace",
+      "short": "FB Mkt",
+      "name": "Facebook Marketplace",
+      "platform": "facebook",
+      "device": "mobile",
+      "template": "fb_marketplace",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "default": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.0,
+          "outside": "pad"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": false,
+          "chars": 125
+        },
+        "headline": {
+          "show": true,
+          "chars": 40
+        },
+        "description": {
+          "show": false,
+          "chars": 30
+        }
+      }
+    },
+    {
+      "id": "fb_video_feeds",
+      "short": "FB VidF",
+      "name": "Facebook Video Feeds",
+      "platform": "facebook",
+      "device": "mobile",
+      "template": "fb_feed",
+      "variant": "video_feeds",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "pad"
+        },
+        "video": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "pad"
+        },
+        "carousel": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.0,
+          "outside": "pad"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 3,
+          "more": "… See more"
+        },
+        "headline": {
+          "show": true,
+          "chars": 27
+        },
+        "description": {
+          "show": true,
+          "chars": 30,
+          "lines": 2
+        }
+      }
+    },
+    {
+      "id": "fb_instream",
+      "short": "FB InSt",
+      "name": "Facebook In-stream video",
+      "platform": "facebook",
+      "device": "mobile",
+      "template": "fb_instream",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "default": {
+          "ideal": 1.7778,
+          "native_min": 1.0,
+          "native_max": 1.91,
+          "outside": "letterbox",
+          "box": 1.7778
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": false,
+          "chars": 125
+        },
+        "headline": {
+          "show": true,
+          "chars": 40
+        },
+        "description": {
+          "show": false,
+          "chars": 30
+        }
+      },
+      "note": "Player is 16:9; media that isn't 16:9 is shown pillarboxed/letterboxed inside it (Meta supports 16:9 and 1:1 video here)."
+    },
+    {
+      "id": "fb_right_column",
+      "short": "FB RCol",
+      "name": "Facebook Right Column",
+      "platform": "facebook",
+      "device": "desktop",
+      "template": "fb_feed",
+      "variant": "right_column",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "default": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.91,
+          "outside": "pad"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": false
+        },
+        "headline": {
+          "show": true,
+          "chars": 40
+        },
+        "description": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": "fb_search",
+      "short": "FB Srch",
+      "name": "Facebook Search results",
+      "platform": "facebook",
+      "device": "mobile",
+      "template": "fb_feed",
+      "variant": "search",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.91,
+          "outside": "pad"
+        },
+        "video": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.0,
+          "outside": "pad"
+        },
+        "carousel": {
+          "ideal": 1.0,
+          "native_min": 1.0,
+          "native_max": 1.0,
+          "outside": "pad"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 3,
+          "more": "… See more"
+        },
+        "headline": {
+          "show": true,
+          "chars": 40
+        },
+        "description": {
+          "show": true,
+          "chars": 30,
+          "lines": 2
+        }
+      }
+    },
+    {
+      "id": "ig_feed",
+      "short": "IG Feed",
+      "name": "Instagram Feed",
+      "platform": "instagram",
+      "device": "mobile",
+      "template": "ig_feed",
+      "variant": "feed",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "crop"
+        },
+        "video": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 1.91,
+          "outside": "crop"
+        },
+        "carousel": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.0,
+          "outside": "crop"
+        }
+      },
+      "safe_zone_video_9x16": {
+        "top": 0.14,
+        "bottom": 0.35,
+        "left": 0.06,
+        "right": 0.06
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 2,
+          "more": "… more"
+        },
+        "headline": {
+          "show": false,
+          "chars": 40
+        },
+        "description": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": "ig_stories",
+      "short": "IG Story",
+      "name": "Instagram Stories",
+      "platform": "instagram",
+      "device": "mobile",
+      "template": "ig_stories",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "default": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 0.5625,
+          "outside": "fill",
+          "box": 0.4613
+        }
+      },
+      "safe_zone": {
+        "top": 0.14,
+        "bottom": 0.35,
+        "left": 0.06,
+        "right": 0.06
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 3,
+          "more": "… more"
+        },
+        "headline": {
+          "show": false,
+          "chars": 40
+        },
+        "description": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": "ig_reels",
+      "short": "IG Reel",
+      "name": "Instagram Reels",
+      "platform": "instagram",
+      "device": "mobile",
+      "template": "ig_reels",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "default": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 0.5625,
+          "outside": "fill",
+          "box": 0.4613
+        }
+      },
+      "safe_zone": {
+        "top": 0.14,
+        "bottom": 0.35,
+        "left": 0.06,
+        "right": 0.06
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 44,
+          "lines": 2,
+          "more": "… more"
+        },
+        "headline": {
+          "show": false
+        },
+        "description": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": "ig_explore",
+      "short": "IG Expl",
+      "name": "Instagram Explore (opened post)",
+      "platform": "instagram",
+      "device": "mobile",
+      "template": "ig_feed",
+      "variant": "explore",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "crop"
+        },
+        "video": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 1.91,
+          "outside": "crop"
+        },
+        "carousel": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.0,
+          "outside": "crop"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 2,
+          "more": "… more"
+        },
+        "headline": {
+          "show": false,
+          "chars": 40
+        },
+        "description": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": "ig_explore_home",
+      "short": "IG ExHm",
+      "name": "Instagram Explore Home (grid)",
+      "platform": "instagram",
+      "device": "mobile",
+      "template": "ig_explore_home",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 0.8,
+          "outside": "crop"
+        },
+        "video": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 0.8,
+          "outside": "crop"
+        },
+        "carousel": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 0.8,
+          "outside": "crop"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": false,
+          "chars": 125
+        },
+        "headline": {
+          "show": false,
+          "chars": 40
+        },
+        "description": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": "ig_profile_feed",
+      "short": "IG Prof",
+      "name": "Instagram Profile Feed",
+      "platform": "instagram",
+      "device": "mobile",
+      "template": "ig_feed",
+      "variant": "profile",
+      "formats": [
+        "image",
+        "video",
+        "carousel"
+      ],
+      "media": {
+        "image": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.91,
+          "outside": "crop"
+        },
+        "video": {
+          "ideal": 0.5625,
+          "native_min": 0.5625,
+          "native_max": 1.91,
+          "outside": "crop"
+        },
+        "carousel": {
+          "ideal": 0.8,
+          "native_min": 0.8,
+          "native_max": 1.0,
+          "outside": "crop"
+        }
+      },
+      "text": {
+        "primary_text": {
+          "show": true,
+          "chars": 125,
+          "lines": 2,
+          "more": "… more"
+        },
+        "headline": {
+          "show": false,
+          "chars": 40
+        },
+        "description": {
+          "show": false
+        }
+      }
+    }
+  ],
+  "cta": {
+    "LEARN_MORE": "Learn more",
+    "SHOP_NOW": "Shop now",
+    "SIGN_UP": "Sign up",
+    "BOOK_NOW": "Book now",
+    "BOOK_TRAVEL": "Book travel",
+    "APPLY_NOW": "Apply now",
+    "BUY_TICKETS": "Buy tickets",
+    "CALL_NOW": "Call now",
+    "CONTACT_US": "Contact us",
+    "DONATE_NOW": "Donate now",
+    "DOWNLOAD": "Download",
+    "GET_DIRECTIONS": "Get directions",
+    "GET_OFFER": "Get offer",
+    "GET_QUOTE": "Get quote",
+    "GET_SHOWTIMES": "Get showtimes",
+    "GET_PROMOTIONS": "Get promotions",
+    "LIKE_PAGE": "Like Page",
+    "LISTEN_NOW": "Listen now",
+    "LISTEN_MUSIC": "Listen now",
+    "OPEN_LINK": "Open link",
+    "ORDER_NOW": "Order now",
+    "PLAY_GAME": "Play game",
+    "REQUEST_TIME": "Request time",
+    "SUBSCRIBE": "Subscribe",
+    "USE_APP": "Use app",
+    "USE_MOBILE_APP": "Use app",
+    "WATCH_MORE": "Watch more",
+    "INSTALL_MOBILE_APP": "Install now",
+    "INSTALL_APP": "Install now",
+    "MESSAGE_PAGE": "Send message",
+    "WHATSAPP_MESSAGE": "Send WhatsApp message",
+    "BUY_NOW": "Buy now",
+    "GET_STARTED": "Get started",
+    "SEE_MORE": "See more",
+    "SEE_DETAILS": "See details",
+    "WATCH_VIDEO": "Watch video",
+    "WATCH_NOW": "Watch now",
+    "CHAT_NOW": "Chat now",
+    "ADD_TO_CART": "Add to cart",
+    "VIEW_PRODUCT": "View product",
+    "SEE_SHOP": "See shop",
+    "NO_BUTTON": "(no button)"
+  }
+}

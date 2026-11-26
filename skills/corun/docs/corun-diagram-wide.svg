@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 600" width="2000" height="800" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="1500" height="600" fill="#f8fafc"/>
+
+  <text x="40" y="54" font-size="34" font-weight="700" fill="#0f172a">Corun</text>
+  <text x="160" y="54" font-size="22" fill="#334155">Claude coordinates Gemini, GPT and Grok inside Claude Code. Only Claude applies changes.</text>
+
+  <!-- you -->
+  <rect x="40" y="145" width="160" height="110" rx="12" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <text x="120" y="190" font-size="22" font-weight="700" text-anchor="middle" fill="#0f172a">You</text>
+  <text x="120" y="217" font-size="15" text-anchor="middle" fill="#475569">requirement in,</text>
+  <text x="120" y="237" font-size="15" text-anchor="middle" fill="#475569">approval out</text>
+  <line x1="200" y1="200" x2="245" y2="200" stroke="#475569" stroke-width="2.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
+
+  <!-- claude -->
+  <rect x="250" y="90" width="290" height="220" rx="14" fill="#fff7ed" stroke="#c2410c" stroke-width="2.5"/>
+  <text x="395" y="130" font-size="22" font-weight="700" text-anchor="middle" fill="#7c2d12">Claude Code</text>
+  <text x="395" y="155" font-size="15" text-anchor="middle" fill="#9a3412">coordinator, Corun skill</text>
+  <text x="270" y="195" font-size="15" fill="#431407">• writes the brief, its own plan</text>
+  <text x="270" y="221" font-size="15" fill="#431407">• applies and tests all changes</text>
+  <text x="270" y="247" font-size="15" fill="#431407">• confirms every finding</text>
+  <text x="270" y="273" font-size="15" fill="#431407">• treats partner output as data</text>
+  <line x1="540" y1="200" x2="585" y2="200" stroke="#475569" stroke-width="2.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
+
+  <!-- corun.py -->
+  <rect x="590" y="90" width="250" height="220" rx="14" fill="#eef2ff" stroke="#4338ca" stroke-width="2.5"/>
+  <text x="715" y="130" font-size="22" font-weight="700" text-anchor="middle" fill="#312e81">corun.py</text>
+  <text x="715" y="155" font-size="15" text-anchor="middle" fill="#3730a3">models.json drives it</text>
+  <text x="608" y="195" font-size="15" fill="#1e1b4b">• probe and declare roster</text>
+  <text x="608" y="221" font-size="15" fill="#1e1b4b">• role chains with fallback</text>
+  <text x="608" y="247" font-size="15" fill="#1e1b4b">• a sandbox for every call</text>
+  <text x="608" y="273" font-size="15" fill="#1e1b4b">• refusal and timeout handling</text>
+
+  <!-- partners -->
+  <rect x="900" y="88" width="560" height="50" rx="10" fill="#ecfeff" stroke="#0e7490" stroke-width="2"/>
+  <text x="916" y="110" font-size="17" font-weight="700" fill="#164e63">Gemini 4 Neon</text>
+  <text x="916" y="129" font-size="13" fill="#155e75">planner, copy editor, coding worker · agy deny rules</text>
+
+  <rect x="900" y="146" width="560" height="50" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <text x="916" y="168" font-size="17" font-weight="700" fill="#14532d">GPT-6.2 Sol / GPT-6.1 Sol</text>
+  <text x="916" y="187" font-size="13" fill="#166534">fact checker / merge reviewer · codex read-only, rules off</text>
+
+  <rect x="900" y="204" width="560" height="50" rx="10" fill="#faf5ff" stroke="#7e22ce" stroke-width="2"/>
+  <text x="916" y="226" font-size="17" font-weight="700" fill="#581c87">Grok 4.7</text>
+  <text x="916" y="245" font-size="13" fill="#6b21a8">merge reviewer, web searches · fail-closed sandbox</text>
+
+  <rect x="900" y="262" width="560" height="50" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="916" y="284" font-size="17" font-weight="700" fill="#334155">Claude subagents</text>
+  <text x="916" y="303" font-size="13" fill="#475569">fallback when a partner is missing · "same-family"</text>
+
+  <line x1="840" y1="170" x2="895" y2="115" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="840" y1="190" x2="895" y2="171" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="840" y1="215" x2="895" y2="229" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="840" y1="240" x2="895" y2="285" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrd)"/>
+
+  <!-- process -->
+  <g font-size="15">
+    <rect x="40"   y="360" width="210" height="92" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+    <text x="145" y="392" font-weight="700" text-anchor="middle" fill="#0f172a">1 Brief</text>
+    <text x="145" y="416" text-anchor="middle" fill="#475569">your words,</text>
+    <text x="145" y="436" text-anchor="middle" fill="#475569">acceptance criteria</text>
+
+    <rect x="282"  y="360" width="210" height="92" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+    <text x="387" y="392" font-weight="700" text-anchor="middle" fill="#0f172a">2 Independent views</text>
+    <text x="387" y="416" text-anchor="middle" fill="#475569">planner sees the brief,</text>
+    <text x="387" y="436" text-anchor="middle" fill="#475569">never Claude's draft</text>
+
+    <rect x="524"  y="360" width="210" height="92" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+    <text x="629" y="392" font-weight="700" text-anchor="middle" fill="#0f172a">3 Produce</text>
+    <text x="629" y="416" text-anchor="middle" fill="#475569">worker returns a diff,</text>
+    <text x="629" y="436" text-anchor="middle" fill="#475569">Claude applies and tests</text>
+
+    <rect x="766"  y="360" width="210" height="92" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+    <text x="871" y="392" font-weight="700" text-anchor="middle" fill="#0f172a">4 Review</text>
+    <text x="871" y="416" text-anchor="middle" fill="#475569">two reviewers, blocking</text>
+    <text x="871" y="436" text-anchor="middle" fill="#475569">only if confirmed</text>
+
+    <rect x="1008" y="360" width="210" height="92" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+    <text x="1113" y="392" font-weight="700" text-anchor="middle" fill="#0f172a">5 Approve</text>
+    <text x="1113" y="416" text-anchor="middle" fill="#475569">result, verdict,</text>
+    <text x="1113" y="436" text-anchor="middle" fill="#475569">open trade-offs</text>
+
+    <rect x="1250" y="360" width="210" height="92" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+    <text x="1355" y="392" font-weight="700" text-anchor="middle" fill="#0f172a">6 Learn</text>
+    <text x="1355" y="416" text-anchor="middle" fill="#475569">each fixed mistake</text>
+    <text x="1355" y="436" text-anchor="middle" fill="#475569">becomes a check</text>
+  </g>
+  <g stroke="#475569" stroke-width="2" marker-end="url(#arr)">
+    <line x1="250" y1="406" x2="279" y2="406"/>
+    <line x1="492" y1="406" x2="521" y2="406"/>
+    <line x1="734" y1="406" x2="763" y2="406"/>
+    <line x1="976" y1="406" x2="1005" y2="406"/>
+    <line x1="1218" y1="406" x2="1247" y2="406"/>
+  </g>
+  <text x="145" y="478" font-size="14" text-anchor="middle" fill="#c2410c" font-weight="700">you take part here</text>
+  <text x="1113" y="478" font-size="14" text-anchor="middle" fill="#c2410c" font-weight="700">and here</text>
+
+  <text x="40" y="545" font-size="15" fill="#64748b">Three profiles: coding and skills, research, writing. First run tests every partner and declares who fills each role.</text>
+  <text x="1460" y="575" font-size="16" text-anchor="end" fill="#334155" font-weight="700">github.com/maxuwp/corun · MIT</text>
+</svg>

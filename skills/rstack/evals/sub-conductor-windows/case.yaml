@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: sub-conductor-windows
+expected_outcome: |
+  One main conductor owns decisions and the merge queue; lane windows run as sub-conductors that own their files, work in their own worktrees, hand reviewed drafts to the conductor and never merge; shared files and migration numbers are sequenced by the conductor; one queue and ledger are the source of truth; the human is not asked about coordination.

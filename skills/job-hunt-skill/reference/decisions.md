@@ -1,0 +1,16 @@
+# Eligibility, net pay, company check, offers
+
+## Eligibility and net pay
+- `filter.py` gives every job an **eligibility** verdict (`eligible`, `likely`, `unclear`, `relocation`, `no`) with reasons, from `filters.md` → `person`. It tells residence requirements ("must reside in") apart from the right to work ("authorized to work in"): a passport satisfies the second, not the first. It also detects the contract type (local payroll, PJ, contractor, employer of record, foreign payroll) and the time-zone overlap. It's advisory: say "relocation" or "unclear" plainly and keep such jobs visible.
+- When pay is listed, `filter.py` estimates **net monthly pay** for the plausible contracts (`pay_net`). Country rules live in `scripts/netpay/<CC>.json`, with sources and a validity date. Other countries use the flat `netRates`. Single offer: `python3 SKILL_DIR/scripts/netpay.py --workspace <ws> --gross 25000 --contract employee_local` (add `--rate` for contractor monthly rates).
+- **Boundary:** net figures are **AI-assisted estimates from a fixed formula**, shown with their main assumptions (if a module's validity date has passed, say the tables need updating). Compare offers; don't give personal tax or legal advice. Show the regime options side by side (e.g. Simples Anexo III vs V) and say the choice of regime, pró-labore and what to report, deduct or claim is for an accountant. Eligibility verdicts read the posting's text: phrase them as "the posting says…", never as advice on the user's work rights or immigration status, and suggest confirming with the employer.
+
+## Company check
+- Run `python3 SKILL_DIR/scripts/verify_company.py --workspace <ws> --results <results.json>` on kept jobs before recommending them. For an inbound recruiter: `--company X --domain x.com --email recruiter@x.com` (add `--cnpj` for Brazilian companies).
+- It scores public signals (domain age, mail setup, website, public job board, recruiter email, LEI, registry) into `ok` / `caution` / `high-risk`, or `unverified` when the website is unknown or only guessed. For `unverified`, find the real website (from the posting or a search) and re-run with `--domain`.
+- Report a high score as "no warning signs", never as "safe". Verdicts are private signals for the user, not facts about the company: never publish or share them, and word risks as "we couldn't verify X", not as accusations. For `caution` or `high-risk`, show the reasons and next steps: ask for the legal entity and registration number; nothing sensitive is shared before a signed contract.
+
+## Offers
+`python3 SKILL_DIR/scripts/offers.py --workspace <ws>`, with the user's offers in `interview/offers.json` (example in `templates/interview/offers.json`). Use it whenever there are two or more offers, or a local-payroll vs PJ vs contract question. Show net, benefits, the currency-move scenarios, the last 12 months' exchange-rate range, and the local-employee gross that gives the same net. Equity is listed but never counted. The boundary above applies.
+
+Pay talk in general: convert everything to the user's monthly currency and compare to the floor and target in `memory.md`. Suggest letting the employer name the number first, and quoting a stated hours basis for contractor rates.

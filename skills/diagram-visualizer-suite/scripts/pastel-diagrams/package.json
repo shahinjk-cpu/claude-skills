@@ -1,0 +1,55 @@
+{
+  "name": "pastel-diagrams",
+  "version": "1.2.0",
+  "description": "Agent skill: render Mermaid diagrams in a soft pastel whiteboard style (Inter, rounded cards, Lucide icons) to SVG, PNG and HTML.",
+  "keywords": [
+    "mermaid",
+    "diagram",
+    "diagrams",
+    "flowchart",
+    "svg",
+    "png",
+    "dark-mode",
+    "agent-skill",
+    "claude-code",
+    "lucide",
+    "markdown"
+  ],
+  "homepage": "https://github.com/mustafa-patharia/pastel-diagrams#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mustafa-patharia/pastel-diagrams.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mustafa-patharia/pastel-diagrams/issues"
+  },
+  "type": "module",
+  "license": "MIT",
+  "author": "Mustafa Patharia",
+  "bin": {
+    "pastel-diagrams": "scripts/render.mjs"
+  },
+  "files": [
+    "scripts/",
+    "themes/",
+    "SKILL.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "render": "node scripts/render.mjs",
+    "check-themes": "node scripts/check-themes.mjs",
+    "examples": "node scripts/render.mjs examples --check && node scripts/render.mjs examples --dark --out examples/dark --formats svg,png,html --check"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.1.1",
+    "@twemoji/svg": "15.0.0",
+    "libavoid-js": "0.5.0-beta.6",
+    "lucide-static": "^0.468.0",
+    "mermaid": "^11.4.1",
+    "puppeteer-core": "^23.11.1"
+  }
+}

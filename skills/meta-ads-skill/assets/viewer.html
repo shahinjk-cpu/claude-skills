@@ -1,0 +1,1788 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meta Ad Mockups</title>
+<style>
+/* ============================================================ app shell */
+:root{
+  --ui-bg:#f4f5f7; --ui-panel:#ffffff; --ui-text:#1c1e21; --ui-sub:#606770; --ui-line:#dadde1; --ui-accent:#1b74e4;
+  --ok:#1f9d55; --warn:#d97706; --bad:#c0392b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --ui-bg:#121314; --ui-panel:#1d1f21; --ui-text:#e4e6eb; --ui-sub:#a0a4aa; --ui-line:#34373a; --ui-accent:#4a90ff; }
+}
+:root[data-theme="dark"]{ --ui-bg:#121314; --ui-panel:#1d1f21; --ui-text:#e4e6eb; --ui-sub:#a0a4aa; --ui-line:#34373a; --ui-accent:#4a90ff; }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ui-bg);color:var(--ui-text);font:14px/1.4 -apple-system,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+#bar{position:sticky;top:0;z-index:50;background:var(--ui-panel);border-bottom:1px solid var(--ui-line);padding:8px 16px}
+#bar .row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+#bar .row + .row{margin-top:8px}
+#bar h1{font-size:15px;margin:0;font-weight:700;white-space:nowrap}
+#bar select.libsel{font-weight:700;max-width:300px}
+#bar a.ib{text-decoration:none;color:inherit}
+#bar select{font:inherit;font-size:13px;max-width:260px;padding:4px 6px;border:1px solid var(--ui-line);border-radius:6px;background:var(--ui-panel);color:var(--ui-text)}
+.seg{display:inline-flex;border:1px solid var(--ui-line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;font-weight:600;line-height:1.25;text-align:left;border:0;border-right:1px solid var(--ui-line);background:transparent;color:var(--ui-text);padding:5px 12px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button small{display:block;font-size:11px;font-weight:400;color:var(--ui-sub)}
+.seg button.on{background:var(--ui-accent);color:#fff}
+.seg button.on small{color:rgba(255,255,255,.85)}
+.fld{display:flex;align-items:center;gap:6px}
+.fld > .lb{font-size:12px;color:var(--ui-sub)}
+.fixed{padding:4px 10px;border-radius:6px;background:var(--ui-bg);color:var(--ui-sub);font-size:13px;white-space:nowrap}
+.ib{font:inherit;font-size:13px;line-height:1.2;border:1px solid var(--ui-line);background:var(--ui-panel);color:var(--ui-text);border-radius:6px;padding:4px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;user-select:none}
+.ib:hover{border-color:var(--ui-sub)}
+.ib:disabled{opacity:.35;cursor:default;border-color:var(--ui-line)}
+.cnt{font-size:12px;color:var(--ui-sub);white-space:nowrap}
+.zoomv{min-width:38px;text-align:center;font-size:13px}
+details.menu{position:relative}
+details.menu > summary{list-style:none}
+details.menu > summary::-webkit-details-marker{display:none}
+details.menu[open] > summary{border-color:var(--ui-accent)}
+.pop{position:absolute;top:calc(100% + 6px);left:0;z-index:60;background:var(--ui-panel);border:1px solid var(--ui-line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:12px 14px;width:max-content;max-width:min(380px,90vw);display:flex;flex-direction:column;gap:12px;font-size:13px}
+.pop.right{left:auto;right:0}
+.pop > *{flex-shrink:0}   /* a menu taller than the window scrolls; nothing in it gets squashed */
+.pop .opt{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;align-items:start;cursor:pointer;color:var(--ui-text)}
+.pop .opt input{margin:2px 0 0}
+.pop .opt small,.pop .note{grid-column:2;color:var(--ui-sub);font-size:12px}
+.pop .fld{justify-content:space-between}
+.pop .fld > .lb{font-size:13px;color:var(--ui-text);min-width:60px}
+.pop .fld select{flex:1}
+.pop p{margin:0}
+.pop .eh{font-weight:700;margin-top:4px}
+.pop .opt.dis{opacity:.5;cursor:default}
+.pop .segsm button{padding:5px 10px}
+.pop .picklist{max-height:200px;overflow:auto;border:1px solid var(--ui-line);border-radius:6px;padding:6px 8px;display:flex;flex-direction:column;gap:3px}
+.pop .picklist label{display:flex;gap:6px;align-items:flex-start;cursor:pointer;font-size:12px}
+.pop .picklist .pg{font-size:11px;font-weight:700;color:var(--ui-sub);text-transform:uppercase;letter-spacing:.04em;margin-top:4px}
+.pop .exppls{flex-wrap:wrap;gap:6px}
+.pop .exppls select{flex:1 1 30%;min-width:0;max-width:none}
+.pop .expin{font:inherit;font-size:12px;padding:5px 7px;border:1px solid var(--ui-line);border-radius:6px;background:var(--ui-bg);color:var(--ui-text);width:100%;resize:vertical}
+.pop details.expask > summary{cursor:pointer;font-size:12px;color:var(--ui-sub)}
+.pop details.expask > * + *{margin-top:8px}
+.pop .expf{display:flex;align-items:flex-start;gap:4px;font-size:12px}
+.pop .expf > a:first-child{color:var(--ui-accent);overflow-wrap:anywhere;flex:1;min-width:0}
+.pop .expf .fi,.fi{flex:none;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;margin-top:-4px;border-radius:6px;color:var(--ui-sub)}
+.pop .expf .fi:hover{background:var(--ui-bg);color:var(--ui-text)}
+.pop{max-height:calc(100vh - 120px);overflow-y:auto;overflow-x:hidden}
+.selbar{background:color-mix(in srgb,var(--ui-accent) 10%,var(--ui-panel));border:1px solid color-mix(in srgb,var(--ui-accent) 40%,var(--ui-line));border-radius:8px;padding:6px 10px}
+.selbar b{font-size:13px}
+.ib.pri{background:var(--ui-accent);border-color:var(--ui-accent);color:#fff}
+.pickbox{display:inline-flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;font-weight:600;color:var(--ui-text);white-space:nowrap}
+.pickbox input{width:16px;height:16px;margin:0;accent-color:var(--ui-accent);cursor:pointer}
+.tile-h .pickbox{align-self:center}
+.tile.picked > .zoomable,.tile.picked > .tile-h + .zoomable{outline:3px solid var(--ui-accent);outline-offset:3px;border-radius:4px}
+table.mx tr.picked th.ad{background:color-mix(in srgb,var(--ui-accent) 14%,var(--ui-panel))}
+table.mx th.ad .pickbox{margin-right:6px;vertical-align:-3px}
+.nbadge{background:var(--ui-accent);color:#fff;border-radius:9px;font-size:11px;font-weight:600;padding:0 6px;line-height:16px}
+.rhs{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
+.ib.on{background:var(--ui-text);color:var(--ui-panel);border-color:var(--ui-text)}
+.key summary{border:0;background:transparent;color:var(--ui-sub);font-size:12px;gap:10px}
+.key .dot{margin-right:4px;vertical-align:-1px}
+.sec-h{font-size:13px;font-weight:700;margin:6px 0 12px;color:var(--ui-text)}
+.sec + .sec{margin-top:30px}
+.adid{font-weight:400;color:var(--ui-sub);font-size:11px}
+@media (max-width:700px){#bar{position:static}.seg button small{display:none}.rhs{margin-left:0}}
+#main{padding:20px 16px 60px}
+.summary{font-size:12px;color:var(--ui-sub);margin:0 0 14px}
+.tiles{display:flex;flex-wrap:wrap;gap:28px 24px;align-items:flex-start}
+.tile{display:flex;flex-direction:column;gap:6px}
+.tile-h{display:flex;gap:6px;align-items:baseline;font-size:12px;max-width:var(--tw,400px)}
+.tile-h b{font-size:13px}
+.tile-h .why{color:var(--ui-sub);font-size:11px}
+.pill[title]{cursor:help}
+.pill{font-size:11px;font-weight:600;padding:1px 6px;border-radius:9px;white-space:nowrap}
+.pill.actual{background:#e3f6ea;color:var(--ok)} .pill.simulated{background:#fdf0dc;color:var(--warn)} .pill.not_eligible,.pill.excluded{background:#f9e1de;color:var(--bad)}
+.reasons{font-size:11px;color:var(--ui-sub);margin:0;padding-left:16px;max-width:var(--tw,400px)}
+.reasons li.copy{color:var(--warn)}
+.empty{color:var(--ui-sub);padding:40px;text-align:center}
+table.mx{border-collapse:collapse;font-size:12px;background:var(--ui-panel)}
+table.mx th,table.mx td{border:1px solid var(--ui-line);padding:4px 6px;text-align:center;vertical-align:top}
+table.mx th.ad{text-align:left;max-width:240px;font-weight:600}
+table.mx thead th{cursor:help;position:sticky;top:var(--barh,90px);background:var(--ui-panel);z-index:5}
+table.mx td{cursor:pointer}
+table.mx td:hover{outline:2px solid var(--ui-accent)}
+.mxthumb{width:140px;height:220px;overflow:hidden;position:relative;margin:0 auto}
+.mxthumb > .scaler{transform:scale(.33);transform-origin:0 0;position:absolute;left:0;top:0}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%}
+.dot.actual{background:var(--ok)} .dot.simulated{background:var(--warn)} .dot.not_eligible{background:var(--bad)} .dot.excluded{background:#999}
+
+/* ============================================================ export mode */
+body.export{background:#01fe02}
+body.export #bar{display:none}
+body.export #main{padding:0}
+body.export .tiles{display:block}
+body.export .tile-h,body.export .reasons{display:none}
+
+/* ============================================================ mockup base */
+.mk{--w:393px;position:relative;width:var(--w);overflow:hidden;font-family:-apple-system,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;color:var(--t1);background:var(--bg)}
+.mk *{box-sizing:border-box}
+.mk.desk{--w:1280px}
+.mk svg{display:block}
+.mk img,.mk video{display:block}
+.mk.fb{--padbg:#f0f2f5;--bg:#fff;--card:#fff;--feedbg:#c9ccd1;--t1:#080809;--t2:#65686c;--btn:#e2e5e9;--linkbg:#f0f2f5;--line:#ced0d4;--blue:#0866ff;--hover:#f2f2f2}
+.mk.fb.dark{--padbg:#3a3b3c;--bg:#242526;--card:#242526;--feedbg:#18191a;--t1:#e2e5e9;--t2:#b0b3b8;--btn:#3a3b3c;--linkbg:#3a3b3c;--line:#3e4042;--blue:#5aa7ff}
+.mk.ig{--bg:#fff;--card:#fff;--t1:#000;--t2:#737373;--line:#dbdbdb;--btn:#efefef;--blue:#0095f6;--ctabar:#efefef}
+.mk.ig.dark{--bg:#000;--card:#000;--t1:#f5f5f5;--t2:#a8a8a8;--line:#262626;--btn:#363636;--blue:#0095f6;--ctabar:#262626}
+.frame{display:inline-block;padding:14px;border-radius:62px;background:#111;box-shadow:0 0 0 2px #333,0 10px 40px rgba(0,0,0,.25)}
+.frame > .mk{border-radius:48px;height:852px}
+.frame > .mk > .scroll{height:100%;overflow-y:auto;scrollbar-width:none}
+.frame > .mk > .scroll::-webkit-scrollbar{display:none}
+.frame > .mk > .scroll{display:flex;flex-direction:column}
+.frame > .mk > .scroll > *{flex-shrink:0}
+.frame > .mk > .scroll > .fbapp,.frame > .mk > .scroll > .igapp,.frame > .mk > .scroll > .iggrid{flex:1 0 auto}
+.frame > .mk > .scroll > .sb{position:sticky;top:0;z-index:30}
+.frame > .mk > .scroll > .fbhdr,.frame > .mk > .scroll > .ighdr{position:sticky;top:54px;z-index:30;background:var(--card)}
+.frame > .mk > .scroll > .fbtabs,.frame > .mk > .scroll > .igtabs{position:sticky;bottom:0;z-index:30}
+.frame > .mk > .scroll > .igpill{position:sticky;bottom:22px}
+
+/* status bar */
+.sb{height:54px;display:flex;align-items:center;justify-content:space-between;padding:6px 32px 0 44px;font-weight:600;font-size:17px;letter-spacing:-.2px;color:var(--t1);background:var(--bg)}
+.sb .ic{display:flex;gap:6px;align-items:center}
+.sb.light-on-dark{color:#fff;background:transparent;position:absolute;top:0;left:0;right:0;z-index:5}
+
+/* generic */
+.av{border-radius:50%;object-fit:cover;flex:none;background:#bcc0c4;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;overflow:hidden}
+.ph{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;color:rgba(255,255,255,.88);text-align:center}
+.ph .phin{padding:18px;max-width:86%}
+.ph .phr{font:600 13px/1.2 ui-monospace,Consolas,monospace;opacity:.85;letter-spacing:.3px}
+.ph .phl{font-size:15px;font-weight:600;margin-top:8px;line-height:1.3}
+.ph .phk{position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 14px,transparent 14px 28px)}
+.media{position:relative;overflow:hidden;background:#000;width:100%}
+.media > .fit{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.media > .blurbg{position:absolute;inset:-30px;width:calc(100% + 60px);height:calc(100% + 60px);object-fit:cover;filter:blur(28px) brightness(.8);transform:scale(1.1)}
+.media > .center{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);width:100%}
+.media > .center > *{width:100%;height:100%;object-fit:cover}
+.vidbadge{position:absolute;right:10px;bottom:10px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center}
+.more{color:var(--t2);font-weight:600;cursor:pointer}
+.ig .more{font-weight:400}
+.clamp{white-space:pre-wrap;word-wrap:break-word}
+
+/* overlays */
+.ov-safe{position:absolute;z-index:40;pointer-events:none;background:rgba(255,40,80,.28);border:1px dashed rgba(255,60,90,.9)}
+.ov-safe span{position:absolute;left:6px;top:4px;font:600 10px/1.2 ui-monospace,Consolas,monospace;color:#fff;text-shadow:0 1px 2px #000;background:rgba(0,0,0,.35);padding:1px 4px;border-radius:3px}
+.ov-tr{outline:1.5px dashed #e8590c;outline-offset:2px;position:relative}
+.ov-tag{position:absolute;z-index:41;right:0;top:-16px;font:600 10px/14px ui-monospace,Consolas,monospace;background:#e8590c;color:#fff;padding:0 5px;border-radius:3px;white-space:nowrap;pointer-events:none}
+.ov-tag.bad{background:#c0392b}
+.ov-badge{position:absolute;z-index:45;left:8px;top:8px;font:600 11px/1.3 -apple-system,"Segoe UI",sans-serif;background:rgba(217,119,6,.95);color:#fff;padding:3px 8px;border-radius:6px;max-width:80%;pointer-events:none}
+.ov-badge.top{top:auto;bottom:52%}
+
+/* ============================================================ FB feed post */
+.fbapp{background:var(--feedbg)}
+.fbhdr{background:var(--card);display:flex;align-items:center;justify-content:space-between;padding:4px 16px 8px;height:52px}
+.fbword{font:700 29px/1 "Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;letter-spacing:-1.1px;color:var(--blue)}
+.dark .fbword{color:#e2e5e9}
+.fbhdr .r{display:flex;gap:10px}
+.circbtn{width:38px;height:38px;border-radius:50%;background:var(--btn);display:flex;align-items:center;justify-content:center;color:var(--t1)}
+.fbtabs{height:50px;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;color:var(--t2)}
+.fbtabs .on{color:var(--blue)}
+.post{background:var(--card);margin-top:8px}
+.post .ph-h{display:flex;align-items:center;gap:8px;padding:12px 12px 0}
+.post .who{flex:1;min-width:0}
+.post .nm{font-size:15px;font-weight:600;line-height:20px;display:flex;align-items:center;gap:4px;color:var(--t1)}
+.post .sp{font-size:13px;line-height:16px;color:var(--t2);display:flex;align-items:center;gap:4px}
+.post .acts{display:flex;gap:14px;color:var(--t2);align-items:center}
+.post .ptxt{font-size:15px;line-height:20px;padding:8px 12px 10px;color:var(--t1)}
+.linkbar{background:var(--linkbg);display:flex;align-items:center;gap:10px;padding:10px 12px}
+.linkbar .tx{flex:1;min-width:0}
+.linkbar .dl{font-size:12px;line-height:16px;color:var(--t2);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.linkbar .hl{font-size:16px;line-height:20px;font-weight:600;color:var(--t1);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.linkbar .ds{font-size:14px;line-height:18px;color:var(--t2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mk.fb.dark .linkbar .fbcta{background:#4e4f50}
+.fbcta{flex:none;background:var(--btn);color:var(--t1);font-size:15px;font-weight:600;border-radius:6px;padding:0 12px;height:36px;display:flex;align-items:center;white-space:nowrap}
+.eng{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:15px;color:var(--t2)}
+.eng .rx{display:flex;align-items:center;gap:6px}
+.eng .rx .stack{display:flex}
+.eng .rx .stack svg{margin-left:-3px;border:2px solid var(--card);border-radius:50%;box-sizing:content-box}
+.eng .rx .stack svg:first-child{margin-left:0}
+.actrow{display:flex;justify-content:space-around;border-top:1px solid var(--line);margin:0 12px;padding:4px 0 6px;color:var(--t2);font-size:15px;font-weight:600}
+.actrow div{display:flex;align-items:center;gap:6px;padding:6px 8px}
+.car{display:flex;gap:8px;overflow-x:auto;padding:0 12px 4px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.car::-webkit-scrollbar{display:none}
+.car .cd{flex:none;width:var(--cw,300px);border:1px solid var(--line);border-radius:8px;overflow:hidden;scroll-snap-align:start;background:var(--card)}
+.car .cd .cb{display:flex;align-items:center;gap:8px;padding:10px}
+.car .cd .cb .tx{flex:1;min-width:0}
+.car .cd .hl{font-size:15px;line-height:20px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.car .cd .ds{font-size:13px;line-height:16px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.car .cd .fbcta{height:32px;font-size:14px}
+.organic .ptxt{padding-bottom:10px}
+
+/* FB desktop */
+.desk.fb{--feedbg:#f0f2f5;background:var(--feedbg)}
+.desk.fb.dark{--feedbg:#18191a}
+.dtop{height:56px;background:var(--card);display:flex;align-items:center;padding:0 16px;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,.12);position:relative;z-index:2}
+.dlogo{width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:flex-end;justify-content:center;font:700 34px/1 "Segoe UI",Helvetica,Arial,sans-serif;overflow:hidden}
+.dark .dlogo{background:#0866ff}
+.dsearch{width:240px;height:40px;border-radius:20px;background:var(--linkbg);display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--t2);font-size:15px}
+.dmid{flex:1;display:flex;justify-content:center;gap:8px;color:var(--t2)}
+.dmid div{width:110px;height:56px;display:flex;align-items:center;justify-content:center}
+.dmid div.on{color:var(--blue);border-bottom:3px solid var(--blue)}
+.dright{display:flex;gap:8px}
+.dbody{display:flex;justify-content:space-between;padding:0 8px}
+.dleft{width:300px;padding:12px 8px;color:var(--t1);font-size:15px;font-weight:600}
+.dleft .drow{display:flex;align-items:center;gap:12px;min-height:52px;padding:4px 8px;border-radius:8px;line-height:20px}
+.dleft .drow > span:last-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dico{width:36px;height:36px;flex:none;display:block}
+.dico.sq{border-radius:8px}
+.dico.metaai{border-radius:50%;background:conic-gradient(from 210deg,#0082fb,#a33bff,#ff4f9a,#ffb23f,#0082fb);-webkit-mask:radial-gradient(circle,transparent 9px,#000 9.5px,#000 15px,transparent 15.5px);mask:radial-gradient(circle,transparent 9px,#000 9.5px,#000 15px,transparent 15.5px)}
+.dmore{width:36px;height:36px;border-radius:50%;background:var(--btn);display:flex;align-items:center;justify-content:center;flex:none}
+.dsep{border-top:1px solid var(--line);margin:8px 8px}
+.dhead{font-size:17px;font-weight:600;color:var(--t2);padding:12px 8px 4px}
+.dcomp{background:var(--card);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.2);display:flex;align-items:center;gap:8px;padding:12px 16px;margin-bottom:16px}
+.dcomp .in{flex:1;height:40px;border-radius:20px;background:var(--btn);display:flex;align-items:center;padding:0 12px;font-size:17px;color:var(--t2)}
+.dstories{display:flex;gap:8px;margin-bottom:16px}
+.dst{position:relative;width:112px;height:200px;border-radius:10px;overflow:hidden;flex:none;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.dst::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.45))}
+.dst .ring{position:absolute;top:12px;left:12px;z-index:2;padding:2px;border-radius:50%;border:3px solid #0866ff;background:var(--card)}
+.dst .nm{position:absolute;left:12px;right:8px;bottom:10px;z-index:2;color:#fff;font-size:13px;font-weight:600;line-height:16px}
+.dst.create{background:var(--card)}
+.dst.create::after{display:none}
+.dst.create .ph{height:150px}
+.dst.create .cb{position:relative;height:50px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:13px;font-weight:600;color:var(--t1)}
+.dst.create .pl{position:absolute;top:-20px;left:36px;width:40px;height:40px;border-radius:50%;background:#0866ff;color:#fff;border:4px solid var(--card);display:flex;align-items:center;justify-content:center;box-sizing:content-box;margin-left:-4px}
+.dfeed{width:590px;padding-top:16px}
+.dfeed .post{border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.2);margin:0 0 16px}
+.dfeed .post .ph-h{padding:12px 16px 0}
+.dfeed .post .ptxt{padding:4px 16px 16px}
+.dfeed .post .linkbar{padding:12px 16px}
+.drc{width:300px;padding:16px 8px;color:var(--t1)}
+.drc h4{margin:0 0 8px;padding:0 8px;font-size:17px;font-weight:600;color:var(--t2)}
+.rcad{display:flex;gap:12px;align-items:center;padding:8px;border-radius:8px}
+.rcad .im{width:128px;flex:none;border-radius:8px;overflow:hidden}
+.rcad .hl{font-size:15px;font-weight:500;line-height:20px;color:var(--t1);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rcad .dl{font-size:13px;color:var(--t2);margin-top:2px}
+.drc .sep{border-top:1px solid var(--line);margin:12px 8px}
+.drc .ct{display:flex;align-items:center;gap:12px;height:44px;padding:0 8px;font-size:15px;font-weight:500}
+
+/* ============================================================ IG feed */
+.igapp{background:var(--bg)}
+.ighdr{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:var(--t1)}
+.igword{font:600 25px/1 "Century Gothic","Avenir Next","Futura","Segoe UI",sans-serif;letter-spacing:-.8px}
+.ighdr .r{display:flex;gap:20px}
+.ighdr.home{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;text-align:center}
+.ighdr.home > :last-child{justify-self:end}
+.igpill{position:sticky;bottom:22px;margin:-82px 14px 22px;height:60px;border-radius:30px;display:flex;align-items:center;justify-content:space-between;padding:0 6px;z-index:30;color:#000;background:rgba(250,250,250,.72);-webkit-backdrop-filter:blur(18px) saturate(1.8);backdrop-filter:blur(18px) saturate(1.8);box-shadow:0 6px 20px rgba(0,0,0,.16),inset 0 0 0 .5px rgba(255,255,255,.6)}
+.igpill > span{width:66px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center}
+.igpill > span.on{background:rgba(0,0,0,.07)}
+.igpill .me{width:28px;height:28px;border-radius:50%;background:#c7c7c7}
+.ig.dark .igpill,.fs .igpill{color:#fff;background:rgba(38,38,38,.62);box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 .5px rgba(255,255,255,.14)}
+.ig.dark .igpill > span.on,.fs .igpill > span.on{background:rgba(255,255,255,.16)}
+.fs .igpill{position:absolute;left:14px;right:14px;bottom:22px;margin:0}
+.igapp{padding-bottom:84px}
+.ighdr.sub{justify-content:flex-start;gap:24px;font-size:16px;font-weight:600;border-bottom:1px solid var(--line)}
+.ighdr.sub .t{display:flex;flex-direction:column;line-height:1.15}
+.ighdr.sub .t small{font-size:12px;color:var(--t2);font-weight:400}
+.igpost{margin-bottom:12px}
+.igpost .h{display:flex;align-items:center;gap:10px;padding:8px 12px;height:56px}
+.igpost .h .ring{padding:2px;border-radius:50%}
+.igpost .who{flex:1;min-width:0;line-height:1.2}
+.igpost .nm{font-size:14px;font-weight:600;display:flex;align-items:center;gap:4px;color:var(--t1)}
+.igpost .sp{font-size:12px;color:var(--t1)}
+.igcta{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:14px;font-weight:600;color:var(--t1);background:var(--ctabar)}
+.igcta.blue{background:var(--blue);color:#fff}
+.igacts{display:flex;align-items:center;padding:8px 12px 6px;color:var(--t1);position:relative}
+.igacts .l{display:flex;gap:14px;align-items:center;flex:1}
+.igacts .ia{display:flex;align-items:center;gap:5px;font-size:14px;font-weight:600}
+.igdots{display:flex;justify-content:center;gap:4px;padding-top:10px}
+.igdots i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.igdots i.on{background:var(--blue)}
+.iglikes{font-size:14px;font-weight:600;padding:0 12px;color:var(--t1)}
+.igcap{font-size:14px;line-height:18px;padding:4px 12px 0;color:var(--t1)}
+.igcap b{font-weight:600}
+.igcom{font-size:14px;color:var(--t2);padding:4px 12px 0}
+.igtime{font-size:12px;color:var(--t2);padding:4px 12px 0}
+.igcar{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.igcar::-webkit-scrollbar{display:none}
+.igcar > div{flex:none;width:100%;scroll-snap-align:start;position:relative}
+.igcar .cnt{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:600;border-radius:12px;padding:3px 8px;z-index:2}
+.igtabs{height:50px;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;color:var(--t1);background:var(--bg)}
+.igtabs .me{width:26px;height:26px;border-radius:50%;background:#c7c7c7}
+
+/* IG explore grid */
+.igsearch{margin:6px 16px 8px;height:36px;border-radius:10px;background:var(--btn);display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--t2);font-size:16px}
+.iggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.iggrid > div{position:relative;overflow:hidden;background:#888}
+.iggrid .tag{position:absolute;left:6px;bottom:6px;font-size:11px;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+
+/* ============================================================ full-screen (stories / reels) */
+.fs{height:852px;background:#000;color:#fff;position:relative}
+.fs .stage{position:absolute;left:0;right:0;top:0;bottom:0;overflow:hidden}
+.fs .stage .media{position:absolute;inset:0;height:100%}
+.fs .shade-t{position:absolute;left:0;right:0;top:0;height:140px;background:linear-gradient(rgba(0,0,0,.45),transparent);pointer-events:none}
+.fs .shade-b{position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(transparent,rgba(0,0,0,.6));pointer-events:none}
+.prog{position:absolute;top:56px;left:8px;right:8px;display:flex;gap:4px;z-index:3}
+.prog i{flex:1;height:2px;border-radius:1px;background:rgba(255,255,255,.35);overflow:hidden}
+.prog i.on::after{content:"";display:block;height:100%;width:42%;background:#fff}
+.sthdr{position:absolute;top:66px;left:12px;right:10px;display:flex;align-items:center;gap:8px;z-index:3}
+.sthdr .who{flex:1;line-height:1.15}
+.sthdr .nm{font-size:14px;font-weight:600;display:flex;gap:4px;align-items:center;text-shadow:0 0 4px rgba(0,0,0,.3)}
+.sthdr .sp{font-size:12px;opacity:.9}
+.sthdr .r{display:flex;gap:16px;align-items:center}
+.stcta{position:absolute;left:0;right:0;bottom:34px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:3}
+.stcta .pillb{background:#fff;color:#000;font-size:15px;font-weight:600;border-radius:22px;height:40px;padding:0 18px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.stcta .up{display:flex;flex-direction:column;align-items:center;font-size:14px;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.sttext{position:absolute;left:20px;right:20px;z-index:3;font-size:15px;line-height:20px;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.sttext .hl{font-size:17px;font-weight:700;margin-bottom:4px}
+.fbstfoot{position:absolute;left:12px;right:12px;bottom:28px;display:flex;align-items:center;gap:10px;z-index:3}
+.fbstfoot .cta{flex:1;height:44px;border-radius:22px;background:#fff;color:#050505;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.rtop{position:absolute;top:56px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;z-index:3;font-size:22px;font-weight:700}
+.rrail{position:absolute;right:10px;bottom:130px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:3;font-size:13px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.rrail div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.rrail .aud{width:30px;height:30px;border-radius:6px;border:2px solid #fff;overflow:hidden;background:#555}
+.rbot{position:absolute;left:12px;right:64px;bottom:72px;z-index:3}
+.rbot .who{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:8px;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.rbot .who .sp{font-weight:400;font-size:13px;opacity:.92}
+.rbot .rhl{font-size:15px;font-weight:700;margin-bottom:4px;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.rbot .cap{font-size:14px;line-height:18px;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.rbot .cap .more{color:rgba(255,255,255,.8)}
+.rbot .rcta{margin-top:10px;height:36px;border-radius:8px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:14px;font-weight:600}
+.rbot .rcta.blue{background:#0095f6}
+.rbot .rcta.fb{background:#0866ff}
+.fs.ig .rbot{bottom:100px}
+.fs.ig .rrail{bottom:170px}
+.rnav{position:absolute;left:0;right:0;bottom:0;height:50px;background:#000;display:flex;justify-content:space-around;align-items:center;z-index:4;border-top:1px solid #262626}
+
+/* ============================================================ marketplace / search / instream */
+.mpgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 6px;padding:8px 0;background:var(--card)}
+.mpgrid .it{display:flex;flex-direction:column}
+.mpgrid .im{aspect-ratio:1;overflow:hidden;background:#ddd}
+.mpgrid .pr{font-size:15px;font-weight:600;padding:6px 8px 0;color:var(--t1)}
+.mpgrid .ti{font-size:14px;line-height:18px;padding:0 8px;color:var(--t1);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mpgrid .lo{font-size:13px;color:var(--t2);padding:0 8px}
+.mpchips{display:flex;gap:8px;padding:8px 12px;background:var(--card);overflow:hidden}
+.mpchips div{height:36px;border-radius:18px;background:var(--btn);padding:0 14px;display:flex;align-items:center;gap:6px;font-size:15px;font-weight:600;color:var(--t1);white-space:nowrap}
+.srch{display:flex;align-items:center;gap:10px;padding:6px 12px 8px;background:var(--card)}
+.srch .box{flex:1;height:36px;border-radius:18px;background:var(--btn);display:flex;align-items:center;padding:0 14px;font-size:15px;color:var(--t1)}
+.srtabs{display:flex;gap:8px;padding:0 12px 10px;background:var(--card)}
+.srtabs div{height:32px;border-radius:16px;padding:0 12px;display:flex;align-items:center;font-size:14px;font-weight:600;background:var(--btn);color:var(--t1)}
+.srtabs div.on{background:#ebf5ff;color:#0064d1}
+.dark .srtabs div.on{background:#263951;color:#5aa7ff}
+.isplayer{position:relative;background:#000;aspect-ratio:16/9;overflow:hidden}
+.isplayer .adlbl{position:absolute;left:10px;bottom:12px;z-index:3;font-size:12px;font-weight:600;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:2px 6px}
+.isplayer .bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.3);z-index:3}
+.isplayer .bar i{display:block;width:35%;height:100%;background:#f7b928}
+.isbrand{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--line)}
+.isbrand .tx{flex:1;min-width:0}
+.isbrand .nm{font-size:15px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.isbrand .sp{font-size:13px;color:var(--t2)}
+.fbcta.blue{background:var(--blue);color:#fff}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="main"></div>
+<script src="data.js"></script>
+<script>
+"use strict";
+const D = window.META_ADS;
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const P = Object.fromEntries(D.placements.map(p => [p.id, p]));
+const AD = Object.fromEntries(D.ads.map(a => [a.id, a]));
+
+/* ------------------------------------------------------------------ icons */
+const I = (d, s = 24, extra = "") => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+const F = (d, s = 24, extra = "") => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" ${extra}>${d}</svg>`;
+const ic = {
+  dots: (s=20) => F('<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>', s),
+  x: (s=20) => I('<path d="M6 6l12 12M18 6 6 18"/>', s),
+  globe: (s=12) => I('<circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.8 3 2.8 16 0 19M12 2.5c-2.8 3-2.8 16 0 19"/>', s, 'stroke-width="2.2"'),
+  fbLike: (s=20) => I('<path d="M7 10.5v10H3.5v-10zM7 10.5 10.8 3c1.6 0 2.7 1.1 2.4 2.9L12.6 9.5h6.2c1.4 0 2.4 1.3 2.1 2.6l-1.6 6.8c-.3 1-1.2 1.6-2.2 1.6H7"/>', s, 'stroke-width="1.8"'),
+  fbComment: (s=20) => I('<path d="M12 3.5c-5 0-9 3.6-9 8 0 2.4 1.2 4.6 3.1 6v3l3.2-1.7c.9.2 1.8.4 2.7.4 5 0 9-3.6 9-8s-4-7.7-9-7.7z"/>', s, 'stroke-width="1.8"'),
+  fbShare: (s=20) => I('<path d="M13.5 4.5 21 11.6l-7.5 7v-4c-5.2 0-8.4 1.4-10.5 4.9.7-5.4 3.8-9.6 10.5-10.4z"/>', s, 'stroke-width="1.8"'),
+  heart: (s=24) => I('<path d="M12 20.5s-8-4.6-9.4-10C1.6 6.7 4.2 4 7.2 4c2 0 3.6 1.1 4.8 2.8C13.2 5.1 14.8 4 16.8 4c3 0 5.6 2.7 4.6 6.5-1.4 5.4-9.4 10-9.4 10z"/>', s),
+  igComment: (s=24) => I('<path d="M20.6 16.2A9 9 0 1 0 17.2 19.8L21.5 21z"/>', s),
+  plane: (s=24) => I('<path d="M21.5 3 2.5 10.2l7.3 3.2M21.5 3 15.2 21l-5.4-7.6M21.5 3 9.8 13.4"/>', s),
+  bookmark: (s=24) => I('<path d="M19 21 12 15.8 5 21V3.5h14z"/>', s),
+  repost: (s=24) => I('<path d="M16.5 3 20 6.5 16.5 10"/><path d="M20 6.5H8.5A4.5 4.5 0 0 0 4 11v1"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M4 17.5h11.5A4.5 4.5 0 0 0 20 13v-1"/>', s),
+  igReels: (s=26) => I('<rect x="3" y="3" width="18" height="18" rx="5.5"/><path d="m10 8.3 5.6 3.7-5.6 3.7z" fill="currentColor" stroke-width="1.4"/>', s, 'stroke-width="2"'),
+  chevR: (s=18) => I('<path d="M9 5l7 7-7 7"/>', s, 'stroke-width="2.2"'),
+  chevL: (s=24) => I('<path d="M15 5l-7 7 7 7"/>', s, 'stroke-width="2.2"'),
+  chevUp: (s=20) => I('<path d="M5 15l7-7 7 7"/>', s, 'stroke-width="2.6"'),
+  link: (s=18) => I('<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>', s),
+  home: (s=26, f) => f ? F('<path d="M3 10.6 12 3l9 7.6V21h-6.5v-6.2h-5V21H3z"/>', s) : I('<path d="M3 10.6 12 3l9 7.6V21h-6.5v-6.2h-5V21H3z"/>', s),
+  search: (s=24) => I('<circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5.5 5.5"/>', s),
+  plusSq: (s=26) => I('<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/>', s),
+  plus: (s=22) => I('<path d="M12 5v14M5 12h14"/>', s, 'stroke-width="2.4"'),
+  reels: (s=26) => I('<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 8.5h18M9.5 3.2l2.8 5.3M15.5 3.2l2.8 5.3"/><path d="m10.2 12.3 4.6 2.6-4.6 2.6z" fill="currentColor"/>', s, 'stroke-width="1.8"'),
+  video: (s=26) => I('<rect x="2.5" y="5" width="15" height="14" rx="3"/><path d="m17.5 10.5 4-2.5v8l-4-2.5"/>', s, 'stroke-width="1.8"'),
+  friends: (s=26) => I('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.8"/><path d="M16.5 14c3 0 5 2 5 5"/>', s, 'stroke-width="1.8"'),
+  store: (s=26) => I('<path d="M4 9.5V20h16V9.5M3 9.5 5 4h14l2 5.5c0 1.5-1.2 2.5-2.6 2.5s-2.6-1-2.6-2.5c0 1.5-1.2 2.5-2.8 2.5s-2.8-1-2.8-2.5c0 1.5-1.2 2.5-2.6 2.5S3 11 3 9.5zM10 20v-5h4v5"/>', s, 'stroke-width="1.8"'),
+  bell: (s=26) => I('<path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4"/>', s, 'stroke-width="1.8"'),
+  menu: (s=26) => I('<path d="M4 6h16M4 12h16M4 18h16"/>', s, 'stroke-width="1.8"'),
+  msgr: (s=22) => I('<path d="M12 2.8c-5.2 0-9.2 3.8-9.2 8.8 0 2.7 1.1 5 3 6.6v3l2.8-1.5c1.1.3 2.2.5 3.4.5 5.2 0 9.2-3.8 9.2-8.6S17.2 2.8 12 2.8z"/><path d="m7 14 3.4-3.6 2.4 2 3.2-3.4"/>', s, 'stroke-width="1.8"'),
+  camera: (s=26) => I('<path d="M3.5 8h3l1.8-2.5h7.4L17.5 8h3v11.5h-17z"/><circle cx="12" cy="13.3" r="3.6"/>', s),
+  music: (s=14) => F('<path d="M9 17.5V6l10-2v11.5a2.5 2.5 0 1 1-2-2.4V8.1l-6 1.2v8.2a2.5 2.5 0 1 1-2-2.5z"/>', s),
+  mute: (s=16) => F('<path d="M3 9h4l5-4v14l-5-4H3z"/><path d="m16 9 5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" fill="none"/>', s),
+  play: (s=16) => F('<path d="M7 4.5v15l13-7.5z"/>', s),
+  verified: (s=14) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path fill="#0095f6" d="M12 1.5l2.4 1.8 3-.2.9 2.9 2.5 1.7-.9 2.9.9 2.9-2.5 1.7-.9 2.9-3-.2L12 22.5l-2.4-1.8-3 .2-.9-2.9-2.5-1.7.9-2.9-.9-2.9 2.5-1.7.9-2.9 3 .2z"/><path d="m8 12.3 2.6 2.6L16.2 9" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  rLike: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#0866ff"/><path fill="#fff" d="M7.2 10.6h2.2v7.2H7.2zM10.3 17.8v-7.4l2.6-4.6c.9 0 1.5.7 1.3 1.7l-.5 2.6h3.6c.8 0 1.4.8 1.2 1.6l-1 4.6c-.2.9-1 1.5-1.9 1.5z"/></svg>`,
+  rLove: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#f33e58"/><path fill="#fff" d="M12 18s-5.2-3.2-5.9-6.4C5.6 9.4 7 7.6 8.9 7.6c1.3 0 2.3.7 3.1 1.8.8-1.1 1.8-1.8 3.1-1.8 1.9 0 3.3 1.8 2.8 4C17.2 14.8 12 18 12 18z"/></svg>`,
+  rHaha: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#f7b125"/><path d="M6.5 12.5h11c-.4 3.2-2.8 5.3-5.5 5.3s-5.1-2.1-5.5-5.3z" fill="#5a3b02"/><path d="m7 8.2 2.6 1.4L7 11M17 8.2l-2.6 1.4L17 11" stroke="#5a3b02" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>`,
+  signal: () => F('<rect x="1" y="14" width="3" height="5" rx=".8"/><rect x="6" y="11" width="3" height="8" rx=".8"/><rect x="11" y="8" width="3" height="11" rx=".8"/><rect x="16" y="5" width="3" height="14" rx=".8"/>', 18),
+  wifi: () => F('<path d="M12 18.5 9.5 16a3.5 3.5 0 0 1 5 0zM5.6 12.1a9 9 0 0 1 12.8 0l-1.8 1.8a6.4 6.4 0 0 0-9.2 0zM2 8.5a14 14 0 0 1 20 0l-1.8 1.8a11.5 11.5 0 0 0-16.4 0z"/>', 18),
+  battery: () => `<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4c.8-.3 1.3-1 1.3-2s-.5-1.7-1.3-2z" fill="currentColor" opacity=".45"/></svg>`,
+};
+
+/* ------------------------------------------------------------------ state */
+const state = {mode:"feed", ad:D.ads[0]?.id, pl:"fb_feed_mobile", group:"", brand:"", status:"", safe:false, trunc:false, badges:true, frame:false, dark:false, zoom:0.8, thumbs:false, card:0, export:false};
+function readHash(){
+  const h = location.hash.replace(/^#/, "");
+  const q = new URLSearchParams(h.replace(/^export&?/, ""));
+  if (h.startsWith("export")) state.export = true;
+  for (const [k, v] of q) {
+    if (["safe","trunc","badges","frame","dark","thumbs"].includes(k)) state[k] = v === "1";
+    else if (k === "zoom") state.zoom = parseFloat(v) || 0.8;
+    else if (k === "card") state.card = parseInt(v) || 0;
+    else if (k in state) state[k] = v;
+  }
+  if (state.export) { state.badges = q.get("badges") === "1"; }
+  // Old or hand-edited links must not leave a view silently empty: drop values this data doesn't have.
+  if (state.status === "ready") state.status = "actual";               // renamed in v1.1.0
+  if (!["", "actual", "simulated"].includes(state.status)) state.status = "";
+  if (!["feed", "compare", "gallery", "matrix"].includes(state.mode)) state.mode = "feed";
+  if (!P[state.pl]) state.pl = P.fb_feed_mobile ? "fb_feed_mobile" : D.placements[0].id;
+  if (state.ad && !AD[state.ad]) state.ad = D.ads[0]?.id;
+  if (state.group && !D.ads.some(a => a.group === state.group)) state.group = "";
+  if (state.brand && !D.ads.some(a => a.brand === state.brand)) state.brand = "";
+}
+function writeHash(){
+  if (state.export) return;
+  const q = new URLSearchParams();
+  for (const k of ["mode","ad","pl","group","brand","status"]) if (state[k]) q.set(k, state[k]);
+  for (const k of ["safe","trunc","badges","frame","dark","thumbs"]) q.set(k, state[k] ? "1" : "0");
+  q.set("zoom", state.zoom);
+  history.replaceState(null, "", "#" + q.toString());
+  savePrefs();
+}
+/* Settings survive closing the page and switching libraries. Look and layout settings are shared by
+   every library; the chosen ad and filters are kept per library. A link's own #settings win over
+   stored ones. Never used for PNG export, which must render exactly what its URL says. */
+const PREF_GLOBAL = ["mode","pl","safe","trunc","badges","frame","dark","thumbs","zoom"];
+const PREF_LOCAL = ["ad","group","brand","status"];
+const prefKey = () => "meta-ads:lib:" + (LIB_ID || (D.campaign && D.campaign.name) || "default");
+function loadPrefs(){
+  try {
+    const g = JSON.parse(localStorage.getItem("meta-ads:prefs") || "{}");
+    const l = JSON.parse(localStorage.getItem(prefKey()) || "{}");
+    for (const k of PREF_GLOBAL) if (k in g) state[k] = g[k];
+    for (const k of PREF_LOCAL) if (k in l) state[k] = l[k];
+    if (Array.isArray(l.picked)) l.picked.forEach(id => { if (AD[id]) EXP.picked.add(id); });
+    if (["this", "shown", "pick"].includes(l.scope)) EXP.scope = l.scope;
+  } catch (e) { /* storage blocked: defaults */ }
+}
+function savePrefs(){
+  if (state.export) return;
+  try {
+    localStorage.setItem("meta-ads:prefs", JSON.stringify(Object.fromEntries(PREF_GLOBAL.map(k => [k, state[k]]))));
+    localStorage.setItem(prefKey(), JSON.stringify({...Object.fromEntries(PREF_LOCAL.map(k => [k, state[k]])), picked: [...EXP.picked], scope: EXP.scope}));
+  } catch (e) { /* storage blocked or full: settings just won't persist */ }
+}
+
+/* ------------------------------------------------------------------ helpers */
+const M = id => D.media[id];
+const brandOf = ad => D.brands[ad.brand];
+const cell = (ad, pl) => D.matrix[ad.id][pl];
+const ctaLabel = code => code ? (D.cta[code] || code) : null;
+function fmtCount(n, style){
+  if (n == null) return "";
+  if (style === "full") return n.toLocaleString("en-US");
+  if (n >= 1e6) return (n/1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, "") + "M";
+  if (n >= 1e4) return Math.round(n/1e3) + "K";
+  if (n >= 1e3) return (n/1e3).toFixed(1).replace(/\.0$/, "") + "K";
+  return String(n);
+}
+function initials(name){ return (name || "?").split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join(""); }
+function avatar(ad, size, ig){
+  const b = brandOf(ad);
+  const ref = (ig && b.ig_avatar) || b.avatar;
+  const m = ref && M(ref);
+  if (m && !m.placeholder && m.src) return `<img class="av" src="${esc(m.src)}" style="width:${size}px;height:${size}px" alt="">`;
+  const bg = (m && m.placeholder && m.color) ? esc(m.color) : hueFor(b.page_name);
+  return `<div class="av" style="width:${size}px;height:${size}px;font-size:${Math.round(size*.38)}px;background:${bg}">${esc(initials(b.page_name))}</div>`;
+}
+function hueFor(s){ let h = 0; for (const c of String(s)) h = (h*31 + c.charCodeAt(0)) % 360; return `hsl(${h} 45% 45%)`; }
+function verified(ad, s){ return brandOf(ad).verified ? ic.verified(s) : ""; }
+
+/* media element sized by box aspect, honouring fit mode */
+function mediaEl(slot, opts = {}){
+  const box = opts.box ?? slot.box;
+  const style = opts.fill ? "height:100%" : `aspect-ratio:${box}`;
+  const m = slot.media && M(slot.media);
+  if (!m) return `<div class="media" style="${style}"></div>`;
+  const inner = (cls) => mediaInner(m, cls, opts);
+  let html;
+  if (m.placeholder) {
+    if (slot.mode === "native" || slot.mode === "crop") html = phBox(m, "100%", "100%", opts);
+    else {
+      const narrow = m.aspect < box && slot.mode !== "fill";
+      const cs = narrow ? `width:${(m.aspect/box)*100}%;left:${(1-m.aspect/box)*50}%;height:100%;top:0;transform:none;` : "";
+      html = `<div class="ph" style="position:absolute;inset:0;background:${slot.mode === "pad" ? "var(--padbg,#f0f2f5)" : "#111"}"></div><div class="center" style="aspect-ratio:${m.aspect};${cs}">${phBox(m,"100%","100%",opts)}</div>`;
+    }
+  } else if (slot.mode === "fill") {
+    html = `<img class="blurbg" src="${esc(m.poster || m.src)}" alt=""><div class="center" style="aspect-ratio:${m.aspect}">${inner("")}</div>`;
+  } else if (slot.mode === "letterbox" || slot.mode === "pad") {
+    html = `<div class="center" style="aspect-ratio:${m.aspect};${m.aspect > box ? "" : `width:${(m.aspect/box)*100}%;left:${(1-m.aspect/box)*50}%;height:100%;top:0;transform:none;`}">${inner("")}</div>`;
+  } else {
+    html = inner("fit");
+  }
+  const vb = (m.kind === "video" && !opts.noVidBadge) ? `<div class="vidbadge">${ic.mute(16)}</div>` : "";
+  const padbg = slot.mode === "pad" ? "background:var(--padbg,#f0f2f5);" : "";
+  return `<div class="media" style="${style};${padbg}${opts.style||""}">${html}${vb}</div>`;
+}
+function mediaInner(m, cls, opts){
+  if (m.kind === "video" && !state.export && m.src) {   // shared copies keep only the cover frame
+    return `<video class="${cls}" src="${esc(m.src)}" poster="${esc(m.poster||"")}" muted autoplay loop playsinline preload="metadata"></video>`;
+  }
+  return `<img class="${cls}" src="${esc(m.kind === "video" ? m.poster : m.src)}" alt="" loading="${state.export ? "eager" : "lazy"}">`;
+}
+function phBox(m, w, h){
+  return `<div class="ph" style="width:${w};height:${h};background:${esc(m.color||"#3a3b3c")}"><div class="phk"></div><div class="phin"><div class="phr">${esc(m.ratio)} · placeholder</div>${m.label ? `<div class="phl">${esc(m.label)}</div>` : ""}</div></div>`;
+}
+
+/* truncation: elements with data-clamp are cut to N lines with a "more" label after insertion */
+function clampAll(root){
+  root.querySelectorAll("[data-clamp]").forEach(el => {
+    const lines = +el.dataset.clamp, text = el.dataset.text || "", more = el.dataset.more || "… See more";
+    const prefix = el.dataset.prefix ? decodeURIComponent(el.dataset.prefix) : "";
+    const cs = getComputedStyle(el);
+    const lh = parseFloat(cs.lineHeight) || 20;
+    const max = lines * lh + (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0) + 1;
+    el.innerHTML = prefix + esc(text);
+    let cut = text.length, truncated = false;
+    if (lines > 0 && el.scrollHeight > max) {
+      truncated = true;
+      let lo = 0, hi = text.length;
+      const sep = /^…/.test(more) ? "" : " ";
+      while (lo < hi) {
+        const mid = Math.ceil((lo + hi) / 2);
+        el.innerHTML = prefix + esc(text.slice(0, mid).trimEnd()) + sep + `<span class="more">${esc(more)}</span>`;
+        if (el.scrollHeight > max) hi = mid - 1; else lo = mid;
+      }
+      cut = lo;
+      el.innerHTML = prefix + esc(text.slice(0, lo).trimEnd()) + sep + `<span class="more" data-expand>${esc(more)}</span>`;
+      const span = el.querySelector("[data-expand]");
+      if (span && !state.export) span.onclick = () => { el.innerHTML = prefix + esc(text); };
+    }
+    if (state.trunc && text) {
+      el.classList.add("ov-tr");
+      const lim = +el.dataset.limit || 0;
+      const tag = document.createElement("div");
+      tag.className = "ov-tag" + (lim && text.length > lim ? " bad" : "");
+      tag.textContent = truncated ? `${cut}/${text.length} chars shown · ${lines} lines` : `${text.length} chars${lim ? ` / rec. ${lim}` : ""}`;
+      el.appendChild(tag);
+    }
+  });
+  root.querySelectorAll("[data-lim]").forEach(el => {
+    if (!state.trunc) return;
+    const lim = +el.dataset.lim, n = (el.dataset.len ? +el.dataset.len : el.textContent.length);
+    if (!n) return;
+    el.classList.add("ov-tr");
+    const tag = document.createElement("div");
+    tag.className = "ov-tag" + (lim && n > lim ? " bad" : "");
+    tag.textContent = `${n}${lim ? "/" + lim : ""}`;
+    el.style.position = "relative"; el.appendChild(tag);
+  });
+}
+function clampAttrs(text, lines, more, limit, prefixHtml){
+  return `data-clamp="${lines}" data-text="${esc(text||"")}" data-more="${esc(more)}" data-limit="${limit||0}"${prefixHtml ? ` data-prefix="${encodeURIComponent(prefixHtml)}"` : ""}`;
+}
+const tcfg = (p, f) => (p.text && p.text[f]) || {};
+const limAttr = (p, f, v) => `data-lim="${tcfg(p,f).chars||0}" data-len="${(v||"").length}"`;
+
+function statusBar(light){
+  return `<div class="sb${light ? " light-on-dark" : ""}"><span>9:41</span><span class="ic">${ic.signal()}${ic.wifi()}${ic.battery()}</span></div>`;
+}
+function safeOverlay(p){
+  if (!state.safe || !p.safe_zone) return "";
+  const z = p.safe_zone, H = 852, W = 393, out = [];
+  if (z.top) out.push(`<div class="ov-safe" style="left:0;right:0;top:0;height:${z.top*100}%"><span>top ${Math.round(z.top*100)}% · UI</span></div>`);
+  if (z.bottom) out.push(`<div class="ov-safe" style="left:0;right:0;bottom:0;height:${z.bottom*100}%"><span>bottom ${Math.round(z.bottom*100)}% · UI</span></div>`);
+  if (z.left) out.push(`<div class="ov-safe" style="left:0;top:${(z.top||0)*100}%;bottom:${(z.bottom||0)*100}%;width:${z.left*100}%"></div>`);
+  if (z.right) out.push(`<div class="ov-safe" style="right:0;top:${(z.top||0)*100}%;bottom:${(z.bottom||0)*100}%;width:${z.right*100}%"></div>`);
+  return out.join("");
+}
+function badge(c, top){
+  if (!state.badges || !c || c.status === "actual") return "";
+  const r = (c.reasons || [])[0] || c.status;
+  return `<div class="ov-badge${top ? " top" : ""}">⚠ ${esc(r)}${c.reasons.length > 1 ? ` (+${c.reasons.length-1})` : ""}</div>`;
+}
+function slots(ad, plId){ return cell(ad, plId).slots || []; }
+
+/* ------------------------------------------------------------------ organic filler (In-feed mode) */
+const ORG = [
+  {n:"Jordan Lee", t:"Finally made it to the coast this weekend. Worth every mile 🌊", c:"linear-gradient(160deg,#6fa8dc,#1c4e80)", r:"4:5"},
+  {n:"Priya Shah", t:"Sunday baking experiment: cardamom buns. Recipe in the comments!", c:"linear-gradient(160deg,#f6c28b,#a0522d)", r:"1:1"},
+  {n:"Marcus Webb", t:"Can't believe it's been 10 years since we started this band.", c:"linear-gradient(160deg,#8e7cc3,#351c75)", r:"4:5"},
+];
+function organicFB(i, desktop){
+  const o = ORG[i % ORG.length];
+  const asp = o.r === "1:1" ? 1 : .8;
+  return `<div class="post organic"><div class="ph-h"><div class="av" style="width:40px;height:40px;background:${hueFor(o.n)}">${initials(o.n)}</div><div class="who"><div class="nm">${o.n}</div><div class="sp">${2+i}h · ${ic.globe()}</div></div><div class="acts">${ic.dots()}${desktop?"":ic.x()}</div></div>
+  <div class="ptxt clamp">${esc(o.t)}</div><div class="media" style="aspect-ratio:${asp};background:${o.c}"></div>
+  <div class="eng"><span class="rx"><span class="stack">${ic.rLike()}${ic.rLove()}</span>${120+i*57}</span><span>${14+i*3} comments</span></div>
+  <div class="actrow"><div>${ic.fbLike()}Like</div><div>${ic.fbComment()}Comment</div><div>${ic.fbShare()}Share</div></div></div>`;
+}
+/* Instagram 2026: floating "Liquid Glass" tab bar, order Home · Reels · Messages · Search · Profile */
+function igPill(on){
+  const t = (k, svg) => `<span class="${k === on ? "on" : ""}">${svg}</span>`;
+  return `<div class="igpill">${t("home", ic.home(26, on === "home"))}${t("reels", ic.igReels(26))}${t("dm", ic.plane(25))}${t("search", ic.search(25))}${t("me", `<i class="me"></i>`)}</div>`;
+}
+const igCount = n => n == null ? "" : (n < 10000 ? n.toLocaleString("en-US") : fmtCount(n));
+function igActions(e, dots){
+  const cnt = n => n ? `<span>${igCount(n)}</span>` : "";
+  return `${dots || ""}<div class="igacts"><div class="l"><span class="ia">${ic.heart()}${cnt(e.likes)}</span><span class="ia">${ic.igComment()}${cnt(e.comments)}</span><span class="ia">${ic.repost()}</span><span class="ia">${ic.plane()}${cnt(e.shares)}</span></div>${ic.bookmark()}</div>`;
+}
+function organicIG(i){
+  const o = ORG[i % ORG.length];
+  const h = o.n.toLowerCase().replace(/\s/g, "_");
+  return `<div class="igpost organic"><div class="h"><div class="av" style="width:32px;height:32px;font-size:12px;background:${hueFor(o.n)}">${initials(o.n)}</div><div class="who"><div class="nm">${h}</div></div>${ic.dots(18)}</div>
+  <div class="media" style="aspect-ratio:${o.r==="1:1"?1:.8};background:${o.c}"></div>
+  ${igActions({likes: 842 + i*311, comments: 14 + i*9, shares: 3 + i})}
+  <div class="igcap"><b>${h}</b> ${esc(o.t)}</div><div class="igtime">${3+i} hours ago</div></div>`;
+}
+
+/* ------------------------------------------------------------------ FB templates */
+function fbPostBody(ad, p, opts = {}){
+  const b = brandOf(ad), s = slots(ad, p.id), c = cell(ad, p.id), e = ad.engagement;
+  const pt = tcfg(p, "primary_text");
+  let media = "";
+  if (ad.format === "carousel") {
+    const cw = opts.desktop ? 330 : 300;
+    media = `<div class="car" style="--cw:${cw}px">` + ad.cards.map((cd, i) => {
+      const sl = s[i] || {};
+      return `<div class="cd">${mediaEl(sl)}<div class="cb"><div class="tx"><div class="hl" ${limAttr(p,"headline",cd.headline)}>${esc(cd.headline||"")}</div>${cd.description && tcfg(p,"description").show !== false ? `<div class="ds">${esc(cd.description)}</div>` : ""}</div>${cd.cta ? `<div class="fbcta">${esc(ctaLabel(cd.cta))}</div>` : ""}</div></div>`;
+    }).join("") + `</div>`;
+  } else {
+    media = mediaEl(s[0] || {});
+    const showDesc = tcfg(p, "description").show !== false && ad.description;
+    media += `<div class="linkbar"><div class="tx">${ad.display_link ? `<div class="dl">${esc(ad.display_link)}</div>` : ""}${ad.headline ? `<div class="hl" ${limAttr(p,"headline",ad.headline)}>${esc(ad.headline)}</div>` : ""}${showDesc ? `<div class="ds" ${limAttr(p,"description",ad.description)}>${esc(ad.description)}</div>` : ""}</div>${ad.cta ? `<div class="fbcta">${esc(ctaLabel(ad.cta))}</div>` : ""}</div>`;
+  }
+  const shares = e.shares ? `${fmtCount(e.shares)} shares` : "";
+  const comments = e.comments ? `${fmtCount(e.comments)} comments` : "";
+  const views = (ad.format === "video" && e.views) ? `${fmtCount(e.views)} views` : "";
+  return `<div class="post ad">
+    <div class="ph-h">${avatar(ad, 40)}<div class="who"><div class="nm">${esc(b.page_name)}${verified(ad,14)}</div><div class="sp">Sponsored · ${ic.globe()}</div></div><div class="acts">${ic.dots()}${opts.desktop ? "" : ic.x()}</div></div>
+    <div class="ptxt clamp" ${clampAttrs(ad.primary_text, pt.lines ?? 3, pt.more || "… See more", pt.chars)}></div>
+    <div style="position:relative">${media}${badge(c)}</div>
+    <div class="eng"><span class="rx">${e.reactions ? `<span class="stack">${ic.rLike()}${ic.rLove()}${e.reactions > 500 ? ic.rHaha() : ""}</span>${fmtCount(e.reactions)}` : ""}</span><span>${[comments, shares, views].filter(Boolean).join("  ")}</span></div>
+    <div class="actrow"><div>${ic.fbLike()}Like</div><div>${ic.fbComment()}Comment</div><div>${ic.fbShare()}Share</div></div>
+  </div>`;
+}
+function fbMobileShell(inner, opts = {}){
+  const hdr = opts.header ?? `<div class="fbhdr"><span class="fbword">facebook</span><div class="r"><div class="circbtn">${ic.plus(20)}</div><div class="circbtn">${ic.search(20)}</div><div class="circbtn">${ic.msgr(20)}</div></div></div>`;
+  const tabs = `<div class="fbtabs">${[["home",ic.home(26,1)],["video",ic.video()],["friends",ic.friends()],["store",ic.store()],["bell",ic.bell()],["menu",ic.menu()]].map(([k,s]) => `<span class="${k===(opts.tab||"home")?"on":""}">${s}</span>`).join("")}</div>`;
+  return `${statusBar()}${hdr}${opts.noTabsTop ? "" : ""}<div class="fbapp">${inner}</div>${tabs}`;
+}
+const T = {};
+T.fb_feed = (ad, p, ctx) => {
+  if (p.device === "desktop") return fbDesktop(ad, p, ctx);
+  let hdr, tab = "home";
+  if (p.variant === "video_feeds") { tab = "video"; hdr = `<div class="fbhdr"><span style="font-size:24px;font-weight:700">Video</span><div class="r"><div class="circbtn">${ic.search(20)}</div><div class="circbtn">${ic.menu(20)}</div></div></div><div class="srtabs"><div class="on">For you</div><div>Live</div><div>Reels</div><div>Following</div></div>`; }
+  if (p.variant === "search") { hdr = `<div class="srch">${ic.chevL()}<div class="box">${esc(ctx.query || "running shoes")}</div></div><div class="srtabs"><div class="on">All</div><div>Posts</div><div>People</div><div>Reels</div><div>Marketplace</div></div>`; }
+  const before = ctx.feed ? organicFB(0) : "";
+  const after = ctx.feed ? organicFB(1) + organicFB(2) : "";
+  return `<div class="mk fb${state.dark ? " dark" : ""}" data-pl="${p.id}">${fbMobileShell(before + fbPostBody(ad, p) + after, {header: hdr, tab})}</div>`;
+};
+/* Desktop Facebook left sidebar, composer and stories row (modelled on the 2026 web app) */
+const DESK_ME = "Alex Rivera";
+const fbIco = {
+  metaai: `<span class="dico metaai"></span>`,
+  friends: `<svg class="dico" viewBox="0 0 36 36"><circle cx="24" cy="12.5" r="5" fill="#4fc3f7"/><path d="M15.5 30c.3-5.6 3.8-9 8.5-9s8.2 3.4 8.5 9z" fill="#4fc3f7"/><circle cx="13.5" cy="13" r="5.8" fill="#1877f2"/><path d="M3 31c.3-6.4 4.4-10.2 10.5-10.2S23.7 24.6 24 31z" fill="#1877f2"/></svg>`,
+  memories: `<svg class="dico" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" fill="#1d90f5"/><circle cx="18" cy="18" r="11" fill="#fff"/><path d="M18 11.5V18l4.6 2.8" stroke="#1d90f5" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M4.5 9.5 3 4.8l5 .9" stroke="#1d90f5" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  saved: `<svg class="dico" viewBox="0 0 36 36"><defs><linearGradient id="fbsv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d64fe6"/><stop offset="1" stop-color="#7a3fe2"/></linearGradient></defs><path d="M10 3.5h16a2.5 2.5 0 0 1 2.5 2.5v26.5L18 26 7.5 32.5V6A2.5 2.5 0 0 1 10 3.5z" fill="url(#fbsv)"/></svg>`,
+  groups: `<svg class="dico" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="#1d90f5"/><circle cx="18" cy="13.5" r="3.8" fill="#fff"/><path d="M11.5 25.5c.4-4.2 3-6.6 6.5-6.6s6.1 2.4 6.5 6.6z" fill="#fff"/><circle cx="10.5" cy="15.5" r="2.8" fill="#fff"/><path d="M5.8 24.5c.3-3 2-4.8 4.7-4.8 1 0 1.8.2 2.5.6-1.2 1.2-1.9 2.6-2.2 4.2z" fill="#fff"/><circle cx="25.5" cy="15.5" r="2.8" fill="#fff"/><path d="M30.2 24.5c-.3-3-2-4.8-4.7-4.8-1 0-1.8.2-2.5.6 1.2 1.2 1.9 2.6 2.2 4.2z" fill="#fff"/></svg>`,
+  marketplace: `<svg class="dico" viewBox="0 0 36 36"><path d="M5 14h26v15.5a2.5 2.5 0 0 1-2.5 2.5h-21A2.5 2.5 0 0 1 5 29.5z" fill="#1877f2"/><path d="M4 14 7 5.5h22L32 14z" fill="#53a8ff"/><rect x="14.5" y="20" width="7" height="12" rx="1" fill="#fff"/></svg>`,
+  video: `<svg class="dico" viewBox="0 0 36 36"><rect x="3" y="7" width="30" height="22" rx="5" fill="#1877f2"/><path d="m15 12.5 8.5 5.5-8.5 5.5z" fill="#fff"/></svg>`,
+};
+function fbDeskSidebar(){
+  const row = (icon, label) => `<div class="drow">${icon}<span>${label}</span></div>`;
+  const more = `<div class="drow"><span class="dmore">${I('<path d="m6 9 6 6 6-6"/>', 20, 'stroke-width="2.4"')}</span><span>See more</span></div>`;
+  const sc = [["Weekend Hikers Club","linear-gradient(135deg,#4caf7d,#1f5d3c)"],["Neighborhood Swap & Sell","linear-gradient(135deg,#f6a04d,#b8501d)"],["Home Cooking Ideas","linear-gradient(135deg,#ef5b5b,#8e1f2f)"],["Local Live Music","linear-gradient(135deg,#7b6cf6,#2e2585)"]];
+  return row(`<span class="av dico" style="background:linear-gradient(135deg,#8a9bb0,#3d4b5c)"></span>`, DESK_ME)
+    + row(fbIco.metaai, "Meta AI") + row(fbIco.friends, "Friends") + row(fbIco.memories, "Memories")
+    + row(fbIco.saved, "Saved") + row(fbIco.groups, "Groups") + row(fbIco.video, "Video") + row(fbIco.marketplace, "Marketplace") + more
+    + `<div class="dsep"></div><div class="dhead">Your shortcuts</div>`
+    + sc.map(([n, g]) => row(`<span class="dico sq" style="background:${g}"></span>`, n)).join("") + more;
+}
+function fbDeskComposer(){
+  return `<div class="dcomp"><span class="av" style="width:40px;height:40px;background:linear-gradient(135deg,#8a9bb0,#3d4b5c)"></span><div class="in">What's on your mind, ${DESK_ME.split(" ")[0]}?</div></div>`;
+}
+function fbDeskStories(){
+  const st = [["Jordan Lee","linear-gradient(160deg,#6fa8dc,#1c4e80)"],["Priya Shah","linear-gradient(160deg,#f6c28b,#a0522d)"],["Marcus Webb","linear-gradient(160deg,#8e7cc3,#351c75)"],["Ana Ruiz","linear-gradient(160deg,#93c47d,#38761d)"]];
+  return `<div class="dstories"><div class="dst create"><div class="ph" style="background:linear-gradient(135deg,#8a9bb0,#3d4b5c)"></div><div class="cb"><span class="pl">${I('<path d="M12 5v14M5 12h14"/>', 22, 'stroke-width="3"')}</span>Create story</div></div>`
+    + st.map(([n, g]) => `<div class="dst" style="background:${g}"><span class="ring"><span class="av" style="width:32px;height:32px;font-size:12px;background:${hueFor(n)}">${initials(n)}</span></span><span class="nm">${n}</span></div>`).join("") + `</div>`;
+}
+function fbDesktop(ad, p, ctx){
+  const b = brandOf(ad), c = cell(ad, p.id);
+  const left = fbDeskSidebar();
+  const top = fbDeskComposer() + fbDeskStories();
+  let center, right;
+  const contacts = ["Jordan Lee","Priya Shah","Marcus Webb","Ana Ruiz"].map(n => `<div class="ct"><div class="av" style="width:36px;height:36px;font-size:13px;background:${hueFor(n)}">${initials(n)}</div>${n}</div>`).join("");
+  if (p.variant === "right_column") {
+    const s = slots(ad, p.id)[0] || {};
+    const hl = ad.format === "carousel" ? (ad.cards[0]?.headline || "") : (ad.headline || "");
+    center = top + organicFB(0, true) + organicFB(1, true);
+    right = `<h4>Sponsored</h4><div class="rcad" style="position:relative"><div class="im">${mediaEl(s, {noVidBadge:true})}</div><div><div class="hl" ${limAttr(p,"headline",hl)}>${esc(hl)}</div><div class="dl">${esc(ad.display_link || "")}</div></div>${badge(c)}</div>
+      <div class="rcad"><div class="im"><div class="media" style="aspect-ratio:1;background:linear-gradient(135deg,#c9d6df,#52616b)"></div></div><div><div class="hl">Another advertiser's offer</div><div class="dl">example.com</div></div></div>
+      <div class="sep"></div><h4>Contacts</h4>${contacts}`;
+  } else {
+    center = top + (ctx.feed ? organicFB(0, true) : "") + fbPostBody(ad, p, {desktop:true}) + (ctx.feed ? organicFB(1, true) : "");
+    right = `<h4>Sponsored</h4><div class="rcad"><div class="im"><div class="media" style="aspect-ratio:1;background:linear-gradient(135deg,#c9d6df,#52616b)"></div></div><div><div class="hl">Another advertiser's offer</div><div class="dl">example.com</div></div></div><div class="sep"></div><h4>Contacts</h4>${contacts}`;
+  }
+  return `<div class="mk fb desk${state.dark ? " dark" : ""}" data-pl="${p.id}" style="min-height:900px">
+    <div class="dtop"><div class="dlogo">f</div><div class="dsearch">${ic.search(16)}Search Facebook</div><div class="dmid"><div class="on">${ic.home(26,1)}</div><div>${ic.video()}</div><div>${ic.store()}</div><div>${ic.friends()}</div></div><div class="dright"><div class="circbtn">${ic.menu(20)}</div><div class="circbtn">${ic.msgr(20)}</div><div class="circbtn">${ic.bell(20)}</div><div class="av" style="width:40px;height:40px;background:#8a8d91"></div></div></div>
+    <div class="dbody"><div class="dleft">${left}</div><div class="dfeed">${center}</div><div class="drc">${right}</div></div></div>`;
+}
+T.fb_stories = (ad, p, ctx) => fullScreen(ad, p, ctx, "fb");
+T.ig_stories = (ad, p, ctx) => fullScreen(ad, p, ctx, "ig");
+function fullScreen(ad, p, ctx, net){
+  const b = brandOf(ad), c = cell(ad, p.id), s = slots(ad, p.id);
+  const ci = Math.min(state.card, Math.max(0, s.length - 1));
+  const sl = s[ci] || {};
+  const name = net === "ig" ? b.ig_handle : b.page_name;
+  const cta = ad.format === "carousel" ? (ad.cards[ci]?.cta ?? ad.cta) : ad.cta;
+  const nProg = ad.format === "carousel" ? s.length : 1;
+  const prog = `<div class="prog">${Array.from({length:nProg}, (_, i) => `<i class="${i===ci?"on":""}" style="${i<ci?"background:#fff":""}"></i>`).join("")}</div>`;
+  const hdr = `<div class="sthdr">${avatar(ad, 32, net==="ig")}<div class="who"><div class="nm">${esc(name)}${verified(ad,13)}</div><div class="sp">Sponsored</div></div><div class="r">${ic.dots(20)}${ic.x(24)}</div></div>`;
+  let text = "";
+  if (sl.mode && sl.mode !== "native" && tcfg(p,"primary_text").show !== false) {
+    const pt = tcfg(p, "primary_text");
+    text = `<div class="sttext" style="top:120px"><div class="clamp" ${clampAttrs(ad.primary_text, pt.lines ?? 3, pt.more || "… more", pt.chars)}></div></div>`;
+  }
+  const ctaHtml = cta ? (net === "ig"
+      ? `<div class="stcta"><div class="pillb">${ic.link(18)}${esc(ctaLabel(cta))}</div></div>`
+      : `<div class="fbstfoot"><div class="cta">${esc(ctaLabel(cta))}</div></div>`)
+    : (net === "fb" ? `<div class="fbstfoot"></div>` : "");
+  return `<div class="mk fs ${net}" data-pl="${p.id}"><div class="stage">${mediaEl(sl, {fill:true, noVidBadge:true})}</div><div class="shade-t"></div><div class="shade-b"></div>
+    ${statusBar(true)}${prog}${hdr}${text}${ctaHtml}${safeOverlay(p)}${badge(c, true)}</div>`;
+}
+T.fb_reels = (ad, p, ctx) => reels(ad, p, ctx, "fb");
+T.ig_reels = (ad, p, ctx) => reels(ad, p, ctx, "ig");
+function reels(ad, p, ctx, net){
+  const b = brandOf(ad), c = cell(ad, p.id), s = slots(ad, p.id), e = ad.engagement;
+  const ci = Math.min(state.card, Math.max(0, s.length - 1));
+  const sl = s[ci] || {};
+  const pt = tcfg(p, "primary_text");
+  const name = net === "ig" ? b.ig_handle : b.page_name;
+  const cta = ad.format === "carousel" ? (ad.cards[ci]?.cta ?? ad.cta) : ad.cta;
+  const rail = net === "ig"
+    ? `<div>${ic.heart(28)}${fmtCount(e.likes ?? e.reactions)}</div><div>${ic.igComment(28)}${fmtCount(e.comments)}</div><div>${ic.plane(28)}${fmtCount(e.shares)}</div><div>${ic.dots(22)}</div>`
+    : `<div>${ic.fbLike(30)}${fmtCount(e.reactions)}</div><div>${ic.fbComment(30)}${fmtCount(e.comments)}</div><div>${ic.fbShare(30)}${fmtCount(e.shares)}</div><div>${ic.dots(22)}</div>`;
+  const nav = net === "ig"
+    ? igPill("reels")
+    : "";
+  const capPrefix = "";
+  return `<div class="mk fs ${net}" data-pl="${p.id}"><div class="stage">${mediaEl(sl, {fill:true, noVidBadge:true})}</div><div class="shade-t"></div><div class="shade-b"></div>
+    ${statusBar(true)}<div class="rtop"><span>${net === "ig" ? "Reels" : "Reels"}</span>${ic.camera(26)}</div>
+    <div class="rrail">${rail}</div>
+    <div class="rbot"><div class="who">${avatar(ad, 32, net==="ig")}<span>${esc(name)}</span>${verified(ad,13)}<span class="sp">· Sponsored</span></div>
+      ${tcfg(p,"headline").show && (ad.format === "carousel" ? ad.cards[ci]?.headline : ad.headline) ? `<div class="rhl" ${limAttr(p,"headline",ad.format === "carousel" ? ad.cards[ci]?.headline : ad.headline)}>${esc(ad.format === "carousel" ? ad.cards[ci]?.headline : ad.headline)}</div>` : ""}
+      <div class="cap clamp" ${clampAttrs(ad.primary_text, pt.lines ?? 2, pt.more || "… more", pt.chars, capPrefix)}></div>
+      ${cta ? `<div class="rcta ${net}">${esc(ctaLabel(cta))}${ic.chevR(16)}</div>` : ""}</div>
+    ${nav}${safeOverlay(p)}${badge(c, true)}</div>`;
+}
+T.fb_marketplace = (ad, p, ctx) => {
+  const c = cell(ad, p.id), s = slots(ad, p.id)[0] || {}, b = brandOf(ad);
+  const hl = ad.format === "carousel" ? (ad.cards[0]?.headline || "") : (ad.headline || ad.primary_text || "");
+  const items = [["$45","Mid-century side table","Oakland, CA","#b08968"],["$120","Road bike, 54cm","Berkeley, CA","#6c757d"],["$15","Ceramic planters (set of 3)","Alameda, CA","#a3b18a"],["$300","Leather sofa – pickup only","San Leandro, CA","#7f5539"],["$20","Kids books bundle","Oakland, CA","#e9c46a"]];
+  const tile = ([pr, ti, lo, col]) => `<div class="it"><div class="im" style="background:${col}"></div><div class="pr">${pr}</div><div class="ti">${ti}</div><div class="lo">${lo}</div></div>`;
+  const adTile = `<div class="it" style="position:relative"><div class="im">${mediaEl(s, {box:1, noVidBadge:true})}</div><div class="pr" style="font-size:14px" ${limAttr(p,"headline",hl)}>${esc(hl)}</div><div class="lo">${esc(b.page_name)} · Sponsored</div>${badge(c)}</div>`;
+  const grid = [tile(items[0]), adTile, tile(items[1]), tile(items[2]), tile(items[3]), tile(items[4])].join("");
+  const hdr = `<div class="fbhdr"><span style="font-size:24px;font-weight:700">Marketplace</span><div class="r"><div class="circbtn">${ic.friends(20)}</div><div class="circbtn">${ic.search(20)}</div></div></div><div class="mpchips"><div>Sell</div><div>For you</div><div>Local</div><div>Categories</div></div>`;
+  return `<div class="mk fb${state.dark ? " dark" : ""}" data-pl="${p.id}">${fbMobileShell(`<div class="mpgrid">${grid}</div>`, {header: hdr, tab:"store"})}</div>`;
+};
+T.fb_instream = (ad, p, ctx) => {
+  const c = cell(ad, p.id), s0 = slots(ad, p.id)[0] || {}, b = brandOf(ad), m0 = M(s0.media);
+  const s = (m0 && Math.abs(Math.log(m0.aspect / (16/9))) > 0.03) ? {...s0, mode: "letterbox", box: 16/9} : s0;
+  const player =`<div class="isplayer">${mediaEl(s, {box:16/9, fill:true, noVidBadge:true})}<div class="adlbl">Ad · 0:06</div><div class="bar"><i></i></div></div>`;
+  const brandRow = `<div class="isbrand">${avatar(ad, 36)}<div class="tx"><div class="nm" ${limAttr(p,"headline",ad.headline)}>${esc(ad.headline || b.page_name)}</div><div class="sp">${esc(b.page_name)} · Sponsored</div></div>${ad.cta ? `<div class="fbcta blue">${esc(ctaLabel(ad.cta))}</div>` : ""}</div>`;
+  const creator = `<div class="post" style="margin-top:0"><div class="ph-h"><div class="av" style="width:40px;height:40px;background:${hueFor("Creator")}">TC</div><div class="who"><div class="nm">The Creator Channel</div><div class="sp">1d · ${ic.globe()}</div></div><div class="acts">${ic.dots()}</div></div><div class="ptxt">Our most-requested video yet: behind the scenes of the big build 🔧</div><div class="eng"><span class="rx"><span class="stack">${ic.rLike()}${ic.rLove()}</span>12K</span><span>1.4K comments  842 shares</span></div><div class="actrow"><div>${ic.fbLike()}Like</div><div>${ic.fbComment()}Comment</div><div>${ic.fbShare()}Share</div></div></div>`;
+  return `<div class="mk fb${state.dark ? " dark" : ""}" data-pl="${p.id}">${statusBar()}<div style="position:relative">${player}${brandRow}${badge(c)}</div>${creator}${organicFB(1)}</div>`;
+};
+
+/* ------------------------------------------------------------------ IG templates */
+T.ig_feed = (ad, p, ctx) => {
+  const b = brandOf(ad), c = cell(ad, p.id), s = slots(ad, p.id), e = ad.engagement;
+  const pt = tcfg(p, "primary_text");
+  let media;
+  if (ad.format === "carousel") {
+    const box = s[0]?.box || 1;
+    media = `<div class="igcar">` + ad.cards.map((cd, i) => `<div><div class="cnt">${i+1}/${ad.cards.length}</div>${mediaEl({...s[i], box}, {})}</div>`).join("") + `</div>`;
+  } else media = mediaEl(s[0] || {});
+  const cta = ad.format === "carousel" ? (ad.cards[0]?.cta ?? ad.cta) : ad.cta;
+  const showHl = tcfg(p, "headline").show;
+  const hl = ad.format === "carousel" ? ad.cards[0]?.headline : ad.headline;
+  const ctaBar = cta ? `<div class="igcta">${showHl && hl ? `<span ${limAttr(p,"headline",hl)}>${esc(ctaLabel(cta))}</span>` : `<span>${esc(ctaLabel(cta))}</span>`}${ic.chevR(18)}</div>` : "";
+  const dots = ad.format === "carousel" ? `<div class="igdots">${ad.cards.map((_, i) => `<i class="${i===0?"on":""}"></i>`).join("")}</div>` : "";
+  const prefix = `<b>${esc(b.ig_handle)}</b> `;
+  let hdr = `${statusBar()}<div class="ighdr home">${ic.plus(28)}<span class="igword">Instagram</span>${ic.heart(26)}</div>`;
+  let tab = "home";
+  if (p.variant === "explore") { tab = "search"; hdr = `${statusBar()}<div class="ighdr sub">${ic.chevL(26)}<div class="t">Explore</div></div>`; }
+  if (p.variant === "profile") { tab = ""; hdr = `${statusBar()}<div class="ighdr sub">${ic.chevL(26)}<div class="t"><small>${esc("some_creator")}</small>Posts</div></div>`; }
+  const post = `<div class="igpost"><div class="h">${avatar(ad, 32, true)}<div class="who"><div class="nm">${esc(b.ig_handle)}${verified(ad,12)}</div><div class="sp">Sponsored</div></div>${ic.dots(18)}</div>
+    <div style="position:relative">${media}${badge(c)}</div>${ctaBar}
+    ${igActions(e, dots)}
+    <div class="igcap clamp" ${clampAttrs(ad.primary_text, pt.lines ?? 2, pt.more || "… more", pt.chars, prefix)}></div></div>`;
+  const tabs = igPill(tab);
+  const before = ctx.feed ? organicIG(0) : "", after = ctx.feed ? organicIG(1) + organicIG(2) : "";
+  return `<div class="mk ig${state.dark ? " dark" : ""}" data-pl="${p.id}">${hdr}<div class="igapp">${before}${post}${after}</div>${tabs}</div>`;
+};
+T.ig_explore_home = (ad, p, ctx) => {
+  const c = cell(ad, p.id), s = slots(ad, p.id)[0] || {};
+  const box = (p.media[ad.format] || p.media.default).ideal;
+  const cols = ["#9c6644","#7f7f7f","#577590","#90be6d","#f9844a","#4d908e","#b56576","#6d597a","#e5989b","#43aa8b","#277da1","#f8961e","#adb5bd","#83c5be"];
+  let n = 0;
+  const filler = () => `<div style="aspect-ratio:${box};background:${cols[(n++) % cols.length]}"></div>`;
+  const adCell = `<div style="aspect-ratio:${box};position:relative">${mediaEl(s, {box, fill:true, noVidBadge:true})}<span class="tag">Sponsored</span>${badge(c)}</div>`;
+  const cellsHtml = [filler(), filler(), filler(), filler(), adCell, filler(), filler(), filler(), filler(), filler(), filler(), filler(), filler(), filler(), filler()].join("");
+  return `<div class="mk ig${state.dark ? " dark" : ""}" data-pl="${p.id}">${statusBar()}<div class="igsearch">${ic.search(18)}Search</div><div class="iggrid">${cellsHtml}</div>${igPill("search")}</div>`;
+};
+
+/* ------------------------------------------------------------------ render one mockup */
+function mockup(adId, plId, ctx = {}){
+  const ad = AD[adId], p = P[plId];
+  const c = cell(ad, plId);
+  if (!c || c.status === "not_eligible" || c.status === "excluded") return null;
+  const fn = T[p.template];
+  if (!fn) return `<div class="empty">No template '${esc(p.template)}'</div>`;
+  let html = fn(ad, p, ctx);
+  if (state.frame && p.device === "mobile" && !state.export) {
+    html = html.replace(/^<div class="mk([^"]*)"([^>]*)>/, `<div class="mk$1"$2><div class="scroll">`) + `</div>`;
+    html = `<div class="frame">${html}</div>`;
+  }
+  return html;
+}
+
+/* ------------------------------------------------------------------ toolbar */
+function toolbar(){
+  const groups = [...new Set(D.ads.map(a => a.group).filter(Boolean))];
+  const brandIds = [...new Set(D.ads.map(a => a.brand).filter(Boolean))];
+  const adsF = filteredAds();
+  const usesAd = state.mode === "feed" || state.mode === "gallery";
+  const usesPl = state.mode === "feed" || state.mode === "compare";
+  const idx = adsF.findIndex(a => a.id === state.ad);
+  const optOf = a => `<option value="${esc(a.id)}" ${a.id===state.ad?"selected":""}>${esc(adOptionText(a))}</option>`;
+  const adBrands = [...new Set(adsF.map(a => a.brand))];
+  const adOpts = adBrands.length > 1
+    ? adBrands.map(b => `<optgroup label="${esc((D.brands[b] || {}).page_name || b)}">${adsF.filter(a => a.brand === b).map(optOf).join("")}</optgroup>`).join("")
+    : adsF.map(optOf).join("");
+  const plGroups = [["facebook","Facebook"],["instagram","Instagram"]].map(([k, l]) => {
+    const ps = D.placements.filter(p => p.platform === k);
+    return ps.length ? `<optgroup label="${l}">${ps.map(p => `<option value="${p.id}" ${p.id===state.pl?"selected":""}>${esc(p.name)}</option>`).join("")}</optgroup>` : "";
+  }).join("");
+  const plIdx = D.placements.findIndex(p => p.id === state.pl);
+  const nFilters = (state.group ? 1 : 0) + (state.brand ? 1 : 0) + (state.status ? 1 : 0);
+  const menu = (id, summary, body, right) => `<details class="menu${id === "key" ? " key" : ""}" data-menu="${id}" ${openMenu === id ? "open" : ""}><summary class="ib">${summary}</summary><div class="pop${right ? " right" : ""}">${body}</div></details>`;
+  const opt = (k, label, help) => `<label class="opt"><input type="checkbox" data-tog="${k}" ${state[k]?"checked":""}><span>${label}</span><small>${help}</small></label>`;
+  const sel = (k, label, all, items) => `<div class="fld"><span class="lb">${label}</span><select data-sel="${k}"><option value="">${all}</option>${items.map(([v, l]) => `<option value="${esc(v)}" ${v===state[k]?"selected":""}>${esc(l)}</option>`).join("")}</select></div>`;
+  const chev = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>`;
+  const adCtlPick = usesAd && SELECTING && state.ad ? pickBox(state.ad, "Include") : "";
+  const adCtl = usesAd
+    ? `<button class="ib" data-step="-1" title="Previous ad (← key)" aria-label="Previous ad" ${idx <= 0 ? "disabled" : ""}>‹</button><select data-sel="ad" aria-label="Ad">${adOpts}</select><button class="ib" data-step="1" title="Next ad (→ key)" aria-label="Next ad" ${idx >= adsF.length - 1 ? "disabled" : ""}>›</button><span class="cnt">${idx + 1} of ${adsF.length}</span>${adCtlPick}`
+    : `<span class="fixed">All ${adsF.length} ad${adsF.length === 1 ? "" : "s"}${nFilters ? " (filtered)" : ""}</span>`;
+  const plCtl = usesPl
+    ? `${state.mode === "compare" ? `<button class="ib" data-plstep="-1" title="Previous placement (← key)" aria-label="Previous placement" ${plIdx <= 0 ? "disabled" : ""}>‹</button>` : ""}<select data-sel="pl" aria-label="Placement">${plGroups}</select>${state.mode === "compare" ? `<button class="ib" data-plstep="1" title="Next placement (→ key)" aria-label="Next placement" ${plIdx >= D.placements.length - 1 ? "disabled" : ""}>›</button>` : ""}`
+    : `<span class="fixed">All ${D.placements.length} placements</span>`;
+  const filterBody = `${groups.length ? sel("group", "Group", "All groups", groups.map(g => [g, g])) : ""}
+    ${brandIds.length > 1 ? sel("brand", "Brand", "All brands", brandIds.map(b => [b, (D.brands[b] || {}).page_name || b])) : ""}
+    ${sel("status", "Status", "Actual and simulated", [["actual", "Actual only"], ["simulated", "Simulated only"]])}
+    ${nFilters ? `<button class="ib" data-clear style="align-self:flex-start">Clear filters</button>` : ""}`;
+  const overlayBody = `${opt("safe", "Stories and Reels safe areas", "Shades the parts of the screen the app covers with buttons and captions.")}
+    ${opt("trunc", "Where text gets cut off", "Marks where “…See more” cuts the text, with character counts against Meta’s guidance.")}
+    ${opt("badges", "Why it’s simulated", "Notes on each simulated mockup saying what was approximated.")}
+    ${state.mode !== "feed" ? opt("frame", "Phone frame", "Shows phone placements inside a phone you can scroll.") : ""}
+    ${state.mode === "matrix" ? opt("thumbs", "Thumbnails", "Small previews in the grid instead of coloured dots.") : ""}
+`;
+  const expBody = exportBody(adsF);
+  const keyBody = `<p><span class="dot actual"></span><b>Actual</b>: the placement shows your creative as supplied, so the mockup should match what Meta shows.</p>
+    <p><span class="dot simulated"></span><b>Simulated</b>: something was approximated, usually an image in the wrong shape (cropped, padded or blurred to fit) or placeholder creative. Hover a status to see why.</p>
+    <p><span class="dot not_eligible"></span><b>Not eligible</b>: Meta doesn’t run this kind of ad in that placement.</p>
+    <p style="color:var(--ui-sub)">Keys: ← → step through ads (or placements in Compare ads).</p>`;
+  $("#bar").innerHTML = `<div class="row">${libCtl()}
+    <span class="seg" role="tablist">${MODES.map(([v, l, d]) => `<button data-mode="${v}" class="${state.mode===v?"on":""}" role="tab" aria-selected="${state.mode===v}">${l}<small>${d}</small></button>`).join("")}</span>
+    <span class="rhs">${D.share ? "" : `<button class="ib${SELECTING ? " on" : ""}" data-selmode aria-pressed="${SELECTING}" title="Tick the ads you want in a PDF, PowerPoint or file">${SELECTING ? "✓ Selecting ads" : "☐ Select ads"}</button>`}${D.share ? "" : menu("export", `Export${EXP.picked.size && EXP.scope === "pick" ? ` <span class="nbadge">${EXP.picked.size}</span>` : ""} ${chev}`, expBody, true)}${menu("key", `<span><span class="dot actual"></span>Actual</span><span><span class="dot simulated"></span>Simulated</span><span>What’s this?</span>`, keyBody, true)}
+    <button class="ib${state.dark ? " on" : ""}" data-dark aria-pressed="${state.dark}" title="Dark theme for the mockups and this viewer">${state.dark ? "☀ Light mode" : "☾ Dark mode"}</button></span></div>
+    <div class="row"><div class="fld"><span class="lb" style="cursor:help" title="Which ad to show. The names come from each ad’s label in your ads.json, grouped by the brand that ran it.">Ad</span>${adCtl}</div>
+    <div class="fld"><span class="lb">Placement</span>${plCtl}</div>
+    ${menu("filter", `Filter${nFilters ? ` <span class="nbadge">${nFilters}</span>` : ""} ${chev}`, filterBody)}
+    ${menu("overlays", `Overlays ${chev}`, overlayBody)}
+    ${state.mode !== "matrix" ? `<div class="fld"><span class="lb">Zoom</span><button class="ib" data-zoomstep="-0.1" aria-label="Zoom out">−</button><span class="zoomv">${Math.round(state.zoom * 100)}%</span><button class="ib" data-zoomstep="0.1" aria-label="Zoom in">+</button></div>` : ""}</div>
+    ${SELECTING ? selBar(adsF, usesAd) : ""}`;
+  const bar = $("#bar");
+  bar.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => { state.mode = b.dataset.mode; go(); });
+  bar.querySelectorAll("[data-sel]").forEach(s => s.onchange = () => { state[s.dataset.sel] = s.value; if (s.dataset.sel === "ad") state.card = 0; go(); });
+  bar.querySelectorAll("[data-tog]").forEach(c => c.onchange = () => { state[c.dataset.tog] = c.checked; go(); });
+  bindExport(bar, adsF);
+  bindSelect(bar, adsF);
+  bar.querySelector("[data-dark]").onclick = () => { state.dark = !state.dark; go(); };
+  bar.querySelectorAll("[data-step]").forEach(b => b.onclick = () => stepAd(+b.dataset.step));
+  bar.querySelectorAll("[data-plstep]").forEach(b => b.onclick = () => stepPl(+b.dataset.plstep));
+  bar.querySelectorAll("[data-zoomstep]").forEach(b => b.onclick = () => { state.zoom = Math.round(Math.min(1.5, Math.max(0.3, state.zoom + +b.dataset.zoomstep)) * 100) / 100; go(); });
+  const ls = bar.querySelector("[data-lib]"); if (ls) ls.onchange = () => switchLibrary(ls.value);
+  const clr = bar.querySelector("[data-clear]"); if (clr) clr.onclick = () => { state.group = state.brand = state.status = ""; go(); };
+  bar.querySelectorAll("details.menu").forEach(d => d.ontoggle = () => {
+    if (d.open) {
+      openMenu = d.dataset.menu; bar.querySelectorAll("details.menu[open]").forEach(o => { if (o !== d) o.open = false; });
+      const pop = d.querySelector(".pop"); pop.classList.toggle("right", d.dataset.menu === "key" || d.dataset.menu === "export");
+      if (pop.getBoundingClientRect().right > innerWidth - 8) pop.classList.add("right");
+      if (pop.getBoundingClientRect().left < 8) pop.classList.remove("right");
+    }
+    else if (openMenu === d.dataset.menu) openMenu = null;
+  });
+  document.documentElement.style.setProperty("--barh", (getComputedStyle(bar).position === "sticky" ? bar.offsetHeight : 0) + "px");
+}
+/* Human name for an ad: the spec's label, else its headline or opening text. IDs stay secondary. */
+const fullName = ad => ad.label || ad.headline || (ad.cards && ad.cards[0] && ad.cards[0].headline) || (ad.primary_text || "").split("\n")[0] || ad.id;
+const clip = (t, n = 80) => t.length > n ? t.slice(0, n - 1) + "…" : t;
+const adName = ad => clip(fullName(ad));
+/* In the Ad picker the list is grouped by brand, so drop the brand's name from each entry,
+   and number ads that share a name ("version 2") rather than showing part of an ID. */
+const shortName = ad => { const pn = (brandOf(ad) || {}).page_name; return clip(fullName(ad).split(" · ").filter(x => x !== pn).join(" · ") || fullName(ad)); };
+const AD_VERSION = (() => {
+  const total = {}, seen = {}, out = {};
+  D.ads.forEach(a => { const k = a.brand + "|" + shortName(a); total[k] = (total[k] || 0) + 1; });
+  D.ads.forEach(a => { const k = a.brand + "|" + shortName(a); if (total[k] > 1) out[a.id] = seen[k] = (seen[k] || 0) + 1; });
+  return out;
+})();
+const adOptionText = ad => shortName(ad) + (AD_VERSION[ad.id] ? ` (version ${AD_VERSION[ad.id]})` : "");
+const MODES = [
+  ["feed", "Feed preview", "One ad, in context"],
+  ["compare", "Compare ads", "All ads, one placement"],
+  ["gallery", "All placements", "One ad, everywhere"],
+  ["matrix", "Overview", "Every ad × placement"],
+];
+let openMenu = null;   // which toolbar menu is open, kept across re-renders
+/* ------------------------------------------------------------------ Export menu
+   The page can't write files, so it builds an exact request (paths, ads, layout) for the user to
+   paste to Claude, which runs share.py or deck.py. Choices live here, outside the URL and outside
+   toolbar(), so they survive re-renders. */
+const EXP = {fmt: "pdf", scope: "this", layout: "concept", pls: ["fb_feed_mobile", "ig_feed", "ig_reels"], one: "", picked: new Set(), title: ""};
+function expAds(adsF){
+  if (EXP.scope === "this") return AD[state.ad] ? [AD[state.ad]] : [];
+  if (EXP.scope === "shown") return adsF;
+  return ADS_BY_BRAND.filter(a => EXP.picked.has(a.id));   // all picks, even ones the Filter hides now
+}
+function selBar(adsF, usesAd){
+  const n = EXP.picked.size, hidden = [...EXP.picked].filter(id => !adsF.some(a => a.id === id)).length;
+  const allIn = adsF.length && adsF.every(a => EXP.picked.has(a.id));
+  return `<div class="row selbar"><b>${n} ad${n === 1 ? "" : "s"} selected</b>${hidden ? `<span class="cnt">(${hidden} hidden by Filter)</span>` : ""}
+    <span class="cnt">${usesAd ? "Tick Include for each ad you want, or switch to Compare ads to see them all." : "Tick the box on each ad you want in the export."}</span>
+    <span class="rhs"><button class="ib" data-selall="${allIn ? "0" : "1"}">${allIn ? "Clear shown" : `Select all ${adsF.length} shown`}</button>${n ? `<button class="ib" data-selclear>Clear all</button>` : ""}
+    <button class="ib pri" data-selexport ${n ? "" : "disabled"}>Export ${n || ""} selected…</button><button class="ib" data-selmode>Done</button></span></div>`;
+}
+function setPicked(id, on){
+  on ? EXP.picked.add(id) : EXP.picked.delete(id);
+  if (on) EXP.scope = "pick";
+  document.querySelectorAll(`#main [data-tile="${CSS.escape(id)}"]`).forEach(t => t.classList.toggle("picked", on));
+  document.querySelectorAll(`[data-pick="${CSS.escape(id)}"]`).forEach(c => { c.checked = on; });
+  savePrefs(); toolbar();
+}
+function bindSelect(bar, adsF){
+  bar.querySelectorAll("[data-selmode]").forEach(b => b.onclick = () => {
+    SELECTING = !SELECTING;
+    if (SELECTING && (state.mode === "feed" || state.mode === "gallery")) state.mode = "compare";   // every ad at once
+    if (!SELECTING && openMenu === "export") openMenu = null;
+    go();
+  });
+  const all = bar.querySelector("[data-selall]");
+  if (all) all.onclick = () => { adsF.forEach(a => all.dataset.selall === "1" ? EXP.picked.add(a.id) : EXP.picked.delete(a.id)); if (EXP.picked.size) EXP.scope = "pick"; savePrefs(); go(); };
+  const clr = bar.querySelector("[data-selclear]");
+  if (clr) clr.onclick = () => { EXP.picked.clear(); savePrefs(); go(); };
+  const ex = bar.querySelector("[data-selexport]");
+  if (ex) ex.onclick = e => { e.stopPropagation(); EXP.scope = "pick"; openMenu = "export"; toolbar(); };
+  bar.querySelectorAll("[data-pick]").forEach(c => c.onchange = () => setPicked(c.dataset.pick, c.checked));
+}
+function libFolder(){
+  let p = decodeURIComponent(location.pathname).replace(/\/index\.html$/, "");
+  if (/^\/[A-Za-z]:\//.test(p)) p = p.slice(1);           // file:///D:/... on Windows
+  return p;                                                // the viewer folder
+}
+function expRequest(adsF){
+  const ads = expAds(adsF);
+  if (!ads.length) return "";
+  const viewer = libFolder();
+  const lib = LIB_ID ? viewer.replace(/\/viewer$/, "") : viewer;
+  const name = D.campaign.name || "ad mockups";
+  const ids = ads.length === D.ads.length ? "" : ` --ads ${ads.map(a => a.id).join(",")}`;
+  if (EXP.fmt === "file") return `Export the “${name}” mockups as a single shareable file with the meta-ads skill: share.py "${viewer}"${ids}`;
+  const pls = EXP.layout === "concept" ? EXP.pls.filter(Boolean) : [EXP.one || state.pl];
+  const title = (EXP.title || name).replace(/"/g, "'");
+  return `Export the “${name}” mockups as ${EXP.fmt === "pdf" ? "a PDF" : "a PowerPoint"} with the meta-ads skill: deck.py quick --library "${lib}" --format ${EXP.fmt} --layout ${EXP.layout} --placements ${pls.join(",")}${ids} --title "${title}"${state.dark ? " --dark" : ""}`;
+}
+/* An exported file, with Open and Show folder buttons like Chrome's downloads. A browser can't
+   show a PowerPoint file, so a plain link to one downloads it again; Office's own link type
+   (ms-powerpoint:, what SharePoint's "Open in app" uses) opens it in PowerPoint instead. A page
+   can't open File Explorer, so the folder button shows the browser's list of the folder. */
+const IC_OPEN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>`;
+const IC_FOLDER = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>`;
+function exportRow(base, f){
+  const url = new URL(base + f.split("/").map(encodeURIComponent).join("/"), location.href).href;
+  const name = f.split("/").pop(), ppt = /\.pptx?$/i.test(name);
+  const open = ppt ? `href="ms-powerpoint:ofe|u|${esc(url)}" title="Open in PowerPoint"` : `href="${esc(url)}" target="_blank" rel="noopener" title="Open in a new tab"`;
+  return `<div class="expf"><a ${open}>${esc(name)}</a><a class="fi" ${open} aria-label="Open ${esc(name)}">${IC_OPEN}</a><a class="fi" href="${esc(url.slice(0, url.lastIndexOf("/") + 1))}" target="_blank" rel="noopener" title="Show the folder" aria-label="Show the folder of ${esc(name)}">${IC_FOLDER}</a></div>`;
+}
+function exportBody(adsF){
+  const ads = expAds(adsF);
+  const nBrands = new Set(ads.map(a => a.brand)).size;
+  if (EXP.layout === "versus" && nBrands !== 2) EXP.layout = "concept";
+  const plOpts = sel => [["facebook", "Facebook"], ["instagram", "Instagram"]].map(([k, l]) =>
+    `<optgroup label="${l}">${D.placements.filter(p => p.platform === k).map(p => `<option value="${p.id}" ${p.id === sel ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</optgroup>`).join("");
+  const radio = (k, v, label, help, dis) => `<label class="opt${dis ? " dis" : ""}"><input type="radio" name="exp-${k}" data-exp="${k}" value="${v}" ${EXP[k] === v ? "checked" : ""} ${dis ? "disabled" : ""}><span>${label}</span>${help ? `<small>${help}</small>` : ""}</label>`;
+  const cur = AD[state.ad];
+  const brandsInView = [...new Set(adsF.map(a => a.brand))];
+  const pick = EXP.scope !== "pick" ? "" : `<div class="fld" style="justify-content:flex-start;margin-left:22px"><button class="ib" data-choose>${EXP.picked.size ? "Change selection" : "Choose ads"}</button><span class="cnt">${EXP.picked.size ? "" : "Tick the ads on the page."}</span></div>`;
+  const deckOpts = EXP.fmt === "file" ? "" : `<p class="eh">Layout</p>
+    ${radio("layout", "concept", "One slide per ad", "The ad in up to three placements, with its copy as text.")}
+    ${EXP.layout === "concept" ? `<div class="fld exppls">${[0, 1, 2].map(i => `<select data-exppl="${i}" aria-label="Placement ${i + 1}">${i ? `<option value="">(none)</option>` : ""}${plOpts(EXP.pls[i])}</select>`).join("")}</div>` : ""}
+    ${radio("layout", "lineup", "Side by side", "Up to four ads per slide in one placement.")}
+    ${radio("layout", "versus", "Brand vs brand", nBrands === 2 ? "Two brands facing each other in one placement." : "Pick ads from exactly two brands to compare them.", nBrands !== 2)}
+    ${EXP.layout !== "concept" ? `<div class="fld exppls"><select data-expone aria-label="Placement">${plOpts(EXP.one || state.pl)}</select></div>` : ""}
+    <p class="eh">Title</p><input data-exptitle class="expin" value="${esc(EXP.title)}" placeholder="${esc(D.campaign.name || "")}">`;
+  const lib = (LIBS && LIBS.libraries || []).find(l => l.id === LIB_ID);
+  const files = lib ? (lib.exports || (lib.shares || []).map(f => "share/" + f)) : [];
+  const req = EXP.fmt === "file" ? "" : expRequest(adsF);
+  const canSave = !!LIB_EMBED;
+  const isDeck = EXP.fmt === "pdf" || (EXP.fmt === "pptx" && canSave);   // decks the browser makes itself
+  const plan = isDeck ? deckPlan(ads) : [];
+  const left = isDeck ? ads.length - new Set(plan.flatMap(s => s.ad ? [s.ad.id] : (s.items || s.sides.flatMap(sd => sd.items)).map(a => a.id))).size : 0;
+  const nSl = plan.length ? plan.length + 2 : 0;
+  const listed = "Save it in this library’s exports folder to have it listed on the libraries page (from the next time the library is rendered).";
+  const leftNote = left ? `<p class="note" style="margin:0">${left} ad${left === 1 ? " doesn’t" : "s don’t"} run in ${EXP.layout === "concept" ? "these placements" : "this placement"}, so ${left === 1 ? "it’s" : "they’re"} left out.</p>` : "";
+  const msg = `<p class="note" data-savemsg style="margin:0;overflow-wrap:anywhere" aria-live="polite"></p>`;
+  const ask = `<details class="expask"><summary>Or ask Claude to make it</summary>
+    <p class="note" style="margin:0">Claude saves the ${EXP.fmt === "pdf" ? "PDF" : "PowerPoint"} straight to this library’s exports folder, with a deck file you can edit and rebuild.</p>
+    <textarea data-expreq class="expin" readonly rows="4" placeholder="Pick at least one ad.">${esc(req)}</textarea>
+    <div class="fld" style="justify-content:flex-start"><button class="ib" data-copy ${req ? "" : "disabled"}>Copy request</button></div></details>`;
+  const make = EXP.fmt === "pdf"
+    ? `<p class="eh">Save</p>
+    <p class="note" style="margin:0">Opens your browser’s print window with the deck. Choose <b>Save as PDF</b> as the printer. ${listed}</p>
+    ${leftNote}
+    <div class="fld" style="justify-content:flex-start"><button class="ib pri" data-savepdf ${plan.length ? "" : "disabled"}>Save PDF (${nSl} slides)…</button></div>
+    ${msg}${ask}`
+    : isDeck
+    ? `<p class="eh">Save</p>
+    <p class="note" style="margin:0">Saves a .pptx you can edit: text stays text, the mockups are pictures, and the full ad text is in the speaker notes. Your browser asks where to put it, or puts it in Downloads. ${listed}</p>
+    ${leftNote}
+    <div class="fld" style="justify-content:flex-start"><button class="ib pri" data-savepptx ${plan.length ? "" : "disabled"}>Save PowerPoint (${nSl} slides)…</button></div>
+    ${msg}${ask}`
+    : EXP.fmt === "file" && canSave
+    ? `<p class="eh">Save</p>
+    <p class="note" style="margin:0">Saves one .html file. Your browser asks where to put it, or puts it in Downloads. ${listed}</p>
+    <div class="fld" style="justify-content:flex-start"><button class="ib pri" data-savefile ${ads.length ? "" : "disabled"}>Save file (${ads.length} ad${ads.length === 1 ? "" : "s"})…</button></div>
+    ${msg}`
+    : `<p class="eh">Ask Claude to make it</p>
+    <p class="note" style="margin:0">This library was rendered by an older version of the skill, so it can’t make the ${EXP.fmt === "file" ? "file" : "PowerPoint"} itself. Paste this request to Claude, or ask Claude to re-render the library.</p>
+    <textarea data-expreq class="expin" readonly rows="4" placeholder="Pick at least one ad.">${esc(EXP.fmt === "file" ? expRequest(adsF) : req)}</textarea>
+    <div class="fld" style="justify-content:flex-start"><button class="ib" data-copy ${(EXP.fmt === "file" ? expRequest(adsF) : req) ? "" : "disabled"}>Copy request</button></div>`;
+  return `<p class="eh" style="margin-top:0">Format</p>
+    <span class="seg segsm">${[["file", "File (.html)"], ["pdf", "PDF"], ["pptx", "PowerPoint"]].map(([v, l]) => `<button data-expfmt="${v}" class="${EXP.fmt === v ? "on" : ""}">${l}</button>`).join("")}</span>
+    <p class="note" style="margin:0">${EXP.fmt === "file" ? "One file with every mockup inside. It opens on any computer with a double-click. Videos show as still frames." : EXP.fmt === "pdf" ? "A designed slide deck: cover, your slides, and a closing note on what the mockups are." : "The same deck as an editable PowerPoint, with the full ad text in the speaker notes."}${EXP.fmt === "file" ? "" : ` The mockups are in ${state.dark ? "dark" : "light"} mode, as you have the viewer now.`}</p>
+    <p class="eh">Ads</p>
+    ${radio("scope", "this", "This ad", cur ? esc(clip(adOptionText(cur), 60)) : "")}
+    ${radio("scope", "shown", `All ${adsF.length} ad${adsF.length === 1 ? "" : "s"} shown`, nFiltersNow() ? "As filtered by Filter." : "")}
+    ${radio("scope", "pick", `Selected ads (${EXP.picked.size})`, EXP.picked.size ? esc(clip(ADS_BY_BRAND.filter(a => EXP.picked.has(a.id)).map(a => a.id).join(", "), 70)) : "")}
+    ${pick}
+    ${deckOpts}
+    ${make}
+    ${files.length ? `<p class="eh">Already exported</p>${files.slice(0, 6).map(f => exportRow("../", f)).join("")}` : ""}`;
+}
+/* Save as file, in the browser. A page opened from a local file can't read its own images, so
+   render.py writes each image (scaled) and each video's cover frame as a small script in embed/,
+   which a page can always load. This mirrors share.py: same data, videos as still frames. */
+const LIB_EMBED = !!document.querySelector('meta[name="meta-ads-embed"]');
+const loadScript = src => new Promise((ok, bad) => { const s = document.createElement("script"); s.src = src; s.onload = () => { s.remove(); ok(); }; s.onerror = () => { s.remove(); bad(new Error("missing " + src)); }; document.head.appendChild(s); });
+function strings(x, out = new Set()){   // every string anywhere in x: the possible media IDs
+  if (Array.isArray(x)) x.forEach(v => strings(v, out));
+  else if (x && typeof x === "object") Object.values(x).forEach(v => strings(v, out));
+  else if (typeof x === "string") out.add(x);
+  return out;
+}
+function shareHtml(ads){
+  const keep = new Set(ads.map(a => a.id));
+  const data = JSON.parse(JSON.stringify(D));
+  delete data.share;
+  data.ads = data.ads.filter(a => keep.has(a.id));
+  data.matrix = Object.fromEntries(Object.entries(data.matrix).filter(([k]) => keep.has(k)));
+  const brands = new Set(data.ads.map(a => a.brand));
+  data.brands = Object.fromEntries(Object.entries(data.brands).filter(([k]) => brands.has(k)));
+  const used = strings([data.ads, data.brands]);
+  data.media = Object.fromEntries(Object.entries(data.media).filter(([k]) => used.has(k)));
+  const E = window.META_ADS_EMBED || {};
+  let videos = 0;
+  for (const m of Object.values(data.media)) {
+    if (m.kind === "video") { delete m.src; videos++; }
+    for (const k of ["src", "poster"]) if (m[k]) { if (E[m[k]]) m[k] = E[m[k]]; else delete m[k]; }
+  }
+  const now = new Date(), pad = n => String(n).padStart(2, "0");
+  data.share = {created: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`, videos_as_frames: videos, library: LIB_ID};
+  const payload = "window.META_ADS = " + JSON.stringify(data).replace(/<\//g, "<\\/") + ";";
+  const head = [...document.head.children].filter(el => !(el.matches('meta[name="meta-ads-library"], meta[name="meta-ads-embed"], title') || (el.tagName === "SCRIPT")))
+    .map(el => el.outerHTML).join("\n");
+  const title = esc((D.campaign.name || "Ad mockups") + " (shared)");
+  const main = [...document.body.querySelectorAll("script:not([src])")].map(s => s.textContent).join("\n");
+  return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="robots" content="noindex, nofollow">\n${head.replace('<meta charset="utf-8">', "").trim()}\n<title>${title}</title>\n</head>\n<body>\n<div id="bar"></div>\n<div id="main"></div>\n<script>${payload}</` + `script>\n<script>${main}</` + `script>\n</body>\n</html>\n`;
+}
+async function buildShareFile(ads){
+  const paths = new Set();
+  for (const id of strings([ads, ads.map(a => D.brands[a.brand])])) {
+    const m = D.media[id]; if (!m) continue;
+    if (m.poster) paths.add(m.poster);
+    if (m.src && m.kind !== "video") paths.add(m.src);
+  }
+  window.META_ADS_EMBED = window.META_ADS_EMBED || {};
+  const todo = [...paths].filter(p => !window.META_ADS_EMBED[p]);
+  for (let i = 0; i < todo.length; i += 8) await Promise.all(todo.slice(i, i + 8).map(p => loadScript("embed/" + p.split("/").pop() + ".js").catch(() => null)));
+  return shareHtml(ads);
+}
+async function saveShareFile(ads){
+  const now = new Date(), d = [now.getFullYear(), now.getMonth() + 1, now.getDate()].map(n => String(n).padStart(2, "0")).join("-");
+  const name = (D.campaign.name || "ads").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase().slice(0, 60) + (ads.length < D.ads.length ? `-${ads.length}-ads` : "") + `-${d}.html`;
+  return saveBlob(name, "Web page", "text/html", ".html", async () => new Blob([await buildShareFile(ads)], {type: "text/html"}));
+}
+/* PDF, in the browser. The same deck deck.py builds (cover, slides, closing note) on the same
+   1920×1080 grid, printed by the browser just as deck.py has headless Chrome print it. The mockups
+   go in as live pages, not screenshots, so they stay sharp at any zoom. The user picks "Save as PDF"
+   in the print window; the page title becomes the suggested file name. Keep in step with deck.py. */
+const DK = {W: 1920, H: 1080, M: 96, DEFAULT_PL: ["fb_feed_mobile", "ig_feed", "ig_reels"], FALLBACK_PL: ["ig_stories", "fb_stories", "fb_reels", "fb_feed_desktop"],
+  th: {bg: "#F4F3EF", panel: "#FFFFFF", text: "#16181D", sub: "#636A73", line: "#DEDBD3", accent: "#2F5BEA"},
+  font: `"Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif`};
+const dkClip = (t, n) => {
+  t = String(t || "").replace(/\s+/g, " ").trim();
+  const ch = [...t];   // characters, not UTF-16 units, so an emoji is never cut in half (and counts as in deck.py)
+  if (ch.length <= n) return t;
+  let cut = ch.slice(0, n - 1).join("");
+  if (ch.slice(Math.floor(n * 0.6), n - 1).includes(" ")) cut = cut.slice(0, cut.lastIndexOf(" "));
+  return cut.replace(/[ ,.;:-]+$/, "") + "…";
+};
+const dkName = ad => { const c0 = (ad.cards || [])[0] || {}; return ad.label || ad.headline || c0.headline || (ad.primary_text || "").split("\n")[0] || ad.id; };
+const dkHeadline = ad => ad.format === "carousel" ? ((ad.cards || [])[0] || {}).headline || "" : ad.headline || "";
+const dkCtaText = code => code ? ((D.cta || {})[code] || code) : "";
+const dkCta = ad => dkCtaText(ad.format === "carousel" ? ((ad.cards || [])[0] || {}).cta || ad.cta : ad.cta);
+const dkBrand = ad => ((D.brands || {})[ad.brand] || {}).page_name || ad.brand || "";
+const dkFmt = ad => ad.format === "carousel" ? `Carousel, ${(ad.cards || []).length} cards` : ad.format === "video" ? "Video ad (cover frame shown)" : "Image ad";
+const dkStatus = (id, pl) => ((D.matrix[id] || {})[pl] || {}).status;
+const dkOk = (id, pl) => !!P[pl] && ["actual", "simulated"].includes(dkStatus(id, pl));
+const dkSlug = s => String(s || "deck").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase().slice(0, 50) || "deck";
+/* The slides for these ads and the menu's layout: deck.py's `quick` and `resolve` in one. */
+function deckPlan(ads){
+  const slides = [];
+  if (EXP.layout === "concept") {
+    const want = EXP.pls.filter(Boolean).slice(0, 3);
+    for (const ad of ads) {
+      const pls = want.filter(p => dkOk(ad.id, p));
+      for (const p of [...DK.FALLBACK_PL, ...DK.DEFAULT_PL]) {
+        if (pls.length >= Math.min(3, want.length)) break;
+        if (!pls.includes(p) && dkOk(ad.id, p)) pls.push(p);
+      }
+      if (pls.length) slides.push({layout: "concept", ad, pls: pls.slice(0, 3)});
+    }
+  } else if (EXP.layout === "lineup") {
+    const pl = EXP.one || state.pl, ok = ads.filter(a => dkOk(a.id, pl));
+    const n = Math.ceil(ok.length / 4), per = n ? Math.ceil(ok.length / n) : 0;   // 5 ads make 3 + 2, not 4 + 1
+    for (let i = 0; i < ok.length; i += per) slides.push({layout: "lineup", pl, items: ok.slice(i, i + per)});
+  } else {
+    const pl = EXP.one || state.pl, by = new Map();
+    ads.forEach(a => { if (!by.has(a.brand)) by.set(a.brand, []); by.get(a.brand).push(a); });
+    if (by.size === 2) {
+      const [a1, a2] = [...by.values()];
+      for (let i = 0; i < Math.max(a1.length, a2.length); i += 3) {
+        const s1 = a1.slice(i, i + 3).length ? a1.slice(i, i + 3) : a1.slice(-3), s2 = a2.slice(i, i + 3).length ? a2.slice(i, i + 3) : a2.slice(-3);
+        const sides = [s1, s2].map(s => ({label: dkBrand(s[0]), items: s.filter(a => dkOk(a.id, pl))}));
+        if (sides.every(sd => sd.items.length)) slides.push({layout: "versus", pl, sides});
+      }
+    }
+  }
+  return slides;
+}
+function deckLayout(slides, title, size, mt){
+  const {W, M} = DK;
+  const T = (x, y, w, h, text, sz, color = "text", o = {}) => ({k: "text", x, y, w, h, text: o.upper ? String(text).toUpperCase() : String(text), size: sz, color, bold: !!o.bold, align: o.align || "left", lh: o.lh || 1.25, upper: !!o.upper});
+  const R = (x, y, w, h, fill, radius = 0, line = null) => ({k: "rect", x, y, w, h, fill, radius, line});
+  const I = (key, [x, y, w, h]) => { const [iw, ih] = size(key), s = Math.min(w / iw, h / ih); return {k: "img", key, x: x + (w - iw * s) / 2, y, w: iw * s, h: ih * s, s}; };
+  const cap = (id, pl) => P[pl].name + (dkStatus(id, pl) === "simulated" ? "  ·  simulated" : "");
+  const footer = n => [T(M, 1016, 1200, 30, dkClip(title, 90), 18, "sub"), T(W - M - 200, 1016, 200, 30, String(n), 18, "sub", {align: "right"})];
+  const under = (imgs, fn) => { const base = Math.max(0, ...imgs.map(im => im.y + im.h)) + 18; return imgs.flatMap((im, i) => [im, ...fn(i, base)]); };
+  const pages = [];
+  for (const s of slides) {
+    const n = pages.length + 2;
+    let els;
+    if (s.layout === "concept") {
+      const ad = s.ad, t = dkClip(dkName(ad), 70);
+      els = [T(M, 96, 560, 32, dkClip(dkBrand(ad), 40), 22, "accent", {bold: true, upper: true}), T(M, 136, 560, 200, t, 50, "text", {bold: true, lh: 1.12})];
+      let y = 136 + Math.min(200, mt.h(t, 560, 50, true, 1.12)) + 64;
+      const hl = dkClip(dkHeadline(ad), 70);
+      if (hl) { const hh = Math.min(84, mt.h(hl, 560, 30, true)); els.push(T(M, y, 560, 26, "Headline", 18, "sub", {upper: true}), T(M, y + 32, 560, hh + 4, hl, 30, "text", {bold: true})); y += 32 + hh + 44; }
+      const pt = dkClip(ad.primary_text || "", 260);
+      if (pt) { const ph = Math.min(330, mt.h(pt, 560, 23, false, 1.35)); els.push(T(M, y, 560, 26, "Primary text", 18, "sub", {upper: true}), T(M, y + 32, 560, ph + 6, pt, 23, "text", {lh: 1.35})); y += 32 + ph + 44; }
+      const cta = dkCta(ad);
+      if (cta) { const tw = Math.ceil(mt.w(cta, 22, true)) + 2; els.push(R(M, y, tw + 48, 52, "panel", 10, "line"), T(M + 24, y + 11, tw + 4, 32, cta, 22, "text", {bold: true})); y += 76; }
+      els.push(T(M, Math.min(y, 940), 560, 30, dkFmt(ad), 20, "sub"));
+      const x0 = 720, x1 = W - M, top = 96, bottom = 950, gap = 40, cw = (x1 - x0 - gap * (s.pls.length - 1)) / s.pls.length;
+      const imgs = s.pls.map((pl, i) => I(ad.id + "|" + pl, [x0 + i * (cw + gap), top, cw, bottom - top - 56]));
+      els.push(...under(imgs, (i, base) => [T(x0 + i * (cw + gap), base, cw, 30, cap(ad.id, s.pls[i]), 19, "sub", {align: "center"})]));
+      s.cover = ad.id + "|" + s.pls[s.pls.length - 1];
+      s.ads = [ad];
+    } else if (s.layout === "lineup") {
+      const items = s.items;
+      els = [T(M, 72, 1500, 60, P[s.pl].name, 44, "text", {bold: true}), T(M, 134, 1500, 32, items.length > 1 ? `${items.length} ads side by side` : "", 22, "sub")];
+      let x0 = M, cw = (W - 2 * M - 48 * (items.length - 1)) / items.length;
+      if (cw > 420) { x0 += (cw - 420) * items.length / 2; cw = 420; }   // few ads: phone-sized and centred
+      const imgs = items.map((ad, i) => I(ad.id + "|" + s.pl, [x0 + i * (cw + 48), 196, cw, 930 - 196 - 80]));
+      els.push(...under(imgs, (i, base) => [T(x0 + i * (cw + 48), base, cw, 30, dkClip(dkName(items[i]), 46), 20, "text", {bold: true, align: "center"}),
+        T(x0 + i * (cw + 48), base + 29, cw, 25.5, dkClip(dkBrand(items[i]), 40) + (dkStatus(items[i].id, s.pl) === "simulated" ? "  ·  simulated" : ""), 17, "sub", {align: "center"})]));
+      s.cover = items[0].id + "|" + s.pl;
+      s.ads = items;
+    } else {
+      const sides = s.sides, gap = 32, half = W / 2 - 48 - M;
+      els = [T(M, 72, 1600, 60, `${sides[0].label}  vs  ${sides[1].label}`, 44, "text", {bold: true}), T(M, 134, 1500, 32, P[s.pl].name, 22, "sub"), R(W / 2 - 1, 200, 2, 760, "line")];
+      const cw = Math.min(330, ...sides.map(sd => (half - gap * (sd.items.length - 1)) / sd.items.length));   // same size both sides
+      const cols = [];
+      sides.forEach((side, k) => {
+        const x0 = k === 0 ? M : W / 2 + 48, x1 = k === 0 ? W / 2 - 48 : W - M;
+        els.push(T(x0, 196, x1 - x0, 40, dkClip(side.label, 40), 28, "accent", {bold: true, upper: true}));
+        const start = x0 + ((x1 - x0) - (cw * side.items.length + gap * (side.items.length - 1))) / 2;
+        side.items.forEach((ad, i) => cols.push({ad, cx: start + i * (cw + gap), im: I(ad.id + "|" + s.pl, [start + i * (cw + gap), 256, cw, 600])}));
+      });
+      els.push(...under(cols.map(c => c.im), (i, base) => {
+        const {ad, cx} = cols[i], pt = ad.primary_text || "";
+        const info = [dkCta(ad), pt ? `text ${[...pt].length} chars` : ""].filter(Boolean).join(" · ");
+        return [T(cx, base, cw, 28.5, dkClip(dkName(ad), 34), 19, "text", {bold: true, align: "center"}), T(cx, base + 27.55, cw, 24, info, 16, "sub", {align: "center"})];
+      }));
+      s.cover = sides[0].items[0].id + "|" + s.pl;
+      s.ads = sides.flatMap(sd => sd.items);
+    }
+    pages.push([...els, ...footer(n)]);
+  }
+  // cover: title, what's inside, and up to three mockups fanned on the right
+  const seen = new Map(); slides.forEach(s => s.ads.forEach(a => seen.set(a.id, a)));
+  const brands = [...new Set([...seen.values()].map(dkBrand).filter(Boolean))].sort();
+  const date = new Date().toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"});
+  const meta = `${seen.size} ad${seen.size === 1 ? "" : "s"}  ·  ` + brands.slice(0, 3).join(", ") + (brands.length > 3 ? ` and ${brands.length - 3} more` : "") + `  ·  ${date}`;
+  const cover = [R(M, 150, 120, 8, "accent"), T(M, 186, 1000, 36, "Ad concepts  ·  Facebook & Instagram", 24, "sub", {upper: true}),
+    T(M, 240, 1000, 330, dkClip(title, 70), 84, "text", {bold: true, lh: 1.1}), T(M, 900, 1000, 40, meta, 24, "sub")];
+  const pics = slides.slice(0, 3).map(s => s.cover);
+  const xs = pics.length === 3 ? [1130, 1327, 1524] : pics.length === 2 ? [1260, 1524] : [1524];
+  pics.forEach((k, i) => cover.push(I(k, [xs[i], 150 + (i % 2 ? 70 : 0), 300, 780])));
+  // closing note
+  const pts = ["These are mockups drawn to look like the Facebook and Instagram apps. They are close approximations, not Meta’s own rendering.",
+    "“Simulated” marks a mockup where the creative was adjusted to fit: cropped, padded or a placeholder.",
+    "Video ads are shown as their cover frame.",
+    "Not live ads. For internal review only."];
+  const about = [T(M, 96, 1200, 60, "About these mockups", 44, "text", {bold: true})];
+  let y = 210;
+  for (const p of pts) { const h = mt.h(p, 1300, 28, false, 1.35); about.push(R(M, y + 15, 10, 10, "accent", 5), T(M + 36, y, 1300, h + 8, p, 28, "text", {lh: 1.35})); y += h + 34; }
+  about.push(T(M, 900, 1500, 36, `Made ${date} with the meta-ads mockup tool.`, 22, "sub"), ...footer(pages.length + 2));
+  return [cover, ...pages, about];
+}
+/* contain:strict on each mockup box matters: without it, carousel cards scrolled out of view make
+   Chrome shrink the whole printout to fit them. */
+const DK_CSS = `
+#deck{position:absolute;left:-40000px;top:0;width:${DK.W}px;font-family:${DK.font};color:${DK.th.text};-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#deck .dks{position:relative;width:${DK.W}px;height:${DK.H}px;overflow:hidden;background:${DK.th.bg};break-after:page}
+#deck .dks:last-child{break-after:auto}
+#deck .dk-t{position:absolute;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
+#deck .dk-r{position:absolute}
+#deck .dk-i{position:absolute;overflow:hidden;contain:strict;border-radius:14px;box-shadow:0 10px 32px rgba(20,20,30,.14),0 2px 6px rgba(20,20,30,.08);background:#fff}
+#deck .dk-sc,#deck .dk-m{position:absolute;left:0;top:0;transform-origin:0 0;font:14px/1.4 -apple-system,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:left;white-space:normal;letter-spacing:normal}
+#deck .dk-m{display:inline-block;position:relative;vertical-align:top}#deck .dk-me{position:absolute;left:0;top:0;visibility:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
+@page{size:${DK.W}px ${DK.H}px;margin:0}
+@media print{
+  html,body{background:${DK.th.bg} !important;margin:0 !important;padding:0 !important}
+  body > :not(#deck){display:none !important}
+  #deck{position:static}
+}`;
+const dkImgs = root => Promise.all([...root.querySelectorAll("img")].map(i => i.complete ? null : i.decode().catch(() => null)));
+const dkDate = () => { const n = new Date(); return [n.getFullYear(), n.getMonth() + 1, n.getDate()].map(v => String(v).padStart(2, "0")).join("-"); };
+/* Shared by PDF and PowerPoint: each mockup drawn once (off screen, as for a screenshot) and
+   measured, then the slides laid out. Returns the pieces and a clean() that removes them. */
+async function deckPrepare(ads, onStep){
+  const slides = deckPlan(ads);
+  if (!slides.length) throw new Error("none of these ads can run in the chosen placements");
+  const title = (EXP.title || D.campaign.name || "Ad mockups").trim();
+  const style = document.createElement("style"); style.textContent = DK_CSS;
+  const deck = document.createElement("div"); deck.id = "deck";
+  document.head.appendChild(style); document.body.appendChild(deck);
+  let cleaned = false;
+  const old = document.title;
+  const clean = () => { if (cleaned) return; cleaned = true; document.title = old; deck.remove(); style.remove(); removeEventListener("afterprint", clean); };
+  try {
+    // 1. each mockup once, drawn as for a screenshot (light or dark as the viewer is set; no
+    //    overlays; first card), and measured
+    onStep("Drawing mockups…");
+    const keys = new Set();
+    slides.forEach(s => (s.layout === "concept" ? s.pls.map(pl => s.ad.id + "|" + pl) : (s.items || s.sides.flatMap(sd => sd.items)).map(a => a.id + "|" + s.pl)).forEach(k => keys.add(k)));
+    const keep = {export: state.export, dark: state.dark, badges: state.badges, safe: state.safe, trunc: state.trunc, frame: state.frame, card: state.card};
+    Object.assign(state, {export: true, badges: false, safe: false, trunc: false, frame: false, card: 0});
+    const nodes = new Map();
+    try {
+      for (const k of keys) {
+        const [id, pl] = k.split("|");
+        const m = document.createElement("div"); m.className = "dk-m";
+        m.innerHTML = mockup(id, pl, {}) || "";
+        deck.appendChild(m); nodes.set(k, m);
+      }
+      clampAll(deck);
+    } finally { Object.assign(state, keep); }
+    await dkImgs(deck);
+    const size = k => { const r = nodes.get(k).getBoundingClientRect(); return [r.width || 1, r.height || 1]; };
+    // 2. lay out, measuring real text instead of guessing
+    const me = document.createElement("div"); me.className = "dk-me"; deck.appendChild(me);
+    const mt = {
+      h(text, w, sz, bold, lh = 1.25){ Object.assign(me.style, {width: w + "px", fontSize: sz + "px", fontWeight: bold ? 700 : 400, lineHeight: lh}); me.textContent = text || " "; return me.offsetHeight; },
+      w(text, sz, bold){ Object.assign(me.style, {width: "max-content", fontSize: sz + "px", fontWeight: bold ? 700 : 400, lineHeight: 1.25}); me.textContent = text; return me.getBoundingClientRect().width; },
+    };
+    const pages = deckLayout(slides, title, size, mt);
+    me.remove();
+    return {slides, pages, nodes, deck, title, clean};
+  } catch (e) { clean(); throw e; }
+}
+async function printDeck(ads, onStep){
+  const {pages, nodes, deck, title, clean} = await deckPrepare(ads, onStep);
+  try {
+    // 3. build the pages from the measured mockups, then drop the measuring copies
+    onStep(`Laying out ${pages.length} slides…`);
+    const px = v => v.toFixed(1) + "px", col = c => DK.th[c] || c;
+    const html = pages.map(els => `<section class="dks">${els.map(e => e.k === "text"
+      ? `<div class="dk-t" style="left:${px(e.x)};top:${px(e.y)};width:${px(e.w)};height:${px(e.h)};font-size:${e.size}px;line-height:${e.lh};color:${col(e.color)};font-weight:${e.bold ? 700 : 400};text-align:${e.align};${e.upper ? "letter-spacing:.08em;" : ""}">${esc(e.text)}</div>`
+      : e.k === "rect"
+      ? `<div class="dk-r" style="left:${px(e.x)};top:${px(e.y)};width:${px(e.w)};height:${px(e.h)};background:${col(e.fill)};border-radius:${e.radius}px;${e.line ? `border:2px solid ${col(e.line)};` : ""}"></div>`
+      : `<div class="dk-i" style="left:${px(e.x)};top:${px(e.y)};width:${px(e.w)};height:${px(e.h)}"><div class="dk-sc" style="transform:scale(${e.s.toFixed(5)})" data-dk="${esc(e.key)}"></div></div>`).join("")}</section>`).join("");
+    const holder = document.createElement("div"); holder.innerHTML = html;
+    holder.querySelectorAll("[data-dk]").forEach(sc => { sc.innerHTML = nodes.get(sc.dataset.dk).innerHTML; });
+    deck.replaceChildren(...holder.children);
+    await dkImgs(deck);
+    // 4. print; the page title is the suggested file name
+    document.title = `${dkSlug(title)}-${EXP.layout}-${dkDate()}`;
+    addEventListener("afterprint", clean);
+    onStep("");
+    window.print();
+    return pages.length;
+  } catch (e) { clean(); throw e; }
+}
+/* PowerPoint, in the browser: the same deck as deck.py's write_pptx (editable text, mockups as
+   pictures, the full ad text in the speaker notes). Each mockup becomes a PNG by drawing it inside
+   an SVG picture onto a canvas. Its images come from embed/, since a page opened from a local file
+   can't read its own image files, and a canvas that drew one couldn't be saved. The .pptx itself
+   is a zip of XML files, written here; no library needed. */
+const PPTX_MIME = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+async function loadEmbeds(paths){
+  window.META_ADS_EMBED = window.META_ADS_EMBED || {};
+  const todo = [...paths].filter(p => p && !p.startsWith("data:") && !window.META_ADS_EMBED[p]);
+  for (let i = 0; i < todo.length; i += 8) await Promise.all(todo.slice(i, i + 8).map(p => loadScript("embed/" + p.split("/").pop() + ".js").catch(() => null)));
+  return window.META_ADS_EMBED;
+}
+async function mockPng(node, css, E){
+  const r = node.getBoundingClientRect(), w = Math.ceil(r.width), h = Math.ceil(r.height);
+  const wrap = document.createElement("div");
+  wrap.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+  wrap.style.cssText = `width:${w}px;height:${h}px;overflow:hidden;font:14px/1.4 -apple-system,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:left`;
+  const st = document.createElement("style"); st.textContent = css; wrap.appendChild(st);
+  const body = document.createElement("div"); body.innerHTML = node.innerHTML; wrap.appendChild(body);
+  let missing = 0;
+  body.querySelectorAll("img").forEach(img => {
+    const s = img.getAttribute("src") || "";
+    if (E[s]) img.setAttribute("src", E[s]); else if (!s.startsWith("data:")) { img.removeAttribute("src"); missing++; }
+    img.removeAttribute("loading");
+  });
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject x="0" y="0" width="${w}" height="${h}">${new XMLSerializer().serializeToString(wrap)}</foreignObject></svg>`;
+  const img = new Image();
+  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  await img.decode();
+  const c = document.createElement("canvas"); c.width = w * 2; c.height = h * 2;   // 2x, as deck.py's screenshots
+  const ctx = c.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height); ctx.scale(2, 2); ctx.drawImage(img, 0, 0);
+  // JPEG, not PNG: mockups are mostly photos, which PNG stores many times larger (a 30-slide deck
+  // came to 115 MB). At 2x and 90% quality the text stays crisp.
+  const blob = await new Promise((ok, bad) => c.toBlob(b => b ? ok(b) : bad(new Error("couldn’t draw a mockup")), "image/jpeg", 0.9));
+  return {bytes: new Uint8Array(await blob.arrayBuffer()), missing};
+}
+/* A zip with no compression (the pictures are compressed already), which is all a .pptx needs. */
+const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC_T[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function zipStore(files, type){
+  const enc = new TextEncoder(), parts = [], cd = [], d = new Date();
+  const time = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1), date = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  let off = 0;
+  for (const [name, data] of files) {
+    const b = typeof data === "string" ? enc.encode(data) : data, nm = enc.encode(name), crc = crc32(b);
+    const h = new DataView(new ArrayBuffer(30)), c = new DataView(new ArrayBuffer(46));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(10, time, true); h.setUint16(12, date, true);
+    h.setUint32(14, crc, true); h.setUint32(18, b.length, true); h.setUint32(22, b.length, true); h.setUint16(26, nm.length, true);
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(12, time, true); c.setUint16(14, date, true);
+    c.setUint32(16, crc, true); c.setUint32(20, b.length, true); c.setUint32(24, b.length, true); c.setUint16(28, nm.length, true); c.setUint32(42, off, true);
+    parts.push(h.buffer, nm, b); cd.push(c.buffer, nm);
+    off += 30 + nm.length + b.length;
+  }
+  const e = new DataView(new ArrayBuffer(22)), cdSize = cd.reduce((n, p) => n + p.byteLength, 0);
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, cdSize, true); e.setUint32(16, off, true);
+  return new Blob([...parts, ...cd, e.buffer], {type});
+}
+const xesc = s => String(s ?? "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+function dkNotes(s){   // deck.py's notes_for
+  if (s.layout === "concept") return [dkName(s.ad), dkHeadline(s.ad), s.ad.primary_text || ""].filter(Boolean).join("\n\n");
+  return (s.items || s.sides.flatMap(sd => sd.items)).map(a => `${dkName(a)}\n${a.primary_text || ""}`).join("\n\n");
+}
+/* The package: one master, one blank layout, a theme, a notes master, the slides and their notes.
+   1 px of the 1920×1080 grid = 6350 EMU = 0.5 pt, as in deck.py. */
+function pptxFiles(pages, notes, imgs, title){
+  const X = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+  const NS = 'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"';
+  const R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/";
+  const rels = list => X + `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${list.map(([id, type, target]) => `<Relationship Id="${id}" Type="${type.includes("://") ? type : R + type}" Target="${target}"/>`).join("")}</Relationships>`;
+  const EMU = v => Math.round(v * 6350);
+  const hex = c => (DK.th[c] || c).replace("#", "").toUpperCase();
+  const xfrm = (x, y, w, h) => `<a:xfrm><a:off x="${EMU(x)}" y="${EMU(y)}"/><a:ext cx="${EMU(w)}" cy="${EMU(h)}"/></a:xfrm>`;
+  const GRP = '<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>';
+  const fill = c => `<a:solidFill><a:srgbClr val="${hex(c)}"/></a:solidFill>`;
+  const CLRMAP = '<p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>';
+  const font = "Segoe UI";
+  const theme = X + `<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="Mockups"><a:themeElements>
+<a:clrScheme name="Mockups"><a:dk1><a:srgbClr val="${hex("text")}"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1><a:dk2><a:srgbClr val="${hex("sub")}"/></a:dk2><a:lt2><a:srgbClr val="${hex("bg")}"/></a:lt2>${["accent", "sub", "line", "text", "accent", "sub"].map((c, i) => `<a:accent${i + 1}><a:srgbClr val="${hex(c)}"/></a:accent${i + 1}>`).join("")}<a:hlink><a:srgbClr val="${hex("accent")}"/></a:hlink><a:folHlink><a:srgbClr val="${hex("sub")}"/></a:folHlink></a:clrScheme>
+<a:fontScheme name="Mockups"><a:majorFont><a:latin typeface="${font}"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="${font}"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme>
+<a:fmtScheme name="Mockups"><a:fillStyleLst>${'<a:solidFill><a:schemeClr val="phClr"/></a:solidFill>'.repeat(3)}</a:fillStyleLst><a:lnStyleLst>${'<a:ln w="6350"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln>'.repeat(3)}</a:lnStyleLst><a:effectStyleLst>${"<a:effectStyle><a:effectLst/></a:effectStyle>".repeat(3)}</a:effectStyleLst><a:bgFillStyleLst>${'<a:solidFill><a:schemeClr val="phClr"/></a:solidFill>'.repeat(3)}</a:bgFillStyleLst></a:fmtScheme>
+</a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>`;
+  const media = [...imgs.keys()], mediaName = k => `image${media.indexOf(k) + 1}.jpg`;
+  const files = [], ct = [], slideIds = [];
+  pages.forEach((els, i) => {
+    const n = i + 1, srels = [["rId1", "slideLayout", "../slideLayouts/slideLayout1.xml"]];
+    const used = [...new Set(els.filter(e => e.k === "img").map(e => e.key))];
+    used.forEach((k, j) => srels.push([`rId${j + 3}`, "image", `../media/${mediaName(k)}`]));
+    let id = 2;
+    const shapes = els.map(e => {
+      if (e.k === "rect" || e.k === "img") {
+        const pad = e.k === "img" ? 2 : 0, x = e.x - pad, y = e.y - pad, w = e.w + 2 * pad, h = e.h + 2 * pad;
+        const rad = e.k === "rect" ? e.radius : 0;
+        const box = `<p:sp><p:nvSpPr><p:cNvPr id="${id}" name="Shape ${id++}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr><p:spPr>${xfrm(x, y, w, h)}<a:prstGeom prst="${rad ? "roundRect" : "rect"}"><a:avLst>${rad ? `<a:gd name="adj" fmla="val ${Math.round(Math.min(0.5, rad / Math.max(1, Math.min(w, h))) * 100000)}"/>` : ""}</a:avLst></a:prstGeom>${fill(e.k === "img" ? "line" : e.fill)}${e.line ? `<a:ln w="${EMU(2)}">${fill(e.line)}</a:ln>` : "<a:ln><a:noFill/></a:ln>"}</p:spPr></p:sp>`;
+        if (e.k === "rect") return box;
+        return box + `<p:pic><p:nvPicPr><p:cNvPr id="${id}" name="Mockup ${id++}"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr><p:blipFill><a:blip r:embed="rId${used.indexOf(e.key) + 3}"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr>${xfrm(e.x, e.y, e.w, e.h)}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>`;
+      }
+      if (!e.text) return "";
+      const rpr = `<a:rPr lang="en-US" sz="${Math.round(e.size * 50)}" b="${e.bold ? 1 : 0}"${e.upper ? ` spc="${Math.round(e.size * 4)}"` : ""} dirty="0">${fill(e.color)}<a:latin typeface="${font}"/><a:cs typeface="${font}"/></a:rPr>`;
+      const runs = e.text.split("\n").map(t => `<a:r>${rpr}<a:t>${xesc(t)}</a:t></a:r>`).join(`<a:br>${rpr}</a:br>`);
+      return `<p:sp><p:nvSpPr><p:cNvPr id="${id}" name="Text ${id++}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr><p:spPr>${xfrm(e.x, e.y, e.w, e.h)}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr><p:txBody><a:bodyPr wrap="square" lIns="0" tIns="0" rIns="0" bIns="0" anchor="t" rtlCol="0"><a:noAutofit/></a:bodyPr><a:lstStyle/><a:p><a:pPr algn="${{left: "l", center: "ctr", right: "r"}[e.align]}"><a:lnSpc><a:spcPts val="${Math.round(e.size * e.lh * 50)}"/></a:lnSpc></a:pPr>${runs}</a:p></p:txBody></p:sp>`;
+    }).join("");
+    files.push([`ppt/slides/slide${n}.xml`, X + `<p:sld ${NS}><p:cSld><p:bg><p:bgPr>${fill("bg")}<a:effectLst/></p:bgPr></p:bg><p:spTree>${GRP}${shapes}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>`]);
+    ct.push([`/ppt/slides/slide${n}.xml`, "presentationml.slide"]);
+    if (notes[i]) {
+      srels.push(["rId2", "notesSlide", `../notesSlides/notesSlide${n}.xml`]);
+      const paras = notes[i].split("\n").map(t => `<a:p>${t ? `<a:r><a:rPr lang="en-US" dirty="0"/><a:t>${xesc(t)}</a:t></a:r>` : ""}</a:p>`).join("");
+      files.push([`ppt/notesSlides/notesSlide${n}.xml`, X + `<p:notes ${NS}><p:cSld><p:spTree>${GRP}<p:sp><p:nvSpPr><p:cNvPr id="2" name="Slide Image Placeholder 1"/><p:cNvSpPr><a:spLocks noGrp="1" noRot="1" noChangeAspect="1"/></p:cNvSpPr><p:nvPr><p:ph type="sldImg"/></p:nvPr></p:nvSpPr><p:spPr/></p:sp><p:sp><p:nvSpPr><p:cNvPr id="3" name="Notes Placeholder 2"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/>${paras}</p:txBody></p:sp></p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:notes>`]);
+      files.push([`ppt/notesSlides/_rels/notesSlide${n}.xml.rels`, rels([["rId1", "notesMaster", "../notesMasters/notesMaster1.xml"], ["rId2", "slide", `../slides/slide${n}.xml`]])]);
+      ct.push([`/ppt/notesSlides/notesSlide${n}.xml`, "presentationml.notesSlide"]);
+    }
+    files.push([`ppt/slides/_rels/slide${n}.xml.rels`, rels(srels)]);
+    slideIds.push(`<p:sldId id="${255 + n}" r:id="rId${n + 10}"/>`);
+  });
+  media.forEach(k => files.push([`ppt/media/${mediaName(k)}`, imgs.get(k).bytes]));
+  const ph = (id, name, type, idx, x, y, w, h) => `<p:sp><p:nvSpPr><p:cNvPr id="${id}" name="${name}"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="${type}"${idx ? ` idx="${idx}"` : ""}/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>${type === "body" ? '<p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang="en-US"/></a:p></p:txBody>' : ""}</p:sp>`;
+  const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+  const head = [
+    ["[Content_Types].xml", X + `<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpg" ContentType="image/jpeg"/>${[
+      ["/ppt/presentation.xml", "presentationml.presentation.main"], ["/ppt/slideMasters/slideMaster1.xml", "presentationml.slideMaster"], ["/ppt/slideLayouts/slideLayout1.xml", "presentationml.slideLayout"],
+      ["/ppt/notesMasters/notesMaster1.xml", "presentationml.notesMaster"], ["/ppt/theme/theme1.xml", "theme"], ["/ppt/theme/theme2.xml", "theme"],
+      ["/ppt/presProps.xml", "presentationml.presProps"], ["/ppt/viewProps.xml", "presentationml.viewProps"], ["/ppt/tableStyles.xml", "presentationml.tableStyles"],
+      ["/docProps/app.xml", "extended-properties"], ...ct].map(([p, t]) => `<Override PartName="${p}" ContentType="application/vnd.openxmlformats-officedocument.${t}+xml"/>`).join("")}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`],
+    ["_rels/.rels", rels([["rId1", "officeDocument", "ppt/presentation.xml"], ["rId2", "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties", "docProps/core.xml"], ["rId3", "extended-properties", "docProps/app.xml"]])],
+    ["docProps/core.xml", X + `<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xesc(title)}</dc:title><dc:creator>meta-ads mockup tool</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`],
+    ["docProps/app.xml", X + `<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>meta-ads mockup tool</Application><Slides>${pages.length}</Slides></Properties>`],
+    ["ppt/presentation.xml", X + `<p:presentation ${NS} saveSubsetFonts="1"><p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst><p:notesMasterIdLst><p:notesMasterId r:id="rId2"/></p:notesMasterIdLst><p:sldIdLst>${slideIds.join("")}</p:sldIdLst><p:sldSz cx="${EMU(DK.W)}" cy="${EMU(DK.H)}"/><p:notesSz cx="6858000" cy="9144000"/></p:presentation>`],
+    ["ppt/_rels/presentation.xml.rels", rels([["rId1", "slideMaster", "slideMasters/slideMaster1.xml"], ["rId2", "notesMaster", "notesMasters/notesMaster1.xml"], ["rId3", "theme", "theme/theme1.xml"], ["rId4", "presProps", "presProps.xml"], ["rId5", "viewProps", "viewProps.xml"], ["rId6", "tableStyles", "tableStyles.xml"],
+      ...pages.map((_, i) => [`rId${i + 11}`, "slide", `slides/slide${i + 1}.xml`])])],
+    ["ppt/presProps.xml", X + `<p:presentationPr ${NS}/>`],
+    ["ppt/viewProps.xml", X + `<p:viewPr ${NS}><p:normalViewPr><p:restoredLeft sz="15620"/><p:restoredTop sz="94660"/></p:normalViewPr><p:gridSpacing cx="76200" cy="76200"/></p:viewPr>`],
+    ["ppt/tableStyles.xml", X + `<a:tblStyleLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" def="{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}"/>`],
+    ["ppt/slideMasters/slideMaster1.xml", X + `<p:sldMaster ${NS}><p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg2"/></p:bgRef></p:bg><p:spTree>${GRP}</p:spTree></p:cSld>${CLRMAP}<p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst><p:txStyles><p:titleStyle/><p:bodyStyle/><p:otherStyle/></p:txStyles></p:sldMaster>`],
+    ["ppt/slideMasters/_rels/slideMaster1.xml.rels", rels([["rId1", "slideLayout", "../slideLayouts/slideLayout1.xml"], ["rId2", "theme", "../theme/theme1.xml"]])],
+    ["ppt/slideLayouts/slideLayout1.xml", X + `<p:sldLayout ${NS} type="blank" preserve="1"><p:cSld name="Blank"><p:spTree>${GRP}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>`],
+    ["ppt/slideLayouts/_rels/slideLayout1.xml.rels", rels([["rId1", "slideMaster", "../slideMasters/slideMaster1.xml"]])],
+    ["ppt/notesMasters/notesMaster1.xml", X + `<p:notesMaster ${NS}><p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg><p:spTree>${GRP}${ph(2, "Slide Image Placeholder 1", "sldImg", 0, 381000, 685800, 6096000, 3429000)}${ph(3, "Notes Placeholder 2", "body", 1, 685800, 4400550, 5486400, 3600450)}</p:spTree></p:cSld>${CLRMAP}</p:notesMaster>`],
+    ["ppt/notesMasters/_rels/notesMaster1.xml.rels", rels([["rId1", "theme", "../theme/theme2.xml"]])],
+    ["ppt/theme/theme1.xml", theme],
+    ["ppt/theme/theme2.xml", theme],
+  ];
+  return [...head, ...files];
+}
+async function buildPptx(ads, onStep){
+  const {slides, pages, nodes, title, clean} = await deckPrepare(ads, onStep);
+  try {
+    const used = [...new Set(pages.flat().filter(e => e.k === "img").map(e => e.key))];
+    onStep("Packing images…");
+    const E = await loadEmbeds(new Set(used.flatMap(k => [...nodes.get(k).querySelectorAll("img")].map(i => i.getAttribute("src")))));
+    const css = [...document.querySelectorAll("style")].filter(s => s.textContent !== DK_CSS).map(s => s.textContent).join("\n");
+    const imgs = new Map();
+    let missing = 0;
+    for (let i = 0; i < used.length; i++) {
+      onStep(`Drawing mockup ${i + 1} of ${used.length}…`);
+      const r = await mockPng(nodes.get(used[i]), css, E);
+      imgs.set(used[i], r); missing += r.missing;
+    }
+    onStep("Writing the PowerPoint…");
+    const notes = [null, ...slides.map(dkNotes), null];   // cover and closing slide have none
+    return {blob: zipStore(pptxFiles(pages, notes, imgs, title), PPTX_MIME), slides: pages.length, missing};
+  } finally { clean(); }
+}
+/* Save a file the browser makes: ask where first (the dialog is only allowed right after the
+   click), then build it, then write it; without the dialog, download it. */
+async function saveBlob(name, desc, mime, ext, make){
+  let handle = null;
+  if (window.showSaveFilePicker) {
+    try { handle = await showSaveFilePicker({suggestedName: name, types: [{description: desc, accept: {[mime]: [ext]}}]}); }
+    catch (e) { if (e && e.name === "AbortError") throw e; /* not allowed here: download instead */ }
+  }
+  const blob = await make();
+  const mb = (blob.size / 1e6).toFixed(1) + " MB";
+  if (handle) { const w = await handle.createWritable(); await w.write(blob); await w.close(); return `Saved ${handle.name} (${mb}).`; }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+  return `Downloaded ${name} (${mb}).`;
+}
+const nFiltersNow = () => (state.group ? 1 : 0) + (state.brand ? 1 : 0) + (state.status ? 1 : 0);
+function bindExport(bar, adsF){
+  const pl = bar.querySelector(".picklist"), keep = pl ? pl.scrollTop : 0;
+  const redraw = () => { const s = bar.querySelector(".picklist"); const top = s ? s.scrollTop : 0; toolbar(); const n = $("#bar .picklist"); if (n) n.scrollTop = top; };
+  bar.querySelectorAll("[data-expfmt]").forEach(b => b.onclick = () => { EXP.fmt = b.dataset.expfmt; redraw(); });
+  bar.querySelectorAll("input[data-exp]").forEach(r => r.onchange = () => {
+    EXP[r.dataset.exp] = r.value;
+    if (r.dataset.exp === "scope") savePrefs();
+    redraw();
+  });
+  const ch = bar.querySelector("[data-choose]");
+  if (ch) ch.onclick = () => { openMenu = null; if (!SELECTING) { SELECTING = true; if (state.mode === "feed" || state.mode === "gallery") state.mode = "compare"; } go(); };
+  const sv = bar.querySelector("[data-savefile]");
+  if (sv) sv.onclick = async () => {
+    const msg = bar.querySelector("[data-savemsg]");
+    sv.disabled = true; msg.textContent = "Packing images…";
+    try { const r = await saveShareFile(expAds(adsF)); msg.textContent = r; }
+    catch (e) { msg.textContent = e && e.name === "AbortError" ? "Cancelled." : "Couldn’t save: " + (e && e.message || e); }
+    sv.disabled = false;
+  };
+  const spp = bar.querySelector("[data-savepptx]");
+  if (spp) spp.onclick = async () => {
+    const msg = bar.querySelector("[data-savemsg]");
+    const ads = expAds(adsF), title = (EXP.title || D.campaign.name || "Ad mockups").trim();
+    spp.disabled = true;
+    let note = "";
+    try {
+      const r = await saveBlob(`${dkSlug(title)}-${EXP.layout}-${dkDate()}.pptx`, "PowerPoint", PPTX_MIME, ".pptx", async () => {
+        const out = await buildPptx(ads, t => { msg.textContent = t; });
+        if (out.missing) note = ` ${out.missing} picture${out.missing === 1 ? " was" : "s were"} missing; re-rendering the library should fix that.`;
+        return out.blob;
+      });
+      msg.textContent = r + note;
+    } catch (e) { msg.textContent = e && e.name === "AbortError" ? "Cancelled." : "Couldn’t make the PowerPoint: " + (e && e.message || e); }
+    spp.disabled = false;
+  };
+  const sp = bar.querySelector("[data-savepdf]");
+  if (sp) sp.onclick = async () => {
+    const msg = bar.querySelector("[data-savemsg]");
+    sp.disabled = true;
+    try { await printDeck(expAds(adsF), t => { msg.textContent = t; }); msg.textContent = ""; }
+    catch (e) { msg.textContent = "Couldn’t make the PDF: " + (e && e.message || e); }
+    sp.disabled = false;
+  };
+  bar.querySelectorAll("[data-exppl]").forEach(s => s.onchange = () => { EXP.pls[+s.dataset.exppl] = s.value; redraw(); });
+  const one = bar.querySelector("[data-expone]"); if (one) one.onchange = () => { EXP.one = one.value; redraw(); };
+  const ti = bar.querySelector("[data-exptitle]"); if (ti) ti.oninput = () => { EXP.title = ti.value; const r = bar.querySelector("[data-expreq]"); if (r) r.value = expRequest(adsF); };
+  const cp = bar.querySelector("[data-copy]");
+  if (cp) cp.onclick = async () => {
+    const box = bar.querySelector("[data-expreq]");
+    try { await navigator.clipboard.writeText(box.value); } catch (e) { box.select(); document.execCommand("copy"); }
+    cp.textContent = "Copied. Now paste it to Claude"; setTimeout(() => { cp.textContent = "Copy request"; }, 2500);
+  };
+  if (pl) pl.scrollTop = keep;
+}
+/* Libraries: render.py marks a viewer that lives in a library (meta-ads/<library>/viewer/) with
+   <meta name="meta-ads-library">. The shared list is ../../libraries.js, loaded after first paint. */
+const LIB_ID = document.querySelector('meta[name="meta-ads-library"]')?.content || null;
+let LIBS = null;
+function libCtl(){
+  const shared = D.share ? `<span class="fixed" style="cursor:help" title="A single-file copy made ${esc((D.share.created || "").replace("T", " "))}, for review. These are mockups, not live ads.${D.share.videos_as_frames ? " Videos are shown as their cover frame, to judge layout, text and margins." : ""}">Shared copy${D.share.videos_as_frames ? " · videos as still frames" : ""}</span>` : "";
+  const title = `<h1>${esc(D.campaign.name || "Ad mockups")}</h1>${shared}`;
+  const libs = (LIBS && LIBS.libraries || []).filter(l => l.rendered);
+  if (D.share) {   // a single-file copy: links back only when opened where it was made
+    if (!libs.some(l => l.id === D.share.library)) return title;
+    return `${title}<a class="ib" href="../viewer/index.html" title="This library's own viewer${D.share.videos_as_frames ? ", with videos playing" : ""}">Open full library</a><a class="ib" href="../../index.html" title="All libraries, with what's in each">All libraries</a>`;
+  }
+  if (!LIB_ID || !LIBS) return title;
+  const home = `<a class="ib" href="../../index.html" title="All libraries, with what's in each">All libraries</a>`;
+  if (libs.length < 2) return `${title}${home}`;
+  if (!libs.some(l => l.id === LIB_ID)) libs.unshift({id: LIB_ID, name: D.campaign.name || LIB_ID, ads: D.ads.length});
+  return `<div class="fld"><span class="lb" style="cursor:help" title="Each library is its own set of ads, kept in its own folder. Switching keeps your view and overlays.">Library</span><select data-lib aria-label="Library" class="libsel">${libs.map(l => `<option value="${esc(l.id)}" ${l.id === LIB_ID ? "selected" : ""}>${esc(l.name)} (${l.ads} ad${l.ads === 1 ? "" : "s"})</option>`).join("")}</select>${home}</div>`;
+}
+function switchLibrary(id){
+  if (!id || id === LIB_ID) return;
+  const q = new URLSearchParams();
+  for (const k of ["mode","pl"]) if (state[k]) q.set(k, state[k]);   // ad, group and brand belong to this library
+  for (const k of ["safe","trunc","badges","frame","dark","thumbs"]) q.set(k, state[k] ? "1" : "0");
+  q.set("zoom", state.zoom);
+  location.href = "../../" + encodeURIComponent(id) + "/viewer/index.html#" + q.toString();
+}
+function stepAd(d){
+  const list = filteredAds(); if (!list.length) return;
+  const i = list.findIndex(a => a.id === state.ad);
+  state.ad = list[Math.min(list.length - 1, Math.max(0, (i < 0 ? 0 : i) + d))].id; state.card = 0; go();
+}
+function stepPl(d){
+  const ids = D.placements.map(p => p.id), i = ids.indexOf(state.pl);
+  state.pl = ids[Math.min(ids.length - 1, Math.max(0, i + d))]; go();
+}
+function statusTitle(c){
+  if (c.status === "actual") return "Actual: this placement shows your creative as supplied, so this should match what Meta shows.";
+  if (c.status === "simulated") return "Simulated, approximated because: " + (c.reasons || []).join("; ");
+  return (c.status || "").replace("_", " ") + ((c.reasons || []).length ? ": " + c.reasons.join("; ") : "");
+}
+const BRAND_RANK = {}; D.ads.forEach(a => { if (!(a.brand in BRAND_RANK)) BRAND_RANK[a.brand] = Object.keys(BRAND_RANK).length; });
+const ADS_BY_BRAND = D.ads.map((a, i) => [a, i]).sort((x, y) => (BRAND_RANK[x[0].brand] - BRAND_RANK[y[0].brand]) || (x[1] - y[1])).map(x => x[0]);
+function filteredAds(){   // grouped by brand (in order of first appearance), spec order within a brand
+  return ADS_BY_BRAND.filter(a => (!state.group || a.group === state.group) && (!state.brand || a.brand === state.brand));
+}
+function statusOk(c){ return !state.status || c.status === state.status; }
+
+/* ------------------------------------------------------------------ views */
+/* Selecting ads to export: a checkbox in each tile's header (never inside the mockup itself,
+   which PNG export and the Overview thumbnails reuse). Toggling doesn't re-render the mockups. */
+let SELECTING = false;
+const pickBox = (id, label = "") => SELECTING && !state.export && !D.share ? `<label class="pickbox" title="Include this ad in the export"><input type="checkbox" data-pick="${esc(id)}" ${EXP.picked.has(id) ? "checked" : ""}>${label}</label>` : "";
+const pickedCls = id => SELECTING && EXP.picked.has(id) ? " picked" : "";
+function tileHtml(title, c, inner, width, adId){
+  const reasons = [...(c.reasons||[]).map(r => `<li>${esc(r)}</li>`), ...(c.copy||[]).map(r => `<li class="copy">${esc(r)}</li>`)].join("");
+  return `<div class="tile${adId ? pickedCls(adId) : ""}" style="--tw:${width}px"${adId ? ` data-tile="${esc(adId)}"` : ""}><div class="tile-h">${adId ? pickBox(adId) : ""}<b>${title}</b><span class="pill ${c.status}" title="${esc(statusTitle(c))}">${c.status.replace("_"," ")}</span></div>${reasons && state.badges ? `<ul class="reasons">${reasons}</ul>` : ""}<div class="zoomable" style="zoom:${state.zoom}">${inner}</div></div>`;
+}
+const widthOf = p => p.device === "desktop" ? 1280 : 393;
+function viewGallery(){
+  const ad = AD[state.ad] || filteredAds()[0];
+  if (!ad) return `<div class="empty">No ads match the filters.</div>`;
+  state.ad = ad.id;
+  const SECS = [["Facebook on phones", p => p.platform === "facebook" && p.device !== "desktop"], ["Instagram", p => p.platform === "instagram"], ["Facebook on desktop", p => p.platform === "facebook" && p.device === "desktop"]];
+  const skipped = []; let n = 0;
+  const secs = SECS.map(([title, test]) => {
+    const parts = [];
+    for (const p of D.placements.filter(test)) {
+      const c = cell(ad, p.id);
+      if (!statusOk(c)) continue;
+      const html = mockup(ad.id, p.id);
+      if (!html) { skipped.push(`${p.name} (${c.reasons[0] || c.status.replace("_", " ")})`); continue; }
+      parts.push(tileHtml(esc(p.name), c, html, Math.round(widthOf(p) * state.zoom)));
+    }
+    n += parts.length;
+    return parts.length ? `<div class="sec"><h2 class="sec-h">${title}</h2><div class="tiles">${parts.join("")}</div></div>` : "";
+  }).join("");
+  const fmt = {image: "Image", video: "Video", carousel: "Carousel"}[ad.format] || ad.format;
+  return `<p class="summary"><b style="color:var(--ui-text)">${esc(adName(ad))}</b> · ${fmt} · ${esc(brandOf(ad).page_name)}${ad.group ? " · Group: " + esc(ad.group) : ""} · <span class="adid">ID ${esc(ad.id)}</span>${skipped.length ? `<br>Not shown here: ${esc(skipped.join(", "))}` : ""}</p>${n ? secs : `<div class="empty">${state.status ? `No ${esc(state.status)} mockups for this ad. Open Filter and set Status to “Actual and simulated” to see them all.` : "No placement can show this ad."}</div>`}`;
+}
+function viewCompare(){
+  const p = P[state.pl];
+  const parts = filteredAds().map(ad => {
+    const c = cell(ad, p.id);
+    if (!statusOk(c)) return "";
+    const html = mockup(ad.id, p.id);
+    const title = `${esc(adName(ad))} <span class="adid">${esc(ad.id)}</span>`;
+    if (!html) return `<div class="tile${pickedCls(ad.id)}" data-tile="${esc(ad.id)}"><div class="tile-h">${pickBox(ad.id)}<b>${title}</b><span class="pill ${c.status}" title="${esc(statusTitle(c))}">${c.status.replace("_"," ")}</span></div><ul class="reasons"><li>${esc(c.reasons[0]||"")}</li></ul></div>`;
+    return tileHtml(title, c, html, Math.round(widthOf(p) * state.zoom), ad.id);
+  });
+  const shown = parts.filter(Boolean).length;
+  return `<p class="summary">Every ad as it appears in <b style="color:var(--ui-text)">${esc(p.name)}</b> · ${shown} ad${shown === 1 ? "" : "s"}</p>${shown ? `<div class="tiles">${parts.join("")}</div>` : `<div class="empty">No ads match the filters here.</div>`}`;
+}
+function viewFeed(){
+  const ad = AD[state.ad] || filteredAds()[0];
+  if (!ad) return `<div class="empty">No ads.</div>`;
+  const p = P[state.pl], c = cell(ad, p.id);
+  if (["fb_stories","ig_stories","fb_reels","ig_reels"].includes(p.template)) {
+    const html = mockup(ad.id, p.id);
+    const org = (i) => `<div class="mk fs ${p.platform==="instagram"?"ig":"fb"}"><div class="stage" style="background:${ORG[i].c}"></div>${statusBar(true)}<div class="sthdr"><div class="av" style="width:32px;height:32px;background:${hueFor(ORG[i].n)}">${initials(ORG[i].n)}</div><div class="who"><div class="nm">${ORG[i].n}</div><div class="sp">${2+i}h</div></div></div></div>`;
+    if (!html) return `<div class="empty">${esc(c.reasons[0] || "Not eligible")}</div>`;
+    return `<p class="summary">${esc(p.name)}: the ad between two organic ${p.template.includes("reels") ? "reels" : "stories"}, in viewing order.</p><div class="tiles zoomable" style="zoom:${state.zoom}">${org(0)}${html}${org(2)}</div>`;
+  }
+  const html = mockup(ad.id, p.id, {feed:true});
+  if (!html) return `<div class="empty">${esc(c.reasons[0] || "Not eligible")}</div>`;
+  const framed = p.device === "mobile" ? (state.frame ? html : `<div class="frame">${html.replace(/^<div class="mk([^"]*)"([^>]*)>/, `<div class="mk$1"$2><div class="scroll">`)}</div></div>`) : html;
+  return `<p class="summary">${esc(p.name)}: the ad between ordinary posts. ${p.device === "mobile" ? "Scroll inside the phone to move through the feed." : "Scroll the page to move through the feed."}</p><div class="zoomable" style="zoom:${state.zoom}">${framed}</div>`;
+}
+function viewMatrix(){
+  const ads = filteredAds();
+  const head = `<thead><tr><th></th>${D.placements.map(p => `<th title="${esc(p.name)}">${esc(p.short)}</th>`).join("")}</tr></thead>`;
+  const rows = ads.map(ad => `<tr class="${pickedCls(ad.id).trim()}" data-tile="${esc(ad.id)}"><th class="ad">${pickBox(ad.id)}${esc(adName(ad))}<br><span class="adid">${esc(ad.id)}</span></th>${D.placements.map(p => {
+    const c = cell(ad, p.id);
+    const inner = state.thumbs && (c.status === "actual" || c.status === "simulated") ? `<div class="mxthumb" data-lazy="${esc(ad.id)}|${p.id}"></div>` : `<span class="dot ${c.status}"></span>`;
+    return `<td title="${esc(p.name + ": " + c.status + (c.reasons.length ? " — " + c.reasons.join("; ") : ""))}" data-go="${esc(ad.id)}|${p.id}">${inner}</td>`;
+  }).join("")}</tr>`).join("");
+  return `<p class="summary"><span class="dot actual"></span> actual &nbsp; <span class="dot simulated"></span> simulated &nbsp; <span class="dot not_eligible"></span> not eligible · Hover a column heading for the placement’s full name, or a cell for details. Click a cell to compare every ad in that placement.</p><table class="mx">${head}<tbody>${rows}</tbody></table>`;
+}
+
+/* ------------------------------------------------------------------ main */
+function go(){
+  const inList = filteredAds();
+  if (inList.length && !inList.some(a => a.id === state.ad)) { state.ad = inList[0].id; state.card = 0; }
+  writeHash();
+  document.documentElement.dataset.theme = state.dark ? "dark" : "light";
+  toolbar();
+  const main = $("#main");
+  main.innerHTML = ({gallery: viewGallery, compare: viewCompare, feed: viewFeed, matrix: viewMatrix}[state.mode] || viewFeed)();
+  clampAll(main);
+  if (state.mode === "feed") revealFeedAd(main);
+  if (state.mode === "matrix") {
+    main.querySelectorAll("table.mx .pickbox").forEach(l => l.onclick = e => e.stopPropagation());
+    main.querySelectorAll("[data-go]").forEach(td => td.onclick = () => { const [a, p] = td.dataset.go.split("|"); state.ad = a; state.pl = p; state.mode = "compare"; state.group = AD[a].group || ""; go(); });
+    const io = new IntersectionObserver(es => es.forEach(en => {
+      if (!en.isIntersecting) return;
+      const el = en.target, [a, p] = el.dataset.lazy.split("|");
+      const z = P[p].device === "desktop" ? 140/1280 : 140/393;
+      el.innerHTML = `<div class="scaler" style="transform:scale(${z})">${mockup(a, p) || ""}</div>`;
+      clampAll(el); io.unobserve(el);
+    }), {rootMargin: "300px"});
+    main.querySelectorAll("[data-lazy]").forEach(el => io.observe(el));
+  }
+}
+/* In-feed mode opens with the ad on screen: scroll so it starts a little below the
+   sticky header, leaving the end of the organic post above it visible. */
+function revealFeedAd(main){
+  const org = main.querySelector(".organic"), ad = org && org.nextElementSibling;
+  if (!ad || ad.classList.contains("organic")) return;
+  let box = ad.parentElement;
+  while (box && box !== main && !(/(auto|scroll)/.test(getComputedStyle(box).overflowY) && box.scrollHeight > box.clientHeight)) box = box.parentElement;
+  if (box && box !== main) {
+    const br = box.getBoundingClientRect(), k = br.height / box.clientHeight || 1;   // CSS zoom factor
+    box.scrollTop += (ad.getBoundingClientRect().top - br.top) / k - 230;
+  } else {
+    window.scrollBy(0, ad.getBoundingClientRect().top - 160);
+  }
+}
+function exportView(){
+  document.body.classList.add("export");
+  const html = mockup(state.ad, state.pl, {}) || `<div class="empty">not eligible</div>`;
+  $("#main").innerHTML = `<div id="shot" style="display:inline-block">${html}</div>`;
+  clampAll($("#main"));
+  // pin feed mockups to a phone-like minimum height so short posts still read as a screen
+  document.title = "ready";
+}
+if (!/^#export/.test(location.hash)) loadPrefs();
+readHash();
+if (state.export) exportView(); else go();
+if ((LIB_ID || (D.share && D.share.library)) && !state.export) {
+  const s = document.createElement("script");
+  s.src = "../../libraries.js?v=" + Date.now();   // fresh list even if another library was rendered since
+  s.onload = () => { LIBS = window.META_ADS_LIBRARIES || null; toolbar(); };
+  document.head.appendChild(s);                    // missing file (library moved on its own): no switcher
+}
+$("#main").addEventListener("change", e => { const c = e.target.closest("[data-pick]"); if (c) setPicked(c.dataset.pick, c.checked); });
+document.addEventListener("click", e => {
+  if (e.target.closest("details.menu, [data-selexport]")) return;
+  document.querySelectorAll("#bar details.menu[open]").forEach(d => d.open = false);
+});
+document.addEventListener("keydown", e => {
+  if (state.export || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.key === "Escape") { document.querySelectorAll("#bar details.menu[open]").forEach(d => d.open = false); return; }
+  if (e.target.closest("input, select, textarea")) return;
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  const d = e.key === "ArrowLeft" ? -1 : 1;
+  if (state.mode === "feed" || state.mode === "gallery") { e.preventDefault(); stepAd(d); }
+  else if (state.mode === "compare") { e.preventDefault(); stepPl(d); }
+});
+addEventListener("hashchange", () => { if (!state.export) { readHash(); go(); } });
+</script>
+</body>
+</html>

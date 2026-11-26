@@ -1,0 +1,189 @@
+# Where space usually goes
+
+Sizes vary. Measure each with `du -sh PATH`, one explicit path at a time.
+
+## Group A: regenerable (safe)
+
+| Item | macOS path | Linux path | Clean command (user runs it) |
+|---|---|---|---|
+| npm cache | `~/.npm` | `~/.npm` | `npm cache clean --force` |
+| pip cache | `~/Library/Caches/pip` | `~/.cache/pip` | `pip cache purge` |
+| uv cache | `~/.cache/uv` | `~/.cache/uv` | `uv cache prune` |
+| Homebrew | `~/Library/Caches/Homebrew` | `~/.cache/Homebrew` | `brew cleanup --prune=all` |
+| Playwright browsers | `~/Library/Caches/ms-playwright` | `~/.cache/ms-playwright` | `npx playwright uninstall --all` |
+| iOS simulators | `~/Library/Developer/CoreSimulator` | n/a | `xcrun simctl delete unavailable` first; if that frees nothing, `xcrun simctl delete all` (Xcode re-downloads on demand) |
+| Xcode build output | `~/Library/Developer/Xcode/DerivedData` | n/a | Xcode › Settings › Locations › delete, or move the folder to the Trash |
+| Docker images | inside the VM disk | `/var/lib/docker` | `docker system prune` (shows what it removes first) |
+| Browser caches | `~/Library/Caches/Google`, `Firefox` | `~/.cache/google-chrome` | clear from the browser's settings with the browser closed |
+| apt / dnf caches | n/a | `/var/cache/apt` | needs admin: explain, let the user decide |
+| journal logs | n/a | `/var/log/journal` | needs admin: explain, let the user decide |
+| Electron app caches (Slack, VS Code, Discord, Claude) | `~/Library/Application Support/APP/Cache`, `Code Cache`, `GPUCache` only | `~/.config/APP/Cache` | quit the app first, then Trash those 3 subfolders only, never the app's whole folder |
+| Language caches | `~/.gradle/caches`, `~/.cargo/registry`, `~/go/pkg/mod`, `~/.m2/repository`, `~/Library/Caches/CocoaPods`, `~/Library/Caches/Yarn`, `~/Library/pnpm/store`, `~/.bun/install/cache` | same under `~` or `~/.cache` | the tool's own command: `go clean -modcache`, `pnpm store prune`, `yarn cache clean`, `pod cache clean --all`, `cargo cache -a` if installed; else Trash the cache folder |
+| Xcode extras | `~/Library/Developer/Xcode/iOS DeviceSupport`, `DocumentationCache`, `~/Library/Developer/XCTestDevices` | n/a | Trash versions for iOS releases no longer on any device; Xcode re-downloads on connect |
+| Installer files | `.dmg`, `.pkg`, `.xip` in `~/Downloads`; `Install macOS *.app`; `~/Library/iTunes/iPhone Software Updates/*.ipsw` | `.deb`, `.AppImage` in `~/Downloads` | Trash once the app is installed |
+| Logs and crash reports | `~/Library/Logs`, `~/Library/Logs/DiagnosticReports` | `~/.local/state/*/log` | Trash files older than 30 days |
+
+## Group B: you decide
+
+| Item | Where | How to check if it is used | Action |
+|---|---|---|---|
+| Ollama models | `~/.ollama/models` | `ollama list`, then search the user's code and config for each name | `ollama rm NAME`, one per line |
+| MLX / Hugging Face models | `~/MLXModels`, `~/.cache/huggingface` | which app loads them; is that app still installed | app gone: Trash; else external disk |
+| VM disks (Colima, Docker Desktop, UTM) | `~/.colima`, `~/Library/Containers/com.docker.docker` | is the VM running, is it needed soon | stop it, then archive to an external disk |
+| Old app support folders | `~/Library/Application Support/APP` | is the app still installed and used | uninstall the app the official way, then Trash the folder |
+| `node_modules` in old projects | project folders | repo committed and pushed, not opened lately | Trash; `npm install` brings it back |
+| Downloads, Movies | `~/Downloads`, `~/Movies` | last opened date | Trash or external disk |
+| Build output beyond node_modules | `target`, `.build`, `dist`, `.next`, `Pods`, `.venv` in project folders | project untouched 6+ months (`stat` mtime) | Trash; the build or `pip install` brings it back |
+| Old toolchain versions | `~/.rustup/toolchains`, `~/.nvm/versions/node`, `~/.pyenv/versions`, old `/Applications/Xcode-*.app` | which version the projects pin (`.nvmrc`, `rust-toolchain`, `.python-version`) | the version manager's own uninstall (`nvm uninstall`, `rustup toolchain uninstall`, `pyenv uninstall`) |
+| Uninstall leftovers | `~/Library/Containers/BUNDLE_ID`, `Group Containers`, `HTTPStorages`, `WebKit`, `Saved Application State` named by the bundle ID | `mdfind "kMDItemCFBundleIdentifier == 'BUNDLE_ID'"` finds no app | Trash those folders, one path per line |
+| Docker data | `docker system df -v` | which images and volumes running containers use | `docker image rm ID`, `docker volume rm NAME` by exact ID, never `system prune --volumes` |
+
+**Report only, never offered:** Xcode Archives (they hold the dSYMs needed to read crash reports), iOS device backups in
+`~/Library/Application Support/MobileSync/Backup`, Mail Downloads, and Chromium `*.code_sign_clone` folders.
+
+## Build output inside git worktrees
+
+Build folders inside agent git worktrees (for example a Swift `.build` or a `node_modules` in each worktree) can hold most of a disk: in a
+real run 42 of 46 GB. Offer each build folder (🟡, group A) only when it was untouched for 7+ days and every check
+passes, one folder at a time:
+
+| Check | Command (read-only) | Pass when |
+|---|---|---|
+| Not tracked | `git -C WORKTREE ls-files DIR` | prints nothing |
+| Ignored | `git -C WORKTREE check-ignore -q DIR` | exit 0 |
+| Marked as cache | `ls DIR/CACHEDIR.TAG` | file exists |
+| Not open | `lsof +D DIR` | prints nothing |
+| No process uses the worktree | `pgrep -fl WORKTREE` | prints nothing |
+| Nothing points at it | search `~/Library/LaunchAgents` and the repo's build scripts for the path | no match |
+| Running app not built from it | the app's executable path (`ps -o comm= -p PID`) | outside DIR |
+
+Then check git in that worktree: unpushed commits (`git -C WORKTREE rev-list @{u}..HEAD`, and the branch exists on
+the remote) and uncommitted files (`git -C WORKTREE status --porcelain`). Report uncommitted files as ⚠️ "stays
+untouched": the command only moves the build folder. Keep the worktree itself (SKILL.md rule 8).
+
+## Local AI models: prove each one is unused
+
+Before offering a model, every check must pass:
+
+- not in any model pin or lock file the project keeps;
+- not in the app's live model list (its own status command);
+- no runtime code calls it (search code, leave out tests, evals and docs); a catalog or size-table mention is
+  display only;
+- no LaunchAgent and no open pull request names it;
+- `ollama ps` shows it is not loaded.
+
+Embedding models count as in use when search runs on them. Before the command, show one table:
+`Model | What the app uses it for | Keep or remove`. Valid reasons to remove: a trial that was never adopted, only in
+old eval results or a catalog, or bigger than the machine's memory allows while a smaller pinned model does the job.
+Then one block of `ollama rm NAME` lines the user runs. Model blobs are not APFS clones, so `ollama list` sizes match
+the `df` gain (a real run: 4 models, 24.9 GB listed, free space 55 → 80 GB).
+If the app's own status command crashes during a check, do not block on it: note it, and propose fixing it
+separately.
+
+## Docker on Colima or Lima: space does not come back by itself
+
+- **The VM disk does not shrink after `docker image rm`.** The VM mounts its data disk without `discard`, so freed
+  blocks stay inside `~/.colima/_lima/_disks/colima` and `df -h /` on the Mac shows no gain. With the VM running,
+  the user runs `colima ssh -- sudo fstrim -v /mnt/lima-colima` (the `sudo` runs inside the VM, not on the Mac);
+  then re-measure. In a real run this freed 9.5 GiB.
+- **A profile's data disk stays after `colima delete`.** Removing a profile and its data needs
+  `colima delete -f --data PROFILE`, one profile per line. Only offer it for a profile the user does not use.
+- **Images with no tag (`<none>`)** fail with "No such image" when removed by name. Remove them by image ID:
+  `docker images --filter dangling=true` lists the IDs, then `docker image rm ID`, one ID per line.
+
+## Measure before you offer
+
+- **`du` overcounts on APFS.** In a real run `du` said 13.6 GB and the Trash gave back 9 GB (clones and hard
+  links). Say "about" before the command and report only the `df -h /` gain after it.
+- **An empty cache gets no step.** Measure each cache first (`pip cache info`, `du -sh PATH`); in a real run the pip
+  cache was already 0 bytes. Drop a cache at 0 bytes from the table instead of keeping a purge step pending.
+
+## What freed the most in a real run
+
+16 GB Mac mini, 29 → 92 GiB free in four user-run rounds: emptying the Trash (+23 GiB, nothing is freed until then),
+unused Ollama models (checked against code first), iOS simulators, models whose app was gone, and `node_modules` in
+pushed repos. Package caches gave about 7 GiB. A later round took it to 115 GiB: old simulator runtimes (14.8 GB) and
+unused or duplicate apps, then the Trash emptied again. Whole run by macOS Storage: 19.6 → 123.3 GB free (103.8 GB,
+21% of the disk). Start with the Trash size, the model folders and simulator runtimes.
+
+## Unused apps
+
+| Check | How |
+|---|---|
+| Size and last use | System Settings › General › Storage › Applications (Last Accessed column), or `mdls -name kMDItemLastUsedDate -name kMDItemAppStoreHasReceipt /Applications/NAME.app` |
+| Re-downloadable? | `kMDItemAppStoreHasReceipt = 1` means the App Store gives it back free |
+| Leftover data | `du -sh ~/Library/Containers/BUNDLE_ID` and `~/Library/Application Support/NAME`; GarageBand sounds in `/Library/Application Support/GarageBand` |
+
+Rank apps unused for 90+ days, largest first. Action: the app's own uninstaller if it has one, else SKILL.md step 7
+(`trash`, then Finder by `osascript` for root-owned App Store apps, then computer use). `trash` fails with
+`afpAccessDenied` on root-owned apps; that is the cue for the Finder route. Data the app made (iMovie libraries, GarageBand projects) is user data: Group B,
+archive first. Paid apps: deleting the app does not cancel the plan; tell the user to cancel it in their account.
+Duplicates: group `.app` bundles by `CFBundleIdentifier` (`mdfind "kMDItemContentType == com.apple.application-bundle"`,
+skip `/System`, paths inside `/Contents/`, the Trash and Developer folders). Same id twice = an old copy or a `-backup` app
+beside the current one; offer the older one. Ignore versioned bundles that an app manages itself (claude-code versions,
+GoogleUpdater).
+System Settings › Storage keeps a cached list: quit System Settings and reopen it on Storage
+(`open "x-apple.systempreferences:com.apple.settings.Storage"`) to see the change.
+Never offer system apps (Safari, Mail) or apps with a running login item or helper.
+
+## Why "System Data" is huge on macOS
+
+System Data is mostly hidden dot folders and app data, not macOS itself (130 GB in a real run: models 58 GB, an
+app's own data 25 GB, Docker 23 GB, an app VM 15 GB, simulators 8.6 GB). Measure read-only first:
+`du -xsh ~/.ollama ~/.colima ~/.cache ~/.npm ~/Library/Caches ~/Library/Developer "$HOME/Library/Application Support"`,
+then `tmutil listlocalsnapshots /` and `du -sh /private/var/folders`. An app's own data folder is hands off.
+
+| Item | Check (read-only) | Action |
+|---|---|---|
+| Simulator runtimes (often 8 GB each) | `xcrun simctl runtime list -v` (size, last used) | keep the newest one in use; `xcrun simctl runtime delete ID` for the rest |
+| Temp and cache (`/private/var/folders`) | `du -sh "$(getconf DARWIN_USER_TEMP_DIR)"` | a restart clears most of it; never Trash it by hand while apps run |
+| Time Machine local snapshots | `tmutil listlocalsnapshots /` | macOS thins them when space is low |
+| App VM bundles (Claude, Docker) | `du -sh` on the app's support folder; `stat -f '%Sm' PATH` for last change | keep while the app is used; see "App VMs in active use" below |
+| Purgeable space | `diskutil info /` Container Free Space | Settings counts it as used; it frees by itself |
+
+## Group C: in an app's own settings
+
+Messages and WhatsApp attachments, iCloud "Optimize Mac Storage", photo libraries, mail downloads, a pending OS update.
+
+### App VMs in active use
+
+Before offering an app VM bundle (for example the Claude app's
+`~/Library/Application Support/Claude/vm_bundles/claudevm.bundle`), check its last change with
+`stat -f '%Sm' PATH` (macOS) or `stat -c '%y' PATH` (Linux). Changed in the last 7 days: the row reads
+"Need it? yes, in active use" and is not offered at all. In a real run the Claude app's VM was offered although it
+had been used that same day.
+
+## Extra read-only checks
+
+| Check | macOS | Linux |
+|---|---|---|
+| Time Machine local snapshots (hidden "System Data") | `tmutil listlocalsnapshots /`; user can run `tmutil thinlocalsnapshots / 1000000000 4` | n/a |
+| Purgeable vs real free | `diskutil info /` (Container Free Space) vs `df -h /` | `df -h /` |
+| Docker / Colima / Podman | `docker system df`, `colima status`, `podman system df` | same |
+| node_modules and build output | `find ~/Projects -maxdepth 6 -name node_modules -type d -prune -exec du -sh {} +` | same |
+| Stale large files (approx. last use) | `find ~/Downloads ~/Movies ~/Desktop -type f -size +500M -atime +180` | same |
+| Trash | `du -sh ~/.Trash` (needs Full Disk Access; else read the Finder size) | `du -sh ~/.local/share/Trash` |
+| Homebrew dry run | `brew cleanup -n` | `brew cleanup -n` |
+| Login items | `osascript -e 'tell application "System Events" to get the name of every login item'`, `ls ~/Library/LaunchAgents` | `systemctl --user list-unit-files --state=enabled` |
+| Package caches, logs | n/a | `du -sh /var/cache`, `journalctl --disk-usage`, `snap list --all` |
+
+Name the search roots explicitly. Never `find ~` over the whole home on a large disk: it can run for minutes.
+
+## Why "Documents" is huge on macOS
+
+System Settings › Storage shows "Documents" as every user file that fits no other category: models, VM disks, caches,
+app support folders, and hidden folders such as `~/.ollama`, `~/.colima` or an app's VM bundle (`vm_bundles` under Application Support). The `~/Documents`
+folder itself is often tiny. Measure the home folder's top level, hidden folders included, and show the user those
+names instead of saying "Documents is heavy".
+
+## Keep, never clean
+
+Agent threads and sessions (active or archived), their git worktrees and merged git branches. They are the record of
+why things were done. If they are in the way, archive them; report their size only.
+
+## RAM and CPU
+
+- `top -l 1 -o mem -n 15` (macOS) or `ps aux --sort=-%mem | head -16` (Linux): the 15 heaviest processes.
+- Login items: System Settings › General › Login Items (macOS), `systemctl --user list-unit-files --state=enabled` (Linux).
+- Local AI models: one loaded model can hold several GB of RAM. Keep the defaults under about a third of total RAM.
+- A disk over about 90% full slows everything: swap and caches have no room.

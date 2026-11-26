@@ -1,0 +1,870 @@
+{
+  "version": "2.1.0",
+  "source_rulebook": "builtin_sfx_intent_rules",
+  "total_scene_labels": 29,
+  "total_sfx_samples": 92,
+  "pipeline_emotion_routing": {
+    "hook": [
+      "sound_vibe/sfx/style_03_accent.wav",
+      "sound_vibe/sfx/style_02_accent.wav",
+      "sound_vibe/sfx/style_12_ui.wav",
+      "sound_vibe/sfx/style_14_transition.wav",
+      "sound_vibe/sfx/style_14_ui.wav"
+    ],
+    "twist": [
+      "sound_vibe/sfx/style_12_ui.wav",
+      "sound_vibe/sfx/style_03_accent.wav",
+      "sound_vibe/sfx/style_14_ui.wav",
+      "sound_vibe/sfx/style_02_accent.wav",
+      "sound_vibe/sfx/style_15_accent.wav",
+      "sound_vibe/sfx/style_05_transition.wav"
+    ],
+    "info": [
+      "sound_vibe/sfx/style_15_receipt.wav",
+      "sound_vibe/sfx/style_15_accent.wav",
+      "sound_vibe/sfx/style_12_ui.wav",
+      "sound_vibe/sfx/style_14_ui.wav",
+      "sound_vibe/sfx/style_02_accent.wav",
+      "sound_vibe/sfx/style_14_transition.wav",
+      "sound_vibe/sfx/style_05_transition.wav"
+    ],
+    "detail": [
+      "sound_vibe/sfx/style_14_transition.wav",
+      "sound_vibe/sfx/style_14_ui.wav",
+      "sound_vibe/sfx/style_03_accent.wav",
+      "sound_vibe/sfx/style_02_accent.wav",
+      "sound_vibe/sfx/style_15_accent.wav"
+    ],
+    "persona": [
+      "sound_vibe/sfx/style_14_transition.wav",
+      "sound_vibe/sfx/style_14_ui.wav",
+      "sound_vibe/sfx/style_12_ui.wav",
+      "sound_vibe/sfx/style_15_accent.wav",
+      "sound_vibe/sfx/style_15_receipt.wav"
+    ],
+    "cta": [
+      "sound_vibe/sfx/style_14_ui.wav",
+      "sound_vibe/sfx/style_12_ui.wav"
+    ]
+  },
+  "scene_taxonomy": {
+    "搜索关键词 “嗖/呼/风/whoosh\"": {
+      "pipeline_intent": "detail",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "旋风",
+          "duration_sec": 2.12,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_transition.wav",
+          "sound_category": "whoosh_transition"
+        }
+      ]
+    },
+    "搜索关键词 \"综艺噔噔/综艺 咚/影视 咚\"": {
+      "pipeline_intent": "detail",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "游戏点击 音效",
+          "duration_sec": 0.78,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "场景音效": {
+      "pipeline_intent": "detail",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "综艺 悬疑 轻敲",
+          "duration_sec": 1.8,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        }
+      ]
+    },
+    "为什么": {
+      "pipeline_intent": "hook",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "综艺悬疑 沙锤长",
+          "duration_sec": 2.48,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        }
+      ]
+    },
+    "开场(提问问题)": {
+      "pipeline_intent": "hook",
+      "count": 3,
+      "items": [
+        {
+          "jianying_sfx_name": "Tom鼓",
+          "duration_sec": 1.6,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "综艺悬疑 不对劲",
+          "duration_sec": 2.42,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        },
+        {
+          "jianying_sfx_name": "综艺悬疑 不对劲",
+          "duration_sec": 2.42,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        }
+      ]
+    },
+    "孩子不行": {
+      "pipeline_intent": "twist",
+      "count": 2,
+      "items": [
+        {
+          "jianying_sfx_name": "诡异的滴水声",
+          "duration_sec": 1.22,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "扫光音效4",
+          "duration_sec": 1.05,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        }
+      ]
+    },
+    "你的成绩不好": {
+      "pipeline_intent": "twist",
+      "count": 2,
+      "items": [
+        {
+          "jianying_sfx_name": "综艺清脆敲声",
+          "duration_sec": 3.02,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        },
+        {
+          "jianying_sfx_name": "空灵的水滴声",
+          "duration_sec": 1.22,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "开场(观点表达)": {
+      "pipeline_intent": "hook",
+      "count": 7,
+      "items": [
+        {
+          "jianying_sfx_name": "诡异的滴水声",
+          "duration_sec": 1.22,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "旋风",
+          "duration_sec": 2.18,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_transition.wav",
+          "sound_category": "whoosh_transition"
+        },
+        {
+          "jianying_sfx_name": "撞击光1",
+          "duration_sec": 1.73,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "旋风",
+          "duration_sec": 2.18,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_transition.wav",
+          "sound_category": "whoosh_transition"
+        },
+        {
+          "jianying_sfx_name": "综艺悬疑 不对劲",
+          "duration_sec": 2.42,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        },
+        {
+          "jianying_sfx_name": "哐，撞击轻响",
+          "duration_sec": 1.95,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "高音闪光 (3)",
+          "duration_sec": 1.95,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "怎么才算真正": {
+      "pipeline_intent": "detail",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "一滴水滴声",
+          "duration_sec": 1.32,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "孩子教育不好": {
+      "pipeline_intent": "twist",
+      "count": 6,
+      "items": [
+        {
+          "jianying_sfx_name": "一声响铃",
+          "duration_sec": 1.52,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "一滴水滴声",
+          "duration_sec": 1.32,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "木鱼敲击回响音效",
+          "duration_sec": 0.52,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        },
+        {
+          "jianying_sfx_name": "综艺咚",
+          "duration_sec": 0.93,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "一滴水滴声",
+          "duration_sec": 1.32,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "青蛙呱叫音效",
+          "duration_sec": 0.35,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        }
+      ]
+    },
+    "家里没钱": {
+      "pipeline_intent": "twist",
+      "count": 2,
+      "items": [
+        {
+          "jianying_sfx_name": "键盘空格声",
+          "duration_sec": 0.43,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        },
+        {
+          "jianying_sfx_name": "Tom鼓",
+          "duration_sec": 1.18,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        }
+      ]
+    },
+    "提出问题": {
+      "pipeline_intent": "detail",
+      "count": 7,
+      "items": [
+        {
+          "jianying_sfx_name": "综艺当当当当",
+          "duration_sec": 1.28,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        },
+        {
+          "jianying_sfx_name": "水滴回响声音效",
+          "duration_sec": 1.23,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "综艺悬疑 不对劲",
+          "duration_sec": 1.82,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        },
+        {
+          "jianying_sfx_name": "综艺 悬疑  敲小鼓",
+          "duration_sec": 1.73,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "综艺悬疑 沙锤长",
+          "duration_sec": 3.48,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        },
+        {
+          "jianying_sfx_name": "咚",
+          "duration_sec": 1.07,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "气泡弹出",
+          "duration_sec": 0.48,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "为什么学习不好": {
+      "pipeline_intent": "hook",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "疑惑",
+          "duration_sec": 0.85,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        }
+      ]
+    },
+    "我有个疑问": {
+      "pipeline_intent": "hook",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "Tom鼓",
+          "duration_sec": 2.95,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        }
+      ]
+    },
+    "知道有多重要吗": {
+      "pipeline_intent": "hook",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "开场音效咚",
+          "duration_sec": 2.37,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        }
+      ]
+    },
+    "没情绪": {
+      "pipeline_intent": "twist",
+      "count": 6,
+      "items": [
+        {
+          "jianying_sfx_name": "气泡弹出",
+          "duration_sec": 0.48,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "气泡弹出",
+          "duration_sec": 0.48,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "咚",
+          "duration_sec": 1.07,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "鼠标单击",
+          "duration_sec": 0.35,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "叮咚，提示音2",
+          "duration_sec": 0.32,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "综艺悬疑 不对劲",
+          "duration_sec": 1.42,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_03_accent.wav",
+          "sound_category": "wood_suspense_knock"
+        }
+      ]
+    },
+    "痛点一": {
+      "pipeline_intent": "twist",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "纸张抖动声",
+          "duration_sec": 0.55,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_05_transition.wav",
+          "sound_category": "paper_rustle"
+        }
+      ]
+    },
+    "痛点二": {
+      "pipeline_intent": "twist",
+      "count": 2,
+      "items": [
+        {
+          "jianying_sfx_name": "空灵的水滴声",
+          "duration_sec": 1.13,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "挤压玩具鸭",
+          "duration_sec": 0.53,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        }
+      ]
+    },
+    "尴尬~": {
+      "pipeline_intent": "twist",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "敲锣歌仔音效下载",
+          "duration_sec": 0.73,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        }
+      ]
+    },
+    "情绪": {
+      "pipeline_intent": "twist",
+      "count": 13,
+      "items": [
+        {
+          "jianying_sfx_name": "小孩哭泣声",
+          "duration_sec": 1.32,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "婴儿开心",
+          "duration_sec": 0.67,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "综艺咚咚两声鼓点转场音效",
+          "duration_sec": 0.57,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "疑惑",
+          "duration_sec": 0.88,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "无奈",
+          "duration_sec": 1.45,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "女声哇哦",
+          "duration_sec": 2.35,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "咚咚重音 心头震",
+          "duration_sec": 2.43,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "眨眼",
+          "duration_sec": 0.53,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "光洙发抖声",
+          "duration_sec": 1.28,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "叮咚（紧张）",
+          "duration_sec": 1.75,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "挤压玩具鸭",
+          "duration_sec": 0.57,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "猛然一惊",
+          "duration_sec": 1.5,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "键盘打字长音效2",
+          "duration_sec": 1.72,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        }
+      ]
+    },
+    "天才是1%的努力 加上99%的汗水": {
+      "pipeline_intent": "persona",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "闪回",
+          "duration_sec": 1.33,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_transition.wav",
+          "sound_category": "whoosh_transition"
+        }
+      ]
+    },
+    "金句": {
+      "pipeline_intent": "persona",
+      "count": 6,
+      "items": [
+        {
+          "jianying_sfx_name": "一滴水滴声",
+          "duration_sec": 1.3,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "扫光",
+          "duration_sec": 0.8,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "空灵的水滴声",
+          "duration_sec": 1.22,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "发条声",
+          "duration_sec": 0.88,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        },
+        {
+          "jianying_sfx_name": "综艺叮~~",
+          "duration_sec": 1.3,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "叮，收银机提示音1",
+          "duration_sec": 1.58,
+          "cc0_role": "cta",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_receipt.wav",
+          "sound_category": "cash_register"
+        }
+      ]
+    },
+    "5000万": {
+      "pipeline_intent": "info",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "超市电子钱柜 结账",
+          "duration_sec": 1.13,
+          "cc0_role": "cta",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_receipt.wav",
+          "sound_category": "cash_register"
+        }
+      ]
+    },
+    "数字": {
+      "pipeline_intent": "info",
+      "count": 3,
+      "items": [
+        {
+          "jianying_sfx_name": "复古胶片滚动",
+          "duration_sec": 0.52,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        },
+        {
+          "jianying_sfx_name": "正确",
+          "duration_sec": 1.17,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "故障音效",
+          "duration_sec": 1.03,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        }
+      ]
+    },
+    "01": {
+      "pipeline_intent": "info",
+      "count": 2,
+      "items": [
+        {
+          "jianying_sfx_name": "扫光音效4",
+          "duration_sec": 1.27,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        },
+        {
+          "jianying_sfx_name": "啵1",
+          "duration_sec": 0.35,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "框架概要": {
+      "pipeline_intent": "info",
+      "count": 12,
+      "items": [
+        {
+          "jianying_sfx_name": "叮，提示音4",
+          "duration_sec": 1.03,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "嘟咚，提示音2",
+          "duration_sec": 0.63,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "提示音",
+          "duration_sec": 1.03,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "叮",
+          "duration_sec": 0.63,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "一滴水滴声",
+          "duration_sec": 1.45,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "叮咚，提示音2",
+          "duration_sec": 0.32,
+          "cc0_role": "hook",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_02_accent.wav",
+          "sound_category": "heavy_impact"
+        },
+        {
+          "jianying_sfx_name": "旋风",
+          "duration_sec": 1.52,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_transition.wav",
+          "sound_category": "whoosh_transition"
+        },
+        {
+          "jianying_sfx_name": "鼠标单击",
+          "duration_sec": 0.35,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        },
+        {
+          "jianying_sfx_name": "“呼”2",
+          "duration_sec": 1.15,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_transition.wav",
+          "sound_category": "whoosh_transition"
+        },
+        {
+          "jianying_sfx_name": "纸张抖动声",
+          "duration_sec": 0.75,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_05_transition.wav",
+          "sound_category": "paper_rustle"
+        },
+        {
+          "jianying_sfx_name": "键盘打字长音效2",
+          "duration_sec": 0.73,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        },
+        {
+          "jianying_sfx_name": "单反相机快速拍照快门声音音效",
+          "duration_sec": 0.48,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        }
+      ]
+    },
+    "转场": {
+      "pipeline_intent": "detail",
+      "count": 5,
+      "items": [
+        {
+          "jianying_sfx_name": "回忆-刷一下",
+          "duration_sec": 0.6,
+          "cc0_role": "transition",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_transition.wav",
+          "sound_category": "whoosh_transition"
+        },
+        {
+          "jianying_sfx_name": "复古胶片滚动",
+          "duration_sec": 0.52,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        },
+        {
+          "jianying_sfx_name": "拍照声2",
+          "duration_sec": 0.9,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        },
+        {
+          "jianying_sfx_name": "键盘空格声",
+          "duration_sec": 0.87,
+          "cc0_role": "accent",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_15_accent.wav",
+          "sound_category": "mechanical_typewriter"
+        },
+        {
+          "jianying_sfx_name": "叮叮",
+          "duration_sec": 1.2,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "点赞收藏": {
+      "pipeline_intent": "cta",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "提示音",
+          "duration_sec": 0.72,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_14_ui.wav",
+          "sound_category": "clean_ding_pop"
+        }
+      ]
+    },
+    "结尾引导": {
+      "pipeline_intent": "cta",
+      "count": 1,
+      "items": [
+        {
+          "jianying_sfx_name": "亮一下",
+          "duration_sec": 1.0,
+          "cc0_role": "ui",
+          "cc0_vibe_sfx": "sound_vibe/sfx/style_12_ui.wav",
+          "sound_category": "general_ui"
+        }
+      ]
+    }
+  }
+}

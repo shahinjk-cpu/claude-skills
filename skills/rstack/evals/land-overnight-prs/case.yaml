@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: land-overnight-prs
+expected_outcome: |
+  A conductor plans how to land a day of PRs from teammates and bots: landings under a size cap, one review each, a pre-push gate, merge only on green, cause files before reruns, and only true human-only asks.

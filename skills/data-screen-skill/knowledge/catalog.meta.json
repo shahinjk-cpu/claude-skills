@@ -1,0 +1,1221 @@
+{
+  "$schema": "./scripts/catalog.schema.json",
+  "version": 2026.11,
+  "upstream": {
+    "name": "DaShuJuZhiDaPingZhanShi",
+    "url": "https://gitee.com/lvyeyou/DaShuJuZhiDaPingZhanShi",
+    "license": "MIT",
+    "author": "Lang (lvyeyou)",
+    "capturedCommit": "75a203b",
+    "capturedAt": "2026-11-26",
+    "note": "原始模板为 2018-2019 年 jQuery + ECharts 2/4 技术栈；本仓库不复制其源码，只做结构化索引、设计提炼与重写示例。"
+  },
+  "archetypes": {
+    "A1": "三栏 · 中心地图",
+    "A2": "三栏 · 左中右多面板",
+    "A3": "全屏 GIS 底图 · 浮层卡片",
+    "A4": "网格卡片 · KPI + 图表",
+    "A5": "低密度叙事 · 中心主视觉",
+    "A6": "硬边终端风 · 仪表盘"
+  },
+  "screens": [
+    {
+      "id": "general-blue",
+      "name": "大数据可视化展板通用模板",
+      "category": "综合",
+      "path": "智慧城市/大数据可视化展板通用模板/index.html",
+      "preview": "assets/previews/05-general-blue.jpg",
+      "doc": "knowledge/templates/01-general-blue.md",
+      "archetype": "A1",
+      "style": "深蓝科技 · 展板通用款",
+      "layout": "30% / 40% / 30%，中心中国地图 + 左右各三块面板，宽高比 16:9",
+      "palette": [
+        "#000d4a",
+        "#02a6b5",
+        "#399bff",
+        "#ffeb7b",
+        "#49bcf7",
+        "#19ba8b"
+      ],
+      "adaptation": "rem：html font-size = windowWidth / 20",
+      "stack": [
+        "jQuery 1.x",
+        "ECharts 4.0.3",
+        "china.js",
+        "DS-DIGIT 数字字体"
+      ],
+      "charts": [
+        "bar",
+        "line",
+        "pie",
+        "map"
+      ],
+      "modules": [
+        "顶部标题 + 实时时钟",
+        "双 KPI 数字翻牌",
+        "中心中国地图（涟漪 + 飞线）",
+        "左右 3×2 图表面板",
+        "三枚环形占比",
+        "加载遮罩 + 背景旋转光效"
+      ],
+      "bestFor": [
+        "通用领导汇报",
+        "城市/区域总览",
+        "单页展览",
+        "快速改造成任何行业"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "ECharts 4 老写法 itemStyle.normal 需在升级到 5 时改写",
+        "地图依赖 china.js 的 'china' 注册名",
+        "rem 方案对竖屏不友好"
+      ]
+    },
+    {
+      "id": "retail",
+      "name": "生意参谋 · 销售大数据页面模板",
+      "category": "电商零售",
+      "path": "智慧电商/销售大数据页面模板/index.html",
+      "preview": "assets/previews/19-retail.jpg",
+      "doc": "knowledge/templates/01-general-blue.md",
+      "archetype": "A1",
+      "style": "深蓝科技 · 电商经营看板",
+      "layout": "左右窄栏 + 中心大区，中心上方为地图、下方为排行榜/滚动表",
+      "palette": [
+        "#000d4a",
+        "#02a6b5",
+        "#399bff",
+        "#ffeb7b",
+        "#49bcf7"
+      ],
+      "adaptation": "rem：html font-size = windowWidth / 20",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x",
+        "jquery.countup",
+        "china.js"
+      ],
+      "charts": [
+        "bar",
+        "line",
+        "pie",
+        "map"
+      ],
+      "modules": [
+        "品牌 Logo + 标题",
+        "天气/日期",
+        "6 枚经营 KPI",
+        "中心中国地图",
+        "消费占比环图",
+        "行业占比",
+        "滚动新增会员",
+        "实时消费流水"
+      ],
+      "bestFor": [
+        "电商运营",
+        "零售连锁",
+        "门店经营分析"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "滚动列表用 jQuery animate 改 marginTop，改为 CSS 动画更稳",
+        "金额/百分比需按业务口径统一单位"
+      ]
+    },
+    {
+      "id": "logistics",
+      "name": "智慧物流服务中心",
+      "category": "物流",
+      "path": "智慧物流/智慧物流/index.html",
+      "preview": "assets/previews/13-logistics.jpg",
+      "doc": "knowledge/templates/02-logistics.md",
+      "archetype": "A2",
+      "style": "深蓝 + 青蓝 · 六边形纹理，硬朗切角",
+      "layout": "24% / 52% / 24%，中心为全国地图 + 数据流向，左右为指标/图表/表格",
+      "palette": [
+        "#071a33",
+        "#0e94ea",
+        "#cdddf7",
+        "#ffc000",
+        "#ff3dbe",
+        "#00c2ff"
+      ],
+      "adaptation": "rem + flex",
+      "stack": [
+        "jQuery 3",
+        "ECharts 4.0.3",
+        "layer",
+        "china.js",
+        "guangdong.js"
+      ],
+      "charts": [
+        "pie",
+        "map",
+        "bar",
+        "lines",
+        "effectScatter"
+      ],
+      "modules": [
+        "当前到件量大数字",
+        "派件入库占比环图",
+        "广东省寄派件地图",
+        "中心标题 + 时钟 + 天气",
+        "全国流向地图",
+        "城市派件 TOP10",
+        "收件/派件柱图",
+        "收入大数字",
+        "今日值班"
+      ],
+      "bestFor": [
+        "物流调度",
+        "快递网络",
+        "供应链总览",
+        "需要强烈中心地图的行业"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "大量切角/描边依赖切图，改成 CSS clip-path 更易改色",
+        "广东省地图需要单独 geojson"
+      ]
+    },
+    {
+      "id": "highway",
+      "name": "高速交通大数据分析平台",
+      "category": "交通",
+      "path": "智慧交通/高速交通大数据分析平台/index.html",
+      "preview": "assets/previews/03-highway.jpg",
+      "doc": "knowledge/templates/03-traffic.md",
+      "archetype": "A2",
+      "style": "深蓝 + 青绿/橙 · 数据密度高",
+      "layout": "三栏，中间地图占 50% 宽，左右各 3-4 个面板，信息密度最高的一类",
+      "palette": [
+        "#061537",
+        "#007aff",
+        "#00ffc6",
+        "#ff8a3d",
+        "#55bfff"
+      ],
+      "adaptation": "transform: scale（按 1920×1080 设计稿缩放）+ flex",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x",
+        "china.js"
+      ],
+      "charts": [
+        "bar",
+        "line",
+        "radar",
+        "effectScatter",
+        "lines",
+        "scatter",
+        "pie"
+      ],
+      "modules": [
+        "顶部电路感标题条",
+        "交通流量柱线复合",
+        "交通工具流量多线",
+        "收费站车流量",
+        "4 枚警情 KPI",
+        "中心飞线地图",
+        "雷达图",
+        "收费站收费排行（人形图标）",
+        "今日实时收费环形进度"
+      ],
+      "bestFor": [
+        "交通/高速/交警",
+        "需要大量实时指标的指挥中心",
+        "数据密集型大屏"
+      ],
+      "difficulty": "high",
+      "watchouts": [
+        "人形图标行用图标重复，改为 CSS/canvas 批量绘制避免 DOM 膨胀",
+        "缩放方案要监听 resize 并同步 transform-origin"
+      ]
+    },
+    {
+      "id": "traffic-video",
+      "name": "大数据视频监控",
+      "category": "交通/安防",
+      "path": "智慧交通/大数据视频监控/index.html",
+      "preview": "assets/previews/01-traffic-video.jpg",
+      "doc": "knowledge/templates/03-traffic.md",
+      "archetype": "A3",
+      "style": "深蓝 + 视频墙 · 监控指挥",
+      "layout": "左侧菜单/资源树 + 中间视频宫格 + 右侧统计面板",
+      "palette": [
+        "#0a1c3d",
+        "#2288cc",
+        "#33bbee",
+        "#ffffff",
+        "#ffcc00"
+      ],
+      "adaptation": "rem + scale",
+      "stack": [
+        "jQuery",
+        "ECharts 2.2.7",
+        "zTree",
+        "artDialog",
+        "bootstrap 风格组件"
+      ],
+      "charts": [
+        "pie",
+        "line",
+        "bar",
+        "radar"
+      ],
+      "modules": [
+        "视频监控宫格",
+        "设备资源树",
+        "警情统计",
+        "卡口过车",
+        "地图点位",
+        "弹窗详情"
+      ],
+      "bestFor": [
+        "视频监控中心",
+        "安防指挥",
+        "卡口/园区监控"
+      ],
+      "difficulty": "high",
+      "watchouts": [
+        "ECharts 2.2.7 语法与现代版本差异大，建议只借鉴布局",
+        "视频流需要 RTSP→WebRTC/HLS 网关，不能直接 <video src=rtsp>"
+      ]
+    },
+    {
+      "id": "tourism",
+      "name": "智慧旅游综合服务平台",
+      "category": "文旅",
+      "path": "智慧交通/旅游大数据/index.html",
+      "preview": "assets/previews/02-tourism.jpg",
+      "doc": "knowledge/templates/03-traffic.md",
+      "archetype": "A1",
+      "style": "深青蓝 + 地图 · 多页面（首页/地图/客流/表格）",
+      "layout": "多页应用：index 首页 + map/static/message/table1 子页，iframe 或整页跳转",
+      "palette": [
+        "#034c6a",
+        "#337ab7",
+        "#00d4ff",
+        "#ffffff",
+        "#ffd166"
+      ],
+      "adaptation": "rem + scale",
+      "stack": [
+        "jQuery",
+        "ECharts 2.2.7",
+        "bootstrap"
+      ],
+      "charts": [
+        "pie",
+        "bar",
+        "line"
+      ],
+      "modules": [
+        "景区总览",
+        "客流趋势",
+        "客源地排行",
+        "景区地图",
+        "舆情/留言",
+        "数据表格"
+      ],
+      "bestFor": [
+        "文旅/景区",
+        "多页面钻取型大屏",
+        "需要子页跳转的场景"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "多页面共享状态需 URL 参数或 localStorage",
+        "ECharts 2 的 map 配置不同"
+      ]
+    },
+    {
+      "id": "medical",
+      "name": "大数据医疗服务平台",
+      "category": "医疗",
+      "path": "智慧医疗/大数据医疗/views/index.html",
+      "preview": "assets/previews/04-medical.jpg",
+      "doc": "knowledge/templates/05-medical.md",
+      "archetype": "A2",
+      "style": "深蓝 + 浅青 · 医疗洁净感",
+      "layout": "三栏，中心医院/区域地图，左慢病管理、右资源与趋势；多视图（index/chronic/NCD/trend/quota）",
+      "palette": [
+        "#034c6a",
+        "#337ab7",
+        "#5bc0de",
+        "#ffffff",
+        "#7bd7c8"
+      ],
+      "adaptation": "rem + flex",
+      "stack": [
+        "jQuery",
+        "ECharts 4.0.3"
+      ],
+      "charts": [
+        "scatter",
+        "pie",
+        "line",
+        "bar"
+      ],
+      "modules": [
+        "门诊/住院 KPI",
+        "慢病分布",
+        "NCD 指标",
+        "趋势分析",
+        "处方/额度",
+        "医院地图"
+      ],
+      "bestFor": [
+        "医院运营",
+        "区域卫健",
+        "慢病管理"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "医疗数据涉及隐私，示例必须是脱敏假数据",
+        "图表多但每屏只保留 1 个主视觉"
+      ]
+    },
+    {
+      "id": "construction",
+      "name": "智慧工地",
+      "category": "住建",
+      "path": "智慧城市/智慧工地/index.html",
+      "preview": "assets/previews/06-construction.jpg",
+      "doc": "knowledge/templates/12-construction-land.md",
+      "archetype": "A4",
+      "style": "深蓝 + 青 · 工地监测",
+      "layout": "顶部标题 + 三列卡片：环境/人员/设备/告警",
+      "palette": [
+        "#000c3b",
+        "#032d60",
+        "#26c6f0",
+        "#00ffff",
+        "#00a0e9"
+      ],
+      "adaptation": "px 固定 1920 设计稿",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x"
+      ],
+      "charts": [
+        "radar",
+        "line",
+        "bar",
+        "pie"
+      ],
+      "modules": [
+        "扬尘/噪声/温湿度",
+        "人员实名制",
+        "塔吊/升降机",
+        "告警列表",
+        "视频画面"
+      ],
+      "bestFor": [
+        "智慧工地",
+        "园区环境监测",
+        "设备物联"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "固定 px 在不同分辨率会留白/裁切，建议改 scale 方案"
+      ]
+    },
+    {
+      "id": "land-3d",
+      "name": "土地交易大数据可视化平台",
+      "category": "自然资源",
+      "path": "智慧政务/土地交易大数据可视化平台/index.html",
+      "preview": "assets/previews/07-land-3d.jpg",
+      "doc": "knowledge/templates/12-construction-land.md",
+      "archetype": "A3",
+      "style": "深蓝 + 冰蓝 · 3D 地图",
+      "layout": "全屏 3D 地图 + 左右浮层 + 顶部标题",
+      "palette": [
+        "#04122e",
+        "#4adefe",
+        "#4e72b0",
+        "#f3db5c"
+      ],
+      "adaptation": "transform: scale",
+      "stack": [
+        "ECharts GL",
+        "ECharts 4.x"
+      ],
+      "charts": [
+        "map3D",
+        "bar3D",
+        "scatter3D",
+        "surface"
+      ],
+      "modules": [
+        "3D 省域地图",
+        "地块交易",
+        "成交金额",
+        "溢价率",
+        "区域排行"
+      ],
+      "bestFor": [
+        "自然资源/国土",
+        "需要 3D 视觉冲击的汇报",
+        "地块/园区展示"
+      ],
+      "difficulty": "high",
+      "watchouts": [
+        "echarts-gl 与 ECharts 5 版本需匹配（推荐 echarts 5.4 + echarts-gl 2.0）",
+        "3D 在低配机器/LED 拼接上帧率差，准备 2D 降级"
+      ]
+    },
+    {
+      "id": "tax",
+      "name": "工商办税大数据监控平台",
+      "category": "政务",
+      "path": "智慧政务/工商办税大数据监控平台/index.html",
+      "preview": "assets/previews/08-tax.jpg",
+      "doc": "knowledge/templates/04-gov.md",
+      "archetype": "A4",
+      "style": "深蓝 + 青色霓虹 · 政务",
+      "layout": "网格卡片：左侧趋势、中间指标+地图、右侧排行/占比",
+      "palette": [
+        "#042d6b",
+        "#00b3fe",
+        "#07f7f4",
+        "#05fef8",
+        "#004c98"
+      ],
+      "adaptation": "px 固定设计稿 + 局部百分比",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x"
+      ],
+      "charts": [
+        "pie",
+        "bar",
+        "line",
+        "pictorialBar"
+      ],
+      "modules": [
+        "办税总量",
+        "渠道分布",
+        "窗口繁忙度",
+        "区域对比",
+        "实时排队",
+        "业务类型占比"
+      ],
+      "bestFor": [
+        "税务/工商",
+        "政务服务大厅",
+        "渠道运行监控"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "霓虹青大面积使用会刺眼，控制在标题/强调数字"
+      ]
+    },
+    {
+      "id": "community",
+      "name": "智慧社区内网比对平台",
+      "category": "社区",
+      "path": "智慧政务/智慧社区/index.html",
+      "preview": "assets/previews/09-community.jpg",
+      "doc": "knowledge/templates/04-gov.md",
+      "archetype": "A4",
+      "style": "深蓝 + 亮蓝 · 社区治理",
+      "layout": "顶部 KPI + 左中右三列，中心社区地图",
+      "palette": [
+        "#071a33",
+        "#0e94ea",
+        "#b1d2ec",
+        "#009f95",
+        "#cdddf7"
+      ],
+      "adaptation": "rem + scale + flex",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x",
+        "china.js"
+      ],
+      "charts": [
+        "map",
+        "pie",
+        "line",
+        "bar"
+      ],
+      "modules": [
+        "人口/房屋/事件",
+        "网格分布",
+        "重点人员",
+        "事件趋势",
+        "社区地图"
+      ],
+      "bestFor": [
+        "社区治理",
+        "网格化治理",
+        "街道/乡镇"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "涉及个人信息，演示必须用虚构数据"
+      ]
+    },
+    {
+      "id": "gov-neon",
+      "name": "大数据综合分析平台（政务）",
+      "category": "政务",
+      "path": "智慧政务/综合分析平台/pages/Datacages_Homeindex.html",
+      "preview": "assets/previews/10-gov-neon.jpg",
+      "doc": "knowledge/templates/04-gov.md",
+      "archetype": "A5",
+      "style": "黑 + 电光蓝 + 荧光绿 · 关系网络",
+      "layout": "大面积中心留白，放系统关系网络图；左右窄面板",
+      "palette": [
+        "#020a18",
+        "#00a8ff",
+        "#aeff00",
+        "#00e4ff",
+        "#56a4ff",
+        "#fd4275"
+      ],
+      "adaptation": "flex + 百分比",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x"
+      ],
+      "charts": [
+        "graph",
+        "pie",
+        "bar"
+      ],
+      "modules": [
+        "中心系统关系网络",
+        "数据传输量",
+        "今日人员在线",
+        "车辆在线",
+        "数据接入排行",
+        "平台接入量"
+      ],
+      "bestFor": [
+        "政务云/数据中台",
+        "系统架构展示",
+        "汇报型大屏（低密度）"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "荧光绿 #aeff00 只做强调，别当正文色",
+        "关系图要固定布局或力导向稳定参数，避免每帧抖动"
+      ]
+    },
+    {
+      "id": "opinion",
+      "name": "舆情分析平台",
+      "category": "政务/舆情",
+      "path": "智慧政务/舆情分析/activity.html",
+      "preview": "assets/previews/11-opinion.jpg",
+      "doc": "knowledge/templates/04-gov.md",
+      "archetype": "A4",
+      "style": "浅色底 + 深蓝 · 少见的亮色大屏",
+      "layout": "多页：活动/分析/人物/公众/交通，每页独立主题",
+      "palette": [
+        "#ffffff",
+        "#337ab7",
+        "#3c763d",
+        "#fcf8e3",
+        "#d9534f"
+      ],
+      "adaptation": "rem + flex",
+      "stack": [
+        "jQuery",
+        "ECharts 4.0.4",
+        "D3 v3"
+      ],
+      "charts": [
+        "line",
+        "bar",
+        "pie",
+        "map",
+        "graph",
+        "wordCloud"
+      ],
+      "modules": [
+        "舆情热度",
+        "情感分布",
+        "传播路径",
+        "关键词云",
+        "意见领袖",
+        "事件时间线"
+      ],
+      "bestFor": [
+        "舆情监测",
+        "宣传/网信",
+        "需要浅色底或投屏到亮环境"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "浅色大屏在 LED 上对比度容易不足，正文用 #333 而非 #999",
+        "D3 + ECharts 混用注意命名空间"
+      ]
+    },
+    {
+      "id": "weather",
+      "name": "气象预报大数据平台",
+      "category": "气象",
+      "path": "智慧气象/气象预报大数据平台/index.html",
+      "preview": "assets/previews/12-weather.jpg",
+      "doc": "knowledge/templates/06-weather-terminal.md",
+      "archetype": "A6",
+      "style": "纯黑 + 荧光黄绿 · 工业终端仪表盘",
+      "layout": "左右对称仪表盘 + 中心中国地图，细线框、无圆角、无渐变",
+      "palette": [
+        "#000000",
+        "#b0cc35",
+        "#f2ff00",
+        "#ff2b2b",
+        "#8a8a8a"
+      ],
+      "adaptation": "transform: scale",
+      "stack": [
+        "jQuery",
+        "ECharts 4.9",
+        "ECharts GL 1.0",
+        "Three.js"
+      ],
+      "charts": [
+        "gauge",
+        "radar",
+        "line",
+        "bar",
+        "map"
+      ],
+      "modules": [
+        "气压表",
+        "温度/湿度仪表",
+        "风向玫瑰",
+        "降雨柱线",
+        "中心地图 + 3D 地球",
+        "站点信息"
+      ],
+      "bestFor": [
+        "气象/环境",
+        "工业监控",
+        "需要差异化视觉的展厅"
+      ],
+      "difficulty": "high",
+      "watchouts": [
+        "荧光色在投影仪上会偏色，交付前实测",
+        "Three.js 与 ECharts GL 同时加载注意体积"
+      ]
+    },
+    {
+      "id": "logistics-2",
+      "name": "物流大数据服务平台",
+      "category": "物流",
+      "path": "智慧物流/物流大数据服务平台/index.html",
+      "preview": "assets/previews/14-logistics-2.jpg",
+      "doc": "knowledge/templates/02-logistics.md",
+      "archetype": "A2",
+      "style": "深蓝 + 青色 · 物流网络",
+      "layout": "三栏 + 中心地图 + 底部流向",
+      "palette": [
+        "#034c6a",
+        "#2c8fbf",
+        "#00e5ff",
+        "#ffffff",
+        "#ffb020"
+      ],
+      "adaptation": "rem",
+      "stack": [
+        "jQuery",
+        "ECharts 4.0.3",
+        "china.js"
+      ],
+      "charts": [
+        "pie",
+        "map",
+        "effectScatter",
+        "lines",
+        "line"
+      ],
+      "modules": [
+        "订单总量",
+        "运输方式占比",
+        "中心路网地图",
+        "时效分析",
+        "异常预警",
+        "运力排行"
+      ],
+      "bestFor": [
+        "物流平台",
+        "干支线网络",
+        "供应链可视化"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "多版本 ECharts 共存会导致全局冲突，只保留一个"
+      ]
+    },
+    {
+      "id": "vehicle",
+      "name": "新能源车联网综合大数据平台",
+      "category": "车联网",
+      "path": "智慧物联/新能源车联网综合大数据平台/index.html",
+      "preview": "assets/previews/15-vehicle.jpg",
+      "doc": "knowledge/templates/09-iot-vehicle.md",
+      "archetype": "A3",
+      "style": "深蓝 + 电光蓝/黄 · 车辆监控",
+      "layout": "全屏地图 + 四周浮层 KPI/图表",
+      "palette": [
+        "#0a1f3d",
+        "#0089ff",
+        "#25f3e6",
+        "#ffff44",
+        "#f84a4a"
+      ],
+      "adaptation": "px + 百分比",
+      "stack": [
+        "jQuery",
+        "ECharts 4.0.3"
+      ],
+      "charts": [
+        "map",
+        "scatter",
+        "effectScatter",
+        "line",
+        "bar",
+        "gauge"
+      ],
+      "modules": [
+        "车辆总数/在线",
+        "里程/能耗",
+        "故障告警",
+        "充电桩分布",
+        "轨迹回放",
+        "区域热力"
+      ],
+      "bestFor": [
+        "车联网",
+        "新能源运营",
+        "车队管理"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "轨迹回放需要坐标纠偏（WGS84→GCJ02）",
+        "大量车辆点用 canvas 渲染"
+      ]
+    },
+    {
+      "id": "iot",
+      "name": "物联网平台数据统计",
+      "category": "物联网",
+      "path": "智慧物联/物联网平台数据统计/index.html",
+      "preview": "assets/previews/16-iot.jpg",
+      "doc": "knowledge/templates/09-iot-vehicle.md",
+      "archetype": "A4",
+      "style": "深蓝 + 青/橙 · 设备统计",
+      "layout": "网格卡片 + 地图，Vue 驱动",
+      "palette": [
+        "#0b122e",
+        "#1d3152",
+        "#00f6ff",
+        "#ff6f05",
+        "#ff0000"
+      ],
+      "adaptation": "px + flex",
+      "stack": [
+        "Vue 2",
+        "jQuery",
+        "ECharts 4.0.3"
+      ],
+      "charts": [
+        "line",
+        "bar",
+        "pictorialBar",
+        "pie",
+        "map"
+      ],
+      "modules": [
+        "设备在线率",
+        "告警趋势",
+        "类型分布",
+        "区域分布",
+        "实时数据流"
+      ],
+      "bestFor": [
+        "IoT 平台",
+        "设备运维",
+        "需要 Vue 数据驱动的项目"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "Vue 2 已停止维护，新项目建议 Vue 3 或原生 JS",
+        "Vue 与 jQuery 同时操作 DOM 易冲突"
+      ]
+    },
+    {
+      "id": "ecommerce-gov",
+      "name": "电子商务公共服务平台大数据中心",
+      "category": "电商",
+      "path": "智慧电商/电子商务公共服务平台大数据中心/index.html",
+      "preview": "assets/previews/17-ecommerce-gov.jpg",
+      "doc": "knowledge/templates/08-ecommerce.md",
+      "archetype": "A1",
+      "style": "深蓝 + 蓝紫 · 电商公共服务",
+      "layout": "三栏，中心地图 + 交易流向",
+      "palette": [
+        "#0a1f3d",
+        "#2c58a6",
+        "#337ab7",
+        "#00d4ff",
+        "#ffcc00"
+      ],
+      "adaptation": "rem",
+      "stack": [
+        "jQuery",
+        "ECharts 4.0.3"
+      ],
+      "charts": [
+        "pie",
+        "line",
+        "scatter",
+        "effectScatter",
+        "map"
+      ],
+      "modules": [
+        "网络零售额",
+        "农产品上行",
+        "店铺/品牌",
+        "物流时效",
+        "区域交易地图",
+        "品类排行"
+      ],
+      "bestFor": [
+        "电商公共服务",
+        "县域电商",
+        "产业带"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "金额单位（万元/亿元）必须全屏统一并在标题标注"
+      ]
+    },
+    {
+      "id": "operation",
+      "name": "运营大数据",
+      "category": "运营",
+      "path": "智慧电商/运营大数据/index.html",
+      "preview": "assets/previews/18-operation.jpg",
+      "doc": "knowledge/templates/08-ecommerce.md",
+      "archetype": "A4",
+      "style": "深蓝 + 亮蓝/紫 · 运营看板",
+      "layout": "顶部 KPI + 下方 2×3 图表",
+      "palette": [
+        "#0b1a3a",
+        "#2c58a6",
+        "#61d2f7",
+        "#2b3aa8"
+      ],
+      "adaptation": "rem",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x"
+      ],
+      "charts": [
+        "line",
+        "bar",
+        "pie"
+      ],
+      "modules": [
+        "GMV/订单/客单价",
+        "渠道趋势",
+        "转化漏斗",
+        "品类占比",
+        "区域排行"
+      ],
+      "bestFor": [
+        "运营分析",
+        "增长看板",
+        "月度经营会"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "漏斗/转化率口径要在图例注明"
+      ]
+    },
+    {
+      "id": "ops-map",
+      "name": "可视化监控管理（百度地图）",
+      "category": "运维",
+      "path": "智慧运维/可视化监控管理/index.html",
+      "preview": "assets/previews/20-ops-map.jpg",
+      "doc": "knowledge/templates/10-ops-device.md",
+      "archetype": "A3",
+      "style": "深色卫星地图 + 品红/青绿状态色",
+      "layout": "全屏百度地图 + 顶部标题 + 左右浮动卡片 + 图例",
+      "palette": [
+        "#052025",
+        "#043037",
+        "#ff3774",
+        "#6ae89c",
+        "#00cefa"
+      ],
+      "adaptation": "px 固定 + 绝对定位",
+      "stack": [
+        "百度地图 JS API 2.0",
+        "jQuery",
+        "ECharts 4.x"
+      ],
+      "charts": [
+        "map（第三方）",
+        "bar",
+        "line"
+      ],
+      "modules": [
+        "运维总指标",
+        "告警点位",
+        "及时率/完成率",
+        "区域高亮",
+        "工单列表"
+      ],
+      "bestFor": [
+        "运维监控",
+        "设备巡检",
+        "需要真实底图/街道级定位"
+      ],
+      "difficulty": "high",
+      "watchouts": [
+        "百度/高德/天地图需要 AK 与域名白名单，内网需离线瓦片",
+        "商用授权与坐标系必须确认"
+      ]
+    },
+    {
+      "id": "stats",
+      "name": "大数据统计展示大屏",
+      "category": "运维/统计",
+      "path": "智慧运维/大数据统计展示大屏/index.html",
+      "preview": "assets/previews/21-stats.jpg",
+      "doc": "knowledge/templates/10-ops-device.md",
+      "archetype": "A4",
+      "style": "深蓝 + 蓝白 · 统计报表风",
+      "layout": "左 KPI 列 + 右图表网格",
+      "palette": [
+        "#0d2b52",
+        "#337ab7",
+        "#5bc0de",
+        "#ffffff",
+        "#f5f5f5"
+      ],
+      "adaptation": "rem",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x",
+        "bootstrap"
+      ],
+      "charts": [
+        "bar",
+        "line",
+        "radar"
+      ],
+      "modules": [
+        "总量指标",
+        "月度趋势",
+        "分布对比",
+        "雷达评估",
+        "排行榜"
+      ],
+      "bestFor": [
+        "统计口径汇报",
+        "月度/年度总结",
+        "政务数据展示"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "报表风容易显旧，加入细线框和留白即可现代很多"
+      ]
+    },
+    {
+      "id": "ops-ring",
+      "name": "大数据运维总览图（TIZA STAR）",
+      "category": "运维",
+      "path": "智慧运维/大数据运维总览图/index.html",
+      "preview": "assets/previews/22-ops-ring.jpg",
+      "doc": "knowledge/templates/06-weather-terminal.md",
+      "archetype": "A6",
+      "style": "深色 + 环形拓扑 · 极简科幻",
+      "layout": "中心环形/拓扑，四周悬浮指标",
+      "palette": [
+        "#0a0f1e",
+        "#2f6bff",
+        "#00e5ff",
+        "#ffffff"
+      ],
+      "adaptation": "transform: scale",
+      "stack": [
+        "jQuery",
+        "ECharts 4.1"
+      ],
+      "charts": [
+        "pie",
+        "line",
+        "graph",
+        "gauge"
+      ],
+      "modules": [
+        "系统健康度环",
+        "节点状态",
+        "流量趋势",
+        "告警数",
+        "拓扑关系"
+      ],
+      "bestFor": [
+        "IT 运维总览",
+        "系统健康度",
+        "展厅主视觉"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "环形布局需计算角度，建议用极坐标或 SVG 预生成"
+      ]
+    },
+    {
+      "id": "device",
+      "name": "设备环境监测平台",
+      "category": "设备",
+      "path": "智慧运维/设备环境监测平台/index.html",
+      "preview": "assets/previews/23-device.jpg",
+      "doc": "knowledge/templates/10-ops-device.md",
+      "archetype": "A4",
+      "style": "深蓝 + 大色块 KPI（红/绿/橙）",
+      "layout": "左大色块 KPI + 中心地图 + 右侧设备条 + 底部图表/表格",
+      "palette": [
+        "#0a1f3d",
+        "#f0553f",
+        "#16c9a3",
+        "#f6a645",
+        "#1aa1fd"
+      ],
+      "adaptation": "rem",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x",
+        "china.js"
+      ],
+      "charts": [
+        "pie",
+        "bar",
+        "line",
+        "map",
+        "scatter",
+        "effectScatter"
+      ],
+      "modules": [
+        "订单/会员/消费大色块",
+        "设备数/增量/增值率",
+        "设备分布地图",
+        "设备使用频率条",
+        "开关次数",
+        "温湿度/信号",
+        "检测统计",
+        "状态饼图",
+        "维保表格"
+      ],
+      "bestFor": [
+        "设备运维",
+        "环境监测",
+        "需要强 KPI 色块的场景"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "红绿同时大面积使用对色弱不友好，配文字/图标区分"
+      ]
+    },
+    {
+      "id": "store",
+      "name": "厅店效能大屏监控看板",
+      "category": "零售/运营商",
+      "path": "智慧运营/厅店效能大屏监控看板/page/index.html",
+      "preview": "assets/previews/24-store.jpg",
+      "doc": "knowledge/templates/11-store.md",
+      "archetype": "A4",
+      "style": "深蓝 + 青 · 门店效能",
+      "layout": "顶部标题 + 左中右三列 + 底部滚动",
+      "palette": [
+        "#0a1c3a",
+        "#428bca",
+        "#00d4ff",
+        "#ffffff"
+      ],
+      "adaptation": "rem + scale + flex",
+      "stack": [
+        "jQuery",
+        "ECharts 4.x",
+        "bootstrap"
+      ],
+      "charts": [
+        "pie",
+        "line",
+        "bar"
+      ],
+      "modules": [
+        "厅店排行",
+        "客流/成交",
+        "业务办理",
+        "满意度",
+        "员工绩效"
+      ],
+      "bestFor": [
+        "连锁门店",
+        "营业厅",
+        "区域经营对比"
+      ],
+      "difficulty": "low",
+      "watchouts": [
+        "排行榜需处理并列名次与长门店名"
+      ]
+    },
+    {
+      "id": "finance-risk",
+      "name": "银行企业信用风险实时监测",
+      "category": "金融",
+      "path": "智慧金融/银行企业信用风险实时监测/index.html",
+      "preview": "assets/previews/25-finance-risk.jpg",
+      "doc": "knowledge/templates/07-finance.md",
+      "archetype": "A4",
+      "style": "深藏青 + 宝蓝 · 金融严谨风",
+      "layout": "顶部标题栏 + 四象限表格/图表，二级详情页",
+      "palette": [
+        "#0c0f2b",
+        "#003bcf",
+        "#487bff",
+        "#ffffff",
+        "#cccccc"
+      ],
+      "adaptation": "flex + 固定宽度 1820",
+      "stack": [
+        "jQuery 1.12",
+        "ECharts 3.7"
+      ],
+      "charts": [
+        "line",
+        "bar",
+        "pie",
+        "graph"
+      ],
+      "modules": [
+        "企业信用分级表",
+        "风险指标",
+        "详情三联页",
+        "趋势对比"
+      ],
+      "bestFor": [
+        "金融风控",
+        "信用评级",
+        "需要表格为主的大屏"
+      ],
+      "difficulty": "medium",
+      "watchouts": [
+        "表格型大屏注意行高与字号（投屏最小 14px）",
+        "评级颜色需符合行业惯例且提供文字"
+      ]
+    }
+  ],
+  "": "../scripts/catalog.schema.json"
+}

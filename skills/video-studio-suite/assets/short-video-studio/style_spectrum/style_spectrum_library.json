@@ -1,0 +1,6687 @@
+{
+  "version": "2.1.0",
+  "generated_at": "2026-11-22T09:45:00+08:00",
+  "source_dir": "builtin_style_spectrum_v21",
+  "total_videos": 24,
+  "default_style_id": "style_14",
+  "default_creator_style_id": "style_11",
+  "shared_rulebooks": {
+    "animation_sfx_pairs": "assets/style_spectrum/animation_sfx_pairs.json",
+    "sfx_intent_taxonomy": "assets/style_spectrum/sfx_intent_taxonomy.json",
+    "typography_cover_rules": "assets/style_spectrum/typography_cover_rules.json"
+  },
+  "archetypes": [
+    {
+      "archetype_id": "arch_01_tech_ui_console",
+      "name": "暗黑科技 / AI 工作流控制台风",
+      "best_for": "AI 工具测评、Agent 工作流演示、SaaS 产品教程、极客硬核拆解",
+      "color_signature": "暗黑低亮度基底 (Y=36~84) + 琥珀金/科技蓝强调色 + 高对比卡片边框",
+      "rhythm_signature": "顶部章节步骤条常驻 + 画面内部 UI/卡片高频切换 + 强节拍/事件对齐 (60%~90%)",
+      "subtitle_signature": "克制小号居中底字 (36~46px)，重在让渡主视觉区给界面与卡片演示",
+      "member_styles": [
+        "style_01",
+        "style_09",
+        "style_10",
+        "style_19"
+      ],
+      "count": 4
+    },
+    {
+      "archetype_id": "arch_02_high_contrast_story",
+      "name": "强反差财经 / 深度人物叙事拼贴风",
+      "best_for": "商业案例揭秘、创始人深度访谈、剪辑思维干货、高信息量长视频",
+      "color_signature": "中性电影对比调或暖人物肤色 + 亮黄/翠绿/报刊米白强视觉冲击块",
+      "rhythm_signature": "高速切镜 (med 1.25s~2.20s，全片 118~290 镜) + 高频音效推动 (63~90 SFX/min)",
+      "subtitle_signature": "常规底部小字兜底 + 情绪/数字爆点处全屏或半屏巨型花字/色块炸裂",
+      "member_styles": [
+        "style_03",
+        "style_15",
+        "style_16",
+        "style_24"
+      ],
+      "count": 4
+    },
+    {
+      "archetype_id": "arch_03_editorial_matte_depth",
+      "name": "高级感杂志排版 / 人物前景遮罩风",
+      "best_for": "审美/设计评论、个人账号方法论教学、Notion/极简白底知识拆解",
+      "color_signature": "极净极简白底或深红/书墙反差色 + 少而精的无衬线黑体层级",
+      "rhythm_signature": "前 3 秒用人物遮罩大字或实物定格瞬间抓眼，中段结构化清单与快切案例交替",
+      "subtitle_signature": "干净双语或粗黑体无底框排版，字距行距克制，严控花哨字体数量 ≤2 种",
+      "member_styles": [
+        "style_04",
+        "style_11",
+        "style_12",
+        "style_18",
+        "style_22"
+      ],
+      "count": 5
+    },
+    {
+      "archetype_id": "arch_04_punch_talking_head",
+      "name": "高密口播卡点 / 干货大字冲击风",
+      "best_for": "创始人认知口播、实体商家/建材家居老板本人出镜、认知颠覆与常见顾虑科普",
+      "color_signature": "暖肤色高透或暖琥珀书桌调 + 亮黄(#FFD54F)/珊瑚红强反差重点高亮",
+      "rhythm_signature": "口播句间紧剪 + 景别推拉跳剪 + 卡片弹窗音效卡点 (对齐率 79%~92%)",
+      "subtitle_signature": "大号粗黑体 (52~76px) + 整句/半句亮黄变色放大，首帧高信息密度大字封面",
+      "member_styles": [
+        "style_02",
+        "style_07",
+        "style_14",
+        "style_17",
+        "style_21"
+      ],
+      "count": 5
+    },
+    {
+      "archetype_id": "arch_05_cinema_slow_space",
+      "name": "电影感空间漫游 / 人文宋体金句风",
+      "best_for": "高端室内设计/建筑展厅实拍、心理学/哲学金句、深度真实生活随拍访谈",
+      "color_signature": "暖木质感色温或冷青电影灰调，拒绝廉价高饱和滤镜",
+      "rhythm_signature": "尊重呼吸感与空间尺度（空镜缓推或随拍微跳剪），少音效或零花字干扰",
+      "subtitle_signature": "思源宋体 (SourceHanSerifCN) 或极简细黑投影，呈现杂志书卷气与高级克制感",
+      "member_styles": [
+        "style_06",
+        "style_08",
+        "style_13",
+        "style_20",
+        "style_23"
+      ],
+      "count": 5
+    },
+    {
+      "archetype_id": "arch_06_paper_stopmotion",
+      "name": "纸张拼贴定格 / 工程图解科普风",
+      "best_for": "收纳改造、家居尺寸科普、产品结构拆解、强动手感实物教程",
+      "color_signature": "低饱和褶皱白纸底纹 (sat=9.1%) + 暖木纹理 + 红线尺寸标尺",
+      "rhythm_signature": "前 3 秒手部模型定格 3 连切，全片依靠纸片元件位移与定格帧节奏驱动",
+      "subtitle_signature": "底部极简白字黑描边，画面主体留给纸雕模型与红色尺寸标注线",
+      "member_styles": [
+        "style_05"
+      ],
+      "count": 1
+    }
+  ],
+  "styles": [
+    {
+      "style_id": "style_01",
+      "index": 1,
+      "style_name_cn": "深色控制台界面 · 工具与流程演示风",
+      "archetype_id": "arch_01_tech_ui_console",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "AI工具演示",
+        "软件教程",
+        "代码图解",
+        "流程拆解"
+      ],
+      "source_filename": "style_01_preset",
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "orientation": "portrait_9_16",
+        "aspect_ratio": "9:16",
+        "fps": 30.0,
+        "nb_frames": 4498,
+        "duration_sec": 149.952,
+        "file_size_mb": 13.45,
+        "has_audio": true,
+        "audio_sample_rate": 48000,
+        "aspect": "9:16"
+      },
+      "shot_distribution": {
+        "total_frames_analyzed": 4498,
+        "total_shots": 16,
+        "hard_cuts": 8,
+        "jump_or_punch_cuts": 7,
+        "dissolve_or_wipe_transitions": 36,
+        "cuts_per_min": 6.0,
+        "transitions_per_min": 20.41,
+        "first_3s_cut_times_sec": [],
+        "min_sec": 1.0,
+        "p25_sec": 2.408,
+        "median_sec": 2.4,
+        "mean_sec": 9.371,
+        "p75_sec": 13.317,
+        "p90_sec": 21.017,
+        "max_sec": 36.467,
+        "pct_under_1s": 0.0,
+        "pct_1s_to_2_5s": 25.0,
+        "pct_over_2_5s": 75.0,
+        "aroll_median_sec": 2.4,
+        "broll_coverage_ratio": 0.45
+      },
+      "beat_alignment": {
+        "estimated_bpm": 112.0,
+        "beat_strength_score": 0.186,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 13.3,
+        "cut_event_align_1f_pct": 26.7,
+        "cut_event_align_3f_pct": 53.3,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 0
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -12.6,
+        "loudness_range_lu": 3.1,
+        "true_peak_dbtp": 1.1,
+        "silence_count": 2,
+        "mean_pause_sec": 0.173,
+        "sfx_transient_count": 149,
+        "sfx_per_min_measured": 59.62,
+        "sfx_per_min_target": 60
+      },
+      "subtitle_spec": {
+        "font_family": "Alimama ShuHeiTi",
+        "font_candidates": [
+          "AlimamaShuHeiTi-Bold.otf",
+          "SmileySans-Oblique.ttf",
+          "SourceHanSerifCN-Bold.otf"
+        ],
+        "font_weight": "Medium",
+        "bilingual": true,
+        "font_size_1080p_px": 40,
+        "english_font_size_px": 22,
+        "keyword_scale": 1.1,
+        "primary_color": "#FBFAEE",
+        "keyword_color": "#D2BB8C",
+        "stroke_color": "#0D0C0D",
+        "stroke_width": 2,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.76,
+        "animation": "fade_slide_up",
+        "punct_stripped": false,
+        "measured_y_center_ratio": 0.638,
+        "measured_animation_raw": "smooth_pop_or_fade",
+        "safe_y_px_1080x1920": 1459,
+        "safe_y_px_1920x1080": 864,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640,
+        "max_chars_per_line": 10
+      },
+      "color_and_lut": {
+        "y_mean_255": 43.7,
+        "y_p05_255": 8.3,
+        "y_p50_255": 21.6,
+        "y_p95_255": 152.2,
+        "dynamic_range_255": 143.8,
+        "dark_ratio_pct": 78.0,
+        "bright_ratio_pct": 6.2,
+        "sat_mean_pct": 20.5,
+        "warmth_index": 6.86,
+        "tone_mood": "深沉低饱和质感调",
+        "shadow_rgb": [
+          19.1,
+          16.6,
+          16.3
+        ],
+        "midtone_rgb": [
+          139.4,
+          113.7,
+          105.6
+        ],
+        "highlight_rgb": [
+          232.9,
+          230.0,
+          222.7
+        ],
+        "top5_palette_hex": [
+          "#0D0C0D",
+          "#F3F2EF",
+          "#2D2B2C",
+          "#504E4D",
+          "#73726E"
+        ],
+        "lut_file": "style_01.cube",
+        "lut_size": 17,
+        "contrast_gain": 1.24,
+        "sat_scale": 0.76,
+        "shadow_tint_rgb": [
+          0.0051,
+          -0.0013,
+          -0.0021
+        ],
+        "highlight_tint_rgb": [
+          0.0061,
+          -0.0002,
+          -0.0159
+        ],
+        "css_filter_approx": "brightness(0.934) contrast(1.24) saturate(0.76) sepia(0.057)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_01.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "深黑框暗窗 0.2s 渐亮开场 → 0.65s 推至半身口播并顶部浮现主题白字 → 1.55s 展开金黄双行重点大字 → 2.65s 切入画中画界面或流程演示",
+        "hook_formula": "开篇悬念预览 + 干货合集指引",
+        "first_frame_density": "中等偏高（拟物暗色控制台边框 + 顶部进度栏 + 主讲人主体）",
+        "first_3s_cuts_count": 2
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "复古胶片齿孔放映控制台",
+        "grid_desc": "深黑底色嵌双侧胶片齿孔，顶部常驻章节胶囊进度条，左侧场次数字，右侧速度表盘，片尾弹清晰评价卡",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "金黄金属渐变大字 + 胶片黄黑胶囊状态标签"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "每 15-20 秒切换一个章节阶段（01 → 02 → 03），内部画中画搭配流畅节奏演示与卡点反馈",
+        "transitions": [
+          "暗场淡入",
+          "胶片滚动切场",
+          "弹窗意见卡滑入"
+        ],
+        "elements": [
+          "胶片齿孔边框",
+          "胶囊场次进度条",
+          "圆环倒计时速度表",
+          "白底映后意见卡"
+        ],
+        "sfx_per_min_target": 60,
+        "visual_per_min_target": 12
+      },
+      "assets": {
+        "lut_cube": "luts/style_01.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "broll_overlay_ratio_target": 0.45,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 2.83,
+        "intro_fade_out_sec": 0.57,
+        "main_bgm_gain_db": -11.0,
+        "main_fade_in_sec": 0.57,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF4C2C",
+        "flank_color": "#FFE28A",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFD637",
+        "stroke_color": "#000000",
+        "borderless": false
+      },
+      "plain_cn_pitch": "深色清爽界面配顶部步骤条和键盘打字声，适合软件操作、工具演示和流程图解。",
+      "commercial_safe_font": "AlimamaShuHeiTi-Bold.otf",
+      "whitebox_source": {
+        "project_name": "style_01_preset",
+        "is_whitebox_jianying": false,
+        "rulebook_injected": true,
+        "canvas": "1080x1920"
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {},
+        "persistent_top_bar": true,
+        "quote_citation_card": false,
+        "giant_impact_count": 2,
+        "capsule_bg_subtitle": true,
+        "black_polaroid_frame": false,
+        "pip_mode": "corner_circle_evidence_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "pip_composition_spec": {
+        "mode": "corner_circle_evidence_pip",
+        "window_bbox": {
+          "x": 692,
+          "y": 236,
+          "w": 288,
+          "h": 288
+        },
+        "mask_shape": "circle",
+        "border_hex": "#38BDF8",
+        "border_width": 5,
+        "tag_text": "实操画面",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 130,
+        "fg_hex": "#38BDF8",
+        "accent_hex": "#FFF589",
+        "stroke_hex": "#0B0F19",
+        "stroke_width": 9,
+        "tag_label": "核心拆解"
+      }
+    },
+    {
+      "style_id": "style_02",
+      "index": 2,
+      "style_name_cn": "极速跳剪避坑 · 暗灰底框荧光高亮风",
+      "archetype_id": "arch_04_punch_talking_head",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "干货口播",
+        "避坑拆解",
+        "工厂老板账号",
+        "知识变现"
+      ],
+      "plain_cn_pitch": "一秒一镜快节奏跳剪，配半透明深灰底框和醒目荧光黄绿重点字，适合三十秒避坑干货口播。",
+      "source_filename": "style_02_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Bold.otf",
+      "source_jianying_font": "思源宋体-Bold",
+      "whitebox_source": {
+        "project_name": "style_02_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 12,
+        "duration_sec": 29.47,
+        "keyframe_per_min": 0.0,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 3,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "镜面": 1,
+          "矩形": 2
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 3,
+        "capsule_bg_subtitle": true,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "dual_rect_grid_pip",
+        "giant_mode": "giant_dual_clash"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 29.47,
+        "benchmark_source": "builtin_preset_style_02"
+      },
+      "shot_distribution": {
+        "total_shots": 29,
+        "hard_cuts": 25,
+        "jump_cuts": 23,
+        "broll_overlays": 4,
+        "median_sec": 1.13,
+        "aroll_median_sec": 1.13,
+        "broll_coverage_ratio": 0.112,
+        "fast_cuts_under_1s_ratio": 0.28
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 40.7,
+        "sfx_per_min_target": 40.7,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "回忆-刷一下",
+          "纸张抖动声",
+          "打字（字幕专用）"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN",
+        "font_candidates": [
+          "SourceHanSerifCN-Bold.otf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SmileySans-Oblique.ttf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 58,
+        "keyword_scale": 1.12,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#BCFF00",
+        "stroke_color": "#000000",
+        "stroke_width": 3,
+        "bg_box_color": "#1F2421CC",
+        "bg_radius": 16,
+        "safe_y_ratio": 0.76,
+        "animation": "loop:弹幕滚动",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.76,
+        "measured_animation_raw": "loop:弹幕滚动/in:向右集合/in:开幕",
+        "safe_y_px_1080x1920": 1459,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 13,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 76.5,
+        "y_p05_255": 11.5,
+        "y_p50_255": 76.5,
+        "y_p95_255": 144.5,
+        "dynamic_range_255": 168.9,
+        "dark_ratio_pct": 53.5,
+        "bright_ratio_pct": 8.3,
+        "sat_mean_pct": 28.5,
+        "warmth_index": 15.4,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          76.5,
+          76.5,
+          76.5
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#3F4A37",
+          "#151A12",
+          "#21261F",
+          "#E0CEA1",
+          "#31302D"
+        ],
+        "lut_file": "style_02.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.129,
+        "sat_scale": 1.04,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.957) contrast(1.129) saturate(1.04)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_02.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(回忆-刷一下) + 高反差核心词(#BCFF00)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 1.58
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "极速跳剪避坑 · 暗灰底框荧光高亮风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（top_giant_bottom_sub），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #BCFF00 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "一秒一镜快节奏跳剪，配半透明深灰底框和醒目荧光黄绿重点字，适合三十秒避坑干货口播。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x3",
+          "蒙版:镜面x1",
+          "胶囊底框字幕"
+        ],
+        "sfx_per_min_target": 41,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.11
+      },
+      "assets": {
+        "lut_cube": "luts/style_02.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 13,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.11,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#BCFF00",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "dual_rect_grid_pip",
+        "window_bbox": {
+          "x": 84,
+          "y": 238,
+          "w": 912,
+          "h": 440
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#BCFF00",
+        "border_width": 4,
+        "tag_text": "对比直击",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_dual_clash",
+        "font_size_px": 134,
+        "fg_hex": "#BCFF00",
+        "accent_hex": "#FF2438",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "避坑真相"
+      }
+    },
+    {
+      "style_id": "style_03",
+      "index": 3,
+      "style_name_cn": "暗调深度长口播 · 顶栏常驻金句对比风",
+      "archetype_id": "arch_02_high_contrast_story",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "深度长口播",
+        "认知拆解",
+        "观点对比",
+        "商业复盘"
+      ],
+      "plain_cn_pitch": "沉稳暗调背景，顶部全程挂着主题小标题，配合大号双引号金句和左右对比词，适合一到两分钟深度观点口播。",
+      "source_filename": "style_03_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Heavy.otf",
+      "source_jianying_font": "FZCuJinLJW / 特黑体-思源黑体1号",
+      "whitebox_source": {
+        "project_name": "style_03_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 16,
+        "duration_sec": 126.87,
+        "keyframe_per_min": 20.8,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 6,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "线性": 2,
+          "圆形": 2,
+          "钢笔": 1
+        },
+        "persistent_top_bar": true,
+        "quote_citation_card": true,
+        "giant_impact_count": 10,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "linear_split_feather_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 126.87,
+        "benchmark_source": "builtin_preset_style_03"
+      },
+      "shot_distribution": {
+        "total_shots": 55,
+        "hard_cuts": 49,
+        "jump_cuts": 47,
+        "broll_overlays": 6,
+        "median_sec": 2.63,
+        "aroll_median_sec": 2.63,
+        "broll_coverage_ratio": 0.097,
+        "fast_cuts_under_1s_ratio": 0.143
+      },
+      "beat_alignment": {
+        "estimated_bpm": 92.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 25.1,
+        "sfx_per_min_target": 25.1,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "“呼”2",
+          "一滴水滴声",
+          "高音闪光 (3)"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN Heavy",
+        "font_candidates": [
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFF589",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.76,
+        "animation": "in:冰雪飘动",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.76,
+        "measured_animation_raw": "in:冰雪飘动/in:逐字显影/in:向上滑动",
+        "safe_y_px_1080x1920": 1459,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 32.9,
+        "y_p05_255": 8.0,
+        "y_p50_255": 32.9,
+        "y_p95_255": 100.9,
+        "dynamic_range_255": 78.5,
+        "dark_ratio_pct": 85.5,
+        "bright_ratio_pct": 2.2,
+        "sat_mean_pct": 40.1,
+        "warmth_index": 28.7,
+        "tone_mood": "沉稳暗调高反差",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          32.9,
+          32.9,
+          32.9
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#000000",
+          "#0F0909",
+          "#562423",
+          "#280A0B",
+          "#421616"
+        ],
+        "lut_file": "style_03.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.04,
+        "sat_scale": 1.11,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.921) contrast(1.04) saturate(1.11)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_03.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 3 次切镜 + 0ms 咬合入场音效(“呼”2) + 高反差核心词(#FFF589)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 3,
+        "hook_intro_sec": 3.2
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "暗调深度长口播 · 顶栏常驻金句对比风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（top_giant_bottom_sub），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFF589 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "沉稳暗调背景，顶部全程挂着主题小标题，配合大号双引号金句和左右对比词，适合一到两分钟深度观点口播。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x6",
+          "蒙版:线性x2/圆形x2",
+          "顶部常驻标题栏",
+          "巨字冲击x10",
+          "金句引语卡"
+        ],
+        "sfx_per_min_target": 25,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.1
+      },
+      "assets": {
+        "lut_cube": "luts/style_03.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.1,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFF589",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": true,
+        "quote_citation_card": true
+      },
+      "pip_composition_spec": {
+        "mode": "linear_split_feather_pip",
+        "window_bbox": {
+          "x": 0,
+          "y": 140,
+          "w": 1080,
+          "h": 680
+        },
+        "book_card_bbox": {
+          "x": 150,
+          "y": 248,
+          "w": 780,
+          "h": 440
+        },
+        "mask_shape": "linear_feather",
+        "border_hex": "#FFF589",
+        "border_width": 3,
+        "tag_text": "深度例证",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 146,
+        "fg_hex": "#FFF589",
+        "accent_hex": "#FF4D4F",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "深度洞察"
+      }
+    },
+    {
+      "style_id": "style_04",
+      "index": 4,
+      "style_name_cn": "清冷奶油高光 · 精致主理人慢叙事风",
+      "archetype_id": "arch_03_editorial_matte_depth",
+      "recommended_track": "store",
+      "domain_tags": [
+        "美业护肤",
+        "轻医美",
+        "服装买手",
+        "生活美学门店"
+      ],
+      "plain_cn_pitch": "画面干净透亮带微冷奶油质感，采用粗宋体配柔和浅黄重点词，适合美业、护肤、女装等讲究审美的门店主理人。",
+      "source_filename": "style_04_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Heavy.otf",
+      "source_jianying_font": "SourceHanSerifCN-Heavy",
+      "whitebox_source": {
+        "project_name": "style_04_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 9,
+        "duration_sec": 19.5,
+        "keyframe_per_min": 86.2,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 1,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "矩形": 2
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 4,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "black_polaroid_frame_pip",
+        "giant_mode": "giant_vertical_seal"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 19.5,
+        "benchmark_source": "builtin_preset_style_04"
+      },
+      "shot_distribution": {
+        "total_shots": 8,
+        "hard_cuts": 6,
+        "jump_cuts": 4,
+        "broll_overlays": 2,
+        "median_sec": 3.6,
+        "aroll_median_sec": 3.6,
+        "broll_coverage_ratio": 0.226,
+        "fast_cuts_under_1s_ratio": 0.167
+      },
+      "beat_alignment": {
+        "estimated_bpm": 92.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 40.0,
+        "sfx_per_min_target": 40.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "回忆-刷一下",
+          "纸张抖动声",
+          "诡异的滴水声"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN Heavy",
+        "font_candidates": [
+          "SourceHanSerifCN-Heavy.otf",
+          "SourceHanSerifCN-Bold.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFF589",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.695,
+        "animation": "in:缩小",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.695,
+        "measured_animation_raw": "in:缩小/in:开幕/in:收拢",
+        "safe_y_px_1080x1920": 1334,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 205.6,
+        "y_p05_255": 140.6,
+        "y_p50_255": 205.6,
+        "y_p95_255": 248.0,
+        "dynamic_range_255": 85.1,
+        "dark_ratio_pct": 2.3,
+        "bright_ratio_pct": 67.6,
+        "sat_mean_pct": 13.6,
+        "warmth_index": -22.0,
+        "tone_mood": "清亮高调奶油感",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          205.6,
+          205.6,
+          205.6
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#CFE1F7",
+          "#B9CAE0",
+          "#DBEBFC",
+          "#9A979D",
+          "#F8FBFC"
+        ],
+        "lut_file": "style_04.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.045,
+        "sat_scale": 0.94,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.065) contrast(1.045) saturate(0.94)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_04.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(回忆-刷一下) + 高反差核心词(#FFF589)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 3.2
+      },
+      "title_cover_layout": {
+        "layout_id": "left_right_split",
+        "layout_name": "清冷奶油高光 · 精致主理人慢叙事风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（left_right_split），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFF589 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "画面干净透亮带微冷奶油质感，采用粗宋体配柔和浅黄重点词，适合美业、护肤、女装等讲究审美的门店主理人。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x1",
+          "蒙版:矩形x2",
+          "巨字冲击x4",
+          "高频关键帧推拉"
+        ],
+        "sfx_per_min_target": 40,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.23
+      },
+      "assets": {
+        "lut_cube": "luts/style_04.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.23,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFF589",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "black_polaroid_frame_pip",
+        "frame_bg_hex": "#1B1917",
+        "window_bbox": {
+          "x": 72,
+          "y": 252,
+          "w": 936,
+          "h": 1220
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#E6DEC8",
+        "border_width": 4,
+        "tag_text": "美学实景",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_vertical_seal",
+        "font_size_px": 134,
+        "fg_hex": "#FFFFFF",
+        "accent_hex": "#E2B887",
+        "stroke_hex": "#1E1B18",
+        "stroke_width": 8,
+        "tag_label": "主理人手记"
+      }
+    },
+    {
+      "style_id": "style_05",
+      "index": 5,
+      "style_name_cn": "牛皮纸拼贴图解 · 工艺结构拆解风",
+      "archetype_id": "arch_06_paper_stopmotion",
+      "recommended_track": "store",
+      "domain_tags": [
+        "家装工艺",
+        "结构图解",
+        "收纳设计",
+        "产品拆解"
+      ],
+      "source_filename": "style_05_preset",
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "orientation": "portrait_9_16",
+        "aspect_ratio": "9:16",
+        "fps": 30.0,
+        "nb_frames": 4076,
+        "duration_sec": 169.852,
+        "file_size_mb": 5.23,
+        "has_audio": true,
+        "audio_sample_rate": 44100,
+        "aspect": "9:16"
+      },
+      "shot_distribution": {
+        "total_frames_analyzed": 4076,
+        "total_shots": 11,
+        "hard_cuts": 5,
+        "jump_or_punch_cuts": 5,
+        "dissolve_or_wipe_transitions": 10,
+        "cuts_per_min": 3.53,
+        "transitions_per_min": 7.06,
+        "first_3s_cut_times_sec": [
+          0.167,
+          0.417,
+          1.917
+        ],
+        "min_sec": 0.167,
+        "p25_sec": 0.604,
+        "median_sec": 1.65,
+        "mean_sec": 15.439,
+        "p75_sec": 10.417,
+        "p90_sec": 52.625,
+        "max_sec": 90.25,
+        "pct_under_1s": 36.4,
+        "pct_1s_to_2_5s": 27.3,
+        "pct_over_2_5s": 36.4,
+        "aroll_median_sec": 1.65,
+        "broll_coverage_ratio": 0.52
+      },
+      "beat_alignment": {
+        "estimated_bpm": 104.0,
+        "beat_strength_score": 0.007,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 30.0,
+        "cut_event_align_1f_pct": 30.0,
+        "cut_event_align_3f_pct": 80.0,
+        "j_cut_detected_pct": 20.0,
+        "j_cut_median_lead_frames": 2.1,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -10.9,
+        "loudness_range_lu": 1.9,
+        "true_peak_dbtp": -0.3,
+        "silence_count": 1,
+        "mean_pause_sec": 0.415,
+        "sfx_transient_count": 221,
+        "sfx_per_min_measured": 78.07,
+        "sfx_per_min_target": 78
+      },
+      "subtitle_spec": {
+        "font_family": "Alimama ShuHeiTi",
+        "font_candidates": [
+          "AlimamaShuHeiTi-Bold.otf",
+          "SmileySans-Oblique.ttf",
+          "SourceHanSerifCN-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 48,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFD54F",
+        "stroke_color": "#1E1E1E",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.76,
+        "animation": "fade_slide_up",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.787,
+        "measured_animation_raw": "smooth_pop_or_fade",
+        "safe_y_px_1080x1920": 1459,
+        "safe_y_px_1920x1080": 950,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640,
+        "max_chars_per_line": 10
+      },
+      "color_and_lut": {
+        "y_mean_255": 185.0,
+        "y_p05_255": 91.9,
+        "y_p50_255": 202.4,
+        "y_p95_255": 214.9,
+        "dynamic_range_255": 123.0,
+        "dark_ratio_pct": 4.3,
+        "bright_ratio_pct": 57.4,
+        "sat_mean_pct": 9.1,
+        "warmth_index": 12.51,
+        "tone_mood": "暖色高饱和门店/人物调",
+        "shadow_rgb": [
+          50.3,
+          36.6,
+          26.3
+        ],
+        "midtone_rgb": [
+          166.0,
+          128.6,
+          101.1
+        ],
+        "highlight_rgb": [
+          210.9,
+          210.2,
+          209.9
+        ],
+        "top5_palette_hex": [
+          "#D2D2D1",
+          "#030302",
+          "#4E3A28",
+          "#F6F6F6",
+          "#A87950"
+        ],
+        "lut_file": "style_05.cube",
+        "lut_size": 17,
+        "contrast_gain": 1.24,
+        "sat_scale": 0.76,
+        "shadow_tint_rgb": [
+          0.0294,
+          -0.0055,
+          -0.0318
+        ],
+        "highlight_tint_rgb": [
+          0.0012,
+          -0.0003,
+          -0.0009
+        ],
+        "css_filter_approx": "brightness(1.066) contrast(1.24) saturate(0.76) sepia(0.104)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_05.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "0.0s 浅灰褶皱纸背景 + 立体结构示意图 + 红白黑边大字标题 + 红色工程尺寸标注 → 0.65s~1.55s 切入实拍人手交互或细节展示 → 2.65s 制造对比反差画面",
+        "hook_formula": "视觉结构模型奇观 + 具体尺寸/核心顾虑问题具象化",
+        "first_frame_density": "极高（皱纹纸背景 + 结构图解 + 红色尺寸线 + 贴纸标注）",
+        "first_3s_cuts_count": 2
+      },
+      "title_cover_layout": {
+        "layout_id": "left_right_split",
+        "layout_name": "褶皱纸面立体模型 + 红色工程标注线",
+        "grid_desc": "浅灰褶皱纸纹贯穿全片，顶部粗黑/红底白描边大字标题，左侧标尺红字标注关键尺寸参数，底部极简白字字幕",
+        "main_sub_ratio": 1.45,
+        "highlight_style": "红字工程尺寸标注线 + 立体纸模抽拉动效"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "前 3 秒手部动作与模型展示连切 3 次；中段依靠结构拆解与红色尺寸线动态延展支撑深度科普",
+        "transitions": [
+          "实物手势定格切",
+          "纸片滑动位移"
+        ],
+        "elements": [
+          "皱纹纸全局底纹",
+          "红色CAD尺寸标尺",
+          "3D等轴测柜体图",
+          "卡通小人交互"
+        ],
+        "sfx_per_min_target": 78,
+        "visual_per_min_target": 15
+      },
+      "assets": {
+        "lut_cube": "luts/style_05.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "broll_overlay_ratio_target": 0.52,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 2.83,
+        "intro_fade_out_sec": 0.57,
+        "main_bgm_gain_db": -11.0,
+        "main_fade_in_sec": 0.57,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF4C2C",
+        "flank_color": "#FFE28A",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFD637",
+        "stroke_color": "#000000",
+        "borderless": false
+      },
+      "plain_cn_pitch": "温暖牛皮纸质感配清脆翻纸声和图文标注卡片，适合把复杂的装修工艺、产品用料或尺寸结构讲得一目了然。",
+      "commercial_safe_font": "AlimamaShuHeiTi-Bold.otf",
+      "whitebox_source": {
+        "project_name": "style_05_preset",
+        "is_whitebox_jianying": false,
+        "rulebook_injected": true,
+        "canvas": "1080x1920"
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {},
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 2,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pip_mode": "white_outline_cutout_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "pip_composition_spec": {
+        "mode": "white_outline_cutout_pip",
+        "window_bbox": {
+          "x": 664,
+          "y": 236,
+          "w": 320,
+          "h": 412
+        },
+        "mask_shape": "white_outline_cutout",
+        "border_hex": "#FFF8E7",
+        "border_width": 8,
+        "tag_text": "结构特写",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 130,
+        "fg_hex": "#FFE066",
+        "accent_hex": "#FF6B35",
+        "stroke_hex": "#1A1412",
+        "stroke_width": 9,
+        "tag_label": "工艺内幕"
+      }
+    },
+    {
+      "style_id": "style_06",
+      "index": 6,
+      "style_name_cn": "黑底竖相框留白 · 顶部手写金句治愈风",
+      "archetype_id": "arch_05_cinema_slow_space",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "女性成长",
+        "情感共鸣",
+        "日常随拍",
+        "品牌温度故事"
+      ],
+      "plain_cn_pitch": "四周黑底留白把画面框成拍立得竖相框，上方常驻温暖金句、下方配小号双语字幕，适合情感、成长与治愈系随拍。",
+      "source_filename": "style_06_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Bold.otf",
+      "source_jianying_font": "喜鹊古字典体 / 思源宋体-Bold",
+      "whitebox_source": {
+        "project_name": "style_06_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 8,
+        "duration_sec": 21.67,
+        "keyframe_per_min": 0.0,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "矩形": 2
+        },
+        "persistent_top_bar": true,
+        "quote_citation_card": false,
+        "giant_impact_count": 0,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": true,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "black_polaroid_frame_pip",
+        "giant_mode": "giant_vertical_seal"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 21.67,
+        "benchmark_source": "builtin_preset_style_06"
+      },
+      "shot_distribution": {
+        "total_shots": 5,
+        "hard_cuts": 4,
+        "jump_cuts": 2,
+        "broll_overlays": 1,
+        "median_sec": 3.13,
+        "aroll_median_sec": 3.13,
+        "broll_coverage_ratio": 0.998,
+        "fast_cuts_under_1s_ratio": 0.25
+      },
+      "beat_alignment": {
+        "estimated_bpm": 92.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 36.0,
+        "sfx_per_min_target": 36.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "纸张抖动声",
+          "气泡弹出",
+          "星星闪耀转场声"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN",
+        "font_candidates": [
+          "SourceHanSerifCN-Bold.otf",
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": true,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFF589",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.693,
+        "animation": "in:逐字显影",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.693,
+        "measured_animation_raw": "in:逐字显影/in:轻微放大/in:随机上升",
+        "safe_y_px_1080x1920": 1331,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 9,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 46.5,
+        "y_p05_255": 8.0,
+        "y_p50_255": 46.5,
+        "y_p95_255": 114.5,
+        "dynamic_range_255": 171.8,
+        "dark_ratio_pct": 70.3,
+        "bright_ratio_pct": 2.1,
+        "sat_mean_pct": 6.5,
+        "warmth_index": 7.3,
+        "tone_mood": "沉稳暗调高反差",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          46.5,
+          46.5,
+          46.5
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#000000",
+          "#B19C8E",
+          "#C3BCB3",
+          "#524B44",
+          "#010001"
+        ],
+        "lut_file": "style_06.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.132,
+        "sat_scale": 0.89,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.932) contrast(1.132) saturate(0.89)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_06.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(纸张抖动声) + 高反差核心词(#FFF589)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 3.2
+      },
+      "title_cover_layout": {
+        "layout_id": "four_corner_editorial",
+        "layout_name": "黑底竖相框留白 · 顶部手写金句治愈风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（four_corner_editorial），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFF589 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "四周黑底留白把画面框成拍立得竖相框，上方常驻温暖金句、下方配小号双语字幕，适合情感、成长与治愈系随拍。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "蒙版:矩形x2",
+          "顶部常驻标题栏",
+          "高B-roll(99%)"
+        ],
+        "sfx_per_min_target": 36,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 1.0
+      },
+      "assets": {
+        "lut_cube": "luts/style_06.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 9,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 1.0,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFF589",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": true,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "black_polaroid_frame_pip",
+        "frame_bg_hex": "#07090D",
+        "window_bbox": {
+          "x": 74,
+          "y": 284,
+          "w": 932,
+          "h": 1190
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#EAD4A6",
+        "border_width": 3,
+        "tag_text": "慢调纪实",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_vertical_seal",
+        "font_size_px": 128,
+        "fg_hex": "#FFF589",
+        "accent_hex": "#FFFFFF",
+        "stroke_hex": "#000000",
+        "stroke_width": 8,
+        "tag_label": "内心独白"
+      }
+    },
+    {
+      "style_id": "style_07",
+      "index": 7,
+      "style_name_cn": "人像白边贴纸抠像 · 高密实景避坑风",
+      "archetype_id": "arch_04_punch_talking_head",
+      "recommended_track": "store",
+      "domain_tags": [
+        "全屋定制",
+        "家装建材",
+        "实体避坑",
+        "门店展厅"
+      ],
+      "plain_cn_pitch": "主讲人带一圈手绘白边贴在实景画面前，六成以上画面穿插车间或展厅实拍特写，配暖琥珀色大字专门讲透行业避坑。",
+      "source_filename": "style_07_preset",
+      "commercial_safe_font": "AlimamaShuHeiTi-Bold.otf",
+      "source_jianying_font": "DouyinSansBold / Aa研宋",
+      "whitebox_source": {
+        "project_name": "style_07_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 16,
+        "duration_sec": 28.13,
+        "keyframe_per_min": 34.1,
+        "vip_asset_ratio": 0.013
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 4,
+        "white_paper_outline": true,
+        "mask_shapes": {
+          "圆形": 2,
+          "镜面": 3,
+          "线性": 1,
+          "矩形": 1
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 3,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "white_outline_cutout_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 28.13,
+        "benchmark_source": "builtin_preset_style_07"
+      },
+      "shot_distribution": {
+        "total_shots": 30,
+        "hard_cuts": 17,
+        "jump_cuts": 15,
+        "broll_overlays": 13,
+        "median_sec": 1.4,
+        "aroll_median_sec": 1.4,
+        "broll_coverage_ratio": 0.598,
+        "fast_cuts_under_1s_ratio": 0.353
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 42.7,
+        "sfx_per_min_target": 42.7,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "“呼”2",
+          "高音闪光转场",
+          "一声响铃"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Alimama ShuHeiTi",
+        "font_candidates": [
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Bold.otf",
+          "SmileySans-Oblique.ttf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.643,
+        "animation": "in:流光扩散",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.643,
+        "measured_animation_raw": "in:流光扩散/in:轻微放大/in:发光模糊",
+        "safe_y_px_1080x1920": 1235,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 113.2,
+        "y_p05_255": 48.2,
+        "y_p50_255": 113.2,
+        "y_p95_255": 181.2,
+        "dynamic_range_255": 148.9,
+        "dark_ratio_pct": 18.1,
+        "bright_ratio_pct": 8.3,
+        "sat_mean_pct": 16.7,
+        "warmth_index": 15.9,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          113.2,
+          113.2,
+          113.2
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#5D5252",
+          "#3F2F2B",
+          "#C4AEAB",
+          "#6E6565",
+          "#D6CBCC"
+        ],
+        "lut_file": "style_07.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.109,
+        "sat_scale": 0.96,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.988) contrast(1.109) saturate(0.96)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_07.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(“呼”2) + 高反差核心词(#FFBF17)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 1.96
+      },
+      "title_cover_layout": {
+        "layout_id": "jianying_poster_4zone",
+        "layout_name": "人像白边贴纸抠像 · 高密实景避坑风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（jianying_poster_4zone），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFBF17 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "主讲人带一圈手绘白边贴在实景画面前，六成以上画面穿插车间或展厅实拍特写，配暖琥珀色大字专门讲透行业避坑。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x4",
+          "蒙版:镜面x3/圆形x2",
+          "巨字冲击x3",
+          "高B-roll(59%)"
+        ],
+        "sfx_per_min_target": 43,
+        "visual_per_min_target": 24,
+        "broll_overlay_ratio_target": 0.6
+      },
+      "assets": {
+        "lut_cube": "luts/style_07.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.6,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFBF17",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "white_outline_cutout_pip",
+        "window_bbox": {
+          "x": 656,
+          "y": 232,
+          "w": 332,
+          "h": 428
+        },
+        "mask_shape": "white_outline_cutout",
+        "border_hex": "#FFFFFF",
+        "border_width": 9,
+        "tag_text": "人像贴纸解说",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 144,
+        "fg_hex": "#FFBF17",
+        "accent_hex": "#FF2438",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "避坑警告"
+      }
+    },
+    {
+      "style_id": "style_08",
+      "index": 8,
+      "style_name_cn": "毛玻璃虚化画中画 · 圆窗评论与双行巨字对撞风",
+      "archetype_id": "arch_02_high_contrast_story",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "社会热点评论",
+        "影视文化锐评",
+        "商业观点拆解",
+        "行业深度辟谣"
+      ],
+      "plain_cn_pitch": "底层原画面做毛玻璃高斯虚化，中央悬浮圆角竖屏画中画与圆形评论小窗，搭配顶部常驻话题栏、上下双色对撞巨字与大引号金句卡，观点锋利、信息密度极高。",
+      "source_filename": "style_08_preset",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "source_jianying_font": "得意黑",
+      "whitebox_source": {
+        "project_name": "style_08_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 12,
+        "duration_sec": 23.53,
+        "keyframe_per_min": 20.4,
+        "vip_asset_ratio": 0.048
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 1,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 4,
+          "矩形": 1
+        },
+        "persistent_top_bar": true,
+        "quote_citation_card": true,
+        "giant_impact_count": 3,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "blur_bg_center_pip": true,
+        "multi_tag_burst": true,
+        "pip_mode": "blur_bg_center_card_pip",
+        "giant_mode": "giant_dual_clash"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 23.53,
+        "benchmark_source": "builtin_preset_style_08"
+      },
+      "shot_distribution": {
+        "total_shots": 14,
+        "hard_cuts": 14,
+        "jump_cuts": 7,
+        "broll_overlays": 3,
+        "median_sec": 1.48,
+        "aroll_median_sec": 1.45,
+        "broll_coverage_ratio": 0.2,
+        "fast_cuts_under_1s_ratio": 0.29
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.082,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 68.0,
+        "cut_event_align_1f_pct": 94.0,
+        "cut_event_align_3f_pct": 99.0,
+        "j_cut_detected_pct": 21.4,
+        "j_cut_median_lead_frames": 3.0,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 30.6,
+        "sfx_per_min_target": 30.6,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "枪拉栓",
+          "综艺悬疑 不对劲",
+          "亮一下",
+          "打字（字幕专用）"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 62,
+        "keyword_scale": 1.18,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFF589",
+        "stroke_color": "#000000",
+        "stroke_width": 5,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.695,
+        "animation": "in:折叠",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.695,
+        "measured_animation_raw": "in:折叠/in:缩小/in:发光模糊/in:打字光标",
+        "safe_y_px_1080x1920": 1334,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000D8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 11,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 56.6,
+        "y_p05_255": 14.0,
+        "y_p50_255": 56.6,
+        "y_p95_255": 176.0,
+        "dynamic_range_255": 162.0,
+        "dark_ratio_pct": 54.0,
+        "bright_ratio_pct": 6.2,
+        "sat_mean_pct": 45.6,
+        "warmth_index": 9.5,
+        "tone_mood": "电影感冷暗虚化底与高反差暖黄焦点",
+        "shadow_rgb": [
+          22.0,
+          20.0,
+          24.0
+        ],
+        "midtone_rgb": [
+          68.0,
+          58.0,
+          54.0
+        ],
+        "highlight_rgb": [
+          236.0,
+          228.0,
+          208.0
+        ],
+        "top5_palette_hex": [
+          "#181418",
+          "#5A2418",
+          "#FFF589",
+          "#FF1837",
+          "#D8D2C8"
+        ],
+        "lut_file": "style_08.cube",
+        "lut_size": 17,
+        "lut_strength": 0.64,
+        "contrast_gain": 1.12,
+        "sat_scale": 1.06,
+        "shadow_tint_rgb": [
+          -0.02,
+          -0.01,
+          0.02
+        ],
+        "highlight_tint_rgb": [
+          0.03,
+          0.02,
+          -0.01
+        ],
+        "css_filter_approx": "brightness(0.96) contrast(1.12) saturate(1.06)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_08.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒毛玻璃虚化底+中央悬浮竖屏画中画开场，2.37s 切入圆形蒙版画中画并上下对撞砸出 140px 双色巨字，0ms 咬合悬疑音效",
+        "hook_formula": "虚化底悬浮画中画证据卡 + 上下双行巨字对撞 + 顶栏常驻争议话题",
+        "first_frame_density": "极高（毛玻璃虚化底 + 中央悬浮画中画窗 + 顶部常驻栏 + 0帧强描边字幕）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 2.37
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "毛玻璃虚化画中画 · 圆窗评论与双行巨字对撞风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（top_giant_bottom_sub），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.88,
+        "highlight_style": "主色 #FFFFFF + 柠檬黄 #FFF589 + 警示红 #FF1837 + 10px 纯黑重描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "底层画面高斯虚化托底，中央悬浮圆角竖屏画中画与左下圆形评论画中画交替切入，顶部常驻争议话题条，中段三连拉栓弹卡与大引号金句卡，结尾超大巨字一锤定音。",
+        "transitions": [
+          "零缝硬切",
+          "画中画浮窗切入",
+          "圆形蒙版缩放"
+        ],
+        "elements": [
+          "毛玻璃虚化底+中央画中画",
+          "蒙版:圆形x4",
+          "AI抠像x1",
+          "顶部常驻标题栏",
+          "双行对撞巨字x3",
+          "大引号金句引语卡",
+          "三连拉栓弹卡"
+        ],
+        "sfx_per_min_target": 31,
+        "visual_per_min_target": 43,
+        "broll_overlay_ratio_target": 0.2
+      },
+      "assets": {
+        "lut_cube": "luts/style_08.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 11,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.2,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFF589",
+        "flank_color": "#FF1837",
+        "stamp_color": "#FF1837",
+        "end_card_color": "#FFF589",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": true,
+        "quote_citation_card": true,
+        "multi_tag_burst": true
+      },
+      "pip_composition_spec": {
+        "mode": "blur_bg_center_card_pip",
+        "window_bbox": {
+          "x": 154,
+          "y": 244,
+          "w": 772,
+          "h": 910
+        },
+        "circle_window_bbox": {
+          "x": 112,
+          "y": 824,
+          "w": 304,
+          "h": 304
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#FFF589",
+        "border_width": 4,
+        "bg_blur_sigma": 22,
+        "tag_text": "热点现场",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_dual_clash",
+        "font_size_px": 142,
+        "fg_hex": "#FFFFFF",
+        "accent_hex": "#FFF589",
+        "danger_hex": "#FF1837",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "深度锐评"
+      }
+    },
+    {
+      "style_id": "style_09",
+      "index": 9,
+      "style_name_cn": "暗黑纪实双格框 · 圆窗主讲与顶栏证据窗普法风",
+      "archetype_id": "arch_01_tech_ui_console",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "律师普法",
+        "热点案件",
+        "维权避坑",
+        "商业纪实"
+      ],
+      "plain_cn_pitch": "纯黑纪实背景搭配上半屏暖金细框双格证据画中画窗，主讲人置于左下/中下圆形头像画中画内，配合鲜红重描边警示巨字与卷宗大引号引语卡，权威感与纪实沉浸感拉满。",
+      "source_filename": "style_09_preset",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "source_jianying_font": "得意黑 / SourceHanSerifCN-Heavy",
+      "whitebox_source": {
+        "project_name": "style_09_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 14,
+        "duration_sec": 42.5,
+        "keyframe_per_min": 11.3,
+        "vip_asset_ratio": 0.05
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 15,
+          "矩形": 6
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "giant_impact_count": 3,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "dark_doc_dual_grid_pip": true,
+        "pip_mode": "dark_doc_circle_avatar_pip",
+        "giant_mode": "giant_dual_clash"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 42.5,
+        "benchmark_source": "builtin_preset_style_09"
+      },
+      "shot_distribution": {
+        "total_shots": 37,
+        "hard_cuts": 27,
+        "jump_cuts": 25,
+        "broll_overlays": 10,
+        "median_sec": 1.5,
+        "aroll_median_sec": 1.5,
+        "broll_coverage_ratio": 0.334,
+        "fast_cuts_under_1s_ratio": 0.259
+      },
+      "beat_alignment": {
+        "estimated_bpm": 108.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 24.0,
+        "sfx_per_min_target": 24.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "打字声",
+          "“呼”2",
+          "一声金属咔哒声"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FF1837",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.669,
+        "animation": "in:渐显",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.669,
+        "measured_animation_raw": "in:渐显/in:向左模糊/in:雪光模糊",
+        "safe_y_px_1080x1920": 1284,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 10.8,
+        "y_p05_255": 8.0,
+        "y_p50_255": 10.8,
+        "y_p95_255": 78.8,
+        "dynamic_range_255": 16.2,
+        "dark_ratio_pct": 93.6,
+        "bright_ratio_pct": 1.1,
+        "sat_mean_pct": 9.6,
+        "warmth_index": 1.9,
+        "tone_mood": "沉稳暗调高反差",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          10.8,
+          10.8,
+          10.8
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#000000",
+          "#342F2B",
+          "#050403",
+          "#A2958A",
+          "#020001"
+        ],
+        "lut_file": "style_09.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.04,
+        "sat_scale": 0.91,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.902) contrast(1.04) saturate(0.91)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_09.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(打字声) + 高反差核心词(#FF1837)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 2.1
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "暗黑纪实双格框 · 圆窗证据弹窗普法风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（top_giant_bottom_sub），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FF1837 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "新闻纪实感黑底细金线分栏，主讲人置于圆形头像窗内，上方展示证据图与鲜红警示词，适合普法、辟谣与案件解读。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "蒙版:圆形x15/矩形x6",
+          "巨字冲击x2",
+          "金句引语卡"
+        ],
+        "sfx_per_min_target": 24,
+        "visual_per_min_target": 30,
+        "broll_overlay_ratio_target": 0.33
+      },
+      "assets": {
+        "lut_cube": "luts/style_09.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.33,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF1837",
+        "flank_color": "#FFBF17",
+        "stamp_color": "#FF1837",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "multi_tag_burst": true
+      },
+      "pip_composition_spec": {
+        "mode": "dark_doc_circle_avatar_pip",
+        "frame_bg_hex": "#05060A",
+        "evidence_bbox": {
+          "x": 74,
+          "y": 224,
+          "w": 932,
+          "h": 508
+        },
+        "avatar_circle_bbox": {
+          "x": 116,
+          "y": 808,
+          "w": 328,
+          "h": 328
+        },
+        "mask_shape": "circle",
+        "border_hex": "#EAD4A6",
+        "border_width": 4,
+        "dual_grid_split": true,
+        "tag_text": "卷宗物证画面",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_dual_clash",
+        "font_size_px": 140,
+        "fg_hex": "#FF1837",
+        "accent_hex": "#FFBF17",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "案情焦点"
+      }
+    },
+    {
+      "style_id": "style_10",
+      "index": 10,
+      "style_name_cn": "高能推拉快切 · 密集抠像弹窗种草风",
+      "archetype_id": "arch_01_tech_ui_console",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "职场规划",
+        "面试干货",
+        "好物测评",
+        "高节奏口播"
+      ],
+      "plain_cn_pitch": "每分钟近两百次画面推拉缩放配密集轻敲音效，过半画面叠加示意图与红金大字，牢牢锁住前三秒防划走。",
+      "source_filename": "style_10_preset",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "source_jianying_font": "知新体 / DINNextW1G-Black",
+      "whitebox_source": {
+        "project_name": "style_10_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 12,
+        "duration_sec": 18.92,
+        "keyframe_per_min": 190.3,
+        "vip_asset_ratio": 0.016
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 8,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "矩形": 5,
+          "圆形": 2,
+          "线性": 1
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 7,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "white_outline_cutout_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 18.92,
+        "benchmark_source": "builtin_preset_style_10"
+      },
+      "shot_distribution": {
+        "total_shots": 25,
+        "hard_cuts": 15,
+        "jump_cuts": 13,
+        "broll_overlays": 10,
+        "median_sec": 1.12,
+        "aroll_median_sec": 1.12,
+        "broll_coverage_ratio": 0.574,
+        "fast_cuts_under_1s_ratio": 0.333
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 47.6,
+        "sfx_per_min_target": 47.6,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "综艺 悬疑 轻敲",
+          "Q弹",
+          "撞击光1"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FF4D4F",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.721,
+        "animation": "in:放大",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.721,
+        "measured_animation_raw": "in:放大/in:滚入/in:向右模糊 II",
+        "safe_y_px_1080x1920": 1384,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 162.9,
+        "y_p05_255": 97.9,
+        "y_p50_255": 162.9,
+        "y_p95_255": 230.9,
+        "dynamic_range_255": 131.3,
+        "dark_ratio_pct": 4.3,
+        "bright_ratio_pct": 24.9,
+        "sat_mean_pct": 11.5,
+        "warmth_index": -1.9,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          162.9,
+          162.9,
+          162.9
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#B7BFC1",
+          "#5C5D56",
+          "#899492",
+          "#C5CED0",
+          "#D9DEE1"
+        ],
+        "lut_file": "style_10.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.091,
+        "sat_scale": 0.92,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.029) contrast(1.091) saturate(0.92)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_10.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(综艺 悬疑 轻敲) + 高反差核心词(#FF4D4F)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 1.57
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "高能推拉快切 · 密集抠像弹窗种草风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（top_giant_bottom_sub），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FF4D4F + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "每分钟近两百次画面推拉缩放配密集轻敲音效，过半画面叠加示意图与红金大字，牢牢锁住前三秒防划走。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x8",
+          "蒙版:矩形x5/圆形x2",
+          "巨字冲击x7",
+          "高B-roll(57%)",
+          "高频关键帧推拉"
+        ],
+        "sfx_per_min_target": 48,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.57
+      },
+      "assets": {
+        "lut_cube": "luts/style_10.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.57,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF4D4F",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "white_outline_cutout_pip",
+        "window_bbox": {
+          "x": 100,
+          "y": 238,
+          "w": 324,
+          "h": 416
+        },
+        "mask_shape": "white_outline_cutout",
+        "border_hex": "#FFE28A",
+        "border_width": 8,
+        "tag_text": "重点抠像",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 146,
+        "fg_hex": "#FFF589",
+        "accent_hex": "#FF2438",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "核心干货"
+      }
+    },
+    {
+      "style_id": "style_11",
+      "index": 11,
+      "style_name_cn": "清亮通透干货 · 胶囊底框与圆窗例证风（个人默认）",
+      "archetype_id": "arch_03_editorial_matte_depth",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "个人账号默认",
+        "知识博主",
+        "咨询顾问",
+        "方法论拆解"
+      ],
+      "plain_cn_pitch": "画面干净明亮不压抑，圆角底框字幕配圆形弹窗例证和双段背景音乐切换，适合绝大多数个人账号日常干货更新。",
+      "source_filename": "style_11_preset",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "source_jianying_font": "得意黑 / Aa研宋",
+      "whitebox_source": {
+        "project_name": "style_11_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 13,
+        "duration_sec": 26.4,
+        "keyframe_per_min": 54.5,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 4,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 7
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "giant_impact_count": 4,
+        "capsule_bg_subtitle": true,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "corner_circle_evidence_pip",
+        "giant_mode": "giant_numeric_trio"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 26.4,
+        "benchmark_source": "builtin_preset_style_11"
+      },
+      "shot_distribution": {
+        "total_shots": 27,
+        "hard_cuts": 19,
+        "jump_cuts": 17,
+        "broll_overlays": 8,
+        "median_sec": 1.32,
+        "aroll_median_sec": 1.32,
+        "broll_coverage_ratio": 0.343,
+        "fast_cuts_under_1s_ratio": 0.316
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "dual_bgm_switch",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 29.5,
+        "sfx_per_min_target": 29.5,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": true,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "“呼”2",
+          "一滴水滴声",
+          "嗖，咻"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "SourceHanSerifCN-Bold.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 58,
+        "keyword_scale": 1.12,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "stroke_width": 3,
+        "bg_box_color": "#1C2426CC",
+        "bg_radius": 16,
+        "safe_y_ratio": 0.695,
+        "animation": "in:向下露出",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.695,
+        "measured_animation_raw": "in:向下露出/in:渐显/in:向右露出",
+        "safe_y_px_1080x1920": 1334,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 182.5,
+        "y_p05_255": 117.5,
+        "y_p50_255": 182.5,
+        "y_p95_255": 248.0,
+        "dynamic_range_255": 97.6,
+        "dark_ratio_pct": 2.5,
+        "bright_ratio_pct": 42.9,
+        "sat_mean_pct": 12.9,
+        "warmth_index": 7.6,
+        "tone_mood": "清亮高调奶油感",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          182.5,
+          182.5,
+          182.5
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#9EB4B8",
+          "#DBDAD1",
+          "#777B6A",
+          "#BCB7AA",
+          "#E3E2D7"
+        ],
+        "lut_file": "style_11.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.058,
+        "sat_scale": 0.93,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.045) contrast(1.058) saturate(0.93)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_11.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 1 次切镜 + 0ms 咬合入场音效(“呼”2) + 高反差核心词(#FFBF17)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 1,
+        "hook_intro_sec": 1.85
+      },
+      "title_cover_layout": {
+        "layout_id": "left_right_split",
+        "layout_name": "清亮通透干货 · 胶囊底框与圆窗例证风（个人默认）",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（left_right_split），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFBF17 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "画面干净明亮不压抑，圆角底框字幕配圆形弹窗例证和双段背景音乐切换，适合绝大多数个人账号日常干货更新。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x4",
+          "蒙版:圆形x7",
+          "巨字冲击x4",
+          "金句引语卡",
+          "双BGM转折",
+          "胶囊底框字幕"
+        ],
+        "sfx_per_min_target": 30,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.34
+      },
+      "assets": {
+        "lut_cube": "luts/style_11.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": true,
+      "broll_overlay_ratio_target": 0.34,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": true,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFBF17",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": false,
+        "persistent_top_bar": false,
+        "quote_citation_card": true
+      },
+      "pip_composition_spec": {
+        "mode": "corner_circle_evidence_pip",
+        "window_bbox": {
+          "x": 684,
+          "y": 234,
+          "w": 296,
+          "h": 296
+        },
+        "mask_shape": "circle",
+        "border_hex": "#FFE28A",
+        "border_width": 5,
+        "tag_text": "圆窗例证",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_numeric_trio",
+        "font_size_px": 138,
+        "fg_hex": "#FFE28A",
+        "accent_hex": "#FF4D4F",
+        "stroke_hex": "#000000",
+        "stroke_width": 9,
+        "tag_label": "关键法则"
+      }
+    },
+    {
+      "style_id": "style_12",
+      "index": 12,
+      "style_name_cn": "极简白底卡片 · 避坑清单与框架可视化风",
+      "archetype_id": "arch_03_editorial_matte_depth",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "效率方法论",
+        "清单盘点",
+        "产品对比",
+        "轻知识卡片"
+      ],
+      "source_filename": "style_12_preset",
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "orientation": "portrait_9_16",
+        "aspect_ratio": "9:16",
+        "fps": 30.0,
+        "nb_frames": 5395,
+        "duration_sec": 224.816,
+        "file_size_mb": 10.32,
+        "has_audio": true,
+        "audio_sample_rate": 44100,
+        "aspect": "9:16"
+      },
+      "shot_distribution": {
+        "total_frames_analyzed": 5395,
+        "total_shots": 4,
+        "hard_cuts": 0,
+        "jump_or_punch_cuts": 3,
+        "dissolve_or_wipe_transitions": 1,
+        "cuts_per_min": 0.8,
+        "transitions_per_min": 1.07,
+        "first_3s_cut_times_sec": [
+          0.083
+        ],
+        "min_sec": 0.083,
+        "p25_sec": 30.052,
+        "median_sec": 1.85,
+        "mean_sec": 56.198,
+        "p75_sec": 91.958,
+        "p90_sec": 92.633,
+        "max_sec": 93.083,
+        "pct_under_1s": 25.0,
+        "pct_1s_to_2_5s": 0.0,
+        "pct_over_2_5s": 75.0,
+        "aroll_median_sec": 1.85,
+        "broll_coverage_ratio": 0.4
+      },
+      "beat_alignment": {
+        "estimated_bpm": 105.0,
+        "beat_strength_score": 0.152,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 33.3,
+        "cut_event_align_1f_pct": 66.7,
+        "cut_event_align_3f_pct": 100.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 0
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.5,
+        "loudness_range_lu": 4.0,
+        "true_peak_dbtp": 1.6,
+        "silence_count": 1,
+        "mean_pause_sec": 0.19,
+        "sfx_transient_count": 114,
+        "sfx_per_min_measured": 30.42,
+        "sfx_per_min_target": 40
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 54,
+        "keyword_scale": 1.12,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFD54F",
+        "stroke_color": "#2A2A2A",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.76,
+        "animation": "hard_cut",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.815,
+        "measured_animation_raw": "hard_cut",
+        "safe_y_px_1080x1920": 1459,
+        "safe_y_px_1920x1080": 832,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640,
+        "max_chars_per_line": 10
+      },
+      "color_and_lut": {
+        "y_mean_255": 224.7,
+        "y_p05_255": 120.9,
+        "y_p50_255": 242.5,
+        "y_p95_255": 246.4,
+        "dynamic_range_255": 125.6,
+        "dark_ratio_pct": 2.8,
+        "bright_ratio_pct": 85.4,
+        "sat_mean_pct": 5.1,
+        "warmth_index": 0.97,
+        "tone_mood": "均衡自然高通透调",
+        "shadow_rgb": [
+          39.5,
+          38.1,
+          34.7
+        ],
+        "midtone_rgb": [
+          157.5,
+          142.1,
+          130.8
+        ],
+        "highlight_rgb": [
+          237.3,
+          238.8,
+          238.5
+        ],
+        "top5_palette_hex": [
+          "#F1F3F5",
+          "#D0D6CE",
+          "#EEC8B2",
+          "#D3AC94",
+          "#2F2D2A"
+        ],
+        "lut_file": "style_12.cube",
+        "lut_size": 17,
+        "contrast_gain": 1.24,
+        "sat_scale": 0.76,
+        "shadow_tint_rgb": [
+          0.0034,
+          -0.0001,
+          -0.0088
+        ],
+        "highlight_tint_rgb": [
+          -0.0025,
+          0.0007,
+          0.0001
+        ],
+        "css_filter_approx": "brightness(1.066) contrast(1.24) saturate(0.76) sepia(0.008)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_12.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "0.0s 全局极净浅灰白背景（高亮基调），人像抠像位于中下，上方留白区左对齐红竖线标签与黑粗主标题 → 2.65s 弹出第二行撞色结论副标题",
+        "hook_formula": "直给实操方法 + 零废话结构化工具思路",
+        "first_frame_density": "极高信息整洁度（浅底抠像 + 极简对齐标题 + 清爽图标）",
+        "first_3s_cuts_count": 1
+      },
+      "title_cover_layout": {
+        "layout_id": "left_right_split",
+        "layout_name": "极净浅灰白底 · 上方结构化 Notion 卡片 + 下方人像抠像",
+        "grid_desc": "画幅上下严密分区：Y:[0.10, 0.48] 为动态卡片舞台（红竖线分类眉标 + 黑粗标题 + 圆点要点表 + 左右对比卡），Y:[0.48, 1.0] 为半身抠像口播",
+        "main_sub_ratio": 1.6,
+        "highlight_style": "朱红竖线眉标(#D9383A) + 红色胶囊状态徽章 + 白底微阴影方卡"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "背景/机位稳定（仅数次全局景别变更），全靠上半屏浅色卡片内逐条动态列表与对比卡保持高留存",
+        "transitions": [
+          "卡片内容平滑替换",
+          "人像微缩放"
+        ],
+        "elements": [
+          "红竖线眉标",
+          "Notion风白底要点列表",
+          "过去vs现在左右对比卡",
+          "流程图箭头"
+        ],
+        "sfx_per_min_target": 40,
+        "visual_per_min_target": 16
+      },
+      "assets": {
+        "lut_cube": "luts/style_12.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "broll_overlay_ratio_target": 0.4,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 2.83,
+        "intro_fade_out_sec": 0.57,
+        "main_bgm_gain_db": -11.0,
+        "main_fade_in_sec": 0.57,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF4C2C",
+        "flank_color": "#FFE28A",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFD637",
+        "stroke_color": "#000000",
+        "borderless": false
+      },
+      "plain_cn_pitch": "清爽浅色卡片背景配人像抠像与气泡提示音，把口播要点变成像笔记卡片一样清晰的分步清单。",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "whitebox_source": {
+        "project_name": "style_12_preset",
+        "is_whitebox_jianying": false,
+        "rulebook_injected": true,
+        "canvas": "1080x1920"
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 1,
+        "white_paper_outline": false,
+        "mask_shapes": {},
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 2,
+        "capsule_bg_subtitle": true,
+        "black_polaroid_frame": false,
+        "pip_mode": "dual_rect_grid_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "pip_composition_spec": {
+        "mode": "dual_rect_grid_pip",
+        "window_bbox": {
+          "x": 86,
+          "y": 236,
+          "w": 908,
+          "h": 440
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#38BDF8",
+        "border_width": 4,
+        "tag_text": "清单图解",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 130,
+        "fg_hex": "#FFE066",
+        "accent_hex": "#38BDF8",
+        "stroke_hex": "#0F172A",
+        "stroke_width": 9,
+        "tag_label": "清单必看"
+      }
+    },
+    {
+      "style_id": "style_13",
+      "index": 13,
+      "style_name_cn": "慢调空间漫游 · 展厅民宿氛围纪实风",
+      "archetype_id": "arch_05_cinema_slow_space",
+      "recommended_track": "store",
+      "domain_tags": [
+        "设计师展厅",
+        "美学民宿",
+        "高端餐饮空间",
+        "家居漫游"
+      ],
+      "source_filename": "style_13_preset",
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "orientation": "portrait_9_16",
+        "aspect_ratio": "9:16",
+        "fps": 30.0,
+        "nb_frames": 14228,
+        "duration_sec": 473.365,
+        "file_size_mb": 40.12,
+        "has_audio": true,
+        "audio_sample_rate": 44100,
+        "aspect": "9:16"
+      },
+      "shot_distribution": {
+        "total_frames_analyzed": 14203,
+        "total_shots": 34,
+        "hard_cuts": 28,
+        "jump_or_punch_cuts": 5,
+        "dissolve_or_wipe_transitions": 70,
+        "cuts_per_min": 4.18,
+        "transitions_per_min": 13.06,
+        "first_3s_cut_times_sec": [],
+        "min_sec": 0.667,
+        "p25_sec": 1.533,
+        "median_sec": 4.08,
+        "mean_sec": 13.925,
+        "p75_sec": 14.592,
+        "p90_sec": 40.747,
+        "max_sec": 98.567,
+        "pct_under_1s": 11.8,
+        "pct_1s_to_2_5s": 50.0,
+        "pct_over_2_5s": 38.2,
+        "aroll_median_sec": 4.08,
+        "broll_coverage_ratio": 0.65
+      },
+      "beat_alignment": {
+        "estimated_bpm": 90.0,
+        "beat_strength_score": 0.031,
+        "bgm_presence": "soft_ambient_bgm",
+        "cut_beat_align_2f_pct": 21.2,
+        "cut_event_align_1f_pct": 27.3,
+        "cut_event_align_3f_pct": 72.7,
+        "j_cut_detected_pct": 6.1,
+        "j_cut_median_lead_frames": 4.0,
+        "recommended_j_cut_frames": 0
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.9,
+        "loudness_range_lu": 8.1,
+        "true_peak_dbtp": -0.7,
+        "silence_count": 4,
+        "mean_pause_sec": 0.205,
+        "sfx_transient_count": 607,
+        "sfx_per_min_measured": 76.94,
+        "sfx_per_min_target": 20
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN",
+        "font_candidates": [
+          "SourceHanSerifCN-Bold.otf",
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Regular",
+        "bilingual": false,
+        "font_size_1080p_px": 46,
+        "keyword_scale": 1.08,
+        "primary_color": "#FAFFFA",
+        "keyword_color": "#FFD54F",
+        "stroke_color": "#26251C",
+        "stroke_width": 2,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.72,
+        "animation": "hard_cut",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.693,
+        "measured_animation_raw": "hard_cut",
+        "safe_y_px_1080x1920": 1382,
+        "safe_y_px_1920x1080": 778,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640,
+        "max_chars_per_line": 10
+      },
+      "color_and_lut": {
+        "y_mean_255": 95.9,
+        "y_p05_255": 14.2,
+        "y_p50_255": 95.8,
+        "y_p95_255": 185.0,
+        "dynamic_range_255": 170.8,
+        "dark_ratio_pct": 25.8,
+        "bright_ratio_pct": 5.0,
+        "sat_mean_pct": 33.8,
+        "warmth_index": 26.52,
+        "tone_mood": "深沉低饱和质感调",
+        "shadow_rgb": [
+          42.6,
+          33.6,
+          24.8
+        ],
+        "midtone_rgb": [
+          131.6,
+          117.8,
+          96.4
+        ],
+        "highlight_rgb": [
+          210.4,
+          211.4,
+          204.5
+        ],
+        "top5_palette_hex": [
+          "#0E0D0B",
+          "#704E33",
+          "#8E6D50",
+          "#91948D",
+          "#31302B"
+        ],
+        "lut_file": "style_13.cube",
+        "lut_size": 17,
+        "contrast_gain": 1.194,
+        "sat_scale": 1.207,
+        "shadow_tint_rgb": [
+          0.0197,
+          -0.0033,
+          -0.0257
+        ],
+        "highlight_tint_rgb": [
+          -0.0006,
+          0.0015,
+          -0.0133
+        ],
+        "css_filter_approx": "brightness(0.972) contrast(1.194) saturate(1.207) sepia(0.221)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_13.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "0.0s~2.65s 零封面大字、零花字贴纸，直接以超广角对称建筑/空间光影景别缓慢推近开篇，纯粹靠真实环境与高级质感建立信任",
+        "hook_formula": "第一眼实景空间美感 + 舒缓沉浸带入",
+        "first_frame_density": "高实景质感（空间建筑光影构图 + 极低文字干扰）",
+        "first_3s_cuts_count": 0
+      },
+      "title_cover_layout": {
+        "layout_id": "four_corner_editorial",
+        "layout_name": "零遮挡实景长镜 · 电影字幕极简版式",
+        "grid_desc": "全片无多余花字遮挡，所有视觉空间留给暖木石材光影与慢推运镜；字幕小号细字投影居下，不挡空间结构",
+        "main_sub_ratio": 1.0,
+        "highlight_style": "暖木温润调色(warmth=26.5) + 极简无框细投影字幕"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "四秒以上舒缓大空镜充分展示空间光影与陈设细节，配克制优雅的宋体小字和轻音乐，适合讲究品位的门店环境展示。",
+        "transitions": [
+          "缓慢推拉长镜",
+          "柔和叠化"
+        ],
+        "elements": [
+          "极简细字投影字幕"
+        ],
+        "sfx_per_min_target": 20,
+        "visual_per_min_target": 2
+      },
+      "assets": {
+        "lut_cube": "luts/style_13.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "broll_overlay_ratio_target": 0.65,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 2.83,
+        "intro_fade_out_sec": 0.57,
+        "main_bgm_gain_db": -11.0,
+        "main_fade_in_sec": 0.57,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF4C2C",
+        "flank_color": "#FFE28A",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFD637",
+        "stroke_color": "#000000",
+        "borderless": false
+      },
+      "plain_cn_pitch": "四秒以上舒缓大空镜充分展示空间光影与陈设细节，配克制优雅的宋体小字和轻音乐，适合讲究品位的门店环境展示。",
+      "commercial_safe_font": "SourceHanSerifCN-Bold.otf",
+      "whitebox_source": {
+        "project_name": "style_13_preset",
+        "is_whitebox_jianying": false,
+        "rulebook_injected": true,
+        "canvas": "1080x1920"
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {},
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "giant_impact_count": 2,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pip_mode": "black_polaroid_frame_pip",
+        "giant_mode": "giant_vertical_seal"
+      },
+      "pip_composition_spec": {
+        "mode": "black_polaroid_frame_pip",
+        "frame_bg_hex": "#0B0E12",
+        "window_bbox": {
+          "x": 68,
+          "y": 258,
+          "w": 944,
+          "h": 1210
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#D4B483",
+        "border_width": 3,
+        "tag_text": "空间实景",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_vertical_seal",
+        "font_size_px": 130,
+        "fg_hex": "#F3D8A4",
+        "accent_hex": "#FFFFFF",
+        "stroke_hex": "#0B0E12",
+        "stroke_width": 8,
+        "tag_label": "空间美学"
+      }
+    },
+    {
+      "style_id": "style_14",
+      "index": 14,
+      "style_name_cn": "门店原生爆款风 · 居中双字号暖黄高亮（默认）",
+      "archetype_id": "arch_04_punch_talking_head",
+      "recommended_track": "store",
+      "domain_tags": [
+        "门店老板",
+        "同城获客",
+        "实拍口播",
+        "默认旗舰风格"
+      ],
+      "source_filename": "style_14_preset",
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 68.5,
+        "benchmark_source": "builtin_preset_style_14"
+      },
+      "shot_distribution": {
+        "total_shots": 45,
+        "hard_cuts": 45,
+        "jump_cuts": 24,
+        "broll_overlays": 21,
+        "median_sec": 1.67,
+        "aroll_median_sec": 1.87,
+        "broll_coverage_ratio": 0.533,
+        "fast_cuts_under_1s_ratio": 0.12
+      },
+      "beat_alignment": {
+        "estimated_bpm": 120.0,
+        "beat_strength_score": 0.037,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 45.8,
+        "cut_event_align_1f_pct": 37.5,
+        "cut_event_align_3f_pct": 91.7,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 24.0,
+        "sfx_per_min_target": 24.0,
+        "voice_bgm_snr_target_db": 11.0,
+        "dual_bgm_enabled": true
+      },
+      "subtitle_spec": {
+        "font_family": "Alimama ShuHeiTi",
+        "font_candidates": [
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSansCN-Bold.otf",
+          "NotoSansCJKsc-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 62,
+        "keyword_scale": 1.133,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFE28A",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.682,
+        "animation": "pop_subtle",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.712,
+        "measured_animation_raw": "smooth_pop_or_fade",
+        "safe_y_px_1080x1920": 1310,
+        "safe_y_px_1920x1080": 799,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 142.8,
+        "y_p05_255": 45.2,
+        "y_p50_255": 152.6,
+        "y_p95_255": 224.9,
+        "dynamic_range_255": 179.7,
+        "dark_ratio_pct": 8.8,
+        "bright_ratio_pct": 28.7,
+        "sat_mean_pct": 20.5,
+        "warmth_index": 0.9,
+        "tone_mood": "均衡自然高通透调",
+        "shadow_rgb": [
+          45.8,
+          51.2,
+          70.3
+        ],
+        "midtone_rgb": [
+          140.2,
+          126.8,
+          121.4
+        ],
+        "highlight_rgb": [
+          219.0,
+          222.2,
+          221.8
+        ],
+        "top5_palette_hex": [
+          "#E8ECED",
+          "#35476E",
+          "#D1D3D3",
+          "#2B3551",
+          "#514E51"
+        ],
+        "lut_file": "style_14.cube",
+        "lut_size": 17,
+        "contrast_gain": 1.135,
+        "sat_scale": 0.76,
+        "shadow_tint_rgb": [
+          -0.0144,
+          -0.0006,
+          0.0481
+        ],
+        "highlight_tint_rgb": [
+          -0.0054,
+          0.0015,
+          0.0007
+        ],
+        "css_filter_approx": "brightness(1.046) contrast(1.135) saturate(0.76) sepia(0.008)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_14.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "0.00–1.37s 主讲人在实景前正脸开讲第一句 → 1.37–2.83s 切强动作或态度的关键定格帧 + 重音起拍 → 1.53–2.83s 同步弹出多方位无底框描边花字（头顶主字 + 侧翼重点词 + 底部强调签）",
+        "hook_formula": "真实冲突瞬间 + 定格强态度 + 多方位花字连环出字 + 引子音乐切主曲",
+        "first_frame_density": "极高（实景背景 + 主体人物 + 无底框高反差红黄大字 + 利益引导）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 2.83
+      },
+      "title_cover_layout": {
+        "layout_id": "jianying_poster_4zone",
+        "layout_name": "门店老板白边人像 + 四区高低错落爆款封面",
+        "grid_desc": "实景铺底 + 主讲人半身主体轮廓 + 左上主标题与正红黑边大字 + 中左微倾斜明黄黑边状态签 + 底部行动引导双色大字",
+        "main_sub_ratio": 1.75,
+        "highlight_style": "正红黑边主爆字(#FF2222) + 明黄黑边倾斜贴纸(#FFE234) + 红白双色福利大字"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "主轨口播物理切净气口零缝紧拼（中位1.87s），句群级特写/实景覆盖率53.3%（中位1.67s），动作指代句保留-10dB现场动作真声；开头2.8s引子音乐切正文轻快主曲；片尾2.7s独立金黄大字+评论区引导尾卡",
+        "transitions": [
+          "零缝紧剪硬切",
+          "定格爆点切入",
+          "句群实拍特写画面覆盖切回"
+        ],
+        "elements": [
+          "无底框头顶红字爆点",
+          "左右双翼金黄花字",
+          "底部暗红印章小字",
+          "片尾金黄大字尾卡"
+        ],
+        "sfx_per_min_target": 24,
+        "visual_per_min_target": 8,
+        "broll_overlay_ratio_target": 0.53
+      },
+      "assets": {
+        "lut_cube": "luts/style_14.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": true,
+      "broll_overlay_ratio_target": 0.53,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": true,
+        "intro_duration_sec": 2.83,
+        "intro_fade_out_sec": 0.57,
+        "main_bgm_gain_db": -11.0,
+        "main_fade_in_sec": 0.57,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF4C2C",
+        "flank_color": "#FFE28A",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFD637",
+        "stroke_color": "#000000",
+        "borderless": true
+      },
+      "plain_cn_pitch": "老板门店实景出镜，前三秒定格冲突瞬间并切轻快主音乐，过半画面穿插店内实拍并保留现场动作真声，居中暖黄大字清晰好读。",
+      "commercial_safe_font": "AlimamaShuHeiTi-Bold.otf",
+      "source_jianying_font": "新青年体-文跃新青年体",
+      "whitebox_source": {
+        "project_name": "style_14_preset",
+        "is_whitebox_jianying": true,
+        "canvas": "1080x1920",
+        "total_tracks": 25,
+        "duration_sec": 68.5
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 3,
+        "white_paper_outline": true,
+        "mask_shapes": {
+          "线性": 1
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 4,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pip_mode": "white_outline_cutout_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "benchmark_reference": "builtin_store_default_preset",
+      "pip_composition_spec": {
+        "mode": "white_outline_cutout_pip",
+        "window_bbox": {
+          "x": 664,
+          "y": 240,
+          "w": 324,
+          "h": 420
+        },
+        "mask_shape": "white_outline_cutout",
+        "border_hex": "#FFFFFF",
+        "border_width": 8,
+        "tag_text": "门店实拍",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 142,
+        "fg_hex": "#FFE066",
+        "accent_hex": "#FF3B30",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "门店招牌"
+      }
+    },
+    {
+      "style_id": "style_15",
+      "index": 15,
+      "style_name_cn": "实景访谈切片 · 全屏高密动效大字流",
+      "archetype_id": "arch_02_high_contrast_story",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "创始人访谈",
+        "街头实拍",
+        "金句切片",
+        "创业故事"
+      ],
+      "plain_cn_pitch": "弱化传统呆板底字幕，随说话节奏在画面各处密集弹出粗宋体与粗黑金句大字，配双段音乐与清脆打字气泡声。",
+      "source_filename": "style_15_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Bold.otf",
+      "source_jianying_font": "思源宋体-Bold / DouyinSansBold",
+      "whitebox_source": {
+        "project_name": "style_15_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 18,
+        "duration_sec": 30.57,
+        "keyframe_per_min": 109.9,
+        "vip_asset_ratio": 0.009
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "矩形": 3,
+          "镜面": 4
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 10,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": true,
+        "pip_mode": "dual_rect_grid_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 30.57,
+        "benchmark_source": "builtin_preset_style_15"
+      },
+      "shot_distribution": {
+        "total_shots": 26,
+        "hard_cuts": 13,
+        "jump_cuts": 11,
+        "broll_overlays": 13,
+        "median_sec": 2.27,
+        "aroll_median_sec": 2.27,
+        "broll_coverage_ratio": 0.352,
+        "fast_cuts_under_1s_ratio": 0.077
+      },
+      "beat_alignment": {
+        "estimated_bpm": 108.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "dual_bgm_switch",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 64.8,
+        "sfx_per_min_target": 48.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": true,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "啵1",
+          "打字声",
+          "回忆-刷一下"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN",
+        "font_candidates": [
+          "SourceHanSerifCN-Bold.otf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Heavy.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.693,
+        "animation": "in:渐显",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.693,
+        "measured_animation_raw": "in:渐显/in:模糊发光/in:缩小",
+        "safe_y_px_1080x1920": 1331,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 87.9,
+        "y_p05_255": 22.9,
+        "y_p50_255": 87.9,
+        "y_p95_255": 155.9,
+        "dynamic_range_255": 155.5,
+        "dark_ratio_pct": 36.4,
+        "bright_ratio_pct": 6.2,
+        "sat_mean_pct": 28.9,
+        "warmth_index": 19.6,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          87.9,
+          87.9,
+          87.9
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#655A57",
+          "#40342F",
+          "#241E1B",
+          "#533C31",
+          "#D2C5BD"
+        ],
+        "lut_file": "style_15.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.115,
+        "sat_scale": 1.04,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.967) contrast(1.115) saturate(1.04)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_15.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(啵1) + 高反差核心词(#FFBF17)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 3.18
+      },
+      "title_cover_layout": {
+        "layout_id": "four_corner_editorial",
+        "layout_name": "实景访谈切片 · 全屏高密动效大字流",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（four_corner_editorial），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFBF17 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "弱化传统呆板底字幕，随说话节奏在画面各处密集弹出粗宋体与粗黑金句大字，配双段音乐与清脆打字气泡声。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "蒙版:镜面x4/矩形x3",
+          "巨字冲击x10",
+          "双BGM转折",
+          "高频关键帧推拉"
+        ],
+        "sfx_per_min_target": 48,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.35
+      },
+      "assets": {
+        "lut_cube": "luts/style_15.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.35,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": true,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFBF17",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "dual_rect_grid_pip",
+        "window_bbox": {
+          "x": 84,
+          "y": 240,
+          "w": 912,
+          "h": 456
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#FFBF17",
+        "border_width": 4,
+        "tag_text": "访谈特写",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 152,
+        "fg_hex": "#FFBF17",
+        "accent_hex": "#FFFFFF",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "高能金句"
+      }
+    },
+    {
+      "style_id": "style_16",
+      "index": 16,
+      "style_name_cn": "暗黑悬疑开篇 · 巨型数字三连跳与线性分屏书摘风",
+      "archetype_id": "arch_02_high_contrast_story",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "商业思维",
+        "财富认知",
+        "读书拆解",
+        "企业家分享"
+      ],
+      "plain_cn_pitch": "暗调高反差悬疑开场，顶部 164px 巨型数字/核心字三连跳配合收银机叮咚音效，上半屏线性羽化分屏切入实景与方框书摘画中画，中段弹出打字机名人引语卡与三阶复利关键词。",
+      "source_filename": "style_16_preset",
+      "commercial_safe_font": "AlimamaShuHeiTi-Bold.otf",
+      "source_jianying_font": "特黑体-思源黑体1号",
+      "whitebox_source": {
+        "project_name": "style_16_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 17,
+        "duration_sec": 28.33,
+        "keyframe_per_min": 36.0,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 5,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "线性": 2,
+          "矩形": 1
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "giant_impact_count": 6,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "linear_feather_split_pip": true,
+        "multi_tag_burst": true,
+        "pip_mode": "linear_split_feather_pip",
+        "giant_mode": "giant_numeric_trio"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 28.33,
+        "benchmark_source": "builtin_preset_style_16"
+      },
+      "shot_distribution": {
+        "total_shots": 24,
+        "hard_cuts": 15,
+        "jump_cuts": 13,
+        "broll_overlays": 9,
+        "median_sec": 1.75,
+        "aroll_median_sec": 1.75,
+        "broll_coverage_ratio": 0.564,
+        "fast_cuts_under_1s_ratio": 0.18
+      },
+      "beat_alignment": {
+        "estimated_bpm": 108.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 27.5,
+        "sfx_per_min_target": 27.5,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "“呼”2",
+          "一声响铃",
+          "超市电子钱柜 结账"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Alimama ShuHeiTi",
+        "font_candidates": [
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Heavy.otf",
+          "SmileySans-Oblique.ttf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FF4D4F",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.721,
+        "animation": "in:渐显",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.721,
+        "measured_animation_raw": "in:渐显/in:滚入/in:缩小",
+        "safe_y_px_1080x1920": 1384,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 12,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 9.4,
+        "y_p05_255": 8.0,
+        "y_p50_255": 9.4,
+        "y_p95_255": 77.4,
+        "dynamic_range_255": 39.2,
+        "dark_ratio_pct": 92.0,
+        "bright_ratio_pct": 0.0,
+        "sat_mean_pct": 13.5,
+        "warmth_index": 5.3,
+        "tone_mood": "沉稳暗调高反差",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          9.4,
+          9.4,
+          9.4
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#000000",
+          "#6D4B3A",
+          "#090002",
+          "#8B6A5B",
+          "#271813"
+        ],
+        "lut_file": "style_16.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.04,
+        "sat_scale": 0.94,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.901) contrast(1.04) saturate(0.94)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_16.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 1 次切镜 + 0ms 咬合入场音效(“呼”2) + 高反差核心词(#FF4D4F)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 1,
+        "hook_intro_sec": 2.45
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "暗黑悬疑开篇 · 巨型数字与书摘引语卡风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（top_giant_bottom_sub），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FF4D4F + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "纯黑高反差悬疑开场，顶部逐字跳出超大号数字，中段切入名人书摘引语卡片与过半实景素材，权威感极强。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x5",
+          "蒙版:线性x2",
+          "巨字冲击x6",
+          "金句引语卡",
+          "高B-roll(56%)"
+        ],
+        "sfx_per_min_target": 28,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.56
+      },
+      "assets": {
+        "lut_cube": "luts/style_16.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 12,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.56,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FF4D4F",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "multi_tag_burst": true
+      },
+      "pip_composition_spec": {
+        "mode": "linear_split_feather_pip",
+        "window_bbox": {
+          "x": 0,
+          "y": 140,
+          "w": 1080,
+          "h": 720
+        },
+        "book_card_bbox": {
+          "x": 144,
+          "y": 248,
+          "w": 792,
+          "h": 468
+        },
+        "mask_shape": "linear_feather",
+        "border_hex": "#D4AF37",
+        "border_width": 4,
+        "tag_text": "书摘与实证",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_numeric_trio",
+        "font_size_px": 164,
+        "fg_hex": "#FF4D4F",
+        "accent_hex": "#FFF589",
+        "stroke_hex": "#000000",
+        "stroke_width": 11,
+        "tag_label": "底层逻辑"
+      }
+    },
+    {
+      "style_id": "style_17",
+      "index": 17,
+      "style_name_cn": "暖金硬核实拍 · 多框拼贴强音效带看风",
+      "archetype_id": "arch_04_punch_talking_head",
+      "recommended_track": "store",
+      "domain_tags": [
+        "汽车二手车",
+        "工厂车间",
+        "餐饮后厨",
+        "硬核实体带看"
+      ],
+      "plain_cn_pitch": "浓郁暖金色调配多画面分屏遮罩和每分钟五十多次密集转场提示音，最适合车行、工厂、餐饮后厨等讲求硬核现场感的实体门店。",
+      "source_filename": "style_17_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Heavy.otf",
+      "source_jianying_font": "SourceHanSerifCN-Heavy / DouyinSansBold",
+      "whitebox_source": {
+        "project_name": "style_17_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 13,
+        "duration_sec": 16.0,
+        "keyframe_per_min": 48.8,
+        "vip_asset_ratio": 0.016
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "矩形": 8,
+          "圆形": 1
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 4,
+        "capsule_bg_subtitle": true,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "dual_rect_grid_pip",
+        "giant_mode": "giant_dual_clash"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 16.0,
+        "benchmark_source": "builtin_preset_style_17"
+      },
+      "shot_distribution": {
+        "total_shots": 16,
+        "hard_cuts": 11,
+        "jump_cuts": 9,
+        "broll_overlays": 5,
+        "median_sec": 1.53,
+        "aroll_median_sec": 1.53,
+        "broll_coverage_ratio": 0.158,
+        "fast_cuts_under_1s_ratio": 0.273
+      },
+      "beat_alignment": {
+        "estimated_bpm": 108.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 56.2,
+        "sfx_per_min_target": 48.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "回忆-刷一下",
+          "叮3",
+          "诡异的滴水声"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN Heavy",
+        "font_candidates": [
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SmileySans-Oblique.ttf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 58,
+        "keyword_scale": 1.12,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFF589",
+        "stroke_color": "#000000",
+        "stroke_width": 3,
+        "bg_box_color": "#1B140ECC",
+        "bg_radius": 16,
+        "safe_y_ratio": 0.693,
+        "animation": "in:渐显",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.693,
+        "measured_animation_raw": "in:渐显/in:随机上升/in:收拢",
+        "safe_y_px_1080x1920": 1331,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 101.5,
+        "y_p05_255": 36.5,
+        "y_p50_255": 101.5,
+        "y_p95_255": 169.5,
+        "dynamic_range_255": 186.0,
+        "dark_ratio_pct": 40.5,
+        "bright_ratio_pct": 10.9,
+        "sat_mean_pct": 45.2,
+        "warmth_index": 52.4,
+        "tone_mood": "浓郁暖金高饱和",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          101.5,
+          101.5,
+          101.5
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#1B140E",
+          "#AA7752",
+          "#DDB087",
+          "#3C281B",
+          "#5C3F2D"
+        ],
+        "lut_file": "style_17.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.146,
+        "sat_scale": 1.14,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.978) contrast(1.146) saturate(1.14)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_17.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(回忆-刷一下) + 高反差核心词(#FFF589)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 2.14
+      },
+      "title_cover_layout": {
+        "layout_id": "jianying_poster_4zone",
+        "layout_name": "暖金硬核实拍 · 多框拼贴强音效带看风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（jianying_poster_4zone），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFF589 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "浓郁暖金色调配多画面分屏遮罩和每分钟五十多次密集转场提示音，最适合车行、工厂、餐饮后厨等讲求硬核现场感的实体门店。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "蒙版:矩形x8/圆形x1",
+          "巨字冲击x4",
+          "胶囊底框字幕"
+        ],
+        "sfx_per_min_target": 48,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.16
+      },
+      "assets": {
+        "lut_cube": "luts/style_17.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.16,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFF589",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": false,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "dual_rect_grid_pip",
+        "window_bbox": {
+          "x": 76,
+          "y": 230,
+          "w": 928,
+          "h": 476
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#FFBF17",
+        "border_width": 5,
+        "tag_text": "多框细节",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_dual_clash",
+        "font_size_px": 140,
+        "fg_hex": "#FFBF17",
+        "accent_hex": "#FFFFFF",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "实测硬核"
+      }
+    },
+    {
+      "style_id": "style_18",
+      "index": 18,
+      "style_name_cn": "户外实景探盘 · 巨型立体字冲击带看风",
+      "archetype_id": "arch_03_editorial_matte_depth",
+      "recommended_track": "store",
+      "domain_tags": [
+        "房产带看",
+        "商铺选址",
+        "同城探店",
+        "户外实拍"
+      ],
+      "plain_cn_pitch": "专为户外走动实拍打造，超四成画面切换楼盘或街景实况，重点价格与地段用超大号红黄立体字直接砸在画面中央。",
+      "source_filename": "style_18_preset",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "source_jianying_font": "得意黑 / 造字工房俊雅体",
+      "whitebox_source": {
+        "project_name": "style_18_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 10,
+        "duration_sec": 38.2,
+        "keyframe_per_min": 25.1,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 4,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 1
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "giant_impact_count": 7,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "blur_bg_center_card_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 38.2,
+        "benchmark_source": "builtin_preset_style_18"
+      },
+      "shot_distribution": {
+        "total_shots": 32,
+        "hard_cuts": 25,
+        "jump_cuts": 23,
+        "broll_overlays": 7,
+        "median_sec": 1.58,
+        "aroll_median_sec": 1.58,
+        "broll_coverage_ratio": 0.417,
+        "fast_cuts_under_1s_ratio": 0.12
+      },
+      "beat_alignment": {
+        "estimated_bpm": 108.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 33.0,
+        "sfx_per_min_target": 33.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "“呼”2",
+          "打字声",
+          "发条旋钮转动齿轮"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.695,
+        "animation": "in:向上露出",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.695,
+        "measured_animation_raw": "in:向上露出/in:向右模糊 II/in:打字光标",
+        "safe_y_px_1080x1920": 1334,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 147.1,
+        "y_p05_255": 82.1,
+        "y_p50_255": 147.1,
+        "y_p95_255": 215.1,
+        "dynamic_range_255": 119.4,
+        "dark_ratio_pct": 3.1,
+        "bright_ratio_pct": 9.0,
+        "sat_mean_pct": 9.4,
+        "warmth_index": 3.6,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          147.1,
+          147.1,
+          147.1
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#BEBCBB",
+          "#525152",
+          "#B4B0AE",
+          "#72757B",
+          "#998C7F"
+        ],
+        "lut_file": "style_18.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.079,
+        "sat_scale": 0.91,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.016) contrast(1.079) saturate(0.91)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_18.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 1 次切镜 + 0ms 咬合入场音效(“呼”2) + 高反差核心词(#FFBF17)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 1,
+        "hook_intro_sec": 2.21
+      },
+      "title_cover_layout": {
+        "layout_id": "jianying_poster_4zone",
+        "layout_name": "户外实景探盘 · 巨型立体字冲击带看风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（jianying_poster_4zone），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFBF17 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "专为户外走动实拍打造，超四成画面切换楼盘或街景实况，重点价格与地段用超大号红黄立体字直接砸在画面中央。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x4",
+          "蒙版:圆形x1",
+          "巨字冲击x7",
+          "金句引语卡"
+        ],
+        "sfx_per_min_target": 33,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.42
+      },
+      "assets": {
+        "lut_cube": "luts/style_18.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.42,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFBF17",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": true
+      },
+      "pip_composition_spec": {
+        "mode": "blur_bg_center_card_pip",
+        "window_bbox": {
+          "x": 148,
+          "y": 246,
+          "w": 784,
+          "h": 896
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#FFE28A",
+        "border_width": 4,
+        "bg_blur_sigma": 18,
+        "tag_text": "实景带看",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 154,
+        "fg_hex": "#FFE28A",
+        "accent_hex": "#FF2438",
+        "stroke_hex": "#000000",
+        "stroke_width": 11,
+        "tag_label": "实景探访"
+      }
+    },
+    {
+      "style_id": "style_19",
+      "index": 19,
+      "style_name_cn": "冷峻专业抠像 · 资讯数据动态背景背书风",
+      "archetype_id": "arch_01_tech_ui_console",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "律所财税",
+        "金融贷款",
+        "宏观解读",
+        "专业顾问"
+      ],
+      "plain_cn_pitch": "冷静蓝灰专业色调，将主讲人抠像置于行情图表或新闻报道背景前，配合法条出处卡片与快门音效，凸显专业权威。",
+      "source_filename": "style_19_preset",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "source_jianying_font": "得意黑 / 造字工房俊雅体",
+      "whitebox_source": {
+        "project_name": "style_19_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 11,
+        "duration_sec": 38.2,
+        "keyframe_per_min": 20.4,
+        "vip_asset_ratio": 0.009
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 5,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 6,
+          "线性": 2
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "giant_impact_count": 5,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "dark_doc_circle_avatar_pip",
+        "giant_mode": "giant_dual_clash"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 38.2,
+        "benchmark_source": "builtin_preset_style_19"
+      },
+      "shot_distribution": {
+        "total_shots": 29,
+        "hard_cuts": 22,
+        "jump_cuts": 20,
+        "broll_overlays": 7,
+        "median_sec": 1.45,
+        "aroll_median_sec": 1.45,
+        "broll_coverage_ratio": 0.244,
+        "fast_cuts_under_1s_ratio": 0.227
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 22.0,
+        "sfx_per_min_target": 22.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "撞击光1",
+          "单反相机快速拍照快门声音音效",
+          "发条转动"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "SourceHanSerifCN-Bold.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.721,
+        "animation": "in:发光模糊",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.721,
+        "measured_animation_raw": "in:发光模糊/in:向下滑动/in:圆柱体滚动",
+        "safe_y_px_1080x1920": 1384,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 135.9,
+        "y_p05_255": 70.9,
+        "y_p50_255": 135.9,
+        "y_p95_255": 203.9,
+        "dynamic_range_255": 180.1,
+        "dark_ratio_pct": 19.9,
+        "bright_ratio_pct": 19.8,
+        "sat_mean_pct": 23.0,
+        "warmth_index": -15.5,
+        "tone_mood": "冷静蓝灰专业调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          135.9,
+          135.9,
+          135.9
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#1F2D3D",
+          "#A7B0B1",
+          "#DADFE2",
+          "#4E6480",
+          "#C9C2C1"
+        ],
+        "lut_file": "style_19.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.14,
+        "sat_scale": 1.0,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.007) contrast(1.14) saturate(1.0)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_19.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(撞击光1) + 高反差核心词(#FFBF17)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 2.03
+      },
+      "title_cover_layout": {
+        "layout_id": "left_right_split",
+        "layout_name": "冷峻专业抠像 · 资讯数据动态背景背书风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（left_right_split），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFBF17 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "冷静蓝灰专业色调，将主讲人抠像置于行情图表或新闻报道背景前，配合法条出处卡片与快门音效，凸显专业权威。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x5",
+          "蒙版:圆形x6/线性x2",
+          "巨字冲击x5",
+          "金句引语卡"
+        ],
+        "sfx_per_min_target": 22,
+        "visual_per_min_target": 20,
+        "broll_overlay_ratio_target": 0.24
+      },
+      "assets": {
+        "lut_cube": "luts/style_19.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.24,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFBF17",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": true
+      },
+      "pip_composition_spec": {
+        "mode": "dark_doc_circle_avatar_pip",
+        "frame_bg_hex": "#080D16",
+        "evidence_bbox": {
+          "x": 78,
+          "y": 228,
+          "w": 924,
+          "h": 496
+        },
+        "avatar_circle_bbox": {
+          "x": 636,
+          "y": 808,
+          "w": 324,
+          "h": 324
+        },
+        "mask_shape": "circle",
+        "border_hex": "#60A5FA",
+        "border_width": 4,
+        "dual_grid_split": false,
+        "tag_text": "数据背书",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_dual_clash",
+        "font_size_px": 144,
+        "fg_hex": "#FFF589",
+        "accent_hex": "#FF2438",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "专业解读"
+      }
+    },
+    {
+      "style_id": "style_20",
+      "index": 20,
+      "style_name_cn": "国风暖木高饱和 · 水墨晕开双段配乐风",
+      "archetype_id": "arch_05_cinema_slow_space",
+      "recommended_track": "store",
+      "domain_tags": [
+        "中医馆",
+        "茶室滋补",
+        "非遗手作",
+        "餐饮老字号"
+      ],
+      "plain_cn_pitch": "温暖厚重的中式木质色调，文字采用重宋体配水墨晕开入场动画与双段国风配乐，专为中医养生、茶馆及传统老字号打造。",
+      "source_filename": "style_20_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Heavy.otf",
+      "source_jianying_font": "喜鹊古字典体 / FZCuJinLJW",
+      "whitebox_source": {
+        "project_name": "style_20_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": false,
+        "canvas": "1080x1920",
+        "total_tracks": 18,
+        "duration_sec": 30.7,
+        "keyframe_per_min": 13.7,
+        "vip_asset_ratio": 0.102
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 2,
+          "矩形": 3
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 4,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "dual_rect_grid_pip",
+        "giant_mode": "giant_vertical_seal"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 30.7,
+        "benchmark_source": "builtin_preset_style_20"
+      },
+      "shot_distribution": {
+        "total_shots": 20,
+        "hard_cuts": 16,
+        "jump_cuts": 14,
+        "broll_overlays": 4,
+        "median_sec": 1.83,
+        "aroll_median_sec": 1.83,
+        "broll_coverage_ratio": 0.115,
+        "fast_cuts_under_1s_ratio": 0.312
+      },
+      "beat_alignment": {
+        "estimated_bpm": 108.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "dual_bgm_switch",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 46.9,
+        "sfx_per_min_target": 46.9,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": true,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "气泡弹出",
+          "纸张抖动声",
+          "打字声"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN Heavy",
+        "font_candidates": [
+          "SourceHanSerifCN-Heavy.otf",
+          "SourceHanSerifCN-Bold.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFF589",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.693,
+        "animation": "in:水墨晕开",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.693,
+        "measured_animation_raw": "in:水墨晕开/in:冰雪飘动/in:向右缓入",
+        "safe_y_px_1080x1920": 1331,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 95.9,
+        "y_p05_255": 30.9,
+        "y_p50_255": 95.9,
+        "y_p95_255": 163.9,
+        "dynamic_range_255": 111.1,
+        "dark_ratio_pct": 20.7,
+        "bright_ratio_pct": 1.3,
+        "sat_mean_pct": 65.1,
+        "warmth_index": 93.2,
+        "tone_mood": "浓郁暖金高饱和",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          95.9,
+          95.9,
+          95.9
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#903213",
+          "#AF7657",
+          "#502114",
+          "#B36141",
+          "#A64A31"
+        ],
+        "lut_file": "style_20.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.071,
+        "sat_scale": 1.14,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.973) contrast(1.071) saturate(1.14)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_20.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(气泡弹出) + 高反差核心词(#FFF589)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 2.56
+      },
+      "title_cover_layout": {
+        "layout_id": "four_corner_editorial",
+        "layout_name": "国风暖木高饱和 · 水墨晕开双段配乐风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（four_corner_editorial），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFF589 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "温暖厚重的中式木质色调，文字采用重宋体配水墨晕开入场动画与双段国风配乐，专为中医养生、茶馆及传统老字号打造。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "蒙版:矩形x3/圆形x2",
+          "巨字冲击x4",
+          "双BGM转折"
+        ],
+        "sfx_per_min_target": 47,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.12
+      },
+      "assets": {
+        "lut_cube": "luts/style_20.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.12,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": true,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFF589",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "dual_rect_grid_pip",
+        "window_bbox": {
+          "x": 84,
+          "y": 240,
+          "w": 912,
+          "h": 460
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#D4A359",
+        "border_width": 4,
+        "tag_text": "古法细节",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_vertical_seal",
+        "font_size_px": 138,
+        "fg_hex": "#FFE28A",
+        "accent_hex": "#C82829",
+        "stroke_hex": "#1B120C",
+        "stroke_width": 9,
+        "tag_label": "传统智慧"
+      }
+    },
+    {
+      "style_id": "style_21",
+      "index": 21,
+      "style_name_cn": "门店工艺快切 · 85%特写实拍踩点风",
+      "archetype_id": "arch_04_punch_talking_head",
+      "recommended_track": "store",
+      "domain_tags": [
+        "餐饮后厨",
+        "美业实操",
+        "工厂车间",
+        "全特写探店"
+      ],
+      "plain_cn_pitch": "片头老板露脸两秒定调，其余八成半以上全程切换店内环境、手作细节与成品特写快剪，并保留滋啦切菜等现场真实动作声。",
+      "source_filename": "style_21_preset",
+      "commercial_safe_font": "AlimamaShuHeiTi-Bold.otf",
+      "source_jianying_font": "Alimama ShuHeiTi",
+      "whitebox_source": {
+        "project_name": "style_21_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": true,
+        "canvas": "1080x1920",
+        "total_tracks": 17,
+        "duration_sec": 15.62,
+        "keyframe_per_min": 92.2,
+        "vip_asset_ratio": 0.036
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 7,
+        "white_paper_outline": true,
+        "mask_shapes": {
+          "线性": 1
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": false,
+        "giant_impact_count": 4,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "white_outline_cutout_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 15.62,
+        "benchmark_source": "builtin_preset_style_21"
+      },
+      "shot_distribution": {
+        "total_shots": 25,
+        "hard_cuts": 13,
+        "jump_cuts": 11,
+        "broll_overlays": 12,
+        "median_sec": 1.2,
+        "aroll_median_sec": 1.2,
+        "broll_coverage_ratio": 0.85,
+        "fast_cuts_under_1s_ratio": 0.462
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "dual_bgm_switch",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 46.1,
+        "sfx_per_min_target": 44.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": true,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "风铃声",
+          "快速翻页声",
+          "键盘空格声"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Alimama ShuHeiTi",
+        "font_candidates": [
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Bold.otf",
+          "SmileySans-Oblique.ttf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.695,
+        "animation": "in:缩小",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.695,
+        "measured_animation_raw": "in:缩小/out:渐隐/in:日出",
+        "safe_y_px_1080x1920": 1334,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 146.0,
+        "y_p05_255": 81.0,
+        "y_p50_255": 146.0,
+        "y_p95_255": 214.0,
+        "dynamic_range_255": 150.2,
+        "dark_ratio_pct": 6.7,
+        "bright_ratio_pct": 27.4,
+        "sat_mean_pct": 24.0,
+        "warmth_index": 18.0,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          146.0,
+          146.0,
+          146.0
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#494B48",
+          "#868079",
+          "#BAAAA0",
+          "#E1E5E7",
+          "#D5DADB"
+        ],
+        "lut_file": "style_21.cube",
+        "lut_size": 17,
+        "lut_strength": 0.62,
+        "contrast_gain": 1.11,
+        "sat_scale": 1.01,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.015) contrast(1.11) saturate(1.01)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_21.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(风铃声) + 高反差核心词(#FFBF17)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 1.68
+      },
+      "title_cover_layout": {
+        "layout_id": "jianying_poster_4zone",
+        "layout_name": "门店工艺快切 · 85%特写实拍踩点风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（jianying_poster_4zone），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFBF17 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "片头老板露脸两秒定调，其余八成半以上全程切换店内环境、手作细节与成品特写快剪，并保留滋啦切菜等现场真实动作声。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x7",
+          "蒙版:线性x1",
+          "巨字冲击x4",
+          "双BGM转折",
+          "高B-roll(75%)",
+          "高频关键帧推拉"
+        ],
+        "sfx_per_min_target": 44,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.85
+      },
+      "assets": {
+        "lut_cube": "luts/style_21.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.85,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": true,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFBF17",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "white_outline_cutout_pip",
+        "window_bbox": {
+          "x": 664,
+          "y": 238,
+          "w": 324,
+          "h": 416
+        },
+        "mask_shape": "white_outline_cutout",
+        "border_hex": "#FFFFFF",
+        "border_width": 8,
+        "tag_text": "工艺特写",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 142,
+        "fg_hex": "#FFF589",
+        "accent_hex": "#FF4D4F",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "实战特写"
+      }
+    },
+    {
+      "style_id": "style_22",
+      "index": 22,
+      "style_name_cn": "画面叙事干货 · 90%例证图解拆解风",
+      "archetype_id": "arch_03_editorial_matte_depth",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "病例账单拆解",
+        "案例对比",
+        "图解干货",
+        "轻出镜教学"
+      ],
+      "plain_cn_pitch": "主讲人仅短暂出镜，九成以上全屏展示案例照片、账单截图与图表变化，顶部常驻主题小标语配胶囊底框字幕，极适合讲透复杂案例。",
+      "source_filename": "style_22_preset",
+      "commercial_safe_font": "SmileySans-Oblique.ttf",
+      "source_jianying_font": "Smiley Sans",
+      "whitebox_source": {
+        "project_name": "style_22_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": true,
+        "canvas": "1080x1920",
+        "total_tracks": 14,
+        "duration_sec": 23.48,
+        "keyframe_per_min": 46.0,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 4,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 1
+        },
+        "persistent_top_bar": true,
+        "quote_citation_card": true,
+        "giant_impact_count": 4,
+        "capsule_bg_subtitle": true,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "corner_circle_evidence_pip",
+        "giant_mode": "giant_numeric_trio"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 23.48,
+        "benchmark_source": "builtin_preset_style_22"
+      },
+      "shot_distribution": {
+        "total_shots": 26,
+        "hard_cuts": 18,
+        "jump_cuts": 16,
+        "broll_overlays": 8,
+        "median_sec": 1.45,
+        "aroll_median_sec": 1.45,
+        "broll_coverage_ratio": 0.9,
+        "fast_cuts_under_1s_ratio": 0.444
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "continuous_bgm_bed",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 33.2,
+        "sfx_per_min_target": 36.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": false,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "打字声",
+          "纸张抖动声",
+          "风铃声"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Smiley Sans",
+        "font_candidates": [
+          "SmileySans-Oblique.ttf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SourceHanSerifCN-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 58,
+        "keyword_scale": 1.12,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFF589",
+        "stroke_color": "#000000",
+        "stroke_width": 3,
+        "bg_box_color": "#1A222ECC",
+        "bg_radius": 16,
+        "safe_y_ratio": 0.695,
+        "animation": "in:开幕",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.695,
+        "measured_animation_raw": "in:开幕/in:缩小/in:向右露出",
+        "safe_y_px_1080x1920": 1334,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 172.0,
+        "y_p05_255": 107.0,
+        "y_p50_255": 172.0,
+        "y_p95_255": 240.0,
+        "dynamic_range_255": 129.8,
+        "dark_ratio_pct": 4.2,
+        "bright_ratio_pct": 29.7,
+        "sat_mean_pct": 14.0,
+        "warmth_index": -4.0,
+        "tone_mood": "清亮高调奶油感",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          172.0,
+          172.0,
+          172.0
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#B9C1C3",
+          "#909A99",
+          "#66615A",
+          "#CBD3D6",
+          "#DDE1E6"
+        ],
+        "lut_file": "style_22.cube",
+        "lut_size": 17,
+        "lut_strength": 0.6,
+        "contrast_gain": 1.09,
+        "sat_scale": 0.94,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.037) contrast(1.09) saturate(0.94)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_22.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(打字声) + 高反差核心词(#FFF589)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 2.03
+      },
+      "title_cover_layout": {
+        "layout_id": "left_right_split",
+        "layout_name": "画面叙事干货 · 90%例证图解拆解风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（left_right_split），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFF589 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "主讲人仅短暂出镜，九成以上全屏展示案例照片、账单截图与图表变化，顶部常驻主题小标语配胶囊底框字幕，极适合讲透复杂案例。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x4",
+          "蒙版:圆形x1",
+          "巨字冲击x4"
+        ],
+        "sfx_per_min_target": 36,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.9
+      },
+      "assets": {
+        "lut_cube": "luts/style_22.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.9,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": false,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFF589",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": false,
+        "persistent_top_bar": true,
+        "quote_citation_card": true
+      },
+      "pip_composition_spec": {
+        "mode": "corner_circle_evidence_pip",
+        "window_bbox": {
+          "x": 98,
+          "y": 242,
+          "w": 292,
+          "h": 292
+        },
+        "mask_shape": "circle",
+        "border_hex": "#FFF589",
+        "border_width": 5,
+        "tag_text": "图解例证",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_numeric_trio",
+        "font_size_px": 142,
+        "fg_hex": "#FFF589",
+        "accent_hex": "#FF2438",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "例证拆解"
+      }
+    },
+    {
+      "style_id": "style_23",
+      "index": 23,
+      "style_name_cn": "品牌微纪录片 · 95%慢调空镜旁白风",
+      "archetype_id": "arch_05_cinema_slow_space",
+      "recommended_track": "store",
+      "domain_tags": [
+        "民宿酒店",
+        "茶室书店",
+        "匠人故事",
+        "门店环境大片"
+      ],
+      "plain_cn_pitch": "几乎全程用舒缓的空镜画面、光影与工作侧拍串联，配温暖克制的宋体旁白字和双段情绪音乐，最适合讲品牌理念与慢生活空间。",
+      "source_filename": "style_23_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Bold.otf",
+      "source_jianying_font": "Source Han Serif CN",
+      "whitebox_source": {
+        "project_name": "style_23_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": true,
+        "canvas": "1080x1920",
+        "total_tracks": 18,
+        "duration_sec": 41.83,
+        "keyframe_per_min": 22.9,
+        "vip_asset_ratio": 0.0
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 2
+        },
+        "persistent_top_bar": false,
+        "quote_citation_card": true,
+        "giant_impact_count": 1,
+        "capsule_bg_subtitle": false,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "black_polaroid_frame_pip",
+        "giant_mode": "giant_vertical_seal"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 30.0,
+        "duration_sec": 41.83,
+        "benchmark_source": "builtin_preset_style_23"
+      },
+      "shot_distribution": {
+        "total_shots": 15,
+        "hard_cuts": 8,
+        "jump_cuts": 6,
+        "broll_overlays": 7,
+        "median_sec": 2.8,
+        "aroll_median_sec": 2.8,
+        "broll_coverage_ratio": 0.95,
+        "fast_cuts_under_1s_ratio": 0.18
+      },
+      "beat_alignment": {
+        "estimated_bpm": 92.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "dual_bgm_switch",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 3
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 17.2,
+        "sfx_per_min_target": 18.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": true,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "“呼”2",
+          "纸张抖动声",
+          "报纸报纸: 折叠或展开"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN",
+        "font_candidates": [
+          "SourceHanSerifCN-Bold.otf",
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 60,
+        "keyword_scale": 1.15,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#FFE28A",
+        "stroke_color": "#000000",
+        "stroke_width": 4,
+        "bg_box_color": "#00000000",
+        "bg_radius": 0,
+        "safe_y_ratio": 0.695,
+        "animation": "in:渐显",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.695,
+        "measured_animation_raw": "in:渐显/in:随机上升/in:开幕",
+        "safe_y_px_1080x1920": 1334,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 11,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 162.0,
+        "y_p05_255": 97.0,
+        "y_p50_255": 162.0,
+        "y_p95_255": 230.0,
+        "dynamic_range_255": 121.4,
+        "dark_ratio_pct": 3.2,
+        "bright_ratio_pct": 25.8,
+        "sat_mean_pct": 16.0,
+        "warmth_index": 14.0,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          162.0,
+          162.0,
+          162.0
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#B8B7AB",
+          "#9D9B9C",
+          "#EBF1F4",
+          "#B4A18D",
+          "#796F64"
+        ],
+        "lut_file": "style_23.cube",
+        "lut_size": 17,
+        "lut_strength": 0.68,
+        "contrast_gain": 1.081,
+        "sat_scale": 0.95,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(1.028) contrast(1.081) saturate(0.95)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_23.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒以高颜值大空镜缓慢推近建立氛围 + “呼”2轻入场",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 0,
+        "hook_intro_sec": 3.2
+      },
+      "title_cover_layout": {
+        "layout_id": "four_corner_editorial",
+        "layout_name": "品牌微纪录片 · 95%慢调空镜旁白风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（four_corner_editorial），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #FFE28A + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "几乎全程用舒缓的空镜画面、光影与工作侧拍串联，配温暖克制的宋体旁白字和双段情绪音乐，最适合讲品牌理念与慢生活空间。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x2",
+          "蒙版:圆形x2",
+          "高B-roll(46%)"
+        ],
+        "sfx_per_min_target": 18,
+        "visual_per_min_target": 32,
+        "broll_overlay_ratio_target": 0.95
+      },
+      "assets": {
+        "lut_cube": "luts/style_23.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 11,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 0.95,
+      "broll_ambient_sound_policy": {
+        "enabled": true,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": true,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#FFE28A",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": true,
+        "persistent_top_bar": false,
+        "quote_citation_card": true
+      },
+      "pip_composition_spec": {
+        "mode": "black_polaroid_frame_pip",
+        "frame_bg_hex": "#0A0C10",
+        "window_bbox": {
+          "x": 72,
+          "y": 264,
+          "w": 936,
+          "h": 1196
+        },
+        "mask_shape": "rounded_rect",
+        "border_hex": "#E2C799",
+        "border_width": 3,
+        "tag_text": "纪实画框",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_vertical_seal",
+        "font_size_px": 148,
+        "fg_hex": "#FFFFFF",
+        "accent_hex": "#E2C799",
+        "stroke_hex": "#000000",
+        "stroke_width": 9,
+        "tag_label": "深度旁白"
+      }
+    },
+    {
+      "style_id": "style_24",
+      "index": 24,
+      "style_name_cn": "全画面高燃卡点 · 100%无出镜混剪风",
+      "archetype_id": "arch_02_high_contrast_story",
+      "recommended_track": "creator",
+      "domain_tags": [
+        "全程不露脸",
+        "好物特写混剪",
+        "产品快闪",
+        "高燃视觉流"
+      ],
+      "plain_cn_pitch": "全程不用老板或博主出镜，百分之百由产品细节、现场实景与图解快切画面撑满全片，每秒都在变化，配高频卡点音效防划走。",
+      "source_filename": "style_24_preset",
+      "commercial_safe_font": "SourceHanSerifCN-Heavy.otf",
+      "source_jianying_font": "Source Han Serif CN Heavy",
+      "whitebox_source": {
+        "project_name": "style_24_preset",
+        "is_whitebox_jianying": true,
+        "high_broll_variant": true,
+        "canvas": "1080x1920",
+        "total_tracks": 16,
+        "duration_sec": 36.42,
+        "keyframe_per_min": 16.5,
+        "vip_asset_ratio": 0.102
+      },
+      "packaging_techniques": {
+        "ai_matting_cutout": 0,
+        "white_paper_outline": false,
+        "mask_shapes": {
+          "圆形": 5
+        },
+        "persistent_top_bar": true,
+        "quote_citation_card": false,
+        "giant_impact_count": 3,
+        "capsule_bg_subtitle": true,
+        "black_polaroid_frame": false,
+        "pure_kinetic_flower_flow": false,
+        "pip_mode": "corner_circle_evidence_pip",
+        "giant_mode": "giant_smash_single"
+      },
+      "meta": {
+        "width": 1080,
+        "height": 1920,
+        "aspect": "9:16",
+        "fps": 60.0,
+        "duration_sec": 36.42,
+        "benchmark_source": "builtin_preset_style_24"
+      },
+      "shot_distribution": {
+        "total_shots": 45,
+        "hard_cuts": 30,
+        "jump_cuts": 28,
+        "broll_overlays": 15,
+        "median_sec": 1.1,
+        "aroll_median_sec": 1.1,
+        "broll_coverage_ratio": 1.0,
+        "fast_cuts_under_1s_ratio": 0.3
+      },
+      "beat_alignment": {
+        "estimated_bpm": 118.0,
+        "beat_strength_score": 0.045,
+        "bgm_presence": "dual_bgm_switch",
+        "cut_beat_align_2f_pct": 52.0,
+        "cut_event_align_1f_pct": 92.0,
+        "cut_event_align_3f_pct": 98.0,
+        "j_cut_detected_pct": 0.0,
+        "j_cut_median_lead_frames": 0.0,
+        "recommended_j_cut_frames": 2
+      },
+      "audio_and_sfx": {
+        "integrated_lufs": -14.0,
+        "sfx_per_min_measured": 31.3,
+        "sfx_per_min_target": 48.0,
+        "voice_bgm_snr_target_db": 11.5,
+        "dual_bgm_enabled": true,
+        "sfx_cut_offset_ms": 0.0,
+        "signature_jianying_sfx": [
+          "“呼”2",
+          "单反相机快速拍照快门声音音效",
+          "鼠标单击"
+        ]
+      },
+      "subtitle_spec": {
+        "font_family": "Source Han Serif CN Heavy",
+        "font_candidates": [
+          "SourceHanSerifCN-Heavy.otf",
+          "AlimamaShuHeiTi-Bold.otf",
+          "SmileySans-Oblique.ttf"
+        ],
+        "font_weight": "Bold",
+        "bilingual": false,
+        "font_size_1080p_px": 58,
+        "keyword_scale": 1.12,
+        "primary_color": "#FFFFFF",
+        "keyword_color": "#BCFF00",
+        "stroke_color": "#000000",
+        "stroke_width": 3,
+        "bg_box_color": "#161B22CC",
+        "bg_radius": 16,
+        "safe_y_ratio": 0.76,
+        "animation": "in:放大",
+        "punct_stripped": true,
+        "measured_y_center_ratio": 0.76,
+        "measured_animation_raw": "in:放大/in:缩小/in:渐显",
+        "safe_y_px_1080x1920": 1459,
+        "safe_y_px_1920x1080": 800,
+        "shadow": true,
+        "shadow_color": "#000000C8",
+        "shadow_offset": [
+          2,
+          3
+        ],
+        "max_chars_per_line": 10,
+        "symmetry_center_x": 540,
+        "symmetry_max_width_px": 640
+      },
+      "color_and_lut": {
+        "y_mean_255": 92.0,
+        "y_p05_255": 27.0,
+        "y_p50_255": 92.0,
+        "y_p95_255": 160.0,
+        "dynamic_range_255": 169.7,
+        "dark_ratio_pct": 46.8,
+        "bright_ratio_pct": 5.5,
+        "sat_mean_pct": 34.0,
+        "warmth_index": 24.0,
+        "tone_mood": "均衡自然通透调",
+        "shadow_rgb": [
+          32.0,
+          34.0,
+          38.0
+        ],
+        "midtone_rgb": [
+          92.0,
+          92.0,
+          92.0
+        ],
+        "highlight_rgb": [
+          225.0,
+          224.0,
+          220.0
+        ],
+        "top5_palette_hex": [
+          "#130E0B",
+          "#805C44",
+          "#BA9070",
+          "#2D1D16",
+          "#483025"
+        ],
+        "lut_file": "style_24.cube",
+        "lut_size": 17,
+        "lut_strength": 0.66,
+        "contrast_gain": 1.13,
+        "sat_scale": 1.07,
+        "shadow_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "highlight_tint_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "css_filter_approx": "brightness(0.970) contrast(1.13) saturate(1.07)",
+        "lut_relative_path": "assets/style_spectrum/luts/style_24.cube"
+      },
+      "opening_structure": {
+        "0_to_3s_pattern": "前3秒完成 2 次切镜 + 0ms 咬合入场音效(“呼”2) + 高反差核心词(#BCFF00)直接亮明观点",
+        "hook_formula": "高频疑问/反常识开篇 + 0ms音画同帧爆点 + 视觉分层花字",
+        "first_frame_density": "高（主体清晰 + 顶部或中区核心关键词 + 0帧零延迟上屏）",
+        "first_3s_cuts_count": 2,
+        "hook_intro_sec": 1.54
+      },
+      "title_cover_layout": {
+        "layout_id": "top_giant_bottom_sub",
+        "layout_name": "全画面高燃卡点 · 100%无出镜混剪风",
+        "grid_desc": "严格遵循内置 3:4 封面安全区构图（top_giant_bottom_sub），主次字号比 >= 1.8",
+        "main_sub_ratio": 1.85,
+        "highlight_style": "主色 #FFFFFF + 强调色 #BCFF00 + 高反差描边"
+      },
+      "transition_and_packaging": {
+        "ui_cadence": "全程不用老板或博主出镜，百分之百由产品细节、现场实景与图解快切画面撑满全片，每秒都在变化，配高频卡点音效防划走。",
+        "transitions": [
+          "零缝硬切",
+          "关键帧推拉",
+          "实景叠层切入"
+        ],
+        "elements": [
+          "AI抠像x3",
+          "蒙版:圆形x5",
+          "巨字冲击x3",
+          "高B-roll(54%)"
+        ],
+        "sfx_per_min_target": 48,
+        "visual_per_min_target": 31,
+        "broll_overlay_ratio_target": 1.0
+      },
+      "assets": {
+        "lut_cube": "luts/style_24.cube"
+      },
+      "subtitle_symmetry_lock": {
+        "x_center": 540,
+        "safe_x_min": 220,
+        "safe_x_max": 860,
+        "max_width_px": 640,
+        "max_chars_per_line": 10,
+        "vertical_face_avoid_only": true
+      },
+      "is_default_store_style": false,
+      "is_default_creator_style": false,
+      "broll_overlay_ratio_target": 1.0,
+      "broll_ambient_sound_policy": {
+        "enabled": false,
+        "gain_db": -10.0,
+        "trigger_action_words": [
+          "敲",
+          "响",
+          "滋啦",
+          "切",
+          "倒",
+          "沸",
+          "烤",
+          "炒",
+          "砸",
+          "摔",
+          "刷",
+          "翻"
+        ]
+      },
+      "dual_bgm_structure": {
+        "enabled": true,
+        "intro_duration_sec": 3.0,
+        "intro_fade_out_sec": 0.5,
+        "main_bgm_gain_db": -11.5,
+        "main_fade_in_sec": 0.5,
+        "main_fade_out_sec": 1.0
+      },
+      "multi_zone_flower_spec": {
+        "center_burst_color": "#BCFF00",
+        "flank_color": "#FFF589",
+        "stamp_color": "#B71C1C",
+        "end_card_color": "#FFBF17",
+        "stroke_color": "#000000",
+        "borderless": false,
+        "persistent_top_bar": true,
+        "quote_citation_card": false
+      },
+      "pip_composition_spec": {
+        "mode": "corner_circle_evidence_pip",
+        "window_bbox": {
+          "x": 688,
+          "y": 240,
+          "w": 292,
+          "h": 292
+        },
+        "mask_shape": "circle",
+        "border_hex": "#FFBF17",
+        "border_width": 5,
+        "tag_text": "高燃特写",
+        "apply_on": "all_clips"
+      },
+      "giant_text_spec": {
+        "mode": "giant_smash_single",
+        "font_size_px": 148,
+        "fg_hex": "#FFBF17",
+        "accent_hex": "#FF1837",
+        "stroke_hex": "#000000",
+        "stroke_width": 10,
+        "tag_label": "高燃盘点"
+      }
+    }
+  ]
+}

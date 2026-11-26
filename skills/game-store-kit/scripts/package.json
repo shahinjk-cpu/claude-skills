@@ -1,0 +1,1 @@
+{ "name": "game-store-kit-scripts", "private": true, "type": "module", "dependencies": { "playwright-core": "^1.49.0" } }

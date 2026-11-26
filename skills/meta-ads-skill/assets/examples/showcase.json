@@ -1,0 +1,205 @@
+{
+  "spec_version": 1,
+  "campaign": {
+    "name": "Northstep fall launch",
+    "notes": "Example spec covering every format. Media paths are relative to this file."
+  },
+  "brands": {
+    "b_northstep": {
+      "page_name": "Northstep Shoes",
+      "avatar": "m_avatar",
+      "ig_handle": "northstep",
+      "verified": true
+    },
+    "b_rival": {
+      "page_name": "Rival Runners",
+      "ig_handle": "rivalrunners",
+      "avatar": "m_rival_logo_ph"
+    }
+  },
+  "media": {
+    "m_avatar": {
+      "kind": "image",
+      "src": "media/avatar.png"
+    },
+    "m_hero45": {
+      "kind": "image",
+      "src": "media/hero_4x5.jpg",
+      "label": "Fall collection hero"
+    },
+    "m_hero11": {
+      "kind": "image",
+      "src": "media/hero_1x1.jpg",
+      "label": "Fall collection hero (square)"
+    },
+    "m_teaser": {
+      "kind": "video",
+      "src": "media/teaser_9x16.mp4",
+      "label": "6s teaser"
+    },
+    "m_trail": {
+      "kind": "image",
+      "src": "media/card_trail.jpg"
+    },
+    "m_city": {
+      "kind": "image",
+      "src": "media/card_city.jpg"
+    },
+    "m_kids": {
+      "kind": "image",
+      "src": "media/card_kids.jpg"
+    },
+    "m_banner": {
+      "kind": "image",
+      "src": "media/banner_191.jpg",
+      "label": "Free shipping banner"
+    },
+    "m_idea_ugc": {
+      "kind": "placeholder",
+      "ratio": "9:16",
+      "label": "UGC: runner unboxing on a rainy porch",
+      "color": "#2f3e46"
+    },
+    "m_rival_logo_ph": {
+      "kind": "placeholder",
+      "ratio": "1:1",
+      "label": "Rival Runners logo",
+      "color": "#1d2b3a"
+    }
+  },
+  "defaults": {
+    "cta": "SHOP_NOW",
+    "destination_url": "https://northstep.example/fall",
+    "engagement": {
+      "reactions": 412,
+      "comments": 38,
+      "shares": 17,
+      "likes": 2304,
+      "views": 26100
+    }
+  },
+  "ads": [
+    {
+      "id": "A1",
+      "label": "Hook: discount first",
+      "group": "Fall hero headlines",
+      "format": "image",
+      "primary_text": "Our fall collection just dropped 🍂 Waterproof uppers, recycled soles, and up to 40% off for launch week only. Free returns, always.",
+      "headline": "Up to 40% off fall styles",
+      "description": "Free returns on every order",
+      "creative": {
+        "4:5": "m_hero45",
+        "1:1": "m_hero11"
+      }
+    },
+    {
+      "id": "A2",
+      "label": "Hook: comfort",
+      "group": "Fall hero headlines",
+      "format": "image",
+      "primary_text": "Wet leaves, cold mornings, long walks. Your feet stay dry and warm in the new Northstep fall line.",
+      "headline": "Dry feet all season",
+      "creative": {
+        "4:5": "m_hero45",
+        "1:1": "m_hero11"
+      }
+    },
+    {
+      "id": "A3",
+      "label": "Hook: social proof",
+      "group": "Fall hero headlines",
+      "format": "image",
+      "primary_text": "\"I wore them through a week of rain in Portland and my socks never got wet.\" ⭐⭐⭐⭐⭐\n\nJoin 40,000+ happy walkers.",
+      "headline": "Rated 4.8 by 40,000+ walkers",
+      "cta": "LEARN_MORE",
+      "creative": {
+        "4:5": "m_hero45"
+      }
+    },
+    {
+      "id": "V1",
+      "label": "Teaser video",
+      "format": "video",
+      "primary_text": "Step into fall. New colors, same all-day comfort.",
+      "headline": "Shop the fall drop",
+      "creative": {
+        "9:16": "m_teaser"
+      }
+    },
+    {
+      "id": "C1",
+      "label": "Carousel by activity",
+      "format": "carousel",
+      "primary_text": "One brand, every kind of walk. Swipe to find your fall pair.",
+      "cards": [
+        {
+          "creative": {
+            "1:1": "m_trail"
+          },
+          "headline": "Trail Runner",
+          "description": "From $129"
+        },
+        {
+          "creative": {
+            "1:1": "m_city"
+          },
+          "headline": "City Sneaker",
+          "description": "From $99"
+        },
+        {
+          "creative": {
+            "1:1": "m_kids"
+          },
+          "headline": "Kids Line",
+          "description": "From $59"
+        }
+      ]
+    },
+    {
+      "id": "B1",
+      "label": "Shipping banner (1.91:1 only)",
+      "format": "image",
+      "primary_text": "Free shipping on every order, no minimum.",
+      "headline": "Free shipping, no minimum",
+      "cta": "SHOP_NOW",
+      "creative": {
+        "1.91:1": "m_banner"
+      }
+    },
+    {
+      "id": "P1",
+      "label": "Copy-first: UGC concept",
+      "format": "video",
+      "primary_text": "POV: the rain starts halfway through your walk and you just keep going 🌧️",
+      "headline": "Waterproof, finally",
+      "cta": "SHOP_NOW",
+      "creative": {
+        "9:16": "m_idea_ugc"
+      }
+    },
+    {
+      "id": "X1",
+      "label": "Competitor reference",
+      "brand": "b_rival",
+      "format": "image",
+      "primary_text": "Fall sale: 25% off everything this weekend.",
+      "headline": "25% off sitewide",
+      "cta": "SHOP_NOW",
+      "destination_url": "https://rival.example",
+      "creative": {
+        "1:1": "m_hero11"
+      },
+      "engagement": {
+        "reactions": 89,
+        "comments": 4,
+        "shares": 1,
+        "likes": 530
+      },
+      "source": {
+        "type": "ads_library",
+        "library_id": "000000000000000",
+        "note": "illustrative only"
+      }
+    }
+  ]
+}

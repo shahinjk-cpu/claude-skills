@@ -1,0 +1,104 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="_base.css">
+<style>
+  .cap { position: absolute; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .stage { position: absolute; z-index: 2; border-radius: 50%; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--accent) 55%, transparent) 0%, transparent 65%); filter: blur(20px); }
+</style></head><body>
+<script src="_base.js"></script>
+<script>
+// Premium screenshot: headline + chips, game frame inside a modern phone (or bare card when style.device = 'none'),
+// floating real game objects at depth, optional zoom callout, objects bridging to neighbouring screenshots.
+const { B, J, S, W, H, P, el, rich, background, fit, phone, chips, callout, floaters, bridge, bokeh, decor } = KIT;
+if (S.upper) document.body.classList.add('upper');
+background(document.body);
+const idx = J.index || 0;
+const layout = J.layout || (P ? ['hero', 'tilt-l', 'hero', 'tilt-r'][idx % 4] : 'split');
+const short = Math.min(W, H);
+const fa = J.aspect || (P ? 1206 / 2622 : 2622 / 1206);   // captured frame aspect (w/h)
+const mode = J.device ?? S.device ?? 'bleed';          // 'bleed' (default: full-bleed gameplay, Google's recommended style) | 'phone' (device mockup) | 'none' (rounded card)
+const device = mode === 'phone';
+if (mode !== 'bleed') bokeh(document.body, S.bokeh ?? 26, (J.index || 0) + 1);
+
+// ---------- text block
+const cap = el('div', 'cap');
+const h1 = el('h1', null, rich(J.headline)); cap.appendChild(h1);
+if (J.sub) { const s = el('div', 'sub', rich(J.sub)); s.style.fontSize = short * 0.036 + 'px'; s.style.marginTop = short * .012 + 'px'; cap.appendChild(s); }
+if (J.chips && J.chips.length) { const c = chips(J.chips, short * 0.04); c.style.marginTop = short * .028 + 'px'; cap.appendChild(c); }
+document.body.appendChild(cap);
+
+// ---------- device
+let ph, box;
+if (mode === 'bleed') {
+  // gameplay fills the whole canvas, zoomed so the action is big; focus point (0-1 in the frame) lands at
+  // `at` (0-1 in the canvas). Caption sits on a soft gradient over the calm part of the frame (sky).
+  const Z = J.zoom || (P ? 1.3 : 1.15), f = J.focus || { x: .4, y: .6 }, at = J.at || (P ? { x: .5, y: .78 } : { x: .62, y: .55 });
+  const DW = (P ? W : H * fa) * Z, DH = DW / fa;
+  const hud = J.hudCrop ?? S.hudCrop ?? .13;   // top part of the frame holding the HUD: keep it above the canvas when possible
+  const left = Math.min(0, Math.max(W - DW, at.x * W - f.x * DW));
+  let top = Math.min(-hud * DH, Math.min(0, Math.max(H - DH, at.y * H - f.y * DH)));
+  // menu / UI screens: start the image BELOW the caption (startAt = fraction of canvas height) so text never covers UI
+  if (J.startAt != null) top = J.startAt * H - (J.cropTop || 0) * DH;
+  const im = el('img', 'bleed'); im.src = J.image; im.style.cssText = `position:absolute;z-index:2;left:${left}px;top:${top}px;width:${DW}px;height:${DH}px;` +
+    (J.startAt != null ? `mask-image:linear-gradient(180deg, transparent ${J.startAt * H - top}px, #000 ${J.startAt * H - top + H * .05}px);-webkit-mask-image:linear-gradient(180deg, transparent ${J.startAt * H - top}px, #000 ${J.startAt * H - top + H * .05}px);` : '');
+  document.body.appendChild(im);
+  const shade = el('div'); shade.style.cssText = `position:absolute;inset:0;z-index:3;pointer-events:none;background:` + (P
+    ? `linear-gradient(180deg, color-mix(in oklab, var(--dark) 78%, transparent) 0%, color-mix(in oklab, var(--dark) 35%, transparent) 26%, transparent 42%), linear-gradient(0deg, color-mix(in oklab, var(--dark) 55%, transparent) 0%, transparent 18%)`
+    : `linear-gradient(90deg, color-mix(in oklab, var(--dark) 82%, transparent) 0%, color-mix(in oklab, var(--dark) 40%, transparent) 34%, transparent 52%)`);
+  document.body.appendChild(shade);
+  const capH = H * (J.chips ? .27 : .23);
+  if (P) { cap.style.cssText = `left:${W * .06}px;right:${W * .06}px;top:${H * .04}px;height:${capH}px;`; h1.style.cssText = `width:100%;max-height:${capH * (J.chips ? .6 : .8)}px;`; }
+  else { cap.style.cssText = `left:${W * .04}px;top:${H * .1}px;bottom:${H * .1}px;width:${W * .38}px;`; h1.style.cssText = `width:100%;max-height:${H * .55}px;`; }
+  box = { x: 0, y: capH, w: W, h: H - capH };
+  window.LAYOUT = () => fit(h1, (P ? W : H * 1.3) * (S.headline || 0.115) * (P ? 1.05 : 1), short * 0.06);
+} else if (P) {
+  const capH = H * (J.chips ? .29 : .245);
+  cap.style.cssText = `left:${W * .06}px;right:${W * .06}px;top:${H * .035}px;height:${capH}px;`;
+  h1.style.cssText = `width:100%;max-height:${capH * (J.chips ? .58 : .78)}px;`;
+  const sw = W * (S.phoneScale || 0.64);
+  ph = device ? phone({ img: J.image, screenW: sw, aspect: fa, crop: J.crop }) : null;
+  const pw = ph ? ph.w : sw, phh = ph ? ph.h : sw / fa;
+  const top = H * .035 + capH + H * .02;
+  const tilt = layout === 'tilt-l' ? -7 : layout === 'tilt-r' ? 7 : 0;
+  const left = (W - pw) / 2 + (tilt ? Math.sign(tilt) * W * .03 : 0);
+  box = { x: left, y: top, w: pw, h: phh };
+  const node = ph ? ph.el : (() => { const c = el('div', 'card'); const i = el('img'); i.src = J.image; c.appendChild(i); c.style.borderRadius = short * .05 + 'px'; return c; })();
+  node.style.left = left + 'px'; node.style.top = top + 'px'; if (!ph) { node.style.width = pw + 'px'; node.style.height = phh + 'px'; }
+  node.style.transform = tilt ? `rotate(${tilt}deg)` : ''; node.style.transformOrigin = '50% 40%';
+  document.body.appendChild(node);
+  const st = el('div', 'stage'); st.style.cssText += `left:${left - pw * .3}px;top:${top + phh * .25}px;width:${pw * 1.6}px;height:${phh * .9}px;`; document.body.appendChild(st);
+  window.LAYOUT = () => fit(h1, W * (S.headline || 0.115), W * 0.06);
+} else {
+  const capW = W * .36;
+  cap.style.cssText = `left:${W * .04}px;top:${H * .1}px;bottom:${H * .1}px;width:${capW}px;`;
+  h1.style.cssText = `width:100%;max-height:${H * (J.chips ? .5 : .66)}px;`;
+  const sh = H * .74, sw = sh * fa;
+  ph = device ? phone({ img: J.image, screenW: sw, aspect: fa, landscape: true, crop: J.crop }) : null;
+  const pw = ph ? ph.w : sw, phh = ph ? ph.h : sh;
+  const left = Math.max(capW + W * .06, W - pw - W * .02), top = (H - phh) / 2;
+  box = { x: left, y: top, w: pw, h: phh };
+  const node = ph ? ph.el : (() => { const c = el('div', 'card'); const i = el('img'); i.src = J.image; c.appendChild(i); return c; })();
+  node.style.left = left + 'px'; node.style.top = top + 'px'; node.style.transform = 'perspective(2600px) rotateY(-10deg) rotateZ(1.5deg)';
+  document.body.appendChild(node);
+  window.LAYOUT = () => fit(h1, H * (S.headline || 0.115) * 1.3, H * 0.06);
+}
+
+// ---------- callout (zoom bubble on a detail)
+if (J.callout) document.body.appendChild(callout(J.callout, J.image, fa));
+
+// ---------- floating real game objects around the device (slots avoid the text and screen centre)
+const slots = P ? [
+  { x: 9, y: 36, size: .1 }, { x: 91, y: 44, size: .095 }, { x: 8, y: 66, size: .09 }, { x: 92, y: 73, size: .1 },
+  { x: 11, y: 92, size: .15, depth: 'near' }, { x: 93, y: 26, size: .06, depth: 'far' }, { x: 5, y: 50, size: .055, depth: 'far' },
+] : [
+  { x: 6, y: 86, size: .13 }, { x: 40, y: 14, size: .1, depth: 'far' }, { x: 97, y: 12, size: .12 }, { x: 38, y: 90, size: .16, depth: 'near' }, { x: 96, y: 92, size: .14, depth: 'near' },
+];
+const items = J.floaters || B.items || [];
+// full-bleed: items only in the caption band corners and one foreground corner, never over the action
+const bleedSlots = P ? [{ x: 7, y: 8, size: .065, depth: 'far' }, { x: 89, y: 91, size: .14, depth: 'near' }]
+                     : [{ x: 4, y: 88, size: .12 }, { x: 34, y: 10, size: .08, depth: 'far' }];
+floaters(document.body, items, J.floaterCount ?? (mode === 'bleed' ? 3 : S.floaters ?? 5), idx + 1, mode === 'bleed' ? bleedSlots : slots);
+bridge(document.body, J.bridge, 'right');
+bridge(document.body, J.bridgeLeft, 'left');
+decor(document.body);
+if (J.badge) { const b = el('div', 'badge', J.badge); b.style.cssText = `font-size:${short * .042}px;padding:.35em .9em;left:${box.x + box.w * .78}px;top:${box.y - short * .02}px;transform:rotate(8deg)`; document.body.appendChild(b); }
+</script></body></html>

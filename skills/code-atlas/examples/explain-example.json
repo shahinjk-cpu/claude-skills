@@ -1,0 +1,53 @@
+{
+ "_about": "A made-up example for a tiny shop codebase (an api/ folder in Go). Copy the shape, not the words.",
+ "nodes": {
+  "area:api": { "what": "The part of the shop that answers web requests about orders.", "does": "main.go starts a small web server. Each web address has its own [[handler]] in handlers/." },
+  "api/main.go": { "what": "Starts the shop's web server.", "does": "Connects the /orders address to ListOrders, prints a start message and waits for requests on port 8080." },
+  "api/main.go#main": { "what": "The first code that runs when the server starts.", "does": "Registers the /orders handler, prints where it is listening, then starts serving.", "example": "Running the program prints 'listening on 8080'." },
+  "api/main.go#startMessage": { "what": "Writes the line printed at start-up.", "does": "Puts the port number into a short sentence.", "example": "8080 becomes 'listening on 8080'." },
+  "api/handlers/orders.go": { "what": "Everything about listing orders.", "does": "Loads the orders, labels each one and sends the labels back to the browser." },
+  "api/handlers/orders.go#ListOrders": { "what": "Answers a request for /orders.", "does": "Asks loadOrders for every order, then writes each order's label into the reply." },
+  "api/handlers/orders.go#loadOrders": { "what": "Gets the list of orders.", "does": "Returns two sample orders written into the code (a real shop would read a database here)." },
+  "api/handlers/orders.go#formatOrder": { "what": "Turns an order into the short label shown in lists.", "does": "Orders over 10 are 'big', the rest 'small'.", "example": "An order with a total of 20 becomes 'big'." }
+ },
+ "glossary": {
+  "handler": "A function the web server runs when a request arrives at one web address."
+ },
+ "tours": [
+  { "title": "Someone asks for their orders", "intro": "From the request to the reply", "steps": [
+   { "id": "api/main.go#main", "text": "The server started earlier and is waiting. A browser asks for /orders." },
+   { "id": "api/handlers/orders.go#ListOrders", "text": "The server hands the request to ListOrders." },
+   { "id": "api/handlers/orders.go#loadOrders", "text": "ListOrders first gets every order." },
+   { "id": "api/handlers/orders.go#formatOrder", "text": "Each order is labelled 'big' or 'small', and the labels go back to the browser." }
+  ] }
+ ],
+ "beginner": {
+  "roles": { "api/main.go#main": "boss", "api/handlers/orders.go#ListOrders": "worker" },
+  "io": {
+   "api/main.go#main": { "in": "Nothing; it runs when the program starts.", "out": "A running web server on port 8080." },
+   "api/main.go#startMessage": { "in": "A port number, like 8080.", "out": "'listening on 8080'.", "to": "to write the start-up line", "tag": "start line" },
+   "api/handlers/orders.go#ListOrders": { "in": "A web request for /orders.", "out": "A reply with one label per order.", "to": "to answer /orders", "tag": "answer /orders" },
+   "api/handlers/orders.go#loadOrders": { "in": "Nothing.", "out": "Two orders: totals 9.5 and 20.", "to": "to get every order", "tag": "get orders" },
+   "api/handlers/orders.go#formatOrder": { "in": "One order, like total 20.", "out": "'big' or 'small'.", "to": "to label an order", "tag": "label it" }
+  },
+  "plays": {
+   "area:api": { "title": "One request, start to finish", "steps": [
+    { "id": "api/main.go", "text": "main.go starts the server and connects /orders to the orders handler." },
+    { "id": "api/handlers/orders.go", "from": "api/main.go", "text": "When someone asks for /orders, orders.go loads the orders, labels them and replies." }
+   ] }
+  }
+ },
+ "story": {
+  "overview": {
+   "title": "Shop Town", "town": "Everything in shop", "intro": "The whole shop as a small town.",
+   "cast": [
+    { "key": "web", "name": "The Internet", "short": "Internet", "job": "ingredients", "hello": "Customers' browsers live here." },
+    { "key": "area:api", "id": "area:api", "name": "Market Street", "short": "Market St", "job": "boss", "hello": "I answer every question about orders." }
+   ],
+   "scenes": [
+    { "from": "web", "to": "area:api", "say": "What orders do I have?", "parcel": "GET /orders", "reply": "Here they are!", "back": "big, small", "caption": "A browser asks Market Street for the orders.", "file": "api/main.go", "line": 10 }
+   ],
+   "quiz": [ { "q": "Who answers questions about orders?", "options": ["The Internet", "Market Street"], "answer": 1 } ]
+  }
+ }
+}

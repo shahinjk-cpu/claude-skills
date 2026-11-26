@@ -1,0 +1,35 @@
+{
+  "country": "BR",
+  "currency": "BRL",
+  "validFrom": "2026-01-01",
+  "validUntil": "2026-12-31",
+  "note": "Estimates for comparing offers, not tax advice. Update every January; verify with an accountant before deciding.",
+  "sources": {
+    "irpf": "https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2026",
+    "inss": "https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal",
+    "inss_act": "Portaria Interministerial MPS/MF nº 13/2026",
+    "simples": "LC 123/2006, Anexos III and V (alíquotas, valor a deduzir, repartição)",
+    "dividends": "Lei 15.270/2025 (art. 6-A monthly 10% withholding; art. 16-A annual minimum tax)"
+  },
+  "minimumWage": 1621.00,
+  "inssEmployee": [[1621.00, 0.075], [2902.84, 0.09], [4354.27, 0.12], [8475.55, 0.14]],
+  "inssCeiling": 8475.55,
+  "inssProLaboreRate": 0.11,
+  "irrf": [[2428.80, 0.0, 0.0], [2826.65, 0.075, 182.16], [3751.05, 0.15, 394.16], [4664.68, 0.225, 675.49], [null, 0.275, 908.73]],
+  "irrfSimplifiedDiscount": 607.20,
+  "irrfReduction": {"fullUpTo": 5000.00, "maxFull": 312.89, "phaseOutUntil": 7350.00, "a": 978.62, "b": 0.133145},
+  "dividendWithholding": {"monthlyThreshold": 50000.00, "rate": 0.10},
+  "minimumAnnualTax": {"from": 600000.00, "full": 1200000.00, "maxRate": 0.10},
+  "fgtsRate": 0.08,
+  "clt": {"salariesPerYear": 13, "vacationBonus": 0.3333},
+  "simples": {
+    "bands": [180000, 360000, 720000, 1800000, 3600000, 4800000],
+    "III": {"rates": [0.06, 0.112, 0.135, 0.16, 0.21, 0.33], "deduct": [0, 9360, 17640, 35640, 125640, 648000],
+            "exportExemptShare": [0.491, 0.491, 0.491, 0.491, 0.491, 0.195]},
+    "V":   {"rates": [0.155, 0.18, 0.195, 0.205, 0.23, 0.305], "deduct": [0, 4500, 9900, 17100, 62100, 540000],
+            "exportExemptShare": [0.3115, 0.3415, 0.3715, 0.4015, 0.4065, 0.20]},
+    "fatorR": 0.28,
+    "exportShareNote": "Share of the DAS that is ISS + PIS + Cofins in each band (repartição tables). These are not charged on exported services. The 5th-band ISS cap is ignored (approximation)."
+  },
+  "defaults": {"accountantMonthly": 400, "fxSpread": 0.015}
+}

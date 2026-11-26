@@ -1,0 +1,41 @@
+{
+  "vehicle_id": "ussr_bmpt_72",
+  "display_name": "BMPT-72 Premium / Terminator-2",
+  "source_glb_sha256": "e7f282911c3aeb058f66011d53ae1278b330b19f283f00afcc1f27e477e98889",
+  "source_unit": "metre",
+  "scale_denominator": 72,
+  "validated_scales": [72],
+  "profile": "a1mini_02_pla",
+  "grouping": {
+    "turret_root": "bone_turret",
+    "gun_root": "bone_gun",
+    "missile_root": "bone_gun_01",
+    "hull_core": "@root",
+    "track_left": "track_l_mesh",
+    "track_right": "track_r_mesh",
+    "left_patterns": ["^wheel_l_", "^suspension_l_"],
+    "right_patterns": ["^wheel_r_", "^suspension_r_"]
+  },
+  "joints": {
+    "turret_pin_owner": "hull",
+    "turret_pin_diameter_mm": 5.0,
+    "turret_pin_engagement_mm": 3.0,
+    "turret_bore_depth_mm": 3.4,
+    "turret_radial_clearance_mm": 0.2,
+    "pin_tip_chamfer_mm": 0.25,
+    "glue_clearance_per_side_mm": 0.15
+  },
+  "minimum_structural_thickness_mm": 0.8,
+  "turret_ring_relief": {
+    "radius_profile_z_r_mm": [[20.0,16.6],[20.5,16.6],[21.0,17.45],[26.3,17.45]],
+    "radial_clearance_mm": 0.35,
+    "minimum_eccentric_margin_mm": 0.15,
+    "protected_bearing_radius_mm": 5.1
+  },
+  "glue_keys": [
+    {"fixed":"gun_group","moving":"turret","low_mm":[-18.25,-0.75,29.0],"high_mm":[-15.75,0.75,31.2]},
+    {"fixed":"turret","moving":"missile_left","low_mm":[-13.25,10.0,34.1],"high_mm":[-10.75,14.0,35.6]},
+    {"fixed":"turret","moving":"missile_right","low_mm":[-13.25,-14.0,34.1],"high_mm":[-10.75,-10.0,35.6]}
+  ],
+  "physical_calibration_passed": false
+}

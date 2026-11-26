@@ -1,0 +1,11 @@
+Rajdhani
+Copyright (c) 2014, Indian Type Foundry (info@indiantypefoundry.com)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is available with a FAQ at:
+https://openfontlicense.org
+
+The font files in this directory are subsets (Latin) of Rajdhani,
+distributed under the SIL Open Font License 1.1.
+For the full license text, see:
+https://github.com/google/fonts/blob/main/ofl/rajdhani/OFL.txt

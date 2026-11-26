@@ -1,0 +1,59 @@
+# Known Speakers Registry — TEMPLATE
+#
+# Maps canonical names to aliases, roles, and team affiliations.
+# Used in Step 0b to resolve raw names from user input or AI-extracted attendee lists
+# into canonical names + wikilinks before they propagate through the pipeline.
+#
+# Format:
+#   canonical_name: The name to use in all outputs (context file, summary, action items)
+#   aliases:        Alternative spellings, nicknames, transliterations,
+#                   or AI-misheard variants that should resolve to this name
+#   role:           Professional role (used in context file for Gemini diarization)
+#   teams:          Team/project affiliations (helps with auto-matching)
+#   wikilink:       Preferred Obsidian wikilink format for the attendees field
+#   notes:          Optional free-text — email, institution, context
+#
+# Matching rules:
+#   1. Case-insensitive exact match on canonical_name OR any alias
+#   2. If no match found, flag as new speaker and ask user
+#   3. NEVER silently accept an unmatched name — always confirm
+#
+# Maintenance:
+#   After each meeting with new attendees, add them here.
+#   When correcting a misspelling, add the wrong spelling as an alias
+#   so the same mistake gets caught next time.
+#
+# ─── REPLACE THE EXAMPLES BELOW WITH YOUR OWN TEAM ──────────────────────────
+# Do NOT commit real names + emails to a public repo.
+
+speakers:
+
+  # ─── Example: PI / Team Lead ───
+  - canonical_name: REPLACE_ME_PERSON_1
+    aliases: [REPLACE_ME_ALIAS_1a, REPLACE_ME_ALIAS_1b]
+    role: REPLACE_ME_ROLE_1
+    teams: [REPLACE_ME_PROJECT_1]
+    wikilink: "[[REPLACE_ME_PERSON_1]]"
+    notes: "replace-me@example.invalid"
+
+  # ─── Example: Analyst with many alias variants ───
+  - canonical_name: REPLACE_ME_PERSON_2
+    aliases: [REPLACE_ME_ALIAS_2a, REPLACE_ME_ALIAS_2b, REPLACE_ME_ALIAS_2c, REPLACE_ME_ALIAS_2d]
+    role: REPLACE_ME_ROLE_2
+    teams: [REPLACE_ME_PROJECT_1]
+    wikilink: "[[REPLACE_ME_PERSON_2]]"
+
+  # ─── Example: Non-English name with transliteration aliases ───
+  - canonical_name: REPLACE_ME_PERSON_3
+    aliases: [REPLACE_ME_ALIAS_3a, REPLACE_ME_非ASCII]
+    role: REPLACE_ME_ROLE_3
+    teams: [REPLACE_ME_PROJECT_2]
+    wikilink: "[[REPLACE_ME_PERSON_3]]"
+
+  # ─── Example: External collaborator ───
+  - canonical_name: REPLACE_ME_PERSON_4
+    aliases: [REPLACE_ME_ALIAS_4a, REPLACE_ME_ALIAS_4b]
+    role: REPLACE_ME_ROLE_4
+    teams: [REPLACE_ME_PROJECT_2]
+    wikilink: "[[REPLACE_ME_PERSON_4]]"
+    notes: "replace-me@example.invalid"

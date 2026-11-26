@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: one-conventional-commit-no-push
+expected_outcome: |
+  Conventional commit for the staged change only; no push, no bypass.

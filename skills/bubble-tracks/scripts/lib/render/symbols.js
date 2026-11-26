@@ -1,0 +1,40 @@
+// What rendering is made of: the symbol sets (unicode / ascii), colors, and title shortening.
+export const SYMBOLS = {
+    unicode: { done: '●', active: '◐', todo: '○', fog: '❓', sep: '──', prev: ' ‹ ', next: ' › ', more: '…', fork: '⑂', side: '↗', lock: '🔒', goal: '⚑', guard: '¦', owner: '◆', humanDone: '◆', humanActive: '◈', humanTodo: '◇' },
+    ascii: { done: '*', active: '@', todo: 'o', fog: '?', sep: '--', prev: ' < ', next: ' > ', more: '...', fork: 'Y', side: '/', lock: '#', goal: '^', guard: '!', owner: '+', humanDone: '+', humanActive: 'H', humanTodo: 'h' },
+};
+// ANSI colors: title dark green, track blue, prev ‹ active › next dark yellow, the human's bubbles red.
+const COLORS = { title: '\x1b[32m', track: '\x1b[34m', context: '\x1b[33m', human: '\x1b[31m', reset: '\x1b[0m' };
+export const paint = (on, color, text) => on && text ? `${COLORS[color]}${text}${COLORS.reset}` : text;
+/** A human's bubble symbol in red, inside text that `paint` colors as `around`: red, then back to that color. */
+export const paintHuman = (on, around, symbol) => on ? `${COLORS.human}${symbol}${COLORS[around]}` : symbol;
+/** Color is opt-in per call (opts.color); NO_COLOR always wins. */
+export function useColor(opts) {
+    if (process.env.NO_COLOR)
+        return false;
+    return !!(opts && opts.color);
+}
+export function symbolsFor(opts) {
+    const ascii = opts && typeof opts.ascii === 'boolean' ? opts.ascii : process.env.BUBBLES_ASCII === '1';
+    return ascii ? SYMBOLS.ascii : SYMBOLS.unicode;
+}
+/** A bubble's symbol; `human` (the human does its work) gives it its own shape. Fog looks the same for both. */
+export function symbolFor(bubble, isActive, sym, human = false) {
+    if (bubble.state === 'fog')
+        return sym.fog;
+    if (bubble.state === 'done')
+        return human ? sym.humanDone : sym.done;
+    if (isActive || bubble.state === 'active')
+        return human ? sym.humanActive : sym.active;
+    return human ? sym.humanTodo : sym.todo;
+}
+const LABEL_MAX = 20;
+/** Cut a title to LABEL_MAX chars, at a word boundary when there is one. */
+export function shorten(title, sym) {
+    const text = String(title || '').trim();
+    if (text.length <= LABEL_MAX)
+        return text;
+    const room = LABEL_MAX - sym.more.length;
+    const cut = text.slice(0, room + 1).lastIndexOf(' ');
+    return text.slice(0, cut > room / 2 ? cut : room).trimEnd() + sym.more;
+}

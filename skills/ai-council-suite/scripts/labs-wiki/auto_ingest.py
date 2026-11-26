@@ -1,0 +1,4889 @@
+#!/usr/bin/env python3
+"""
+Auto-ingest: Process raw wiki sources through an LLM pipeline.
+
+Reads a raw markdown source from raw/, enriches deterministic source snapshots,
+then compiles wiki pages through the configured ingest backend. The default
+backend is Codex CLI; the legacy GitHub Models path remains available.
+"""
+
+from __future__ import annotations
+
+import argparse
+import base64
+import hashlib
+import html
+import io
+import json
+import logging
+import mimetypes
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import traceback
+import textwrap
+from collections import Counter
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.parse import urljoin, urlparse
+
+import httpx
+from bs4 import BeautifulSoup
+from jsonschema import Draft202012Validator
+from openai import OpenAI
+try:
+    from markitdown import MarkItDown
+except ImportError:  # pragma: no cover
+    MarkItDown = None
+
+try:
+    from rapidfuzz import fuzz as _rf_fuzz
+    _FUZZ_AVAILABLE = True
+except ImportError:  # pragma: no cover
+    _rf_fuzz = None
+    _FUZZ_AVAILABLE = False
+
+# Semantic-dedupe deps are loaded lazily — see _get_sentence_transformer().
+# When unavailable, semantic dedupe degrades to the rapidfuzz token_set_ratio
+# path, which is the same fallback `find_fuzzy_match` already uses.
+_ST_MODEL = None
+_ST_AVAILABLE: bool | None = None  # tri-state: None=unprobed, True/False=known
+_ST_NUMPY = None
+
+from checkpoint_classifier import (
+    COMPRESS,
+    RETAIN,
+    SKIP,
+    classify_checkpoint,
+    resolve_retention,
+)
+from checkpoint_state import derive_knowledge_state, is_planning_only_checkpoint
+from ingest_transaction import (
+    PROPOSAL_SCHEMA,
+    ProposalError,
+    prepare_and_publish,
+    rebuild_graph_artifacts,
+)
+from wiki_schema import validate_page
+
+log = logging.getLogger("auto-ingest")
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+GITHUB_MODELS_URL = os.environ.get(
+    "GITHUB_MODELS_URL", "https://models.github.ai/inference"
+)
+DEFAULT_MODEL = "gpt-4.1"
+DEFAULT_CODEX_MODEL = "gpt-5.6-luna"
+DEFAULT_COPILOT_MODEL = "gpt-5.4"
+MAX_RETRIES = 3
+URL_FETCH_TIMEOUT = 30
+MAX_DOCUMENT_DOWNLOAD_SIZE = 15 * 1024 * 1024  # 15MB max document download
+MAX_IMAGES = 5  # Max images to process per source for vision
+MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5MB max per image download
+FETCHED_CONTENT_START = "<!-- fetched-content:start -->"
+FETCHED_CONTENT_END = "<!-- fetched-content:end -->"
+EXTRACTED_CONTENT_START = "<!-- extracted-content:start -->"
+EXTRACTED_CONTENT_END = "<!-- extracted-content:end -->"
+
+MARKITDOWN_FILE_EXTENSIONS = {
+    ".csv",
+    ".docx",
+    ".epub",
+    ".htm",
+    ".html",
+    ".json",
+    ".md",
+    ".pdf",
+    ".pptx",
+    ".rst",
+    ".txt",
+    ".xls",
+    ".xlsx",
+    ".xml",
+}
+MARKITDOWN_BINARY_URL_EXTENSIONS = {
+    ".docx",
+    ".epub",
+    ".pdf",
+    ".pptx",
+    ".xls",
+    ".xlsx",
+}
+MARKITDOWN_BINARY_MIME_TYPES = {
+    "application/epub+zip",
+    "application/pdf",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
+MARKITDOWN_MIME_TO_EXTENSION = {
+    "application/epub+zip": ".epub",
+    "application/pdf": ".pdf",
+    "application/vnd.ms-excel": ".xls",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": ".pptx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+}
+FILE_ASSET_REFERENCE_RE = re.compile(r"^See\s+`?(raw/assets/[^`\s]+)`?\s*$", re.I)
+
+
+@dataclass(frozen=True)
+class UrlFetchResult:
+    text: str
+    image_urls: list[str]
+    resolved_url: str | None = None
+    content_type: str | None = None
+
+
+def _env_str(*names: str, default: str = "") -> str:
+    """Return the first non-empty environment variable value."""
+    for name in names:
+        value = os.environ.get(name, "").strip()
+        if value:
+            return value
+    return default
+
+
+def _build_content_pattern(start_marker: str, end_marker: str) -> re.Pattern[str]:
+    return re.compile(
+        rf"\n?{re.escape(start_marker)}\n.*?\n{re.escape(end_marker)}\n?",
+        flags=re.S,
+    )
+
+
+def _read_persisted_content_block(
+    body: str,
+    *,
+    start_marker: str,
+    end_marker: str,
+    section_heading: str,
+) -> tuple[str | None, dict[str, object]]:
+    pattern = re.compile(
+        rf"{re.escape(start_marker)}\n(.*?)\n{re.escape(end_marker)}",
+        flags=re.S,
+    )
+    match = pattern.search(body)
+    if not match:
+        return None, {}
+
+    metadata: dict[str, object] = {}
+    text_lines: list[str] = []
+    in_text = False
+
+    for line in match.group(1).splitlines():
+        stripped = line.strip()
+        if stripped == section_heading:
+            in_text = True
+            continue
+        if not in_text and stripped.startswith("- "):
+            key, _, value = stripped[2:].partition(":")
+            parsed_key = key.strip()
+            parsed_value = value.strip()
+            if parsed_key == "image_urls":
+                try:
+                    metadata[parsed_key] = json.loads(parsed_value)
+                except json.JSONDecodeError:
+                    metadata[parsed_key] = []
+            else:
+                metadata[parsed_key] = parsed_value
+            continue
+        if in_text:
+            text_lines.append(line)
+
+    text = "\n".join(text_lines).strip()
+    return (text or None), metadata
+
+
+def _upsert_content_block(raw_text: str, block: str, pattern: re.Pattern[str]) -> str:
+    cleaned = pattern.sub("\n", raw_text).rstrip()
+    if cleaned:
+        return cleaned + "\n\n" + block
+    return block
+
+
+def _normalized_content_type(content_type: str | None) -> str:
+    if not content_type:
+        return ""
+    return content_type.split(";", 1)[0].strip().lower()
+
+
+def _suffix_from_url(url: str | None) -> str:
+    if not url:
+        return ""
+    return Path(urlparse(url).path).suffix.lower()
+
+
+def _is_meaningful_markdown(text: str) -> bool:
+    cleaned = text.strip()
+    if not cleaned:
+        return False
+    if cleaned.startswith("See `raw/assets/"):
+        return False
+    compressed = re.sub(r"\s+", "", cleaned)
+    return len(compressed) >= 30
+
+
+_PDF_SINGLE_CHAR_LINE_RE = re.compile(r"^[A-Za-z0-9\[\]\(\)\.:;,_-]$")
+_PDF_SPACED_WORD_RE = re.compile(r"\b(?:[A-Za-z]{1,2}\s+){3,}[A-Za-z]{1,2}\b")
+_PDF_SPACED_WORD_STOPWORDS = {
+    "a", "an", "and", "as", "at", "be", "by", "do", "et", "for", "he",
+    "if", "in", "is", "it", "of", "on", "or", "so", "to", "up", "we",
+}
+
+
+def _strip_pdf_vertical_noise(text: str) -> str:
+    """Remove vertical single-character metadata dumps common in PDF extraction."""
+    lines = text.splitlines()
+    cleaned: list[str] = []
+    i = 0
+    while i < len(lines):
+        j = i
+        total_lines = 0
+        single_char_lines = 0
+        while j < len(lines):
+            stripped = lines[j].strip()
+            if not stripped:
+                if total_lines == 0:
+                    break
+                total_lines += 1
+                j += 1
+                continue
+            if _PDF_SINGLE_CHAR_LINE_RE.fullmatch(stripped):
+                single_char_lines += 1
+                total_lines += 1
+                j += 1
+                continue
+            break
+        if single_char_lines >= 6 and total_lines >= 8:
+            i = j
+            continue
+        cleaned.append(lines[i])
+        i += 1
+    return "\n".join(cleaned)
+
+
+def _merge_spaced_pdf_word(match: re.Match[str]) -> str:
+    phrase = match.group(0)
+    tokens = phrase.split()
+    letters_only = "".join(tokens)
+    if len(tokens) < 3:
+        return phrase
+    lowered = [token.lower() for token in tokens]
+    if all(token in _PDF_SPACED_WORD_STOPWORDS for token in lowered):
+        return phrase
+    if len(letters_only) >= 6:
+        return letters_only
+    mixed_case_token = any(
+        any(ch.islower() for ch in token) and any(ch.isupper() for ch in token)
+        for token in tokens
+    )
+    if mixed_case_token or sum(len(token) == 1 for token in tokens) >= 3:
+        return letters_only
+    return phrase
+
+
+def _merge_pdf_fragments_if_known(match: re.Match[str], known_words: Counter[str]) -> str:
+    pieces = [piece for piece in match.groups() if piece]
+    if len(pieces) < 2:
+        return match.group(0)
+    if any(piece.lower() in _PDF_SPACED_WORD_STOPWORDS for piece in pieces):
+        return match.group(0)
+
+    for piece_count in range(len(pieces), 1, -1):
+        candidate = "".join(pieces[:piece_count])
+        if len(candidate) < 6:
+            continue
+        if known_words[candidate.lower()] > 0:
+            suffix = ""
+            if piece_count < len(pieces):
+                suffix = " " + " ".join(pieces[piece_count:])
+            return candidate + suffix
+    return match.group(0)
+
+
+def _normalize_pdf_link_line(line: str) -> str:
+    if not any(marker in line.lower() for marker in ("http", "www.", "github", "openreview", "doi.org")):
+        return line
+    line = re.sub(r"(https?)\s*:\s*/\s*/\s*", r"\1://", line)
+    line = re.sub(r"(https?://)\s+", r"\1", line)
+    line = re.sub(r"(www\.)\s+", r"\1", line)
+    line = re.sub(r"\s+([/?#=&.:])", r"\1", line)
+    line = re.sub(r"([/?#=&.:])\s+", r"\1", line)
+    return line
+
+
+def normalize_pdf_markdown(text: str) -> str:
+    """Apply lightweight cleanup to PDF-derived markdown/text.
+
+    MarkItDown PDF output is often good enough structurally, but arXiv papers can
+    still contain vertical single-character metadata, spaced-out words, and URLs
+    with embedded spaces. Clean those artifacts without aggressively reflowing the
+    document.
+    """
+    cleaned = text.replace("\x00", "")
+    cleaned = re.sub(r"\(cid:\d+\)", "", cleaned)
+    cleaned = cleaned.replace("ﬁ", "fi").replace("ﬂ", "fl")
+    cleaned = re.sub(r"(?<=\w)-\n(?=\w)", "", cleaned)
+    cleaned = _strip_pdf_vertical_noise(cleaned)
+    cleaned = _PDF_SPACED_WORD_RE.sub(_merge_spaced_pdf_word, cleaned)
+    known_words = Counter(word.lower() for word in re.findall(r"\b[A-Za-z]{7,}\b", cleaned))
+    cleaned = re.sub(
+        r"\b([A-Za-z]{3,})(?:\s+([A-Za-z]{1,3}))(?:\s+([A-Za-z]{1,3}))?\b",
+        lambda match: _merge_pdf_fragments_if_known(match, known_words),
+        cleaned,
+    )
+    cleaned = "\n".join(_normalize_pdf_link_line(line) for line in cleaned.splitlines())
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    cleaned = re.sub(r"[ \t]+\n", "\n", cleaned)
+    return cleaned.strip()
+
+
+
+def _is_markitdown_binary_url(source_url: str, content_type: str | None) -> bool:
+    suffix = _suffix_from_url(source_url) or _guess_extension_from_content_type(content_type)
+    normalized_content_type = _normalized_content_type(content_type)
+    if normalized_content_type.startswith("text/") or normalized_content_type in {
+        "application/json",
+        "application/xml",
+        "text/xml",
+    }:
+        return False
+    return (
+        suffix in MARKITDOWN_BINARY_URL_EXTENSIONS
+        or normalized_content_type in MARKITDOWN_BINARY_MIME_TYPES
+    )
+
+
+def _build_binary_url_placeholder(
+    source_url: str,
+    content_type: str | None,
+    *,
+    reason: str,
+) -> str:
+    suffix = _suffix_from_url(source_url) or _guess_extension_from_content_type(content_type)
+    label = suffix.lstrip(".").upper() if suffix else "DOCUMENT"
+    return f"[{label} document at {source_url} — {reason}]"
+
+
+def _is_binary_url_placeholder(text: str) -> bool:
+    return bool(re.fullmatch(r"\[[A-Z0-9]+ document at .+ — .+\]", text.strip()))
+
+
+def _guess_extension_from_content_type(content_type: str | None) -> str:
+    normalized = _normalized_content_type(content_type)
+    if not normalized:
+        return ""
+    if normalized in MARKITDOWN_MIME_TO_EXTENSION:
+        return MARKITDOWN_MIME_TO_EXTENSION[normalized]
+    guessed = mimetypes.guess_extension(normalized)
+    return (guessed or "").lower()
+
+
+_markitdown_converter: MarkItDown | None = None
+
+
+def get_markitdown_converter() -> MarkItDown | None:
+    global _markitdown_converter
+    if MarkItDown is None:
+        return None
+    if _markitdown_converter is None:
+        _markitdown_converter = MarkItDown()
+    return _markitdown_converter
+
+
+def convert_file_to_markdown(path: Path) -> tuple[str | None, str | None]:
+    """Convert a supported local file to markdown via MarkItDown."""
+    suffix = path.suffix.lower()
+    if suffix not in MARKITDOWN_FILE_EXTENSIONS:
+        return None, None
+
+    converter = get_markitdown_converter()
+    if converter is None:
+        return None, None
+
+    try:
+        result = converter.convert_local(path)
+    except Exception as exc:
+        log.warning("MarkItDown local conversion failed for %s: %s", path.name, exc)
+        return None, None
+
+    text = getattr(result, "text_content", "").strip()
+    if suffix == ".pdf":
+        text = normalize_pdf_markdown(text)
+    if not _is_meaningful_markdown(text):
+        return None, _normalized_content_type(mimetypes.guess_type(path.name)[0])
+    return text, _normalized_content_type(mimetypes.guess_type(path.name)[0])
+
+
+def convert_binary_response_to_markdown(
+    content: bytes,
+    *,
+    source_url: str,
+    content_type: str | None,
+) -> str | None:
+    """Convert a supported binary URL response to markdown via MarkItDown."""
+    if not _is_markitdown_binary_url(source_url, content_type):
+        return None
+
+    suffix = _suffix_from_url(source_url) or _guess_extension_from_content_type(content_type)
+    converter = get_markitdown_converter()
+    if converter is None:
+        return None
+
+    try:
+        result = converter.convert_stream(
+            io.BytesIO(content),
+            file_extension=suffix or None,
+            url=source_url,
+        )
+    except Exception as exc:
+        log.warning("MarkItDown URL conversion failed for %s: %s", source_url, exc)
+        return None
+
+    text = getattr(result, "text_content", "").strip()
+    if suffix == ".pdf":
+        text = normalize_pdf_markdown(text)
+    if not _is_meaningful_markdown(text):
+        return None
+    return text
+
+
+def _fetched_content_pattern() -> re.Pattern[str]:
+    return _build_content_pattern(FETCHED_CONTENT_START, FETCHED_CONTENT_END)
+
+
+def _extracted_content_pattern() -> re.Pattern[str]:
+    return _build_content_pattern(EXTRACTED_CONTENT_START, EXTRACTED_CONTENT_END)
+
+
+def strip_fetched_content_block(body: str) -> str:
+    return re.sub(_fetched_content_pattern(), "\n", body).strip()
+
+
+def extract_manual_notes(body: str, source_url: str | None) -> str:
+    raw_body = strip_fetched_content_block(body)
+    if not raw_body:
+        return ""
+    lines = raw_body.splitlines()
+    if source_url and lines and lines[0].strip() == source_url.strip():
+        lines = lines[1:]
+    return "\n".join(line.rstrip() for line in lines).strip()
+
+
+def read_persisted_fetched_content(body: str) -> tuple[str | None, dict[str, object]]:
+    return _read_persisted_content_block(
+        body,
+        start_marker=FETCHED_CONTENT_START,
+        end_marker=FETCHED_CONTENT_END,
+        section_heading="## Fetched Content",
+    )
+
+
+def build_fetched_content_block(
+    *,
+    fetched_at: str,
+    source_url: str,
+    resolved_url: str | None,
+    content_type: str | None,
+    image_urls: list[str],
+    text: str,
+) -> str:
+    lines = [
+        FETCHED_CONTENT_START,
+        "## Fetched Metadata",
+        f"- fetched_at: {fetched_at}",
+        f"- source_url: {source_url}",
+        f"- resolved_url: {resolved_url or source_url}",
+        f"- content_type: {content_type or 'unknown'}",
+        f"- image_urls: {json.dumps(image_urls)}",
+        "",
+        "## Fetched Content",
+        text.strip(),
+        FETCHED_CONTENT_END,
+    ]
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def upsert_fetched_content_block(raw_text: str, block: str) -> str:
+    return _upsert_content_block(raw_text, block, _fetched_content_pattern())
+
+
+def strip_extracted_content_block(body: str) -> str:
+    return re.sub(_extracted_content_pattern(), "\n", body).strip()
+
+
+def read_persisted_extracted_content(body: str) -> tuple[str | None, dict[str, object]]:
+    return _read_persisted_content_block(
+        body,
+        start_marker=EXTRACTED_CONTENT_START,
+        end_marker=EXTRACTED_CONTENT_END,
+        section_heading="## Extracted Content",
+    )
+
+
+def build_extracted_content_block(
+    *,
+    extracted_at: str,
+    asset_path: str,
+    original_filename: str | None,
+    content_type: str | None,
+    text: str,
+) -> str:
+    lines = [
+        EXTRACTED_CONTENT_START,
+        "## Extracted Metadata",
+        f"- extracted_at: {extracted_at}",
+        f"- asset_path: {asset_path}",
+        f"- original_filename: {original_filename or ''}",
+        f"- content_type: {content_type or 'unknown'}",
+        "",
+        "## Extracted Content",
+        text.strip(),
+        EXTRACTED_CONTENT_END,
+    ]
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def upsert_extracted_content_block(raw_text: str, block: str) -> str:
+    return _upsert_content_block(raw_text, block, _extracted_content_pattern())
+
+
+def parse_file_asset_reference(body: str) -> tuple[str | None, str | None]:
+    cleaned = strip_extracted_content_block(body)
+    asset_path: str | None = None
+    original_filename: str | None = None
+
+    for line in cleaned.splitlines():
+        stripped = line.strip()
+        if asset_path is None:
+            match = FILE_ASSET_REFERENCE_RE.match(stripped)
+            if match:
+                asset_path = match.group(1)
+                continue
+        if stripped.lower().startswith("original filename:"):
+            original_filename = stripped.partition(":")[2].strip() or None
+            if asset_path is not None:
+                break
+
+    return asset_path, original_filename
+
+
+def extract_file_manual_notes(body: str) -> str:
+    lines = strip_extracted_content_block(body).splitlines()
+    filtered: list[str] = []
+    skipped_asset = False
+    skipped_original_name = False
+
+    for line in lines:
+        stripped = line.strip()
+        if not skipped_asset and FILE_ASSET_REFERENCE_RE.match(stripped):
+            skipped_asset = True
+            continue
+        if skipped_asset and not skipped_original_name and stripped.lower().startswith("original filename:"):
+            skipped_original_name = True
+            continue
+        filtered.append(line.rstrip())
+
+    return "\n".join(filtered).strip()
+
+
+def build_file_ingest_content(body: str, persisted_text: str | None) -> str:
+    manual_notes = extract_file_manual_notes(body)
+    parts: list[str] = []
+    if persisted_text:
+        parts.append(persisted_text.strip())
+    if manual_notes:
+        if persisted_text:
+            parts.append(f"## Manual Notes\n{manual_notes}")
+        else:
+            parts.append(manual_notes)
+    if parts:
+        return "\n\n".join(parts).strip()
+    return strip_extracted_content_block(body).strip()
+
+
+def build_url_ingest_content(
+    *,
+    body: str,
+    source_url: str | None,
+    persisted_text: str | None,
+) -> str:
+    manual_notes = extract_manual_notes(body, source_url)
+    parts: list[str] = []
+    if persisted_text:
+        parts.append(persisted_text.strip())
+    if manual_notes:
+        if persisted_text:
+            parts.append(f"## Manual Notes\n{manual_notes}")
+        else:
+            parts.append(manual_notes)
+    if parts:
+        return "\n\n".join(parts).strip()
+    return strip_fetched_content_block(body).strip()
+
+
+def is_meaningful_fetched_body(text: str, source_url: str | None) -> bool:
+    cleaned = text.strip()
+    if not cleaned:
+        return False
+    if source_url and cleaned == source_url.strip():
+        return False
+    if _is_binary_url_placeholder(cleaned):
+        return False
+    compressed = re.sub(r"\s+", "", cleaned)
+    return len(compressed) >= 30
+
+
+_IMG_PENALIZE = re.compile(
+    r"logo|icon|favicon|badge|avatar|sprite"
+    r"|app[_-]?store|google[_-]?play|download[_-]?on[_-]?the|get[_-]?it[_-]?on"
+    r"|btn|button|banner|ad[_\-/]|promo|pixel|tracking|1x1",
+    re.I,
+)
+_IMG_PREFER_PATH = re.compile(
+    r"/articles?/|/posts?/|/images?/|/content/|/media/|/uploads?/|/figures?/",
+    re.I,
+)
+
+
+def _parse_img_dimension(value: str | None) -> int | None:
+    if not value:
+        return None
+    match = re.search(r"\d+", value)
+    if not match:
+        return None
+    return int(match.group(0))
+
+
+def _parse_dimension_from_src(src: str) -> tuple[int | None, int | None]:
+    match = re.search(r"(?<!\d)(\d{2,4})x(\d{2,4})(?!\d)", src)
+    if not match:
+        return None, None
+    return int(match.group(1)), int(match.group(2))
+
+
+def _extract_img_src(tag) -> str:
+    src = (
+        tag.get("src")
+        or tag.get("data-src")
+        or tag.get("data-lazy-src")
+        or tag.get("data-original")
+    )
+    if src:
+        return src
+    srcset = tag.get("srcset") or tag.get("data-srcset")
+    if not srcset:
+        return ""
+    candidates = [part.strip().split()[0] for part in srcset.split(",") if part.strip()]
+    return candidates[-1] if candidates else ""
+
+
+def _resolve_image_url(src: str, base_url: str) -> str:
+    return urljoin(base_url, src) if not src.startswith(("http://", "https://")) else src
+
+
+def _score_img(
+    src: str,
+    alt: str,
+    in_figure: bool,
+    in_article_root: bool,
+    width: int | None,
+    height: int | None,
+    *,
+    is_og_image: bool = False,
+) -> float:
+    """Score an <img> as an article-content image. Higher is better."""
+    if src.startswith("data:"):
+        return -1000.0
+    score = 0.0
+    if _IMG_PENALIZE.search(src) or _IMG_PENALIZE.search(alt):
+        score -= 50.0
+    if src.lower().endswith(".svg") and not in_figure and not in_article_root:
+        score -= 20.0
+    if _IMG_PREFER_PATH.search(src):
+        score += 20.0
+    if in_figure:
+        score += 15.0
+    if in_article_root:
+        score += 10.0
+    alt_words = len(alt.split())
+    if alt_words >= 4:
+        score += 10.0
+    elif alt_words >= 2:
+        score += 5.0
+    elif alt_words == 0:
+        score -= 5.0
+    if is_og_image:
+        score += 8.0
+    if width and height:
+        largest = max(width, height)
+        smallest = max(min(width, height), 1)
+        aspect_ratio = largest / smallest
+        if not in_article_root and largest <= 256 and aspect_ratio <= 1.2:
+            score -= 25.0
+        elif not in_article_root and largest <= 320 and aspect_ratio <= 1.2:
+            score -= 12.0
+        area = width * height
+        if area >= 200_000:
+            score += 12.0
+        elif area >= 80_000:
+            score += 6.0
+        elif area <= 12_000:
+            score -= 20.0
+        elif area <= 32_000:
+            score -= 8.0
+        if width >= 800 or height >= 800:
+            score += 4.0
+    elif width or height:
+        largest = max(width or 0, height or 0)
+        if largest >= 800:
+            score += 4.0
+        elif largest <= 120:
+            score -= 12.0
+    return score
+
+
+def extract_image_urls(raw_html: str, page_url: str) -> list[str]:
+    soup = BeautifulSoup(raw_html, "html.parser")
+    base_tag = soup.find("base", href=True)
+    base_url = urljoin(page_url, base_tag["href"]) if base_tag else page_url
+
+    scored: list[tuple[float, str]] = []
+    og_match = re.search(
+        r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']',
+        raw_html,
+        flags=re.I,
+    )
+    if not og_match:
+        og_match = re.search(
+            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']',
+            raw_html,
+            flags=re.I,
+        )
+    if og_match:
+        og_src = _resolve_image_url(og_match.group(1), base_url)
+        og_width, og_height = _parse_dimension_from_src(og_src)
+        scored.append((
+            _score_img(
+                og_src,
+                "",
+                False,
+                False,
+                og_width,
+                og_height,
+                is_og_image=True,
+            ),
+            og_src,
+        ))
+
+    # Score all <img> tags; prefer article-local and figure images
+    article_root = _select_content_root(soup)
+    article_img_ids = {id(img) for img in article_root.find_all("img")}
+    for img in soup.find_all("img"):
+        src = _extract_img_src(img)
+        if not src or src.startswith("data:"):
+            continue
+        resolved_src = _resolve_image_url(src, base_url)
+        alt = img.get("alt", "")
+        in_figure = bool(img.parent and img.parent.name == "figure")
+        in_article_root = id(img) in article_img_ids
+        width = _parse_img_dimension(img.get("width"))
+        height = _parse_img_dimension(img.get("height"))
+        if not width and not height:
+            width, height = _parse_dimension_from_src(resolved_src)
+        score = _score_img(resolved_src, alt, in_figure, in_article_root, width, height)
+        scored.append((score, resolved_src))
+
+    image_urls: list[str] = []
+    seen: set[str] = set()
+    for score, src in sorted(scored, key=lambda x: x[0], reverse=True):
+        if score < -10.0:
+            continue
+        if src not in seen:
+            image_urls.append(src)
+            seen.add(src)
+        if len(image_urls) >= MAX_IMAGES:
+            break
+
+    return image_urls[:MAX_IMAGES]
+
+
+_CONTENT_ROOT_SELECTORS = [
+    "article",
+    "main",
+    "[role='main']",
+    "[itemprop='articleBody']",
+    ".article-body",
+    ".article-content",
+    ".entry-content",
+    ".post-content",
+    ".content",
+    "#content",
+]
+
+
+def _score_content_root(tag) -> float:
+    """Score a BeautifulSoup tag as an article content root. Higher is better."""
+    text = tag.get_text(" ", strip=True)
+    text_len = len(text)
+    if text_len < 100:
+        return 0.0
+    html_len = len(str(tag))
+    density = text_len / max(html_len, 1)
+    p_count = len(tag.find_all("p"))
+    li_count = len(tag.find_all("li"))
+    table_count = len(tag.find_all("table"))
+    pre_count = len(tag.find_all("pre"))
+    h_count = sum(len(tag.find_all(f"h{i}")) for i in range(1, 7))
+    score = (
+        density * 50
+        + min(p_count, 20) * 2
+        + min(li_count, 30) * 1
+        + min(table_count, 10) * 3
+        + min(pre_count, 10) * 3
+        + min(h_count, 15) * 2
+        + min(text_len, 10_000) / 200
+    )
+    return score
+
+
+def _select_content_root(soup: BeautifulSoup):
+    """Select the best article-like content root from a parsed document.
+
+    Tries selectors in _CONTENT_ROOT_SELECTORS, scores each candidate by
+    text density and structural richness, and returns the highest-scoring
+    match. Falls back to <body> (or the soup root) when no candidate
+    clears the minimum quality bar.
+    """
+    candidates: list[tuple[float, object]] = []
+    for selector in _CONTENT_ROOT_SELECTORS:
+        for tag in soup.select(selector):
+            score = _score_content_root(tag)
+            if score > 0:
+                candidates.append((score, tag))
+    if candidates:
+        return max(candidates, key=lambda x: x[0])[1]
+    body = soup.find("body")
+    return body if body else soup
+
+
+def _serialize_html_table(table) -> str:
+    rows: list[list[str]] = []
+    for tr in table.find_all("tr"):
+        cells = [cell.get_text(" ", strip=True) for cell in tr.find_all(["th", "td"])]
+        if cells:
+            rows.append(cells)
+    if not rows:
+        return ""
+
+    width = max(len(row) for row in rows)
+    normalized_rows = [row + [""] * (width - len(row)) for row in rows]
+    header = normalized_rows[0]
+    divider = ["---"] * width
+    body_rows = normalized_rows[1:]
+    markdown_rows = [
+        "| " + " | ".join(header) + " |",
+        "| " + " | ".join(divider) + " |",
+    ]
+    markdown_rows.extend("| " + " | ".join(row) + " |" for row in body_rows)
+    return "\n".join(markdown_rows)
+
+
+def normalize_html_document(raw_html: str) -> str:
+    soup = BeautifulSoup(raw_html, "html.parser")
+    # Strip script/style/noscript globally before root selection
+    for node in soup(["script", "style", "noscript"]):
+        node.decompose()
+    for node in soup.select("[aria-hidden='true'], .visually-hidden, .sr-only"):
+        node.decompose()
+
+    # Select article-like content root (e.g. GeeksforGeeks .content wins over body)
+    root = _select_content_root(soup)
+
+    # Strip structural chrome from within the selected root
+    for node in root(["nav", "header", "footer", "aside", "form"]):
+        node.decompose()
+    for br in root.find_all("br"):
+        br.replace_with("\n")
+
+    for table in root.find_all("table"):
+        table_md = _serialize_html_table(table)
+        if table_md:
+            table.replace_with("\n" + table_md + "\n")
+        else:
+            table.decompose()
+
+    for tag_name in ("h1", "h2", "h3", "h4", "h5", "h6"):
+        for tag in root.find_all(tag_name):
+            level = int(tag_name[1])
+            tag.replace_with("\n" + ("#" * level) + " " + tag.get_text(" ", strip=True) + "\n")
+
+    for pre in root.find_all("pre"):
+        pre.replace_with("\n```\n" + pre.get_text("\n", strip=False).strip() + "\n```\n")
+
+    for code in root.find_all("code"):
+        if code.parent.name != "pre":
+            code.replace_with("`" + code.get_text(" ", strip=True) + "`")
+
+    for li in root.find_all("li"):
+        li.replace_with("\n- " + li.get_text(" ", strip=True))
+
+    text = root.get_text("\n")
+    text = html.unescape(text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    text = re.sub(r"[ \t]+\n", "\n", text)
+    # Preserve all non-empty lines; no global short-line deduplication so
+    # lists, table rows, captions, and footnotes survive verbatim.
+    # Do not truncate here: the raw fetched-content block is the durable source
+    # snapshot and should keep the full translated document body. Downstream LLM
+    # calls already apply their own max_source_chars budget.
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    return "\n".join(lines).strip()
+
+
+MODEL_DEFAULT = _env_str("GITHUB_MODELS_MODEL_DEFAULT", "GITHUB_MODELS_MODEL", default=DEFAULT_MODEL)
+MODEL_LIGHT = _env_str("GITHUB_MODELS_MODEL_LIGHT", default=MODEL_DEFAULT)
+MODEL_VISION = _env_str("GITHUB_MODELS_MODEL_VISION", default=MODEL_DEFAULT)
+MAX_SOURCE_CHARS_DEFAULT = int(os.environ.get("AUTO_INGEST_MAX_SOURCE_CHARS_DEFAULT", "30000"))
+MAX_SOURCE_CHARS_LIGHT = int(os.environ.get("AUTO_INGEST_MAX_SOURCE_CHARS_LIGHT", "18000"))
+MAX_SOURCE_CHARS_VISION = int(os.environ.get("AUTO_INGEST_MAX_SOURCE_CHARS_VISION", "24000"))
+INCLUDE_EXISTING_PAGES_CONTEXT = os.environ.get(
+    "AUTO_INGEST_INCLUDE_EXISTING_PAGES_CONTEXT", "1"
+).strip().lower() not in {"0", "false", "no"}
+
+
+@dataclass(frozen=True)
+class IngestRoute:
+    lane: str
+    model: str
+    priority: int
+    max_source_chars: int
+    source_class: str
+    checkpoint_class: str = ""
+    retention_mode: str = RETAIN
+
+
+def classify_ingest_route(
+    fm: dict,
+    *,
+    has_images: bool = False,
+    model_override: str | None = None,
+    body: str | None = None,
+) -> IngestRoute:
+    """Classify a raw source into a model lane + queue priority.
+
+    Priority is ascending: lower numbers are processed first. Interactive/user-
+    supplied sources should win ahead of backlog-style promotions from sessions.
+    """
+    source = str(fm.get("source", "")).strip().lower()
+    source_type = str(fm.get("type", "text")).strip().lower()
+    source_url = str(fm.get("url", "")).strip().lower()
+    tags = fm.get("tags", []) if isinstance(fm.get("tags"), list) else []
+    tags_lower = {str(tag).strip().lower() for tag in tags}
+
+    if model_override:
+        return IngestRoute(
+            lane="override",
+            model=model_override,
+            priority=0,
+            max_source_chars=MAX_SOURCE_CHARS_DEFAULT,
+            source_class="manual-override",
+        )
+
+    if has_images:
+        return IngestRoute(
+            lane="vision",
+            model=MODEL_VISION,
+            priority=0,
+            max_source_chars=MAX_SOURCE_CHARS_VISION,
+            source_class="vision-source",
+        )
+
+    if source == "copilot-session-curator" or "copilot-session" in tags_lower:
+        # Honour the class written by the curator if present; otherwise
+        # re-classify from the title + body so legacy/backlog imports still
+        # benefit from retention logic.
+        cp_class = str(fm.get("checkpoint_class", "")).strip().lower()
+        if cp_class not in {"durable-architecture", "durable-debugging",
+                            "durable-workflow", "project-progress",
+                            "low-signal"}:
+            classification = classify_checkpoint(
+                str(fm.get("title", "")),
+                body or "",
+            )
+            cp_class = classification.cls
+        retention = str(fm.get("retention_mode", "")).strip().lower()
+        if retention not in {RETAIN, COMPRESS, SKIP}:
+            retention = resolve_retention(cp_class)
+        return IngestRoute(
+            lane="light",
+            model=MODEL_LIGHT,
+            priority=30,
+            max_source_chars=MAX_SOURCE_CHARS_LIGHT,
+            source_class="copilot-session-checkpoint",
+            checkpoint_class=cp_class,
+            retention_mode=retention,
+        )
+
+    if source == "mempalace-bridge" or "mempalace" in tags_lower:
+        return IngestRoute(
+            lane="light",
+            model=MODEL_LIGHT,
+            priority=20,
+            max_source_chars=MAX_SOURCE_CHARS_LIGHT,
+            source_class="mempalace-export",
+        )
+
+    if source_type == "url" or source_url:
+        return IngestRoute(
+            lane="default",
+            model=MODEL_DEFAULT,
+            priority=0,
+            max_source_chars=MAX_SOURCE_CHARS_DEFAULT,
+            source_class="url-source",
+        )
+
+    return IngestRoute(
+        lane="default",
+        model=MODEL_DEFAULT,
+        priority=10,
+        max_source_chars=MAX_SOURCE_CHARS_DEFAULT,
+        source_class="text-source",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Frontmatter helpers
+# ---------------------------------------------------------------------------
+
+
+def parse_frontmatter(path: Path) -> tuple[dict, str]:
+    """Return (frontmatter_dict, body) from a markdown file."""
+    content = path.read_text()
+    if not content.startswith("---"):
+        return {}, content
+
+    parts = content.split("---", 2)
+    if len(parts) < 3:
+        return {}, content
+
+    fm: dict = {}
+    current_key: str | None = None
+    current_list: list[str] | None = None
+
+    for line in parts[1].strip().split("\n"):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        # List item under a key
+        if stripped.startswith("- ") and current_key is not None:
+            if current_list is None:
+                current_list = []
+            current_list.append(stripped[2:].strip().strip('"').strip("'"))
+            fm[current_key] = current_list
+            continue
+
+        # Key: value line
+        if ":" in stripped:
+            # Save pending list
+            if current_list is not None:
+                current_list = None
+
+            key, _, value = stripped.partition(":")
+            key = key.strip()
+            value = value.strip()
+
+            if value == "" or value == "[]":
+                current_key = key
+                if value == "[]":
+                    fm[key] = []
+                    current_list = None
+                else:
+                    current_list = []
+                continue
+
+            # Inline list: [a, b, c]
+            if value.startswith("[") and value.endswith("]"):
+                items = [
+                    v.strip().strip('"').strip("'")
+                    for v in value[1:-1].split(",")
+                    if v.strip()
+                ]
+                fm[key] = items
+                current_key = key
+                current_list = None
+                continue
+
+            fm[key] = value.strip('"').strip("'")
+            current_key = key
+            current_list = None
+
+    return fm, parts[2].strip()
+
+
+def slugify(title: str) -> str:
+    """Convert a title to a kebab-case filename slug."""
+    s = title.lower().strip()
+    s = re.sub(r"[^\w\s-]", "", s)
+    s = re.sub(r"[\s_]+", "-", s)
+    s = re.sub(r"-+", "-", s)
+    return s.strip("-")[:80]
+
+
+def compute_sha256(text: str) -> str:
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+# ---------------------------------------------------------------------------
+# GitHub repo tree crawling
+# ---------------------------------------------------------------------------
+
+# File extensions worth fetching from repos (lowercase)
+_CRAWL_EXTENSIONS = {
+    ".md", ".txt", ".rst",                         # docs
+    ".py", ".js", ".ts", ".go", ".rs", ".sh",      # code
+    ".yml", ".yaml", ".toml", ".json", ".ini",      # config
+    ".cfg", ".env.example", ".conf",                # config
+}
+# Exact filenames to always include (case-insensitive match)
+_CRAWL_EXACT = {
+    "dockerfile", "makefile", "justfile", "procfile",
+    "caddyfile", "gemfile", "rakefile",
+    ".env.example", ".gitignore", "license",
+    # Package manifests — explicit so they always rank top.
+    "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt",
+    "package.json", "package-lock.json", "yarn.lock", "pnpm-lock.yaml",
+    "go.mod", "go.sum", "cargo.toml", "cargo.lock",
+    "composer.json", "gemfile.lock", "podfile", "pubspec.yaml",
+    "build.gradle", "settings.gradle", "pom.xml",
+    "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml",
+}
+# Directories to prioritise (contents fetched first)
+_PRIORITY_DIRS = ("docs", "doc", "documentation", "guides", "wiki", "examples")
+# Names that signal a per-directory README — fetched eagerly.
+_README_NAMES = {"readme.md", "readme.rst", "readme.txt", "readme"}
+# Max individual file size (chars) to include
+_MAX_FILE_CHARS = 16_000
+
+
+def _should_crawl(path: str) -> bool:
+    """Return True if a tree entry is worth fetching."""
+    name = path.rsplit("/", 1)[-1].lower()
+    if name in _CRAWL_EXACT:
+        return True
+    _, ext = os.path.splitext(name)
+    return ext.lower() in _CRAWL_EXTENSIONS
+
+
+def _priority_sort_key(path: str) -> tuple[int, str]:
+    """Sort key: manifests/READMEs first, then priority dirs, root files, alpha."""
+    lower = path.lower()
+    name = lower.rsplit("/", 1)[-1]
+    parts = lower.split("/")
+    # 0: per-directory READMEs and manifests (fetched eagerly, cheap & dense)
+    if name in _README_NAMES or name in _CRAWL_EXACT:
+        return (0, lower)
+    # 1: priority dirs (docs, examples)
+    if any(p in _PRIORITY_DIRS for p in parts):
+        return (1, lower)
+    # 2: root-level files
+    if "/" not in path:
+        return (2, lower)
+    return (3, lower)
+
+
+def _crawl_github_tree(
+    owner: str,
+    repo: str,
+    headers: dict[str, str],
+    budget: int = 30_000,
+) -> list[str]:
+    """Recursively crawl a GitHub repo and return file contents as sections.
+
+    Uses the Git Trees API (single request) then fetches individual files
+    via the raw content endpoint.  Stays within *budget* total characters.
+    """
+    # 1. Get recursive tree (single API call)
+    tree_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/HEAD?recursive=1"
+    try:
+        resp = httpx.get(
+            tree_url, headers=headers,
+            follow_redirects=True, timeout=URL_FETCH_TIMEOUT,
+        )
+        resp.raise_for_status()
+    except Exception as e:
+        log.warning("GitHub tree API failed for %s/%s: %s", owner, repo, e)
+        return []
+
+    tree = resp.json().get("tree", [])
+
+    # 2. Filter to crawlable blobs (skip README — already fetched)
+    candidates = [
+        entry["path"]
+        for entry in tree
+        if entry.get("type") == "blob"
+        and _should_crawl(entry["path"])
+        and entry["path"].lower() not in ("readme.md", "readme.txt", "readme.rst", "readme")
+    ]
+    candidates.sort(key=_priority_sort_key)
+
+    log.info(
+        "GitHub tree crawl: %d total entries, %d crawlable files",
+        len(tree), len(candidates),
+    )
+
+    # 3. Fetch file contents within budget
+    parts: list[str] = []
+    used = 0
+    raw_headers = {**headers, "Accept": "application/vnd.github.raw+json"}
+
+    for fpath in candidates:
+        if used >= budget:
+            remaining = len(candidates) - len(parts)
+            parts.append(f"\n(… {remaining} more files omitted due to size limit)")
+            break
+
+        raw_url = (
+            f"https://api.github.com/repos/{owner}/{repo}/contents/{fpath}"
+        )
+        try:
+            file_resp = httpx.get(
+                raw_url, headers=raw_headers,
+                follow_redirects=True, timeout=15,
+            )
+            file_resp.raise_for_status()
+        except Exception as e:
+            log.debug("Skipping %s: %s", fpath, e)
+            continue
+
+        text = file_resp.text[:_MAX_FILE_CHARS]
+        section = f"\n## File: {fpath}\n\n```\n{text}\n```\n"
+        parts.append(section)
+        used += len(section)
+        log.debug("Crawled %s (%d chars, budget %d/%d)", fpath, len(text), used, budget)
+
+    log.info("GitHub crawl fetched %d files (%d chars)", len(parts), used)
+    return parts
+
+
+# ---------------------------------------------------------------------------
+# URL content fetching
+# ---------------------------------------------------------------------------
+
+
+def fetch_url_content(url: str) -> UrlFetchResult:
+    """Fetch text content from a URL.
+
+    Handles Twitter/X, GitHub repos, GitHub gists, and generic HTML.
+    """
+    # --- arxiv handler: rewrite /pdf/ and /abs/ to /html/ for full text ---
+    arxiv_match = re.match(
+        r"https?://arxiv\.org/(?:pdf|abs)/(\d+\.\d+)(?:v\d+)?(?:\.pdf)?$", url
+    )
+    if arxiv_match:
+        paper_id = arxiv_match.group(1)
+        html_url = f"https://arxiv.org/html/{paper_id}"
+        pdf_url = f"https://arxiv.org/pdf/{paper_id}.pdf"
+        abs_url = f"https://arxiv.org/abs/{paper_id}"
+        log.info("arxiv detected — preferring full-paper content for %s", paper_id)
+        try:
+            resp = httpx.get(
+                html_url,
+                headers={"User-Agent": "Mozilla/5.0 (compatible; labs-wiki-bot/1.0)"},
+                follow_redirects=True,
+                timeout=URL_FETCH_TIMEOUT,
+            )
+            resp.raise_for_status()
+            if (
+                "html" in resp.headers.get("content-type", "")
+                and str(resp.url).rstrip("/") == html_url
+            ):
+                log.info("arxiv HTML version available, fetching full paper")
+                return fetch_url_content(html_url)
+        except Exception:
+            pass
+
+        # Preferred fallback: fetch the PDF itself and run MarkItDown so the
+        # raw source stores translated document text instead of an abstract-only
+        # pointer page when arXiv has no HTML rendering yet.
+        try:
+            pdf_resp = httpx.get(
+                pdf_url,
+                headers={"User-Agent": "Mozilla/5.0 (compatible; labs-wiki-bot/1.0)"},
+                follow_redirects=True,
+                timeout=URL_FETCH_TIMEOUT,
+            )
+            pdf_resp.raise_for_status()
+            converted_pdf = convert_binary_response_to_markdown(
+                pdf_resp.content,
+                source_url=pdf_url,
+                content_type=pdf_resp.headers.get("content-type"),
+            )
+            if converted_pdf and _is_meaningful_markdown(converted_pdf):
+                log.info("arxiv HTML unavailable for %s; using PDF-to-markdown fallback", paper_id)
+                return UrlFetchResult(
+                    text=converted_pdf,
+                    image_urls=[],
+                    resolved_url=pdf_url,
+                    content_type=pdf_resp.headers.get("content-type"),
+                )
+        except Exception as e:
+            log.warning("arxiv PDF fallback failed for %s: %s", paper_id, e)
+
+        # Last-resort fallback: fetch the abstract page directly (NOT via
+        # fetch_url_content, which would re-match this same arxiv branch and
+        # recurse infinitely).
+        log.warning("arxiv HTML/PDF unavailable for %s, falling back to abstract", paper_id)
+        try:
+            abs_resp = httpx.get(
+                abs_url,
+                headers={"User-Agent": "Mozilla/5.0 (compatible; labs-wiki-bot/1.0)"},
+                follow_redirects=True,
+                timeout=URL_FETCH_TIMEOUT,
+            )
+            abs_resp.raise_for_status()
+            soup = BeautifulSoup(abs_resp.text, "html.parser")
+            for tag in soup(["script", "style", "nav", "footer"]):
+                tag.decompose()
+            text = soup.get_text(separator="\n", strip=True)
+            return UrlFetchResult(
+                text=text,
+                image_urls=[],
+                resolved_url=abs_url,
+                content_type=abs_resp.headers.get("content-type"),
+            )
+        except Exception as e:
+            log.warning("arxiv abstract fallback failed for %s: %s", paper_id, e)
+            return UrlFetchResult(
+                text="",
+                image_urls=[],
+                resolved_url=abs_url,
+                content_type=None,
+            )
+
+    # --- t.co redirect handler ---
+    if re.match(r"https?://t\.co/", url):
+        log.info("Resolving t.co redirect: %s", url)
+        try:
+            resp = httpx.head(url, follow_redirects=True, timeout=URL_FETCH_TIMEOUT)
+            resolved = str(resp.url)
+            log.info("t.co resolved to: %s", resolved)
+            return fetch_url_content(resolved)
+        except Exception as e:
+            log.warning("Failed to resolve t.co URL %s: %s", url, e)
+            return UrlFetchResult(text="", image_urls=[], resolved_url=url, content_type=None)
+
+    # --- Twitter/X handler ---
+    twitter_pattern = re.match(
+        r"https?://(?:(?:www\.)?(?:twitter\.com|x\.com)|[fv]xtwitter\.com)/([^/]+)/status/(\d+)",
+        url,
+    )
+    if twitter_pattern:
+        _user, tweet_id = twitter_pattern.groups()
+        log.info("Fetching tweet via fxtwitter API: %s", tweet_id)
+        try:
+            api_url = f"https://api.fxtwitter.com/i/status/{tweet_id}"
+            resp = httpx.get(
+                api_url,
+                follow_redirects=True,
+                timeout=URL_FETCH_TIMEOUT,
+                headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            tweet = data.get("tweet", {})
+
+            author = tweet.get("author", {})
+            author_name = author.get("name", "Unknown")
+            screen_name = author.get("screen_name", "")
+            created_at = tweet.get("created_at", "")
+            text = tweet.get("text", "")
+
+            parts = [
+                f"Tweet by {author_name} (@{screen_name})",
+                f"Date: {created_at}" if created_at else "",
+                "",
+                text,
+            ]
+
+            # Quoted tweet
+            quote = tweet.get("quote")
+            if quote:
+                q_author = quote.get("author", {})
+                parts.append("")
+                parts.append(
+                    f"> Quoting @{q_author.get('screen_name', '?')}: {quote.get('text', '')}"
+                )
+
+            image_urls: list[str] = []
+            media = tweet.get("media", {})
+            if media:
+                photos = media.get("photos", [])
+                for photo in photos[:MAX_IMAGES]:
+                    photo_url = photo.get("url", "")
+                    if photo_url:
+                        image_urls.append(photo_url)
+
+            content = "\n".join(p for p in parts)
+            return UrlFetchResult(
+                text=content[:50_000],
+                image_urls=image_urls,
+                resolved_url=url,
+                content_type="application/json",
+            )
+        except Exception as e:
+            log.warning("fxtwitter API failed for %s: %s", tweet_id, e)
+            return UrlFetchResult(text="", image_urls=[], resolved_url=url, content_type=None)
+
+    # --- GitHub repo handler ---
+    clean_url = re.sub(r"[?#].*$", "", url)
+    repo_match = re.match(r"https?://github\.com/([^/]+)/([^/]+)/?$", clean_url)
+    if repo_match:
+        owner, repo = repo_match.groups()
+        log.info("Fetching GitHub repo info: %s/%s", owner, repo)
+        gh_token = os.environ.get("GITHUB_TOKEN", "") or os.environ.get(
+            "GITHUB_MODELS_TOKEN", ""
+        )
+        gh_headers: dict[str, str] = {
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "labs-wiki-bot/1.0",
+        }
+        if gh_token:
+            gh_headers["Authorization"] = f"Bearer {gh_token}"
+
+        parts = []
+        try:
+            repo_resp = httpx.get(
+                f"https://api.github.com/repos/{owner}/{repo}",
+                headers=gh_headers,
+                follow_redirects=True,
+                timeout=URL_FETCH_TIMEOUT,
+            )
+            repo_resp.raise_for_status()
+            info = repo_resp.json()
+            parts.append(f"Repository: {info.get('full_name', f'{owner}/{repo}')}")
+            parts.append(f"Description: {info.get('description', 'N/A')}")
+            parts.append(f"Stars: {info.get('stargazers_count', 0)}")
+            parts.append(f"Language: {info.get('language', 'N/A')}")
+            topics = info.get("topics", [])
+            if topics:
+                parts.append(f"Topics: {', '.join(topics)}")
+            parts.append("")
+        except Exception as e:
+            log.warning("GitHub repo API failed for %s/%s: %s", owner, repo, e)
+            parts.append(f"Repository: {owner}/{repo}")
+            parts.append("")
+
+        # Fetch README
+        try:
+            readme_headers = {**gh_headers, "Accept": "application/vnd.github.raw+json"}
+            readme_resp = httpx.get(
+                f"https://api.github.com/repos/{owner}/{repo}/readme",
+                headers=readme_headers,
+                follow_redirects=True,
+                timeout=URL_FETCH_TIMEOUT,
+            )
+            readme_resp.raise_for_status()
+            parts.append("## README\n")
+            parts.append(readme_resp.text[:30_000])
+        except Exception as e:
+            log.warning("GitHub README fetch failed for %s/%s: %s", owner, repo, e)
+
+        # Languages breakdown
+        try:
+            langs_resp = httpx.get(
+                f"https://api.github.com/repos/{owner}/{repo}/languages",
+                headers=gh_headers, follow_redirects=True, timeout=URL_FETCH_TIMEOUT,
+            )
+            langs_resp.raise_for_status()
+            langs = langs_resp.json() or {}
+            if langs:
+                total = sum(langs.values()) or 1
+                items = sorted(langs.items(), key=lambda kv: -kv[1])[:8]
+                pretty = ", ".join(
+                    f"{k} {v*100/total:.1f}%" for k, v in items
+                )
+                parts.append(f"Languages: {pretty}\n")
+        except Exception as e:
+            log.debug("GitHub languages fetch failed for %s/%s: %s", owner, repo, e)
+
+        # Latest releases (top 5)
+        try:
+            rel_resp = httpx.get(
+                f"https://api.github.com/repos/{owner}/{repo}/releases?per_page=5",
+                headers=gh_headers, follow_redirects=True, timeout=URL_FETCH_TIMEOUT,
+            )
+            rel_resp.raise_for_status()
+            releases = rel_resp.json() or []
+            if releases:
+                parts.append("## Recent Releases\n")
+                for r in releases[:5]:
+                    tag = r.get("tag_name") or r.get("name") or "?"
+                    pub = (r.get("published_at") or "")[:10]
+                    body = (r.get("body") or "").strip().replace("\r\n", "\n")
+                    if len(body) > 600:
+                        body = body[:600] + "…"
+                    parts.append(f"### {tag} ({pub})\n\n{body}\n")
+        except Exception as e:
+            log.debug("GitHub releases fetch failed for %s/%s: %s", owner, repo, e)
+
+        # Recent commits / open issues / recently-merged PRs are intentionally
+        # NOT fetched: they pollute the LLM's attention with delta/activity
+        # metadata that gets parroted into source pages instead of the
+        # technical synthesis we want. README + tree crawl below carry the
+        # substance. Releases (above) cover "what changed lately".
+
+        # Crawl repo tree for additional files
+        try:
+            parts.extend(
+                _crawl_github_tree(owner, repo, gh_headers, budget=120_000)
+            )
+        except Exception as e:
+            log.warning("GitHub tree crawl failed for %s/%s: %s", owner, repo, e)
+
+        return UrlFetchResult(
+            text="\n".join(parts)[:140_000],
+            image_urls=[],
+            resolved_url=url,
+            content_type="application/vnd.github+json",
+        )
+
+    # --- GitHub gist handler ---
+    gist_match = re.match(
+        r"https://gist\.github\.com/([^/]+)/([a-f0-9]+)", url
+    )
+    if gist_match:
+        user, gist_id = gist_match.groups()
+        raw_url = f"https://gist.githubusercontent.com/{user}/{gist_id}/raw"
+        log.info("Fetching GitHub gist raw content: %s", raw_url)
+        resp = httpx.get(raw_url, follow_redirects=True, timeout=URL_FETCH_TIMEOUT)
+        resp.raise_for_status()
+        return UrlFetchResult(
+            text=resp.text,
+            image_urls=[],
+            resolved_url=str(resp.url),
+            content_type=resp.headers.get("content-type"),
+        )
+
+    # --- Default HTML handler ---
+    log.info("Fetching URL content: %s", url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (compatible; labs-wiki-bot/1.0)",
+        "Accept": (
+            "text/html,text/plain,application/json,"
+            "application/pdf,"
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document,"
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,"
+            "application/vnd.ms-excel,"
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation,"
+            "application/epub+zip,"
+            "*/*;q=0.1"
+        ),
+    }
+    with httpx.stream(
+        "GET",
+        url,
+        headers=headers,
+        follow_redirects=True,
+        timeout=URL_FETCH_TIMEOUT,
+    ) as resp:
+        resp.raise_for_status()
+        content_type = resp.headers.get("content-type", "")
+        resolved_url = str(resp.url)
+
+        if _is_markitdown_binary_url(resolved_url, content_type):
+            declared_size = resp.headers.get("content-length", "").strip()
+            if declared_size.isdigit() and int(declared_size) > MAX_DOCUMENT_DOWNLOAD_SIZE:
+                log.warning("Skipping oversized binary URL (content-length=%s): %s", declared_size, resolved_url)
+                return UrlFetchResult(
+                    text=_build_binary_url_placeholder(
+                        resolved_url,
+                        content_type,
+                        reason="content exceeded size limit",
+                    ),
+                    image_urls=[],
+                    resolved_url=resolved_url,
+                    content_type=content_type,
+                )
+
+            document_bytes = bytearray()
+            for chunk in resp.iter_bytes():
+                document_bytes.extend(chunk)
+                if len(document_bytes) > MAX_DOCUMENT_DOWNLOAD_SIZE:
+                    log.warning("Skipping oversized binary URL (%d bytes): %s", len(document_bytes), resolved_url)
+                    return UrlFetchResult(
+                        text=_build_binary_url_placeholder(
+                            resolved_url,
+                            content_type,
+                            reason="content exceeded size limit",
+                        ),
+                        image_urls=[],
+                        resolved_url=resolved_url,
+                        content_type=content_type,
+                    )
+
+            converted_binary = convert_binary_response_to_markdown(
+                bytes(document_bytes),
+                source_url=resolved_url,
+                content_type=content_type,
+            )
+            if converted_binary:
+                log.info("Converted binary URL response via MarkItDown: %s", resolved_url)
+                return UrlFetchResult(
+                    text=converted_binary,
+                    image_urls=[],
+                    resolved_url=resolved_url,
+                    content_type=content_type,
+                )
+
+            log.warning("Binary URL could not be converted via MarkItDown: %s", resolved_url)
+            return UrlFetchResult(
+                text=_build_binary_url_placeholder(
+                    resolved_url,
+                    content_type,
+                    reason="content could not be extracted",
+                ),
+                image_urls=[],
+                resolved_url=resolved_url,
+                content_type=content_type,
+            )
+
+        resp.read()
+        if "html" in content_type:
+            raw_html = resp.text
+            return UrlFetchResult(
+                text=normalize_html_document(raw_html),
+                image_urls=extract_image_urls(raw_html, resolved_url),
+                resolved_url=resolved_url,
+                content_type=content_type,
+            )
+
+        return UrlFetchResult(
+            text=resp.text[:50_000],
+            image_urls=[],
+            resolved_url=resolved_url,
+            content_type=content_type,
+        )
+
+
+def download_images_as_base64(image_urls: list[str], max_count: int = MAX_IMAGES) -> list[str]:
+    """Download images and return as base64 data URIs for vision API."""
+    results: list[str] = []
+    for img_url in image_urls[:max_count]:
+        try:
+            resp = httpx.get(
+                img_url,
+                follow_redirects=True,
+                timeout=15,
+                headers={"User-Agent": "Mozilla/5.0 (compatible; labs-wiki-bot/1.0)"},
+            )
+            resp.raise_for_status()
+
+            ct = resp.headers.get("content-type", "")
+            mime = ct.split(";")[0].strip()
+            # Vision API only supports raster formats
+            _VISION_MIMES = {"image/png", "image/jpeg", "image/webp", "image/gif"}
+            if mime not in _VISION_MIMES:
+                log.warning("Skipping unsupported image format %s for %s", mime, img_url)
+                continue
+
+            if len(resp.content) > MAX_IMAGE_SIZE:
+                log.warning("Skipping oversized image (%d bytes): %s", len(resp.content), img_url)
+                continue
+
+            mime = ct.split(";")[0].strip()
+            b64 = base64.b64encode(resp.content).decode("ascii")
+            results.append(f"data:{mime};base64,{b64}")
+            log.debug("Encoded image (%d bytes): %s", len(resp.content), img_url)
+        except Exception as e:
+            log.warning("Failed to download image %s: %s", img_url, e)
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Existing wiki state
+# ---------------------------------------------------------------------------
+
+
+def get_existing_pages(wiki_dir: Path) -> dict[str, str]:
+    """Return {title: relative_path} for all existing wiki pages."""
+    pages: dict[str, str] = {}
+    for category in ("sources", "concepts", "entities", "synthesis"):
+        cat_dir = wiki_dir / category
+        if not cat_dir.exists():
+            continue
+        for page in cat_dir.glob("*.md"):
+            if page.name in ("index.md", "log.md", ".gitkeep"):
+                continue
+            fm, _ = parse_frontmatter(page)
+            title = fm.get("title", page.stem.replace("-", " ").title())
+            pages[title] = str(page.relative_to(wiki_dir.parent))
+    return pages
+
+
+FUZZY_MERGE_THRESHOLD = 85  # token_set_ratio score above this triggers a merge
+
+
+def find_fuzzy_match(
+    new_title: str,
+    category: str,
+    wiki_dir: Path,
+    threshold: int = FUZZY_MERGE_THRESHOLD,
+) -> Path | None:
+    """Find an existing page in `wiki_dir/<category>/` whose title fuzzy-matches.
+
+    Returns the matched Path or None. Used to prevent the LLM from creating
+    near-duplicate concept/entity pages (e.g. "Linear Regression" vs
+    "Linear Regression Algorithm").
+    """
+    if not _FUZZ_AVAILABLE or not new_title:
+        return None
+    cat_dir = wiki_dir / category
+    if not cat_dir.exists():
+        return None
+    best_score = 0
+    best_path: Path | None = None
+    for page in cat_dir.glob("*.md"):
+        if page.name in ("index.md", "log.md", ".gitkeep"):
+            continue
+        try:
+            fm, _ = parse_frontmatter(page)
+        except Exception:
+            continue
+        existing_title = fm.get("title") or page.stem.replace("-", " ").title()
+        score = _rf_fuzz.token_set_ratio(new_title.lower(), str(existing_title).lower())
+        if score > best_score:
+            best_score = score
+            best_path = page
+    if best_score >= threshold and best_path is not None:
+        return best_path
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Semantic dedupe (R1) — embed proposed concept against existing concept
+# titles + leading bodies, route to update flow on cosine ≥ threshold.
+# ---------------------------------------------------------------------------
+
+SEMANTIC_DEDUPE_THRESHOLD = 0.82
+SEMANTIC_BODY_CHARS = 500
+SEMANTIC_CACHE_REL = ".cache/concept_embeddings.json"
+SEMANTIC_MODEL_NAME = "all-MiniLM-L6-v2"
+
+
+def is_dedupe_disabled() -> bool:
+    return os.environ.get("WIKI_INGEST_DEDUPE_DISABLE", "").strip() == "1"
+
+
+def is_update_only_mode() -> bool:
+    return os.environ.get("WIKI_INGEST_UPDATE_ONLY", "").strip() == "1"
+
+
+def _get_sentence_transformer():
+    """Lazily load sentence-transformers + numpy. Returns (model, np) or (None, None)."""
+    global _ST_MODEL, _ST_AVAILABLE, _ST_NUMPY
+    if _ST_AVAILABLE is False:
+        return None, None
+    if _ST_MODEL is not None and _ST_NUMPY is not None:
+        return _ST_MODEL, _ST_NUMPY
+    try:
+        from sentence_transformers import SentenceTransformer  # type: ignore
+        import numpy as _np  # type: ignore
+        _ST_MODEL = SentenceTransformer(SEMANTIC_MODEL_NAME)
+        _ST_NUMPY = _np
+        _ST_AVAILABLE = True
+        log.info("Semantic dedupe: loaded %s", SEMANTIC_MODEL_NAME)
+        return _ST_MODEL, _ST_NUMPY
+    except Exception as exc:  # pragma: no cover — env-dependent
+        _ST_AVAILABLE = False
+        log.info(
+            "Semantic dedupe: sentence-transformers unavailable (%s); "
+            "falling back to rapidfuzz token_set_ratio.",
+            exc.__class__.__name__,
+        )
+        return None, None
+
+
+def _semantic_cache_path(project_root: Path) -> Path:
+    return project_root / SEMANTIC_CACHE_REL
+
+
+def _load_semantic_cache(project_root: Path) -> dict:
+    p = _semantic_cache_path(project_root)
+    if not p.exists():
+        return {}
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return {}
+
+
+def _save_semantic_cache(project_root: Path, cache: dict) -> None:
+    p = _semantic_cache_path(project_root)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        p.write_text(json.dumps(cache))
+    except OSError as exc:  # pragma: no cover
+        log.warning("Could not write semantic cache: %s", exc)
+
+
+def _embed_text(text: str):
+    """Return a numpy embedding or None if model unavailable."""
+    model, np = _get_sentence_transformer()
+    if model is None:
+        return None
+    vec = model.encode([text], normalize_embeddings=True)
+    return np.asarray(vec[0], dtype="float32")
+
+
+def _build_concept_corpus(
+    cat_dir: Path,
+    project_root: Path,
+    cache: dict,
+) -> list[tuple[Path, str, object]]:
+    """Return [(path, title, embedding|None)] for every existing page in cat_dir.
+
+    Embeddings are cached by slug + body sha. Cache is updated in-place.
+    """
+    model, np = _get_sentence_transformer()
+    corpus: list[tuple[Path, str, object]] = []
+    if not cat_dir.exists():
+        return corpus
+    for page in cat_dir.glob("*.md"):
+        if page.name in ("index.md", "log.md", ".gitkeep"):
+            continue
+        try:
+            fm, body = parse_frontmatter(page)
+        except Exception:
+            continue
+        title = str(fm.get("title") or page.stem.replace("-", " ").title())
+        leading = (body or "")[:SEMANTIC_BODY_CHARS]
+        sha = hashlib.sha256(f"{title}\n{leading}".encode()).hexdigest()
+        slug = page.stem
+        cached = cache.get(slug)
+        emb = None
+        if model is not None:
+            if cached and cached.get("sha") == sha and cached.get("embedding"):
+                emb = np.asarray(cached["embedding"], dtype="float32")
+            else:
+                vec = _embed_text(f"{title}\n{leading}")
+                if vec is not None:
+                    emb = vec
+                    cache[slug] = {
+                        "title": title,
+                        "sha": sha,
+                        "embedding": vec.tolist(),
+                    }
+        corpus.append((page, title, emb))
+    return corpus
+
+
+def find_semantic_match(
+    new_title: str,
+    new_body: str,
+    category: str,
+    wiki_dir: Path,
+    project_root: Path,
+    threshold: float = SEMANTIC_DEDUPE_THRESHOLD,
+) -> tuple[Path | None, float, str]:
+    """Find an existing page semantically equivalent to the proposed concept.
+
+    Returns (path, score, method) where method ∈ {"embedding","rapidfuzz","none"}.
+    On miss, returns (None, best_score, method).
+    """
+    if is_dedupe_disabled() or not new_title:
+        return None, 0.0, "none"
+    cat_dir = wiki_dir / category
+    if not cat_dir.exists():
+        return None, 0.0, "none"
+
+    cache = _load_semantic_cache(project_root)
+    model, np = _get_sentence_transformer()
+    leading = (new_body or "")[:SEMANTIC_BODY_CHARS]
+    query_text = f"{new_title}\n{leading}"
+
+    corpus = _build_concept_corpus(cat_dir, project_root, cache)
+
+    if model is not None:
+        # Persist any new embeddings (cache may have grown)
+        _save_semantic_cache(project_root, cache)
+        q = _embed_text(query_text)
+        if q is None:
+            model = None  # downgrade
+        else:
+            best_score = 0.0
+            best_path: Path | None = None
+            for path, _t, emb in corpus:
+                if emb is None:
+                    continue
+                # both vectors are L2-normalized → cosine == dot
+                score = float(np.dot(q, emb))
+                if score > best_score:
+                    best_score, best_path = score, path
+            if best_path is not None and best_score >= threshold:
+                return best_path, best_score, "embedding"
+            return None, best_score, "embedding"
+
+    # Fallback: rapidfuzz token_set_ratio (0–100) → scaled to 0.0–1.0
+    if not _FUZZ_AVAILABLE:
+        return None, 0.0, "none"
+    fuzz_threshold = int(threshold * 100)
+    best_score_int = 0
+    best_path = None
+    for path, title, _e in corpus:
+        score = _rf_fuzz.token_set_ratio(new_title.lower(), title.lower())
+        if score > best_score_int:
+            best_score_int, best_path = score, path
+    if best_path is not None and best_score_int >= fuzz_threshold:
+        return best_path, best_score_int / 100.0, "rapidfuzz"
+    return None, best_score_int / 100.0, "rapidfuzz"
+
+
+def append_update_section(
+    matched_path: Path,
+    new_body: str,
+    raw_rel: str,
+    today: str,
+    proposed_title: str,
+) -> None:
+    """Append the proposed body content under a `## Update from <date>` section.
+
+    Used when an existing page is the semantic match but no richer update flow
+    exists. Also adds raw_rel to the page's frontmatter `sources:` list (once).
+    """
+    existing = matched_path.read_text()
+    # Add raw_rel to sources if not already present
+    if raw_rel not in existing:
+        existing = existing.replace(
+            "sources:", f"sources:\n  - {raw_rel}", 1
+        )
+    update_block = (
+        f"\n\n## Update from {today}\n\n"
+        f"_Proposed under title: {proposed_title}_\n\n"
+        f"{(new_body or '').strip()}\n"
+    )
+    matched_path.write_text(existing.rstrip() + update_block)
+
+
+def normalize_source_hash(value: object) -> str:
+    """Normalize historical ``sha256:`` prefixes for exact deduplication."""
+    text = str(value or "").strip().lower()
+    if text.startswith("sha256:"):
+        text = text.removeprefix("sha256:")
+    return text if re.fullmatch(r"[0-9a-f]{64}", text) else ""
+
+
+def check_already_processed(wiki_dir: Path, source_hash: str) -> bool:
+    """Check if a source with this canonical hash has already been processed."""
+    expected = normalize_source_hash(source_hash)
+    if not expected:
+        return False
+    sources_dir = wiki_dir / "sources"
+    if not sources_dir.exists():
+        return False
+    for page in sources_dir.glob("*.md"):
+        fm, _ = parse_frontmatter(page)
+        if normalize_source_hash(fm.get("source_hash")) == expected:
+            log.info("Source already processed (hash match): %s", page.name)
+            return True
+    return False
+
+
+# ---------------------------------------------------------------------------
+# LLM extraction
+# ---------------------------------------------------------------------------
+
+SYSTEM_PROMPT = textwrap.dedent("""\
+    You are a knowledge extraction agent for a personal wiki system.
+    Given a source document, you extract structured knowledge that will
+    become standalone wiki pages — each page should be a useful reference
+    on its own, not just a pointer back to the source.
+
+    ## Rules
+    1. Extract CONCEPTS — ideas, techniques, patterns, methodologies
+    2. Extract ENTITIES — tools, people, organizations, datasets, models
+    3. Write a SOURCE SUMMARY — concise overview of the document
+    4. Suggest SYNTHESIS opportunities when the source overlaps with existing wiki pages
+    5. Every claim must be grounded in the source — no hallucination
+    6. Use Title Case for all titles (e.g., "Rotary Position Embedding")
+    7. Slugs are kebab-case (e.g., "rotary-position-embedding")
+    8. If the source is short or is just a link/stub, extract what you can — it's OK to have few or no concepts/entities
+    9. If images are included, describe any charts, diagrams, code screenshots, or text visible in them
+    10. For chart/diagram images, extract the underlying data and relationships shown
+    11. Note in the output when information came from an image rather than text
+
+    ## CRITICAL: Provenance & Accuracy
+    - Do NOT reference external URLs, websites, or resources that are not mentioned in the source document
+    - Do NOT fabricate dates: use null for created_year/publication_date if not explicitly stated in the source
+    - Do NOT cite external sources (e.g., Wikipedia, GeeksforGeeks) in concept/entity descriptions — only cite the raw source
+    - For related_concepts in concepts: only reference concepts you are extracting OR that appear in the EXISTING WIKI PAGES list
+    - For entities: fill in related_entities with other entities from THIS SAME source (e.g., co-authors, related tools)
+
+    ## CRITICAL: Depth Over Breadth
+    - Extract at most 3-4 concepts — pick the MOST important ones and go deep
+    - Write THOROUGH, DETAILED content for each concept — aim for 5+ substantial paragraphs in how_it_works
+    - Include specific details: formulas (use LaTeX where appropriate), algorithm pseudocode, step-by-step processes, complexity analysis
+    - Transfer ALL useful information from the source into the extraction — don't summarize away details
+    - If the source contains code examples, pseudocode, or mathematical notation, PRESERVE them verbatim
+    - If the source contains performance characteristics (time/space complexity), include them in key_properties
+    - Each concept should read as a standalone mini-article that someone could learn from WITHOUT reading the source
+    - how_it_works should explain the WHY, not just the WHAT — include intuition, trade-offs, and edge cases
+    - A concept with 500+ words in how_it_works is better than 5 concepts with 50 words each
+
+    ## Synthesis Suggestions
+    Look at the EXISTING WIKI PAGES list provided. If the current source covers topics
+    that OVERLAP or CONTRAST with concepts already in the wiki, suggest synthesis pages.
+    Good synthesis candidates:
+    - Two algorithms that solve the same problem differently (e.g., SVM vs Decision Tree)
+    - Competing approaches or frameworks
+    - Evolution of a technique (old approach vs new approach)
+    - Trade-off analysis (e.g., accuracy vs interpretability)
+    Only suggest synthesis when there is genuine overlap — do NOT force it. Max 2 suggestions.
+    Leave the array empty if nothing warrants comparison.
+
+    ## Output Format
+    Return ONLY valid JSON matching this schema (no markdown fencing):
+    {
+      "source_summary": {
+        "title": "Source Title",
+        "summary": "2-3 sentence summary of the source",
+        "key_points": ["point 1", "point 2", "point 3"],
+        "author": "Author name or null",
+        "publication_date": "Date or null",
+        "source_type": "article|paper|video|note|gist|guide|tweet|repo",
+        "notable_quotes": [{"quote": "...", "attribution": "..."}]
+      },
+      "concepts": [
+        {
+          "title": "Concept Title",
+          "slug": "concept-slug",
+          "overview": "2-4 sentence explanation establishing what this is and why it matters",
+          "how_it_works": "Multi-paragraph detailed explanation (5+ paragraphs). Include the mechanism, algorithm steps, mathematical formulas, intuition for WHY it works, and internal logic. Use markdown formatting (lists, bold, code blocks, LaTeX). Cover edge cases and trade-offs.",
+          "key_properties": [
+            {"name": "Property", "description": "Detailed description with specifics (e.g., 'Time Complexity: O(n log n) for training, O(log n) for prediction')"}
+          ],
+          "limitations": "Known weaknesses, failure modes, or assumptions that can break down. Be specific — include when and why it fails.",
+          "example": "A concrete example, use case walkthrough, or pseudocode snippet showing how this works in practice. Use markdown code blocks if appropriate.",
+          "visual_description": "Description of any diagram, chart, or figure from the source that illustrates this concept. Null if no relevant image.",
+          "related_concepts": [{"title": "Other Concept", "relationship": "how they relate"}],
+          "practical_applications": "Specific real-world uses with enough detail to understand when and why to apply this",
+          "tags": ["tag1", "tag2"]
+        }
+      ],
+      "entities": [
+        {
+          "title": "Entity Name",
+          "slug": "entity-slug",
+          "overview": "2-3 sentence description with specific, substantive detail — not just a one-liner",
+          "entity_type": "Tool|Person|Organization|Dataset|Model|Framework",
+          "created_year": "Year or null — ONLY if explicitly stated in source, otherwise null",
+          "creator": "Creator or null — ONLY if explicitly stated in source, otherwise null",
+          "url": "Official URL or null — ONLY if a real, verified URL appears in the source",
+          "status": "Active|Deprecated|Historical",
+          "relevance": "Why this matters in 2-3 sentences with specific details from the source",
+          "associated_concepts": [{"title": "...", "relationship": "..."}],
+          "related_entities": [{"title": "Other Entity From This Source", "relationship": "e.g., co-author, sub-project, parent org"}],
+          "tags": ["tag1", "tag2"]
+        }
+      ],
+      "synthesis_suggestions": [
+        {
+          "title": "Synthesis Page Title (e.g., Decision Trees vs Random Forests)",
+          "slug": "synthesis-slug",
+          "question": "The cross-cutting question this synthesis answers",
+          "concepts_to_compare": ["Existing Wiki Page Title 1", "Existing Wiki Page Title 2"],
+          "dimensions": ["dimension 1 to compare", "dimension 2", "dimension 3"],
+          "rationale": "Why this comparison adds value to the wiki"
+        }
+      ],
+      "tags": ["tag1", "tag2"]
+    }
+""")
+
+
+def call_llm(
+    content: str,
+    source_title: str,
+    source_url: str | None,
+    existing_pages: dict[str, str],
+    token: str,
+    model: str,
+    *,
+    max_source_chars: int = MAX_SOURCE_CHARS_DEFAULT,
+    images: list[str] | None = None,
+) -> dict:
+    """Call GitHub Models API to extract knowledge from source content."""
+    client = OpenAI(base_url=GITHUB_MODELS_URL, api_key=token)
+
+    if INCLUDE_EXISTING_PAGES_CONTEXT:
+        existing_list = "\n".join(
+            f"- {title} ({path})" for title, path in sorted(existing_pages.items())
+        )
+        if not existing_list:
+            existing_list = "(no existing pages yet)"
+    else:
+        existing_list = "(existing wiki page context suppressed for this ingest run)"
+
+    user_prompt = f"""## Source Document
+Title: {source_title}
+{"URL: " + source_url if source_url else ""}
+
+## Existing Wiki Pages (for cross-referencing, avoid duplicates)
+{existing_list}
+
+## Content
+{content[:max_source_chars]}"""
+
+    # Build user message: multimodal if images present, plain text otherwise
+    if images:
+        user_content: list[dict] = [{"type": "text", "text": user_prompt}]
+        for img_uri in images:
+            user_content.append({"type": "image_url", "image_url": {"url": img_uri}})
+        user_message: str | list[dict] = user_content
+    else:
+        user_message = user_prompt
+
+    last_error = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            log.info("LLM call attempt %d/%d (model: %s)", attempt, MAX_RETRIES, model)
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_message},
+                ],
+                temperature=0.3,
+                max_tokens=16000,
+                response_format={"type": "json_object"},
+            )
+            raw = response.choices[0].message.content
+            return json.loads(raw)
+        except Exception as e:
+            message = str(e).lower()
+            status_code = getattr(e, "status_code", None)
+            if "budget limit" in message and (status_code == 403 or "403" in message):
+                raise RuntimeError(f"GitHub Models budget limit reached: {e}") from e
+            last_error = e
+            log.warning("LLM call attempt %d failed: %s", attempt, e)
+            if attempt < MAX_RETRIES:
+                import time
+                time.sleep(2 ** attempt)
+
+    raise RuntimeError(f"LLM call failed after {MAX_RETRIES} attempts: {last_error}")
+
+
+# ---------------------------------------------------------------------------
+# Synthesis LLM call
+# ---------------------------------------------------------------------------
+
+SYNTHESIS_SYSTEM_PROMPT = textwrap.dedent("""\
+    You are a synthesis writer for a personal knowledge wiki.
+    Given two or more wiki concept/entity pages, you produce a SYNTHESIS page
+    that compares, contrasts, and connects them.
+
+    ## Rules
+    1. Every claim must be grounded in the provided wiki pages — no hallucination
+    2. Be SPECIFIC — use concrete details, numbers, formulas from the source pages
+    3. The synthesis should answer a clear question (provided in the prompt)
+    4. Include a structured comparison table with 4-6 meaningful dimensions
+    5. The Analysis section should be 3-5 paragraphs identifying patterns,
+       trade-offs, and practical decision criteria
+    6. Key Insights should be non-obvious observations that emerge from the comparison
+    7. Open Questions should identify genuine gaps where more sources are needed
+    8. Use a topic- or decision-shaped title under 100 characters; never use
+       pipeline-mechanism prefixes such as "Recurring checkpoint patterns"
+
+    ## Output Format
+    Return ONLY valid JSON (no markdown fencing):
+    {
+      "title": "Synthesis Title",
+      "question": "The cross-cutting question this answers",
+      "summary": "2-3 sentence answer to the question",
+      "comparison": [
+        {
+          "dimension": "Dimension Name",
+          "entries": [
+            {"concept": "Concept A", "description": "How A handles this"},
+            {"concept": "Concept B", "description": "How B handles this"}
+          ]
+        }
+      ],
+      "analysis": "3-5 paragraph deep analysis in markdown. Cover: when to choose each, performance trade-offs, common misconceptions, how they complement each other.",
+      "key_insights": [
+        {"insight": "Non-obvious observation", "supporting_pages": ["Page Title 1", "Page Title 2"]}
+      ],
+      "open_questions": ["Question 1", "Question 2"],
+      "tags": ["tag1", "tag2"]
+    }
+""")
+
+MAX_SYNTHESIS_PER_INGEST = max(
+    0,
+    int(os.environ.get("AUTO_INGEST_MAX_SYNTHESIS_PER_INGEST", "1")),
+)
+
+# Checkpoint-family synthesis trigger: minimum number of checkpoint sources
+# (including the freshly-ingested one) that must share concepts before we
+# auto-suggest a cross-checkpoint synthesis. Default shared=1 because the
+# current concept extractor produces hyper-specific concepts that almost never
+# repeat verbatim across checkpoints (52 checkpoints / 140 unique concepts /
+# max 2 hits per concept on the existing corpus). Operators with denser concept
+# graphs can raise this via env.
+CHECKPOINT_FAMILY_MIN_SIZE = max(
+    2,
+    int(os.environ.get("AUTO_INGEST_CHECKPOINT_FAMILY_MIN", "3")),
+)
+CHECKPOINT_FAMILY_MIN_SHARED = max(
+    1,
+    int(os.environ.get("AUTO_INGEST_CHECKPOINT_FAMILY_SHARED", "1")),
+)
+
+
+def find_checkpoint_family(
+    wiki_dir: Path,
+    concept_slugs: list[str],
+    exclude_slug: str | None = None,
+) -> list[tuple[Path, set[str]]]:
+    """Find existing checkpoint source pages that share >= CHECKPOINT_FAMILY_MIN_SHARED
+    concepts with the given slug list.
+
+    Returns a list of (path, shared_slugs) tuples, sorted by overlap size descending.
+    """
+    if not concept_slugs:
+        return []
+    target = set(concept_slugs)
+    fam: list[tuple[Path, set[str]]] = []
+    sources_dir = wiki_dir / "sources"
+    if not sources_dir.is_dir():
+        return []
+    for src in sources_dir.glob("copilot-session-checkpoint-*.md"):
+        if exclude_slug and src.stem == exclude_slug:
+            continue
+        try:
+            fm, _ = parse_frontmatter(src)
+        except Exception:
+            continue
+        their = fm.get("concepts") or []
+        if not isinstance(their, list):
+            continue
+        shared = target & set(their)
+        if len(shared) >= CHECKPOINT_FAMILY_MIN_SHARED:
+            fam.append((src, shared))
+    fam.sort(key=lambda x: len(x[1]), reverse=True)
+    return fam
+
+
+def call_llm_synthesis(
+    concept_pages: dict[str, str],
+    question: str,
+    dimensions: list[str],
+    token: str,
+    model: str,
+) -> dict | None:
+    """Call LLM to generate synthesis content from existing wiki pages.
+
+    Args:
+        concept_pages: {title: page_content} for the pages to compare
+        question: The cross-cutting question to answer
+        dimensions: Suggested comparison dimensions
+        token: API token
+        model: Model ID
+
+    Returns:
+        Parsed JSON synthesis or None on failure.
+    """
+    client = OpenAI(base_url=GITHUB_MODELS_URL, api_key=token)
+
+    pages_text = "\n\n---\n\n".join(
+        f"## {title}\n\n{content}" for title, content in concept_pages.items()
+    )
+
+    user_prompt = f"""## Synthesis Task
+
+Question: {question}
+
+Suggested comparison dimensions: {', '.join(dimensions)}
+
+## Wiki Pages to Synthesize
+
+{pages_text[:25_000]}"""
+
+    try:
+        log.info("Synthesis LLM call (model: %s, pages: %d)", model, len(concept_pages))
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": SYNTHESIS_SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.3,
+            max_tokens=8000,
+            response_format={"type": "json_object"},
+        )
+        raw = response.choices[0].message.content
+        return json.loads(raw)
+    except Exception as e:
+        log.warning("Synthesis LLM call failed: %s", e)
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Wiki page generation
+# ---------------------------------------------------------------------------
+
+
+def generate_source_page(
+    extraction: dict,
+    raw_path: str,
+    source_hash: str,
+    source_url: str | None,
+    today: str,
+    raw_tags: list[str],
+    *,
+    checkpoint_class: str = "",
+    retention_mode: str = RETAIN,
+    knowledge_state: str = "",
+) -> tuple[str, str]:
+    """Generate source summary page. Returns (filename, content)."""
+    ss = extraction["source_summary"]
+    title = ss["title"]
+    slug = slugify(title)
+    filename = f"{slug}.md"
+
+    concept_slugs = [c["slug"] for c in extraction.get("concepts", [])]
+    concept_links = [
+        f'  - "[[{c["title"]}]]"' for c in extraction.get("concepts", [])
+    ]
+    entity_links = [
+        f'  - "[[{e["title"]}]]"' for e in extraction.get("entities", [])
+    ]
+    related = concept_links + entity_links
+
+    tags = list(set(raw_tags + extraction.get("tags", [])))
+
+    # Key points
+    key_points = "\n".join(f"- {p}" for p in ss.get("key_points", []))
+
+    # Concepts extracted
+    concepts_section = "\n".join(
+        f'- **[[{c["title"]}]]** — {c["overview"]}'
+        for c in extraction.get("concepts", [])
+    )
+
+    # Entities mentioned
+    entities_section = "\n".join(
+        f'- **[[{e["title"]}]]** — {e["overview"]}'
+        for e in extraction.get("entities", [])
+    )
+
+    # Quotes
+    quotes_section = "\n".join(
+        f'> "{q["quote"]}" — {q["attribution"]}'
+        for q in ss.get("notable_quotes", [])
+    )
+
+    # Tier defaults to "hot" for new source pages but compressed checkpoints
+    # land in "archive" so they don't bubble up in hot.md / surfacing lists.
+    page_tier = "archive" if (checkpoint_class and retention_mode == COMPRESS) else "hot"
+
+    extra_fm: list[str] = []
+    if checkpoint_class:
+        extra_fm.append(f"checkpoint_class: {checkpoint_class}")
+        extra_fm.append(f"retention_mode: {retention_mode}")
+    if knowledge_state:
+        extra_fm.append(f"knowledge_state: {knowledge_state}")
+    extra_fm_block = ("\n" + "\n".join(extra_fm)) if extra_fm else ""
+
+    content = f"""---
+title: "{title}"
+type: source
+created: {today}
+last_verified: {today}
+source_hash: "{source_hash}"
+sources:
+  - {raw_path}
+concepts:
+{chr(10).join('  - ' + s for s in concept_slugs) if concept_slugs else '  []'}
+related:
+{chr(10).join(related) if related else '  []'}
+tier: {page_tier}{extra_fm_block}
+tags: [{', '.join(tags)}]
+---
+
+# {title}
+
+## Summary
+
+{ss.get("summary", "No summary available.")}
+
+## Key Points
+
+{key_points or "- No key points extracted."}
+
+## Concepts Extracted
+
+{concepts_section or "No concepts extracted."}
+
+## Entities Mentioned
+
+{entities_section or "No entities mentioned."}
+
+## Notable Quotes
+
+{quotes_section or "No notable quotes."}
+
+## Source Details
+
+| Field | Value |
+|-------|-------|
+| Original | `{raw_path}` |
+| Type | {ss.get("source_type", "unknown")} |
+| Author | {ss.get("author") or "Unknown"} |
+| Date | {ss.get("publication_date") or "Unknown"} |
+| URL | {source_url or "N/A"} |
+"""
+    return filename, content
+
+
+def normalize_checkpoint_source_page(
+    page_path: Path,
+    checkpoint_class: str,
+    retention_mode: str,
+    knowledge_state: str = "",
+) -> None:
+    """Ensure checkpoint source pages carry class/retention/tier frontmatter."""
+    if not checkpoint_class or not page_path.exists():
+        return
+
+    content = page_path.read_text()
+    if not content.startswith("---"):
+        return
+
+    parts = content.split("---", 2)
+    if len(parts) < 3:
+        return
+
+    frontmatter_lines = parts[1].strip().split("\n")
+    body = parts[2]
+    desired = {
+        "checkpoint_class": checkpoint_class,
+        "retention_mode": retention_mode,
+        "tier": "archive" if retention_mode == COMPRESS else "hot",
+    }
+    if knowledge_state:
+        desired["knowledge_state"] = knowledge_state
+
+    def upsert(lines: list[str], key: str, value: str) -> list[str]:
+        prefix = f"{key}:"
+        for idx, line in enumerate(lines):
+            if line.strip().startswith(prefix):
+                lines[idx] = f"{key}: {value}"
+                return lines
+        insert_at = len(lines)
+        for idx, line in enumerate(lines):
+            if line.strip().startswith("tags:"):
+                insert_at = idx
+                break
+        lines.insert(insert_at, f"{key}: {value}")
+        return lines
+
+    updated_lines = list(frontmatter_lines)
+    for key, value in desired.items():
+        updated_lines = upsert(updated_lines, key, value)
+
+    normalized = "---\n" + "\n".join(updated_lines) + "\n---" + body
+    if normalized != content:
+        page_path.write_text(normalized)
+
+
+def generate_concept_page(
+    concept: dict,
+    raw_path: str,
+    source_hash: str,
+    source_title: str,
+    today: str,
+) -> tuple[str, str]:
+    """Generate a concept wiki page. Returns (filename, content)."""
+    title = concept["title"]
+    slug = concept["slug"]
+    filename = f"{slug}.md"
+
+    related_concepts = concept.get("related_concepts", [])
+    related_links = [f'  - "[[{r["title"]}]]"' for r in related_concepts]
+    related_links.append(f'  - "[[{source_title}]]"')
+
+    relationships = "\n".join(
+        f'- **[[{r["title"]}]]** — {r["relationship"]}'
+        for r in related_concepts
+    )
+
+    properties = "\n".join(
+        f'- **{p["name"]}:** {p["description"]}'
+        for p in concept.get("key_properties", [])
+    )
+
+    content = f"""---
+title: "{title}"
+type: concept
+created: {today}
+last_verified: {today}
+source_hash: "{source_hash}"
+sources:
+  - {raw_path}
+concepts:
+  - {slug}
+related:
+{chr(10).join(related_links)}
+tier: hot
+tags: [{', '.join(concept.get("tags", []))}]
+---
+
+# {title}
+
+## Overview
+
+{concept.get("overview", "No overview available.")}
+
+## How It Works
+
+{concept.get("how_it_works", "Details not yet available.")}
+
+## Key Properties
+
+{properties or "No key properties identified."}
+"""
+
+    # Optional sections — only include if present
+    limitations = concept.get("limitations")
+    if limitations:
+        content += f"""
+## Limitations
+
+{limitations}
+"""
+
+    example = concept.get("example")
+    if example:
+        content += f"""
+## Example
+
+{example}
+"""
+
+    visual = concept.get("visual_description")
+    if visual:
+        content += f"""
+## Visual
+
+{visual}
+"""
+
+    content += f"""
+## Relationship to Other Concepts
+
+{relationships or "No relationships identified yet."}
+
+## Practical Applications
+
+{concept.get("practical_applications", "Applications not yet documented.")}
+
+## Sources
+
+- [[{source_title}]] — primary source for this concept
+"""
+    return filename, content
+
+
+def generate_entity_page(
+    entity: dict,
+    raw_path: str,
+    source_hash: str,
+    source_title: str,
+    today: str,
+    all_entities: list[dict] | None = None,
+) -> tuple[str, str]:
+    """Generate an entity wiki page. Returns (filename, content).
+
+    Args:
+        all_entities: Other entities from the same ingest for reciprocal linking.
+    """
+    title = entity["title"]
+    slug = entity["slug"]
+    filename = f"{slug}.md"
+
+    assoc = entity.get("associated_concepts", [])
+    related_links = [f'  - "[[{a["title"]}]]"' for a in assoc]
+    related_links.append(f'  - "[[{source_title}]]"')
+
+    assoc_section = "\n".join(
+        f'- **[[{a["title"]}]]** — {a["relationship"]}' for a in assoc
+    )
+
+    # Related entities: from LLM extraction + reciprocal links from same batch
+    related_ents = list(entity.get("related_entities", []))
+    if all_entities:
+        existing_titles = {re["title"] for re in related_ents}
+        for other in all_entities:
+            if other["title"] != title and other["title"] not in existing_titles:
+                related_ents.append({
+                    "title": other["title"],
+                    "relationship": f"co-mentioned in source ({other.get('entity_type', 'entity')})",
+                })
+                existing_titles.add(other["title"])
+
+    # Add related entity links to frontmatter
+    for re_ent in related_ents:
+        link = f'  - "[[{re_ent["title"]}]]"'
+        if link not in related_links:
+            related_links.append(link)
+
+    related_ents_section = "\n".join(
+        f'- **[[{re["title"]}]]** — {re["relationship"]}' for re in related_ents
+    ) if related_ents else "No related entities documented yet."
+
+    content = f"""---
+title: "{title}"
+type: entity
+created: {today}
+last_verified: {today}
+source_hash: "{source_hash}"
+sources:
+  - {raw_path}
+concepts:
+  - {slug}
+related:
+{chr(10).join(related_links)}
+tier: hot
+tags: [{', '.join(entity.get("tags", []))}]
+---
+
+# {title}
+
+## Overview
+
+{entity.get("overview", "No overview available.")}
+
+## Key Facts
+
+| Field | Value |
+|-------|-------|
+| Type | {entity.get("entity_type", "Unknown")} |
+| Created | {entity.get("created_year") or "Unknown"} |
+| Creator | {entity.get("creator") or "Unknown"} |
+| URL | {entity.get("url") or "N/A"} |
+| Status | {entity.get("status", "Unknown")} |
+
+## Relevance
+
+{entity.get("relevance", "Relevance not yet documented.")}
+
+## Associated Concepts
+
+{assoc_section or "No associated concepts documented."}
+
+## Related Entities
+
+{related_ents_section}
+
+## Sources
+
+- [[{source_title}]] — where this entity was mentioned
+"""
+    return filename, content
+
+
+def generate_synthesis_page(
+    synthesis: dict,
+    raw_paths: list[str],
+    source_titles: list[str],
+    today: str,
+    *,
+    extra_frontmatter: dict[str, str] | None = None,
+    source_provenance: dict[str, list[str]] | None = None,
+    project_root: Path | None = None,
+) -> tuple[str, str]:
+    """Generate a synthesis wiki page. Returns (filename, content)."""
+    title = synthesis.get("title", "Untitled Synthesis")
+    slug = slugify(title)
+    filename = f"{slug}.md"
+    raw_paths = list(dict.fromkeys(str(path) for path in raw_paths))
+    if project_root is None:
+        # Compatibility for pure rendering callers; production callers pass a
+        # root so families are resolved from raw frontmatter/URLs.
+        origin_family_count = len(raw_paths)
+    else:
+        from audit_synthesis import source_origin_family
+
+        families = {
+            source_origin_family((project_root / raw_path).resolve())
+            for raw_path in raw_paths
+            if (project_root / raw_path).is_file()
+        }
+        families.discard("missing")
+        origin_family_count = len(families)
+    evidence_scope = "cross-source" if origin_family_count >= 2 else "within-source"
+    synthesis_hash = hashlib.sha256("\n".join(sorted(raw_paths)).encode()).hexdigest()
+
+    # Build comparison table
+    comparison = synthesis.get("comparison", [])
+    if comparison:
+        # Determine concept columns from first entry
+        concepts = [e["concept"] for e in comparison[0].get("entries", [])]
+        if not concepts:
+            table = "No comparison dimensions available."
+            comparison = []  # reset so downstream loops don't break
+        else:
+            header = "| Dimension | " + " | ".join(f"[[{c}]]" for c in concepts) + " |"
+            sep = "|-----------|" + "|".join("---------------------|" for _ in concepts)
+            rows = []
+            for dim in comparison:
+                descs = [e["description"] for e in dim.get("entries", [])]
+                rows.append(f"| {dim['dimension']} | " + " | ".join(descs) + " |")
+            table = "\n".join([header, sep] + rows)
+    else:
+        table = "No comparison dimensions available."
+
+    # Key insights
+    insights = synthesis.get("key_insights", [])
+    insights_section = "\n".join(
+        f'{i + 1}. **{ins["insight"]}** — supported by '
+        + ", ".join(f'[[{p}]]' for p in ins.get("supporting_pages", []))
+        for i, ins in enumerate(insights)
+    ) or "No key insights identified."
+
+    provenance_by_page = {
+        str(page): [str(raw) for raw in sources if str(raw) in raw_paths]
+        for page, sources in (source_provenance or {}).items()
+    }
+    if not provenance_by_page:
+        provenance_by_page = {
+            str(title): [raw_paths[index]]
+            for index, title in enumerate(source_titles)
+            if index < len(raw_paths)
+        }
+    evidence_rows = []
+    for ins in insights:
+        supporting_pages = [str(page) for page in ins.get("supporting_pages", [])]
+        support = ", ".join(f'[[{page}]]' for page in supporting_pages)
+        supporting_raw: list[str] = []
+        for page in supporting_pages:
+            for raw_path in provenance_by_page.get(page, []):
+                if raw_path not in supporting_raw:
+                    supporting_raw.append(raw_path)
+        provenance = ", ".join(f"`{raw_path}`" for raw_path in supporting_raw)
+        evidence_confidence = (
+            "Medium-high; multiple supporting raw sources"
+            if len(supporting_raw) >= 2
+            else "Medium; one supporting raw source"
+            if supporting_raw
+            else "Unresolved; no mapped raw provenance"
+        )
+        evidence_rows.append(
+            f'| {ins.get("insight", "Insight")} | {support or "Unresolved"} | '
+            f'{provenance or "Unresolved"} | {evidence_confidence} |'
+        )
+    evidence_map = "\n".join(
+        [
+            "| Insight | Supporting pages | Raw provenance | Confidence / limits |",
+            "|---------|------------------|----------------|---------------------|",
+            *evidence_rows,
+        ]
+    )
+
+    # Open questions
+    open_qs = synthesis.get("open_questions", [])
+    oq_section = "\n".join(f"- {q}" for q in open_qs) or "- No open questions identified."
+
+    # Sources section
+    sources_section = "\n".join(f"- [[{t}]]" for t in source_titles)
+
+    # Related links
+    all_related = list(set(source_titles + [
+        e["concept"]
+        for dim in comparison
+        for e in dim.get("entries", [])
+    ]))
+    related_links = "\n".join(f'  - "[[{r}]]"' for r in all_related)
+
+    # Concept slugs from compared items
+    concept_slugs = list(set(
+        slugify(e["concept"])
+        for dim in comparison
+        for e in dim.get("entries", [])
+    ))
+
+    tags = synthesis.get("tags", [])
+
+    sources_fm = "\n".join(f"  - {rp}" for rp in raw_paths)
+    extra_fm_lines = [
+        f"{key}: {value}"
+        for key, value in (extra_frontmatter or {}).items()
+        if str(value).strip()
+    ]
+    extra_fm_block = ("\n" + "\n".join(extra_fm_lines)) if extra_fm_lines else ""
+
+    content = f"""---
+title: "{title}"
+type: synthesis
+created: {today}
+last_verified: {today}
+source_hash: "{synthesis_hash}"
+sources:
+{sources_fm}
+evidence_scope: {evidence_scope}
+evidence_source_count: {len(raw_paths)}
+evidence_origin_family_count: {origin_family_count}
+concepts:
+{chr(10).join('  - ' + s for s in concept_slugs) if concept_slugs else '  []'}
+related:
+{related_links if related_links else '  []'}
+tier: hot{extra_fm_block}
+tags: [{', '.join(tags)}]
+---
+
+# {title}
+
+## Question
+
+{synthesis.get("question", "Cross-cutting comparison.")}
+
+## Summary
+
+{synthesis.get("summary", "Summary not available.")}
+
+## Comparison
+
+{table}
+
+## Analysis
+
+{synthesis.get("analysis", "Analysis not yet available.")}
+
+## Key Insights
+
+{insights_section}
+
+## Evidence Map
+
+{evidence_map}
+
+## Open Questions
+
+{oq_section}
+
+## Sources
+
+{sources_section}
+"""
+    return filename, content
+
+
+# ---------------------------------------------------------------------------
+# Post-processing: wikilink validation, dedup, quality scoring
+# ---------------------------------------------------------------------------
+
+
+def _get_all_valid_titles(wiki_dir: Path) -> set[str]:
+    """Collect all page titles from the wiki."""
+    titles: set[str] = set()
+    for category in ("sources", "concepts", "entities", "synthesis"):
+        cat_dir = wiki_dir / category
+        if not cat_dir.exists():
+            continue
+        for page in cat_dir.glob("*.md"):
+            if page.name in ("index.md", "log.md", ".gitkeep"):
+                continue
+            fm, _ = parse_frontmatter(page)
+            title = fm.get("title", "")
+            if title:
+                titles.add(title)
+    return titles
+
+
+def _wikilink_slug(text: str) -> str:
+    """Normalize a wikilink target to the same slug shape used by graph_builder."""
+    text = text.lower().strip()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_-]+", "-", text)
+    return text.strip("-")
+
+
+def _build_wikilink_lookup(wiki_dir: Path) -> tuple[set[str], set[str]]:
+    """Return exact-title and slug-based wikilink targets that resolve in the wiki."""
+    titles: set[str] = set()
+    slugs: set[str] = set()
+    for category in ("sources", "concepts", "entities", "synthesis"):
+        cat_dir = wiki_dir / category
+        if not cat_dir.exists():
+            continue
+        for page in cat_dir.glob("*.md"):
+            if page.name in ("index.md", "hot.md", "log.md", ".gitkeep"):
+                continue
+            fm, _ = parse_frontmatter(page)
+            title = str(fm.get("title") or page.stem.replace("-", " ").title())
+            titles.add(title)
+            slugs.add(_wikilink_slug(title))
+            slugs.add(_wikilink_slug(page.stem))
+    return titles, slugs
+
+
+def _wikilink_target_exists(target: str, valid_titles: set[str], valid_slugs: set[str]) -> bool:
+    """Return True when a wikilink target resolves by title or filename slug."""
+    key = target.strip()
+    return key in valid_titles or _wikilink_slug(key) in valid_slugs
+
+
+def _compute_quality_score(*_args, **_kwargs) -> int:
+    """Deprecated. quality_score is computed by scripts/lint_wiki.py.
+
+    Retained as a no-op shim so any external caller importing the symbol
+    keeps working (returns 0). See R3 in reports/full-review-2026-04-21.md.
+    """
+    return 0
+
+
+def postprocess_created_pages(
+    wiki_dir: Path,
+    created_pages: list[str],
+    project_root: Path,
+) -> None:
+    """Post-process newly created pages: fix wikilinks, dedup, score.
+
+    1. Validate wikilinks against all existing page titles
+    2. Remove self-referential links
+    3. Deduplicate related: entries
+    4. Compute and write quality_score
+    """
+    valid_titles, valid_slugs = _build_wikilink_lookup(wiki_dir)
+    log.info(
+        "Post-processing %d pages (%d valid titles in wiki)",
+        len(created_pages), len(valid_titles),
+    )
+
+    for rel_path in created_pages:
+        page_path = project_root / rel_path
+        if not page_path.exists():
+            continue
+
+        content = page_path.read_text()
+        if not content.startswith("---"):
+            continue
+
+        parts = content.split("---", 2)
+        if len(parts) < 3:
+            continue
+
+        frontmatter_text = parts[1]
+        body = parts[2]
+
+        # --- Parse the page title ---
+        page_title = ""
+        for line in frontmatter_text.strip().split("\n"):
+            if line.strip().startswith("title:"):
+                page_title = line.split(":", 1)[1].strip().strip('"').strip("'")
+                break
+
+        # --- Fix body wikilinks: remove broken ones ---
+        def _replace_wikilink(m: re.Match) -> str:
+            link_title = m.group(1)
+            if link_title == page_title:
+                # Self-reference — remove the wikilink, keep the text
+                return link_title
+            if not _wikilink_target_exists(link_title, valid_titles, valid_slugs):
+                # Broken link — keep the text, drop the brackets
+                return link_title
+            return m.group(0)
+
+        body = re.sub(r"\[\[([^\]]+)\]\]", _replace_wikilink, body)
+
+        # --- Fix frontmatter related: entries ---
+        new_fm_lines = []
+        in_related = False
+        seen_related: set[str] = set()
+
+        for line in frontmatter_text.strip().split("\n"):
+            stripped = line.strip()
+
+            if stripped == "related:":
+                in_related = True
+                new_fm_lines.append(line)
+                continue
+
+            if in_related and stripped.startswith("- "):
+                # Extract title from "[[Title]]" in the related entry
+                link_match = re.search(r"\[\[([^\]]+)\]\]", stripped)
+                if link_match:
+                    link_title = link_match.group(1)
+
+                    # Skip self-references
+                    if link_title == page_title:
+                        continue
+
+                    # Skip broken links
+                    if not _wikilink_target_exists(link_title, valid_titles, valid_slugs):
+                        continue
+
+                    # Skip duplicates
+                    if link_title in seen_related:
+                        continue
+
+                    seen_related.add(link_title)
+
+                new_fm_lines.append(line)
+                continue
+
+            if in_related and not stripped.startswith("- "):
+                in_related = False
+                # If no valid related entries remain, add empty marker
+                if not seen_related:
+                    # Check if the last line was "related:"
+                    if new_fm_lines and new_fm_lines[-1].strip() == "related:":
+                        new_fm_lines.append("  []")
+
+            new_fm_lines.append(line)
+
+        # --- R3: quality_score is now computed by lint_wiki.py (which has the
+        # full corpus to compute inbound-link counts), not stamped here. The
+        # field is intentionally omitted at create time and lint --write-scores
+        # populates it later.
+        wikilinks = re.findall(r"\[\[([^\]]+)\]\]", body)
+
+        # Drop any leftover `quality_score:` line so newly generated pages do
+        # not carry a stale literal forward through merges/updates.
+        new_fm_lines = [
+            line for line in new_fm_lines
+            if not line.strip().startswith("quality_score:")
+        ]
+        score = 0  # for the log line below
+
+        # Reassemble the page
+        new_content = "---\n" + "\n".join(new_fm_lines) + "\n---" + body
+        page_path.write_text(new_content)
+        log.info("Post-processed %s (score: %d, valid links: %d)", rel_path, score, len(seen_related))
+
+
+# ---------------------------------------------------------------------------
+# Log + index
+# ---------------------------------------------------------------------------
+
+
+def append_log(log_path: Path, entry: dict) -> None:
+    """Append a YAML log entry to wiki/log.md."""
+    content = log_path.read_text() if log_path.exists() else ""
+    # Strip trailing ``` if present (the log wraps entries in a yaml block)
+    content = content.rstrip()
+    if content.endswith("```"):
+        content = content[:-3].rstrip()
+
+    targets_yaml = "\n".join(f"    - {t}" for t in entry["targets"])
+    block = f"""
+- timestamp: {entry["timestamp"]}
+  operation: {entry["operation"]}
+  agent: {entry["agent"]}
+  targets:
+{targets_yaml}
+  source: {entry["source"]}
+  status: {entry["status"]}
+  notes: "{entry["notes"]}"
+```
+"""
+    log_path.write_text(content + "\n" + block)
+
+
+def rebuild_index(project_root: Path) -> None:
+    """Run compile_index.py to rebuild wiki/index.md."""
+    script = _runtime_scripts_dir(project_root) / "compile_index.py"
+    if script.exists():
+        log.info("Rebuilding wiki/index.md")
+        subprocess.run(
+            [sys.executable, str(script), "--wiki-dir", str(project_root)],
+            check=True,
+        )
+    else:
+        log.warning("compile_index.py not found at %s", script)
+
+
+def update_raw_status(raw_path: Path, new_status: str) -> None:
+    """Update the status field in a raw source's frontmatter."""
+    content = raw_path.read_text()
+    updated = re.sub(
+        r"^(status:\s*).*$",
+        f"\\g<1>{new_status}",
+        content,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    raw_path.write_text(updated)
+
+
+def finalize_pre_backend_skip(
+    project_root: Path,
+    raw_path: Path,
+    *,
+    title: str,
+    backend: str,
+    new_status: str,
+    operation: str,
+    notes: str,
+    validation_run: bool,
+) -> None:
+    """Finalize a deterministic pre-backend outcome through normal side effects."""
+    if validation_run:
+        return
+    raw_relative = raw_path.resolve().relative_to(project_root.resolve()).as_posix()
+    log_relative = "wiki/log.md"
+    log_path = project_root / log_relative
+    raw_before = raw_path.read_text()
+    log_existed = log_path.exists()
+    log_before = log_path.read_text() if log_existed else ""
+    try:
+        update_raw_status(raw_path, new_status)
+        append_log(
+            log_path,
+            {
+                "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "operation": operation,
+                "agent": backend,
+                "targets": [raw_relative],
+                "source": raw_relative,
+                "status": "success",
+                "notes": notes.replace('"', "'").replace("\n", " "),
+            },
+        )
+        try:
+            committed = commit_wiki_changes(
+                project_root,
+                title=title,
+                notes=notes,
+                paths=[raw_relative, log_relative],
+            )
+        except Exception as exc:
+            raise RuntimeError("pre-backend manifest commit failed") from exc
+        if not committed:
+            raise RuntimeError("pre-backend manifest commit did not complete")
+    except Exception:
+        raw_path.write_text(raw_before)
+        if log_existed:
+            log_path.write_text(log_before)
+        else:
+            log_path.unlink(missing_ok=True)
+        try:
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(project_root),
+                    "add",
+                    "-A",
+                    "--",
+                    raw_relative,
+                    log_relative,
+                ],
+                check=False,
+                capture_output=True,
+                timeout=30,
+            )
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            log.warning("Unable to restore Git index after pre-backend rollback")
+        raise
+    send_ntfy(
+        f"Wiki: {title}",
+        notes,
+        tags="books,white_check_mark",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Notification
+# ---------------------------------------------------------------------------
+
+
+NTFY_FAILURE_MESSAGE_MAX_CHARS = 3500
+
+
+def _redact_failure_detail(detail: object) -> str:
+    """Remove common credential forms before external error notification."""
+    text = str(detail or "Unknown error").strip()
+    patterns = (
+        (r"(?im)^((?:set-)?cookie\s*:)\s*[^\r\n]+", r"\1 [REDACTED]"),
+        (r"(?i)(authorization\s*:\s*(?:bearer|basic)\s+)[^\s]+", r"\1[REDACTED]"),
+        (r"(?i)\b(bearer\s+)[A-Za-z0-9._~+/=-]+", r"\1[REDACTED]"),
+        (r"\b(?:ghp_|gho_|github_pat_|sk-)[A-Za-z0-9_-]{12,}\b", "[REDACTED]"),
+        (
+            r"(?i)(https?://)[^\s/:@]+:[^\s/@]+@",
+            r"\1[REDACTED]@",
+        ),
+        (
+            r"(?i)([?&](?:access[_-]?key|api[_-]?key|auth|client[_-]?secret|"
+            r"password|session|secret|token)=)[^&#\s]+",
+            r"\1[REDACTED]",
+        ),
+        (
+            r"(?i)\b([A-Za-z0-9_.-]*(?:access[_-]?key|api[_-]?key|auth[_-]?token|"
+            r"client[_-]?secret|password|passwd|secret|session|token)[A-Za-z0-9_.-]*)"
+            r"(\s*[=:]\s*)([^\s,;&]+)",
+            r"\1\2[REDACTED]",
+        ),
+        (r"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b", "[REDACTED]"),
+    )
+    for pattern, replacement in patterns:
+        text = re.sub(pattern, replacement, text)
+    return text
+
+
+def format_ingest_failure_message(
+    raw_path: Path,
+    *,
+    backend: str,
+    detail: object,
+) -> str:
+    """Build a bounded, redacted ntfy body with actionable failure context."""
+    prefix = f"Source: {raw_path.name}\nBackend: {backend}\nError:\n"
+    redacted = _redact_failure_detail(detail)
+    available = max(0, NTFY_FAILURE_MESSAGE_MAX_CHARS - len(prefix.encode("utf-8")))
+    encoded = redacted.encode("utf-8")
+    if len(encoded) > available:
+        separator = "\n...[middle truncated]...\n"
+        separator_bytes = separator.encode("utf-8")
+        content_budget = max(0, available - len(separator_bytes))
+        head_size = min(900, content_budget // 3)
+        tail_size = max(0, content_budget - head_size)
+        head = encoded[:head_size].decode("utf-8", errors="ignore").rstrip()
+        tail = encoded[-tail_size:].decode("utf-8", errors="ignore").lstrip()
+        redacted = head + separator + tail
+    return prefix + redacted
+
+
+def notify_ingest_failure(
+    raw_path: Path,
+    *,
+    backend: str,
+    detail: object,
+    validation_run: bool = False,
+) -> None:
+    """Send a detailed failure alert unless notifications are explicitly suppressed."""
+    if validation_run:
+        return
+    send_ntfy(
+        f"Wiki ingest failed: {raw_path.name}",
+        format_ingest_failure_message(raw_path, backend=backend, detail=detail),
+        tags="warning,x",
+    )
+
+
+def send_ntfy(title: str, message: str, tags: str = "books") -> None:
+    """Send a notification via ntfy if configured."""
+    server = os.environ.get("NTFY_SERVER", "")
+    topic = os.environ.get("NTFY_TOPIC", "")
+    if not server or not topic:
+        return
+    try:
+        httpx.post(
+            f"{server}/{topic}",
+            content=message.encode("utf-8"),
+            headers={"Title": title.encode("utf-8").decode("ascii", errors="replace"), "Tags": tags},
+            timeout=10,
+        )
+    except Exception as e:
+        log.warning("ntfy notification failed: %s", e)
+
+
+# ---------------------------------------------------------------------------
+# Agent CLI backends (Codex default, Copilot compatibility)
+# ---------------------------------------------------------------------------
+
+
+AGENT_CLI_BACKENDS = {"codex-cli", "copilot-cli"}
+
+
+def _selected_backend() -> str:
+    return os.environ.get("WIKI_INGEST_BACKEND", "codex-cli").strip().lower()
+
+
+def _codex_sandbox_mode() -> str:
+    """Resolve the Codex sandbox; containers may supply their own outer boundary."""
+    mode = os.environ.get("WIKI_CODEX_SANDBOX", "read-only").strip()
+    if mode not in {"read-only", "workspace-write", "danger-full-access"}:
+        raise ValueError(f"Unsupported WIKI_CODEX_SANDBOX: {mode!r}")
+    return mode
+
+
+def _backend_requires_token(backend: str) -> bool:
+    """Return True for backends that require a GitHub Models/Copilot token upfront."""
+    return backend in {"github-models", "openai", "legacy", "copilot-cli"}
+
+
+def _extract_last_json_object(text: str) -> dict | None:
+    """Return the last valid JSON object embedded in text, if any.
+
+    Agent CLIs often emit progress text around the final status object. Scanning
+    with JSONDecoder is more robust than a regex because the status report can
+    contain nested arrays/objects such as duplicates_avoided entries.
+    """
+    decoder = json.JSONDecoder()
+    last_obj: dict | None = None
+    last_status_obj: dict | None = None
+    for idx, char in enumerate(text):
+        if char != "{":
+            continue
+        try:
+            obj, _end = decoder.raw_decode(text[idx:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict):
+            last_obj = obj
+            # Nested objects (notably duplicates_avoided entries) are also
+            # decodable from their opening brace. Prefer the outer typed status
+            # object instead of accidentally returning its final nested child.
+            if "status" in obj:
+                last_status_obj = obj
+    return last_status_obj or last_obj
+
+
+def _runtime_scripts_dir(project_root: Path) -> Path:
+    """Return image-owned runtime scripts when configured, else checkout scripts."""
+    configured = os.environ.get("WIKI_RUNTIME_SCRIPT_ROOT", "").strip()
+    return Path(configured).resolve() if configured else project_root / "scripts"
+
+
+def _prepare_agent_context(project_root: Path, destination: Path) -> None:
+    """Copy readable ingest inputs into a disposable agent workspace.
+
+    Agent CLIs may still use permissive tools for compatibility inside
+    containers. They never receive the canonical checkout: attempted writes
+    land in this temporary copy and are discarded.
+    """
+    destination.mkdir(parents=True, exist_ok=True)
+    for directory in ("wiki", "templates"):
+        source = project_root / directory
+        if source.is_dir():
+            shutil.copytree(source, destination / directory, dirs_exist_ok=True)
+    (destination / "raw").mkdir(parents=True, exist_ok=True)
+    for source in (project_root / "raw").rglob("*.md"):
+        target = destination / source.relative_to(project_root)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    for relative in ("AGENTS.md",):
+        source = project_root / relative
+        if source.is_file():
+            target = destination / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+
+
+def _build_agent_ingest_prompt(
+    *,
+    raw_path: Path,
+    project_root: Path,
+    model: str,
+    backend: str,
+    checkpoint_class: str = "",
+    retention_mode: str = "",
+    planning_only: bool = False,
+    source_hash: str = "",
+    workspace_root: Path | None = None,
+) -> str:
+    prompt_template_path = (
+        _runtime_scripts_dir(project_root) / "prompts" / "wiki_ingest_proposal_prompt.md"
+    )
+    if not prompt_template_path.exists():
+        raise FileNotFoundError(f"Prompt template not found: {prompt_template_path}")
+
+    prompt_template = prompt_template_path.read_text()
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    agent_root = (workspace_root or project_root).resolve()
+    agent_raw = agent_root / raw_path.resolve().relative_to(project_root.resolve())
+    runtime_inputs = f"""
+
+## RUNTIME INPUTS
+
+- **PROJECT_ROOT**: `{agent_root}`
+- **RAW_PATH**: `{agent_raw}`
+- **MODEL_ID**: `{model}`
+- **INGEST_BACKEND**: `{backend}`
+- **WING**: `labs_wiki`
+- **TODAY**: `{today}`
+- **CHECKPOINT_CLASS**: `{checkpoint_class or 'not-a-checkpoint'}`
+- **RETENTION_MODE**: `{retention_mode or 'standard'}`
+- **PLANNING_ONLY**: `{str(planning_only).lower()}`
+- **SOURCE_HASH**: `{source_hash}`
+
+The checkpoint policy above was computed deterministically by the Python
+orchestrator. If `PLANNING_ONLY` is true, propose only the source summary
+mutation. Do not promote a plan or progress narrative into canonical concepts,
+entities, or synthesis. A `compress` retention mode likewise requires a terse
+source summary and no synthesis unless the raw contains an explicit completed
+result with durable evidence.
+"""
+    return prompt_template + runtime_inputs
+
+
+def _failed_agent_proposal(notes: str) -> dict:
+    """Return a schema-valid failure result for every agent execution path."""
+    return {
+        "status": "failed",
+        "source_path": "",
+        "page_mutations": [],
+        "duplicates_avoided": [],
+        "kg_facts": [],
+        "notes": notes,
+    }
+
+
+def _parse_agent_status_output(output: str, backend_label: str, raw_path: Path) -> dict:
+    status_dict = _extract_last_json_object(output.strip())
+    if not status_dict:
+        log.warning(
+            "No JSON proposal found in %s output for %s. Treating the ingest as failed.",
+            backend_label,
+            raw_path.name,
+        )
+        return _failed_agent_proposal("No JSON proposal found in output")
+    errors = sorted(
+        Draft202012Validator(PROPOSAL_SCHEMA).iter_errors(status_dict),
+        key=lambda error: tuple(str(part) for part in error.absolute_path),
+    )
+    if errors:
+        detail = "; ".join(
+            f"{'.'.join(map(str, error.absolute_path)) or '<root>'}: {error.message}"
+            for error in errors
+        )
+        return _failed_agent_proposal(f"Invalid agent proposal schema: {detail}")
+    log.info(
+        "%s ingest proposal %s: %s",
+        backend_label,
+        status_dict.get("status", "unknown"),
+        status_dict.get("notes", ""),
+    )
+    return status_dict
+
+
+def _looks_like_pdf_reference(value: object) -> bool:
+    text = str(value or "").strip().lower()
+    if not text:
+        return False
+    return "/pdf/" in text or text.endswith(".pdf") or text == "application/pdf"
+
+
+def _compute_effort_for_raw(fm: dict, body: str | None = None) -> str:
+    """Default reasoning effort: 'high' for PDFs and GitHub repos, 'medium' otherwise.
+
+    - PDFs: URL contains '/pdf/' (arxiv), ends with '.pdf', has PDF content
+      type in persisted extracted metadata, or a file raw points at / names a
+      PDF asset in the body.
+    - GitHub repos: URL matches https://github.com/<owner>/<repo> (root only).
+      These have long READMEs + tree-crawled file contents that need careful
+      synthesis into Architecture / How-it-works / API-surface sections.
+    Override with the WIKI_INGEST_EFFORT env var.
+    """
+    url = str(fm.get("url") or fm.get("source") or "").lower()
+    if _looks_like_pdf_reference(url):
+        return "high"
+    if str(fm.get("type", "")).lower() == "file":
+        references: list[object] = [fm.get("source")]
+        if body:
+            asset_path_ref, original_filename = parse_file_asset_reference(body)
+            _persisted_text, persisted_metadata = read_persisted_extracted_content(body)
+            references.extend(
+                [
+                    asset_path_ref,
+                    original_filename,
+                    persisted_metadata.get("asset_path"),
+                    persisted_metadata.get("original_filename"),
+                    persisted_metadata.get("content_type"),
+                ]
+            )
+        if any(_looks_like_pdf_reference(ref) for ref in references):
+            return "high"
+    if re.match(r"^https?://github\.com/[^/]+/[^/]+/?$", url):
+        return "high"
+    return "medium"
+
+
+def _compute_agent_effort(fm: dict, body: str | None, route: IngestRoute) -> str:
+    """Choose Codex/Copilot reasoning effort after deterministic source routing."""
+    env_effort = os.environ.get("WIKI_INGEST_EFFORT", "").strip()
+    if env_effort:
+        return env_effort
+    if route.lane == "light":
+        return "low"
+    return _compute_effort_for_raw(fm, body)
+
+
+def replay_pending_kg_facts(project_root: Path) -> int:
+    """Drain wiki/.kg-pending.jsonl into MemPalace, if reachable.
+
+    Two strategies:
+      1. If MEMPALACE_API_URL is set (HTTP endpoint), POST each fact to
+         {url}/kg/add. Used when MemPalace is exposed as an HTTP service.
+      2. Otherwise, if the `mempalace` Python package is importable in the
+         current interpreter, call KnowledgeGraph.add_triple directly. This
+         is the host-side path (auto-ingest container does NOT have the
+         package installed, so this branch is a no-op there).
+
+    Successfully replayed lines are removed; failures stay in the file.
+    Returns the count replayed. No-op (returns 0) if file is missing.
+    """
+    pending_path = project_root / "wiki" / ".kg-pending.jsonl"
+    if not pending_path.exists():
+        return 0
+
+    facts: list[dict] = []
+    raw_lines: list[str] = []
+    for line in pending_path.read_text().splitlines():
+        if not line.strip():
+            continue
+        raw_lines.append(line)
+        try:
+            facts.append(json.loads(line))
+        except json.JSONDecodeError:
+            facts.append({})  # placeholder so indices line up
+
+    if not facts:
+        return 0
+
+    api_url = os.environ.get("MEMPALACE_API_URL", "").rstrip("/")
+    kg = None
+    if not api_url:
+        try:
+            from mempalace.knowledge_graph import KnowledgeGraph  # type: ignore
+            kg = KnowledgeGraph()
+        except ImportError:
+            log.info(
+                "KG facts pending in %s but neither MEMPALACE_API_URL nor "
+                "the `mempalace` package is available; leaving %d line(s) "
+                "for host-side replay (scripts/replay_kg_facts.py).",
+                pending_path, len(facts),
+            )
+            return 0
+
+    replayed = 0
+    remaining: list[str] = []
+    for raw, fact in zip(raw_lines, facts):
+        if not fact or not all(fact.get(k) for k in ("subject", "predicate", "object")):
+            log.warning("KG line missing required fields: %s", raw[:120])
+            remaining.append(raw)
+            continue
+        try:
+            if kg is not None:
+                kg.add_triple(
+                    subject=fact["subject"],
+                    predicate=fact["predicate"],
+                    obj=fact["object"],
+                    source_closet=fact.get("source_closet"),
+                    valid_from=fact.get("valid_from"),
+                )
+            else:
+                with httpx.Client(timeout=10.0) as client:
+                    resp = client.post(f"{api_url}/kg/add", json=fact)
+                    resp.raise_for_status()
+            replayed += 1
+        except Exception as exc:
+            log.warning("KG replay failed for %s: %s", raw[:100], exc)
+            remaining.append(raw)
+
+    if kg is not None:
+        try:
+            kg.close()
+        except Exception:
+            pass
+
+    if remaining:
+        pending_path.write_text("\n".join(remaining) + "\n")
+    else:
+        pending_path.unlink()
+    log.info("KG facts replayed: %d (remaining: %d)", replayed, len(remaining))
+    return replayed
+
+
+def commit_wiki_changes(
+    project_root: Path,
+    title: str,
+    notes: str,
+    paths: list[str] | None = None,
+) -> bool:
+    """Stage and commit only manifest-listed ingest changes.
+
+    Returns True when a commit was created, False when there was nothing to
+    commit or git is unavailable. Raises only on subprocess invocation
+    errors that aren't related to "nothing to commit".
+    """
+    git = ["git", "-C", str(project_root), "--no-pager"]
+    # Skip if not a git repo or git missing
+    try:
+        head = subprocess.run(
+            [*git, "rev-parse", "--git-dir"],
+            capture_output=True, text=True, timeout=10,
+        )
+        if head.returncode != 0:
+            log.info("Skipping git commit: not a git repository")
+            return False
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        log.info("Skipping git commit: git unavailable")
+        return False
+
+    # Stage only paths validated and finalized by this ingest. This avoids
+    # accidentally committing unrelated or concurrent wiki/raw work.
+    requested_paths = paths or []
+    stage_paths: list[str] = []
+    root_resolved = project_root.resolve()
+    for value in requested_paths:
+        candidate = (project_root / value).resolve()
+        try:
+            relative = candidate.relative_to(root_resolved)
+        except ValueError:
+            log.warning("Refusing to stage out-of-tree ingest path: %s", value)
+            continue
+        relative_text = str(relative)
+        if relative_text not in stage_paths and candidate.exists():
+            stage_paths.append(relative_text)
+    if not stage_paths:
+        log.warning("Skipping git commit: ingest manifest had no existing paths")
+        return False
+    subprocess.run(
+        [*git, "add", "--", *stage_paths],
+        check=False,
+        timeout=30,
+    )
+
+    # Anything to commit?
+    diff = subprocess.run(
+        [*git, "diff", "--cached", "--quiet", "--", *stage_paths],
+        capture_output=True, timeout=10,
+    )
+    if diff.returncode == 0:
+        log.info("git auto-commit: nothing staged")
+        return False
+
+    short_title = (title or "raw source")[:60]
+    short_notes = (notes or "auto-ingest").strip().splitlines()[0][:200]
+    msg = (
+        f"wiki(auto-ingest): {short_title}\n\n{short_notes}\n\n"
+        "Co-authored-by: Codex <codex@openai.com>"
+    )
+    commit = subprocess.run(
+        [*git, "commit", "--only", "-m", msg, "--no-verify", "--", *stage_paths],
+        capture_output=True, text=True, timeout=30,
+    )
+    if commit.returncode != 0:
+        log.warning("git commit failed: %s", commit.stderr.strip())
+        return False
+    log.info("git auto-commit: %s", short_title)
+    return True
+
+
+def git_publish_manifest(paths: list[str]) -> list[str]:
+    """Exclude local runtime outboxes from a manifest-scoped Git commit."""
+    return [path for path in paths if path != "wiki/.kg-pending.jsonl"]
+
+
+def call_codex_cli_ingest(
+    raw_path: Path,
+    project_root: Path,
+    model: str,
+    effort: str,
+    checkpoint_class: str = "",
+    retention_mode: str = "",
+    planning_only: bool = False,
+    source_hash: str = "",
+) -> dict:
+    """Call Codex CLI for a read-only, typed wiki ingest proposal."""
+    log.info(
+        "Calling Codex CLI for %s (model=%s, effort=%s)",
+        raw_path.name,
+        model,
+        effort,
+    )
+
+    try:
+        with tempfile.TemporaryDirectory(prefix="labs-wiki-codex-") as tmp:
+            temp_dir = Path(tmp)
+            context_root = temp_dir / "context"
+            _prepare_agent_context(project_root, context_root)
+            final_prompt = _build_agent_ingest_prompt(
+                raw_path=raw_path,
+                project_root=project_root,
+                model=model,
+                backend="codex-cli",
+                checkpoint_class=checkpoint_class,
+                retention_mode=retention_mode,
+                planning_only=planning_only,
+                source_hash=source_hash,
+                workspace_root=context_root,
+            )
+            output_path = temp_dir / "status.json"
+            schema_path = temp_dir / "status-schema.json"
+            schema_path.write_text(json.dumps(PROPOSAL_SCHEMA))
+            sandbox_mode = _codex_sandbox_mode()
+            cmd = [
+                "codex",
+                "-a", "never",
+                "exec",
+                "-m", model,
+                "-c", f'model_reasoning_effort="{effort}"',
+                "-C", str(context_root),
+                "--add-dir", str(context_root),
+                "-s", sandbox_mode,
+                "--skip-git-repo-check",
+                "--ephemeral",
+                "--ignore-user-config",
+                "--output-schema", str(schema_path),
+                "--output-last-message", str(output_path),
+                "-",
+            ]
+            env = {**os.environ, "CODEX_INGEST_AUTOMATION": "1"}
+            result = subprocess.run(
+                cmd,
+                input=final_prompt,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=1200,  # 20 minutes max
+                cwd=str(context_root),
+            )
+            if result.returncode != 0:
+                log.error(
+                    "Codex CLI exited with code %d for %s:\nSTDERR: %s",
+                    result.returncode,
+                    raw_path.name,
+                    result.stderr,
+                )
+                detail = result.stderr.strip() or result.stdout.strip() or "No process output"
+                return _failed_agent_proposal(
+                    f"codex exec exited with code {result.returncode}: {detail}"
+                )
+
+            output_parts = [result.stdout.strip()]
+            if output_path.exists():
+                output_parts.append(output_path.read_text().strip())
+            output = "\n".join(part for part in output_parts if part)
+    except subprocess.TimeoutExpired:
+        log.error("Codex CLI timed out after 1200s for %s", raw_path.name)
+        return _failed_agent_proposal("Codex CLI timed out after 20 minutes")
+    except Exception as e:
+        log.error("Codex CLI subprocess failed: %s", e)
+        return _failed_agent_proposal(f"Subprocess error: {e}")
+
+    log.debug("Codex CLI output (last 500 chars): %s", output[-500:])
+    return _parse_agent_status_output(output, "Codex CLI", raw_path)
+
+
+def call_copilot_cli_ingest(
+    raw_path: Path,
+    project_root: Path,
+    model: str,
+    effort: str,
+    checkpoint_class: str = "",
+    retention_mode: str = "",
+    planning_only: bool = False,
+    source_hash: str = "",
+) -> dict:
+    """Call GitHub Copilot CLI in a disposable read-only proposal context."""
+    log.info(
+        "Calling gh copilot CLI for %s (model=%s, effort=%s)",
+        raw_path.name, model, effort,
+    )
+
+    try:
+        with tempfile.TemporaryDirectory(prefix="labs-wiki-copilot-") as tmp:
+            context_root = Path(tmp) / "context"
+            _prepare_agent_context(project_root, context_root)
+            final_prompt = _build_agent_ingest_prompt(
+                raw_path=raw_path,
+                project_root=project_root,
+                model=model,
+                backend="copilot-cli",
+                checkpoint_class=checkpoint_class,
+                retention_mode=retention_mode,
+                planning_only=planning_only,
+                source_hash=source_hash,
+                workspace_root=context_root,
+            )
+            cmd = [
+                "gh", "copilot", "-p", final_prompt,
+                "--model", model,
+                "--effort", effort,
+                "--allow-all-tools",
+                "--add-dir", str(context_root),
+            ]
+            env = {**os.environ, "COPILOT_ALLOW_ALL": "1"}
+            result = subprocess.run(
+                cmd,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=900,  # 15 minutes max
+                cwd=str(context_root),
+            )
+    except subprocess.TimeoutExpired:
+        log.error("Copilot CLI timed out after 900s for %s", raw_path.name)
+        return _failed_agent_proposal("Copilot CLI timed out after 15 minutes")
+    except Exception as e:
+        log.error("Copilot CLI subprocess failed: %s", e)
+        return _failed_agent_proposal(f"Subprocess error: {e}")
+
+    if result.returncode != 0:
+        log.error(
+            "Copilot CLI exited with code %d for %s:\nSTDERR: %s",
+            result.returncode, raw_path.name, result.stderr,
+        )
+        detail = result.stderr.strip() or result.stdout.strip() or "No process output"
+        return _failed_agent_proposal(
+            f"gh copilot exited with code {result.returncode}: {detail}"
+        )
+
+    stdout = result.stdout.strip()
+    log.debug("Copilot CLI stdout (last 500 chars): %s", stdout[-500:])
+    return _parse_agent_status_output(stdout, "Copilot CLI", raw_path)
+
+
+# ---------------------------------------------------------------------------
+# Main pipeline
+# ---------------------------------------------------------------------------
+
+
+def ingest_raw_source(
+    raw_path: Path,
+    project_root: Path,
+    token: str,
+    model: str | None = None,
+    *,
+    force: bool = False,
+    refresh_fetch: bool = False,
+    validation_run: bool = False,
+) -> bool:
+    """Process a single raw source file. Returns True on success."""
+    log.info("Processing: %s", raw_path)
+
+    # Parse raw source
+    fm, body = parse_frontmatter(raw_path)
+    if not fm:
+        detail = f"No frontmatter found in {raw_path}"
+        log.error("%s", detail)
+        notify_ingest_failure(
+            raw_path,
+            backend=_selected_backend(),
+            detail=detail,
+            validation_run=validation_run,
+        )
+        return False
+
+    status = fm.get("status", "pending")
+    if status != "pending" and not force:
+        log.info("Skipping %s (status: %s)", raw_path.name, status)
+        return False
+
+    title = fm.get("title", raw_path.stem)
+    source_type = fm.get("type", "text")
+    source_url = fm.get("url")
+
+    # Check which backend to use
+    backend = _selected_backend()
+    if backend in AGENT_CLI_BACKENDS:
+        # Enrich raw URL/file sources before handing off to the agent CLI
+        # compiler flow so prompt-side page generation sees the durable fetched /
+        # extracted body instead of the original pointer-only raw stub.
+        if source_type == "file":
+            asset_path_ref, original_filename = parse_file_asset_reference(body)
+            persisted_text, persisted_metadata = read_persisted_extracted_content(body)
+            if not original_filename:
+                original_filename = str(persisted_metadata.get("original_filename") or "").strip() or None
+            should_extract = bool(asset_path_ref) and (refresh_fetch or force or not persisted_text)
+            if asset_path_ref and should_extract:
+                asset_path = (project_root / asset_path_ref).resolve()
+                try:
+                    project_root_resolved = project_root.resolve()
+                    asset_path.relative_to(project_root_resolved)
+                except ValueError:
+                    log.warning("Skipping out-of-tree asset reference in %s: %s", raw_path.name, asset_path_ref)
+                else:
+                    if not asset_path.exists():
+                        log.warning("Referenced asset does not exist for %s: %s", raw_path.name, asset_path)
+                    else:
+                        extracted_text, extracted_content_type = convert_file_to_markdown(asset_path)
+                        if extracted_text:
+                            updated_raw = upsert_extracted_content_block(
+                                raw_path.read_text(),
+                                build_extracted_content_block(
+                                    extracted_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                    asset_path=asset_path_ref,
+                                    original_filename=original_filename,
+                                    content_type=extracted_content_type,
+                                    text=extracted_text.strip(),
+                                ),
+                            )
+                            raw_path.write_text(updated_raw)
+                            body = updated_raw
+                            fm, body = parse_frontmatter(raw_path)
+                            log.info(
+                                "Persisted %d chars of extracted file content for %s before %s ingest",
+                                len(extracted_text.strip()),
+                                raw_path.name,
+                                backend,
+                            )
+        elif source_type == "url" and source_url:
+            persisted_text, _persisted_metadata = read_persisted_fetched_content(body)
+            should_fetch = refresh_fetch or force or not persisted_text
+            if should_fetch:
+                try:
+                    fetch_result = fetch_url_content(source_url)
+                except Exception as exc:
+                    log.error("Failed to fetch URL %s before %s ingest: %s", source_url, backend, exc)
+                else:
+                    fetched_text = fetch_result.text.strip()
+                    if is_meaningful_fetched_body(fetched_text, source_url) or _is_binary_url_placeholder(fetched_text):
+                        updated_raw = upsert_fetched_content_block(
+                            raw_path.read_text(),
+                            build_fetched_content_block(
+                                fetched_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                source_url=source_url,
+                                resolved_url=fetch_result.resolved_url,
+                                content_type=fetch_result.content_type,
+                                image_urls=fetch_result.image_urls,
+                                text=fetched_text,
+                            ),
+                        )
+                        raw_path.write_text(updated_raw)
+                        body = updated_raw
+                        fm, body = parse_frontmatter(raw_path)
+                        log.info(
+                            "Persisted %d chars of fetched content for %s before %s ingest",
+                            len(fetched_text),
+                            raw_path.name,
+                            backend,
+                        )
+                    else:
+                        log.warning(
+                            "Fetched URL content for %s was not meaningful before %s ingest; leaving raw unchanged",
+                            source_url,
+                            backend,
+                        )
+
+        # All backends perform deterministic source deduplication before any
+        # model process is selected or invoked. Hash only durable source content
+        # (not fetched/extracted timestamps) so refreshes remain stable.
+        if source_type == "file":
+            persisted_text, persisted_metadata = read_persisted_extracted_content(body)
+            _asset_ref, original_filename = parse_file_asset_reference(body)
+            original_filename = (
+                original_filename
+                or str(persisted_metadata.get("original_filename") or "").strip()
+                or None
+            )
+            hash_content = build_file_ingest_content(
+                body=body,
+                persisted_text=persisted_text,
+            )
+        elif source_type == "url" and source_url:
+            persisted_text, _persisted_metadata = read_persisted_fetched_content(body)
+            hash_content = build_url_ingest_content(
+                body=body,
+                source_url=source_url,
+                persisted_text=persisted_text,
+            )
+        else:
+            hash_content = body
+        agent_source_hash = hashlib.sha256(hash_content.encode()).hexdigest()
+        if not force and check_already_processed(project_root / "wiki", agent_source_hash):
+            log.info("Duplicate source hash; skipping %s before %s execution", raw_path.name, backend)
+            finalize_pre_backend_skip(
+                project_root,
+                raw_path,
+                title=str(title),
+                backend=backend,
+                new_status="ingested",
+                operation="duplicate",
+                notes=f"Skipped duplicate source hash before {backend} execution.",
+                validation_run=validation_run,
+            )
+            return True
+
+        agent_route = classify_ingest_route(fm, model_override=model, body=body)
+        agent_planning_only = is_planning_only_checkpoint(
+            str(title),
+            body,
+            agent_route.checkpoint_class,
+            agent_route.retention_mode,
+        )
+        if agent_route.retention_mode == SKIP:
+            log.info(
+                "Skipping %s before %s execution (checkpoint_class=%s retention=skip)",
+                raw_path.name,
+                backend,
+                agent_route.checkpoint_class or "-",
+            )
+            finalize_pre_backend_skip(
+                project_root,
+                raw_path,
+                title=str(title),
+                backend=backend,
+                new_status="ingested-skipped",
+                operation="skip",
+                notes=(
+                    "Skipped by deterministic retention policy before "
+                    f"{backend} execution (checkpoint_class={agent_route.checkpoint_class or '-'})."
+                ),
+                validation_run=validation_run,
+            )
+            return True
+
+        # Agent CLI backend (Codex default, Copilot compatibility)
+        if backend == "codex-cli":
+            ingest_model = _env_str(
+                "WIKI_INGEST_MODEL",
+                "CODEX_MODEL",
+                default=model or DEFAULT_CODEX_MODEL,
+            )
+        else:
+            ingest_model = _env_str(
+                "WIKI_INGEST_MODEL",
+                default=model or DEFAULT_COPILOT_MODEL,
+            )
+        # Effort routing: env var wins; lightweight checkpoint/MemPalace lanes
+        # use 'low', PDFs/root GitHub repos use 'high', and ordinary sources use
+        # 'medium'.
+        ingest_effort = _compute_agent_effort(fm, body, agent_route)
+
+        log.info(
+            "Using %s backend (model=%s, effort=%s)",
+            backend, ingest_model, ingest_effort,
+        )
+
+        if backend == "codex-cli":
+            result = call_codex_cli_ingest(
+                raw_path=raw_path,
+                project_root=project_root,
+                model=ingest_model,
+                effort=ingest_effort,
+                checkpoint_class=agent_route.checkpoint_class or "",
+                retention_mode=agent_route.retention_mode,
+                planning_only=agent_planning_only,
+                source_hash=agent_source_hash,
+            )
+        else:
+            result = call_copilot_cli_ingest(
+                raw_path=raw_path,
+                project_root=project_root,
+                model=ingest_model,
+                effort=ingest_effort,
+                checkpoint_class=agent_route.checkpoint_class or "",
+                retention_mode=agent_route.retention_mode,
+                planning_only=agent_planning_only,
+                source_hash=agent_source_hash,
+            )
+
+        if agent_planning_only and result.get("status") == "success":
+            promoted = [
+                mutation.get("path", "")
+                for mutation in result.get("page_mutations", [])
+                if not str(mutation.get("path", "")).startswith("wiki/sources/")
+            ]
+            if promoted:
+                result = {
+                    **result,
+                    "status": "failed",
+                    "notes": (
+                        "planning-only checkpoint proposed canonical promotion despite "
+                        f"deterministic retention policy: {sorted(promoted)}"
+                    ),
+                }
+
+        success = result.get("status") == "success"
+
+        if success:
+            try:
+                manifest = prepare_and_publish(
+                    result,
+                    project_root,
+                    raw_path,
+                    backend=backend,
+                    validation_run=validation_run,
+                    runtime_scripts=_runtime_scripts_dir(project_root),
+                    expected_source_hash=agent_source_hash,
+                )
+            except (ProposalError, OSError, RuntimeError, subprocess.SubprocessError) as exc:
+                log.error(
+                    "Transactional %s ingest failed; canonical state remains unchanged: %s",
+                    backend,
+                    exc,
+                )
+                notify_ingest_failure(
+                    raw_path,
+                    backend=backend,
+                    detail=f"{type(exc).__name__}: {exc}",
+                    validation_run=validation_run,
+                )
+                return False
+
+            # Git publication is attempted before external side effects so a
+            # success notification never precedes the manifest-scoped commit.
+            # The canonical transaction is already durable even when auto-commit
+            # is disabled or fails.
+            if not validation_run:
+                try:
+                    # The local KG outbox must survive a crash between commit and
+                    # replay, but it is runtime state and must never enter Git.
+                    commit_manifest = git_publish_manifest(manifest)
+                    commit_wiki_changes(
+                        project_root,
+                        title=title,
+                        notes=result.get("notes", ""),
+                        paths=commit_manifest,
+                    )
+                except Exception as exc:
+                    log.warning("git auto-commit failed (non-fatal): %s", exc)
+
+            try:
+                replay_pending_kg_facts(project_root)
+            except Exception as exc:
+                log.warning("KG replay failed (non-fatal): %s", exc)
+            if not validation_run:
+                send_ntfy(
+                    f"Wiki: {title}",
+                    f"Ingested via {backend}: {result.get('notes', '')}",
+                    tags="books,white_check_mark",
+                )
+        else:
+            detail = result.get("notes", "Unknown error")
+            log.error("%s ingest failed: %s", backend, detail)
+            notify_ingest_failure(
+                raw_path,
+                backend=backend,
+                detail=detail,
+                validation_run=validation_run,
+            )
+
+        return success
+
+    # Legacy github-models backend (original implementation below)
+
+    title = fm.get("title", raw_path.stem)
+    source_type = fm.get("type", "text")
+    source_url = fm.get("url")
+    raw_tags = fm.get("tags", []) if isinstance(fm.get("tags"), list) else []
+    route = classify_ingest_route(fm, model_override=model, body=body)
+
+    # For URL sources, prefer the durable fetched-content block. Only fetch
+    # when the raw file has never been enriched or the caller explicitly asks
+    # to refresh the persisted block.
+    content = body
+    image_urls: list[str] = []
+    persisted_text: str | None = None
+    if source_type == "file":
+        asset_path_ref, original_filename = parse_file_asset_reference(body)
+        persisted_text, persisted_metadata = read_persisted_extracted_content(body)
+        if not original_filename:
+            original_filename = str(persisted_metadata.get("original_filename") or "").strip() or None
+        should_extract = bool(asset_path_ref) and (refresh_fetch or force or not persisted_text)
+        if asset_path_ref and should_extract:
+            asset_path = (project_root / asset_path_ref).resolve()
+            try:
+                project_root_resolved = project_root.resolve()
+                asset_path.relative_to(project_root_resolved)
+            except ValueError:
+                log.warning("Skipping out-of-tree asset reference in %s: %s", raw_path.name, asset_path_ref)
+            else:
+                if not asset_path.exists():
+                    log.warning("Referenced asset does not exist for %s: %s", raw_path.name, asset_path)
+                else:
+                    extracted_text, extracted_content_type = convert_file_to_markdown(asset_path)
+                    if extracted_text:
+                        persisted_text = extracted_text.strip()
+                        updated_raw = upsert_extracted_content_block(
+                            raw_path.read_text(),
+                            build_extracted_content_block(
+                                extracted_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                asset_path=asset_path_ref,
+                                original_filename=original_filename,
+                                content_type=extracted_content_type,
+                                text=persisted_text,
+                            ),
+                        )
+                        raw_path.write_text(updated_raw)
+                        body = updated_raw
+                        log.info(
+                            "Persisted %d chars of extracted file content for %s",
+                            len(persisted_text),
+                            raw_path.name,
+                        )
+                    else:
+                        log.info(
+                            "MarkItDown produced no meaningful text for %s (asset: %s)",
+                            raw_path.name,
+                            asset_path.name,
+                        )
+        content = build_file_ingest_content(
+            body=body,
+            persisted_text=persisted_text,
+        )
+    if source_type == "url" and source_url:
+        persisted_text, persisted_metadata = read_persisted_fetched_content(body)
+        should_fetch = refresh_fetch or not persisted_text
+        live_fetch_succeeded = False
+        try:
+            if should_fetch:
+                fetch_result = fetch_url_content(source_url)
+                if is_meaningful_fetched_body(fetch_result.text, source_url) or _is_binary_url_placeholder(fetch_result.text):
+                    persisted_text = fetch_result.text.strip()
+                    image_urls = fetch_result.image_urls
+                    persisted_metadata = {
+                        "image_urls": fetch_result.image_urls,
+                    }
+                    live_fetch_succeeded = True
+                    updated_raw = upsert_fetched_content_block(
+                        raw_path.read_text(),
+                        build_fetched_content_block(
+                            fetched_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                            source_url=source_url,
+                            resolved_url=fetch_result.resolved_url,
+                            content_type=fetch_result.content_type,
+                            image_urls=fetch_result.image_urls,
+                            text=persisted_text,
+                        ),
+                    )
+                    raw_path.write_text(updated_raw)
+                    log.info(
+                        "Persisted %d chars of fetched content for %s",
+                        len(persisted_text),
+                        raw_path.name,
+                    )
+                else:
+                    log.warning(
+                        "Fetched URL content for %s was not meaningful; leaving raw content unchanged",
+                        source_url,
+                    )
+        except Exception as e:
+            log.error("Failed to fetch URL %s: %s", source_url, e)
+        if persisted_text and not image_urls and not live_fetch_succeeded:
+            persisted_image_urls = persisted_metadata.get("image_urls", [])
+            if isinstance(persisted_image_urls, list):
+                image_urls = [str(url) for url in persisted_image_urls[:MAX_IMAGES] if str(url)]
+        content = build_url_ingest_content(
+            body=body,
+            source_url=source_url,
+            persisted_text=persisted_text,
+        )
+
+    # Download and encode images for vision
+    images_b64: list[str] = []
+    if image_urls:
+        log.info("Downloading %d images for vision analysis...", len(image_urls))
+        images_b64 = download_images_as_base64(image_urls)
+        log.info("Successfully encoded %d images", len(images_b64))
+    route = classify_ingest_route(fm, has_images=bool(images_b64), model_override=model, body=body)
+    log.info(
+        "Ingest route: class=%s lane=%s model=%s priority=%d images=%s checkpoint_class=%s retention=%s",
+        route.source_class,
+        route.lane,
+        route.model,
+        route.priority,
+        bool(images_b64),
+        route.checkpoint_class or "-",
+        route.retention_mode,
+    )
+
+    if not content or len(content.strip()) < 10:
+        log.warning("Source content too short for meaningful extraction")
+
+    # Retention: skip checkpoints classified as low-signal (or whatever the
+    # operator has overridden to skip via LABS_WIKI_CHECKPOINT_RETENTION_OVERRIDES).
+    # No LLM call, no source page; raw is marked so we don't retry it.
+    if route.retention_mode == SKIP:
+        log.info(
+            "Skipping ingest for %s (checkpoint_class=%s retention=skip)",
+            raw_path.name,
+            route.checkpoint_class or "-",
+        )
+        finalize_pre_backend_skip(
+            project_root,
+            raw_path,
+            title=str(title),
+            backend=backend,
+            new_status="ingested-skipped",
+            operation="skip",
+            notes=(
+                "Skipped by deterministic retention policy before "
+                f"{backend} execution (checkpoint_class={route.checkpoint_class or '-'})."
+            ),
+            validation_run=validation_run,
+        )
+        return True
+
+    # Compute hash & check incremental
+    source_hash = compute_sha256(content)
+    wiki_dir = project_root / "wiki"
+
+    if not force and check_already_processed(wiki_dir, source_hash):
+        log.info("Already processed, updating status only")
+        finalize_pre_backend_skip(
+            project_root,
+            raw_path,
+            title=str(title),
+            backend=backend,
+            new_status="ingested",
+            operation="duplicate",
+            notes=f"Skipped duplicate source hash before {backend} execution.",
+            validation_run=validation_run,
+        )
+        return True
+
+    # Get existing wiki state
+    existing_pages = get_existing_pages(wiki_dir)
+
+    # LLM extraction
+    log.info("Calling LLM for extraction...")
+    extraction = call_llm(
+        content,
+        title,
+        source_url,
+        existing_pages,
+        token,
+        route.model,
+        max_source_chars=route.max_source_chars,
+        images=images_b64,
+    )
+
+    planning_only = is_planning_only_checkpoint(
+        title,
+        body,
+        route.checkpoint_class,
+        route.retention_mode,
+    )
+    if planning_only:
+        log.info(
+            "Planning-only checkpoint detected for %s; keeping archived source summary only",
+            raw_path.name,
+        )
+        extraction["concepts"] = []
+        extraction["entities"] = []
+        extraction["synthesis_suggestions"] = []
+        if "planning-only" not in raw_tags:
+            raw_tags = raw_tags + ["planning-only"]
+
+    knowledge_state = derive_knowledge_state(
+        title,
+        body,
+        route.checkpoint_class,
+        route.retention_mode,
+    )
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    raw_rel = str(raw_path.relative_to(project_root))
+    source_title = extraction["source_summary"]["title"]
+
+    created_pages: list[str] = []
+
+    # Generate source summary page
+    src_filename, src_content = generate_source_page(
+        extraction, raw_rel, source_hash, source_url, today, raw_tags,
+        checkpoint_class=route.checkpoint_class,
+        retention_mode=route.retention_mode,
+        knowledge_state=knowledge_state,
+    )
+    src_path = wiki_dir / "sources" / src_filename
+    src_path.parent.mkdir(parents=True, exist_ok=True)
+    src_path.write_text(src_content)
+    normalize_checkpoint_source_page(
+        src_path,
+        route.checkpoint_class,
+        route.retention_mode,
+        knowledge_state,
+    )
+    created_pages.append(f"wiki/sources/{src_filename}")
+    log.info("Created: wiki/sources/%s", src_filename)
+
+    # Generate concept pages
+    for concept in extraction.get("concepts", []):
+        filename, page_content = generate_concept_page(
+            concept, raw_rel, source_hash, source_title, today,
+        )
+        concept_path = wiki_dir / "concepts" / filename
+        concept_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Extract the body from the freshly-generated page for semantic dedupe
+        _new_parts = page_content.split("---", 2)
+        _new_body = _new_parts[2] if len(_new_parts) >= 3 else page_content
+
+        # R1: semantic dedupe — embed proposed title+body and compare to existing.
+        if not concept_path.exists() and not is_dedupe_disabled():
+            sem_hit, sem_score, sem_method = find_semantic_match(
+                concept["title"], _new_body, "concepts", wiki_dir, project_root,
+            )
+            if sem_hit is not None:
+                log.info(
+                    "Semantic-dedupe (%s, score=%.3f): '%s' → existing %s "
+                    "(routing to update flow, skipping new file %s)",
+                    sem_method, sem_score, concept["title"], sem_hit.name, filename,
+                )
+                concept_path = sem_hit
+                filename = sem_hit.name
+                # Append proposed content as an Update section (preserves provenance)
+                append_update_section(
+                    concept_path, _new_body, raw_rel, today, concept["title"],
+                )
+                created_pages.append(f"wiki/concepts/{filename}")
+                continue
+
+        # Fuzzy-dedupe: redirect to a near-duplicate existing page if any.
+        if not concept_path.exists():
+            fuzzy_hit = find_fuzzy_match(concept["title"], "concepts", wiki_dir)
+            if fuzzy_hit is not None:
+                log.info(
+                    "Fuzzy-merge: '%s' → existing %s (skipping new file %s)",
+                    concept["title"], fuzzy_hit.name, filename,
+                )
+                concept_path = fuzzy_hit
+                filename = fuzzy_hit.name
+
+        if concept_path.exists():
+            # Merge: append source reference to existing page
+            existing = concept_path.read_text()
+            if raw_rel not in existing:
+                merge_line = f"\n- [[{source_title}]] — additional source\n"
+                existing = existing.rstrip() + merge_line
+                # Add raw path to sources in frontmatter
+                existing = existing.replace(
+                    "sources:", f"sources:\n  - {raw_rel}", 1
+                )
+                concept_path.write_text(existing)
+                log.info("Merged into existing: wiki/concepts/%s", filename)
+        else:
+            # R11: hard-stop new page creation when UPDATE_ONLY mode is set
+            if is_update_only_mode():
+                log.info(
+                    "update-only mode active — skipping creation of "
+                    "wiki/concepts/%s ('%s')",
+                    filename, concept["title"],
+                )
+                continue
+            concept_path.write_text(page_content)
+            log.info("Created: wiki/concepts/%s", filename)
+
+        created_pages.append(f"wiki/concepts/{filename}")
+
+    # Generate entity pages
+    all_entities = extraction.get("entities", [])
+    for entity in all_entities:
+        filename, page_content = generate_entity_page(
+            entity, raw_rel, source_hash, source_title, today,
+            all_entities=all_entities,
+        )
+        entity_path = wiki_dir / "entities" / filename
+        entity_path.parent.mkdir(parents=True, exist_ok=True)
+
+        _new_parts_e = page_content.split("---", 2)
+        _new_body_e = _new_parts_e[2] if len(_new_parts_e) >= 3 else page_content
+
+        # R1: semantic dedupe for entities
+        if not entity_path.exists() and not is_dedupe_disabled():
+            sem_hit, sem_score, sem_method = find_semantic_match(
+                entity["title"], _new_body_e, "entities", wiki_dir, project_root,
+            )
+            if sem_hit is not None:
+                log.info(
+                    "Semantic-dedupe (%s, score=%.3f): '%s' → existing %s "
+                    "(routing to update flow, skipping new file %s)",
+                    sem_method, sem_score, entity["title"], sem_hit.name, filename,
+                )
+                entity_path = sem_hit
+                filename = sem_hit.name
+                append_update_section(
+                    entity_path, _new_body_e, raw_rel, today, entity["title"],
+                )
+                created_pages.append(f"wiki/entities/{filename}")
+                continue
+
+        if not entity_path.exists():
+            fuzzy_hit = find_fuzzy_match(entity["title"], "entities", wiki_dir)
+            if fuzzy_hit is not None:
+                log.info(
+                    "Fuzzy-merge: '%s' → existing %s (skipping new file %s)",
+                    entity["title"], fuzzy_hit.name, filename,
+                )
+                entity_path = fuzzy_hit
+                filename = fuzzy_hit.name
+
+        if entity_path.exists():
+            existing = entity_path.read_text()
+            if raw_rel not in existing:
+                merge_line = f"\n- [[{source_title}]] — additional source\n"
+                existing = existing.rstrip() + merge_line
+                existing = existing.replace(
+                    "sources:", f"sources:\n  - {raw_rel}", 1
+                )
+                entity_path.write_text(existing)
+                log.info("Merged into existing: wiki/entities/%s", filename)
+        else:
+            if is_update_only_mode():
+                log.info(
+                    "update-only mode active — skipping creation of "
+                    "wiki/entities/%s ('%s')",
+                    filename, entity["title"],
+                )
+                continue
+            entity_path.write_text(page_content)
+            log.info("Created: wiki/entities/%s", filename)
+
+        created_pages.append(f"wiki/entities/{filename}")
+
+    # ------------------------------------------------------------------
+    # Phase 3: checkpoint-family synthesis trigger
+    # If this is a durable checkpoint and there are >= CHECKPOINT_FAMILY_MIN_SIZE
+    # checkpoints (incl. self) sharing concepts, append a synthesis suggestion so
+    # the existing call_llm_synthesis loop picks it up.
+    # ------------------------------------------------------------------
+    if (
+        route.checkpoint_class
+        and route.checkpoint_class.startswith("durable-")
+        and route.retention_mode != SKIP
+    ):
+        own_concept_slugs = [
+            c["slug"] for c in extraction.get("concepts", []) if c.get("slug")
+        ]
+        if len(own_concept_slugs) >= CHECKPOINT_FAMILY_MIN_SHARED:
+            family = find_checkpoint_family(
+                wiki_dir,
+                own_concept_slugs,
+                exclude_slug=Path(src_filename).stem,
+            )
+            if len(family) + 1 >= CHECKPOINT_FAMILY_MIN_SIZE:
+                tally: Counter[str] = Counter()
+                for _, shared in family:
+                    for s in shared:
+                        tally[s] += 1
+                top_slugs = [slug for slug, _ in tally.most_common(3)]
+                if top_slugs:
+                    anchor = top_slugs[0].replace("-", " ")
+                    syn_title = f"Recurring checkpoint patterns: {anchor}"
+                    syn_slug = slugify(syn_title)
+                    syn_path = wiki_dir / "synthesis" / f"{syn_slug}.md"
+                    if syn_path.exists():
+                        log.info(
+                            "Checkpoint family of %d touching %s already has synthesis %s",
+                            len(family) + 1, top_slugs, syn_path.name,
+                        )
+                    else:
+                        # Resolve concept titles for compare list (slug -> title)
+                        compare_titles: list[str] = []
+                        for slug in top_slugs:
+                            cp = wiki_dir / "concepts" / f"{slug}.md"
+                            if cp.exists():
+                                cfm, _ = parse_frontmatter(cp)
+                                compare_titles.append(
+                                    cfm.get("title") or slug.replace("-", " ").title()
+                                )
+                            else:
+                                compare_titles.append(slug.replace("-", " ").title())
+                        suggestion = {
+                            "title": syn_title,
+                            "slug": syn_slug,
+                            "question": (
+                                f"What recurring decisions, fixes, and patterns "
+                                f"appear across the {len(family) + 1} session "
+                                f"checkpoints touching {', '.join(compare_titles)}?"
+                            ),
+                            "concepts_to_compare": compare_titles,
+                            "dimensions": ["Approach", "Outcome", "Lessons"],
+                        }
+                        extraction.setdefault("synthesis_suggestions", []).append(
+                            suggestion
+                        )
+                        log.info(
+                            "Checkpoint family trigger: %d members on %s -> queued synthesis '%s'",
+                            len(family) + 1, top_slugs, syn_title,
+                        )
+
+    # Generate synthesis pages from suggestions
+    synthesis_count = 0
+    suggestions = extraction.get("synthesis_suggestions", [])
+    for suggestion in suggestions[:MAX_SYNTHESIS_PER_INGEST]:
+        syn_slug = slugify(suggestion.get("title", ""))
+        if not syn_slug:
+            continue
+
+        # Skip if synthesis page already exists
+        syn_path = wiki_dir / "synthesis" / f"{syn_slug}.md"
+        if syn_path.exists():
+            log.info("Synthesis already exists: %s", syn_path.name)
+            continue
+
+        # Resolve concept pages to compare — look in wiki for matching titles
+        concepts_to_compare = suggestion.get("concepts_to_compare", [])
+        concept_pages: dict[str, str] = {}
+        for concept_title in concepts_to_compare:
+            # Search in existing wiki pages
+            cslug = slugify(concept_title)
+            for category in ("concepts", "entities", "sources"):
+                candidate = wiki_dir / category / f"{cslug}.md"
+                if candidate.exists():
+                    _, page_body = parse_frontmatter(candidate)
+                    concept_pages[concept_title] = page_body
+                    break
+
+        if len(concept_pages) < 2:
+            log.info(
+                "Skipping synthesis '%s' — only %d/%d pages found",
+                suggestion["title"], len(concept_pages), len(concepts_to_compare),
+            )
+            continue
+
+        # Call LLM to generate synthesis content
+        synthesis_result = call_llm_synthesis(
+            concept_pages=concept_pages,
+            question=suggestion.get("question", suggestion["title"]),
+            dimensions=suggestion.get("dimensions", []),
+            token=token,
+            model=model,
+        )
+        if not synthesis_result:
+            continue
+
+        # Collect raw paths from the compared pages' sources
+        syn_raw_paths = [raw_rel]
+        syn_source_titles = [source_title]
+        syn_source_provenance: dict[str, list[str]] = {source_title: [raw_rel]}
+        for concept_title in concept_pages:
+            concept_sources: list[str] = []
+            cslug = slugify(concept_title)
+            for category in ("concepts", "entities", "sources"):
+                candidate = wiki_dir / category / f"{cslug}.md"
+                if candidate.exists():
+                    cfm, _ = parse_frontmatter(candidate)
+                    for src in cfm.get("sources", []):
+                        if src not in syn_raw_paths:
+                            syn_raw_paths.append(src)
+                        if src not in concept_sources:
+                            concept_sources.append(src)
+                    break
+            if concept_title not in syn_source_titles:
+                syn_source_titles.append(concept_title)
+            syn_source_provenance[concept_title] = concept_sources
+
+        syn_filename, syn_content = generate_synthesis_page(
+            synthesis_result, syn_raw_paths, syn_source_titles, today,
+            source_provenance=syn_source_provenance,
+            project_root=project_root,
+        )
+        syn_path = wiki_dir / "synthesis" / syn_filename
+        syn_path.parent.mkdir(parents=True, exist_ok=True)
+        syn_path.write_text(syn_content)
+        created_pages.append(f"wiki/synthesis/{syn_filename}")
+        synthesis_count += 1
+        log.info("Created synthesis: wiki/synthesis/%s", syn_filename)
+
+    # Post-process: validate wikilinks, dedup, compute quality scores
+    postprocess_created_pages(wiki_dir, created_pages, project_root)
+
+    # Enforce the shared page contract for every compatibility-backend output,
+    # then rebuild both derived artifacts before any success side effect.
+    validation_errors: list[str] = []
+    for relative in dict.fromkeys(created_pages):
+        page = project_root / relative
+        validation_errors.extend(f"{relative}: {error}" for error in validate_page(page, project_root))
+        if relative.startswith("wiki/synthesis/"):
+            from audit_synthesis import audit_page
+
+            audit = audit_page(page, project_root, strict=True)
+            if not audit.passed:
+                codes = ", ".join(finding.code for finding in audit.findings)
+                validation_errors.append(
+                    f"{relative}: strict synthesis audit score={audit.score}; {codes}"
+                )
+    if validation_errors:
+        raise ProposalError("compatibility backend page validation failed: " + "; ".join(validation_errors))
+
+    rebuild_index(project_root)
+    rebuild_graph_artifacts(project_root, _runtime_scripts_dir(project_root))
+
+    # Raw status and audit log are success-finalization effects and occur only
+    # after the graph gate succeeds.
+    update_raw_status(raw_path, "ingested")
+    if validation_run:
+        log.info("Validation run — skipping log.md append and ntfy notification")
+    else:
+        log_path = wiki_dir / "log.md"
+        append_log(log_path, {
+            "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "operation": "ingest",
+            "agent": backend,
+            "targets": created_pages,
+            "source": raw_rel,
+            "status": "success",
+            "notes": f"Auto-ingested {len(created_pages)} pages ({len(extraction.get('concepts', []))} concepts, {len(extraction.get('entities', []))} entities, {synthesis_count} synthesis)",
+        })
+        send_ntfy(
+            f"Wiki: {source_title}",
+            f"Ingested {len(created_pages)} pages from {raw_path.name}",
+            tags="books,white_check_mark",
+        )
+
+    log.info(
+        "✅ Ingested %s → %d pages created",
+        raw_path.name,
+        len(created_pages),
+    )
+    return True
+
+
+def process_all_pending(
+    project_root: Path,
+    token: str,
+    model: str | None = None,
+    *,
+    validation_run: bool = False,
+) -> int:
+    """Process all pending raw sources. Returns count of processed files."""
+    raw_dir = project_root / "raw"
+    count = 0
+    pending_files: list[tuple[int, str, Path]] = []
+    for raw_file in raw_dir.glob("*.md"):
+        try:
+            fm, _ = parse_frontmatter(raw_file)
+            if fm.get("status") == "pending":
+                route = classify_ingest_route(fm, model_override=model)
+                pending_files.append((route.priority, raw_file.name, raw_file))
+        except Exception as exc:
+            log.exception("Failed to inspect pending source %s", raw_file.name)
+            notify_ingest_failure(
+                raw_file,
+                backend=_selected_backend(),
+                detail=f"{type(exc).__name__}: {exc}\n\n{traceback.format_exc()}",
+                validation_run=validation_run,
+            )
+
+    for _, _, raw_file in sorted(pending_files):
+        try:
+            if ingest_raw_source(
+                raw_file,
+                project_root,
+                token,
+                model,
+                validation_run=validation_run,
+            ):
+                count += 1
+        except Exception as exc:
+            log.exception("Failed to process %s", raw_file.name)
+            notify_ingest_failure(
+                raw_file,
+                backend=_selected_backend(),
+                detail=f"{type(exc).__name__}: {exc}\n\n{traceback.format_exc()}",
+                validation_run=validation_run,
+            )
+    return count
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Auto-ingest raw wiki sources via LLM")
+    parser.add_argument(
+        "raw_file",
+        nargs="?",
+        help="Specific raw file to process (default: process all pending)",
+    )
+    parser.add_argument(
+        "--project-root",
+        default=os.environ.get("PROJECT_ROOT", "."),
+        help="Root of the labs-wiki project",
+    )
+    parser.add_argument(
+        "--model",
+        default=None,
+        help="Optional explicit model override (otherwise source-based routing decides)",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Process a specific raw file even if it is already marked ingested",
+    )
+    parser.add_argument(
+        "--refresh-fetch",
+        action="store_true",
+        help="Re-fetch URL content and replace the persisted fetched-content block",
+    )
+    parser.add_argument(
+        "--validation-run",
+        action="store_true",
+        help=(
+            "Mark this as a review-only rerun (requires --force). "
+            "Still updates raw snapshots and wiki pages but suppresses "
+            "wiki/log.md append and ntfy notifications."
+        ),
+    )
+    parser.add_argument(
+        "--token",
+        default=os.environ.get("GITHUB_MODELS_TOKEN", os.environ.get("GITHUB_TOKEN", "")),
+        help="GitHub Models/Copilot API token (not required for WIKI_INGEST_BACKEND=codex-cli)",
+    )
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable debug logging",
+    )
+    args = parser.parse_args()
+    if args.refresh_fetch and not args.force:
+        parser.error("--refresh-fetch requires --force")
+    if args.validation_run and not args.force:
+        parser.error("--validation-run requires --force")
+    if args.force and not args.raw_file:
+        parser.error("--force requires a specific raw_file")
+    if args.validation_run and not args.raw_file:
+        parser.error("--validation-run requires a specific raw_file")
+    if args.refresh_fetch and not args.raw_file:
+        parser.error("--refresh-fetch requires a specific raw_file")
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+    backend = _selected_backend()
+    if _backend_requires_token(backend) and not args.token:
+        log.error("No API token. Set GITHUB_MODELS_TOKEN/GITHUB_TOKEN or pass --token for backend=%s", backend)
+        sys.exit(1)
+
+    project_root = Path(args.project_root).resolve()
+
+    if args.raw_file:
+        raw_path = Path(args.raw_file)
+        if not raw_path.is_absolute():
+            raw_path = project_root / raw_path
+        raw_path = raw_path.resolve()
+        try:
+            ok = ingest_raw_source(
+                raw_path,
+                project_root,
+                args.token,
+                args.model,
+                force=args.force,
+                refresh_fetch=args.refresh_fetch,
+                validation_run=args.validation_run,
+            )
+        except Exception as exc:
+            log.exception("Failed to process %s", raw_path.name)
+            notify_ingest_failure(
+                raw_path,
+                backend=backend,
+                detail=f"{type(exc).__name__}: {exc}\n\n{traceback.format_exc()}",
+                validation_run=args.validation_run,
+            )
+            ok = False
+        sys.exit(0 if ok else 1)
+    else:
+        count = process_all_pending(
+            project_root,
+            args.token,
+            args.model,
+            validation_run=args.validation_run,
+        )
+        log.info("Processed %d pending source(s)", count)
+
+
+if __name__ == "__main__":
+    main()

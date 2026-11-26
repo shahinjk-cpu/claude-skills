@@ -1,0 +1,465 @@
+<title>{{PROJECT}} の決めごと</title>
+<style>
+/* 問いを1列に積む、静かな紙の読みもの。墨とグレーに、アクセントは1色（--c） */
+:root {
+  --ground: #f7f4ee;
+  --paper: #fffdf9;
+  --ink: #262420;
+  --sub: #77736b;
+  --rule: #e3ded4;
+  --c: #4e6178;
+  --ok: #2f7a4c; /* 「コピーしました」の一瞬だけ */
+  --font-jp: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', system-ui, sans-serif;
+  --font-latin: 'Avenir Next', 'Helvetica Neue', 'Hiragino Sans', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --ground: #18191c; --paper: #202226; --ink: #e8e5df; --sub: #9a968e; --rule: #2f3136; --c: #9fb3cc; --ok: #7cc49a; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --ground: #18191c; --paper: #202226; --ink: #e8e5df; --sub: #9a968e; --rule: #2f3136; --c: #9fb3cc; --ok: #7cc49a; color-scheme: dark; }
+
+[hidden] { display: none !important; } /* display を決めた要素（.copybar など）でも隠れるように */
+body { background: var(--ground); color: var(--ink); font-family: var(--font-jp); font-size: 15px; line-height: 1.7; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 80px; }
+.logo { font-family: var(--font-latin); font-weight: 600; font-size: 12px; letter-spacing: .32em; color: var(--sub); text-align: center; }
+h1 { font-size: 22px; font-weight: 600; margin: 18px 0 4px; text-wrap: balance; }
+.lead { color: var(--sub); font-size: 13px; margin: 0; }
+
+.tabs { display: flex; gap: 20px; margin: 26px 0 0; border-bottom: 1px solid var(--rule); }
+.tabs button { appearance: none; background: none; border: 0; padding: 10px 0; font: inherit; font-size: 14px; color: var(--sub); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--c); }
+.tabs .n { font-family: var(--font-latin); font-variant-numeric: tabular-nums; margin-left: 4px; }
+.tabs button:focus-visible, .opt:focus-within, .btn:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
+
+.q { padding-block: 30px; border-bottom: 1px solid var(--rule); display: grid; gap: 14px; }
+.eyebrow { display: flex; gap: 10px; align-items: baseline; font-family: var(--font-latin); font-size: 11px; font-weight: 600; letter-spacing: .18em; color: var(--sub); text-transform: uppercase; }
+.eyebrow a { color: var(--c); text-decoration: none; letter-spacing: .06em; }
+.q h2 { font-size: 18px; font-weight: 600; margin: 0; line-height: 1.5; text-wrap: balance; }
+.q p { margin: 0; }
+.muted { color: var(--sub); font-size: 13px; }
+
+.strip { display: grid; gap: 6px; }
+.strip .cap { font-size: 12px; color: var(--sub); }
+.strip .scroller { overflow-x: auto; border: 1px solid var(--rule); background: var(--paper); }
+.strip img { display: block; height: 300px; width: auto; max-width: none; cursor: zoom-in; }
+@media (max-width: 520px) { .strip img { height: 220px; } }
+
+.opts { display: grid; gap: 8px; }
+.opt { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: start; padding: 12px 14px; border: 1px solid var(--rule); background: var(--paper); cursor: pointer; }
+.opt input { margin: 4px 0 0; accent-color: var(--c); grid-row: span 2; }
+.opt b { font-weight: 600; }
+.opt span { color: var(--sub); font-size: 13px; grid-column: 2; }
+.opt:has(input:checked) { border-color: var(--c); }
+/* 16px より小さい入力欄は iPhone が拡大したまま戻さず、ページが横にはみ出して見える */
+textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 10px 12px; font: inherit; font-size: 16px; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); resize: vertical; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.btn { appearance: none; font: inherit; font-size: 14px; font-weight: 600; padding: 9px 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--ground); cursor: pointer; transition: background-color .3s ease, border-color .3s ease; }
+.btn.ghost { background: none; color: var(--ink); border-color: var(--rule); font-weight: 400; }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.done { background: var(--ok); border-color: var(--ok); transition: none; } /* すぐ変わり、ゆっくり戻る */
+.answer { border-left: 2px solid var(--c); padding: 2px 0 2px 12px; }
+.answer .when { font-family: var(--font-latin); font-variant-numeric: tabular-nums; color: var(--sub); font-size: 12px; margin-left: 8px; }
+.decided { border-left: 2px solid var(--rule); padding: 2px 0 2px 12px; }
+.decided li { margin: 2px 0; }
+.decided ul { margin: 0; padding-left: 1.2em; }
+.copybar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding-block: 16px; border-bottom: 1px solid var(--rule); }
+.copybar .muted { flex: 1 1 200px; min-width: 0; }
+#copy-text { width: 100%; min-height: 120px; font-size: 16px; }
+.empty { padding-block: 40px; color: var(--sub); text-align: center; font-size: 14px; }
+.note-off { color: var(--sub); font-size: 12px; }
+
+/* メモ: 書いて送る欄と、送ったメモ */
+.memo-new { display: grid; gap: 10px; padding-block: 24px; border-bottom: 1px solid var(--rule); }
+.memo-new textarea { min-height: 96px; }
+.thumbs { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+.thumb { display: grid; gap: 4px; justify-items: start; }
+.thumbs img { display: block; height: 96px; width: auto; max-width: 100%; border: 1px solid var(--rule); background: var(--paper); cursor: zoom-in; }
+.thumb .btn { padding: 4px 10px; font-size: 12px; }
+.memo { padding-block: 22px; border-bottom: 1px solid var(--rule); display: grid; gap: 10px; }
+.memo .meta { display: flex; gap: 10px; font-family: var(--font-latin); font-variant-numeric: tabular-nums; color: var(--sub); font-size: 12px; }
+.memo .got { color: var(--c); font-family: var(--font-jp); }
+.memo .text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.zoom { position: fixed; inset: 0; background: color-mix(in srgb, var(--ground) 94%, transparent); overflow: auto; z-index: 10; padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); }
+.zoom img { display: block; max-width: none; height: min(86vh, 900px); width: auto; margin: 4vh 16px; cursor: zoom-out; }
+.zoom button { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 12px); right: 16px; }
+@media (prefers-reduced-motion: no-preference) { .q { animation: in .3s ease-out both; } @keyframes in { from { opacity: .4; } to { opacity: 1; } } }
+</style>
+
+<div class="wrap">
+  <div class="logo">{{PROJECT}}</div>
+  <h1>決めごと</h1>
+
+  <div class="tabs" role="tablist" aria-label="絞り込み">
+    <button role="tab" id="tab-open" aria-selected="true" data-tab="open">未回答<span class="n" id="n-open"></span></button>
+    <button role="tab" id="tab-answered" aria-selected="false" data-tab="answered">回答済み<span class="n" id="n-answered"></span></button>
+    <button role="tab" id="tab-decided" aria-selected="false" data-tab="decided">決定済み<span class="n" id="n-decided"></span></button>
+    <button role="tab" id="tab-memos" aria-selected="false" data-tab="memos">メモ<span class="n" id="n-memos"></span></button>
+  </div>
+  <div class="copybar" id="copybar" hidden>
+    <span class="muted" id="copy-label"></span>
+    <button class="btn" id="copy-btn">回答をコピー</button>
+    <textarea id="copy-text" hidden readonly aria-label="チャットに貼り付ける回答"></textarea>
+  </div>
+  <p class="note-off" id="db-off" hidden>このページでは回答を保存できません。チャットで回答してください。</p>
+  <div id="list"></div>
+</div>
+<div class="zoom" id="zoom" hidden><button class="btn ghost" id="zoom-close">閉じる</button><img id="zoom-img" alt=""></div>
+
+<script>
+// 問い（ここは Claude が書き足す）。答えは db の answers/<id> に入る
+const QUESTIONS = [
+  // 例: {
+  //   id: 'q-emoji',                      // 問いの id（db の answers/<id>）。聞き直すときは新しい id にする
+  //   tag: '#143', link: 'https://…',     // 小さな見出し（issue 番号など）と、そのリンク（なくてよい）
+  //   topic: '画像にする',
+  //   title: '絵文字をどこに置く？',        // 問いは1行
+  //   context: '',                        // 要るときだけ短い1行
+  //   images: [{ src: 'img/emoji-a.jpg', cap: '案1' }],
+  //   options: [{ key: 'a', label: '案1 紙のふち', desc: '' }, { key: 'b', label: '案2 名前の横', desc: '' }],
+  // },
+]
+
+// 決まったこと（見返す用）
+const DECIDED = [
+  // 例: { id: 'd-emoji', tag: '#143', link: '', topic: '画像にする', date: '2026-10-17', title: '絵文字は名前の横', points: ['台紙なし'], images: [] },
+]
+
+// どの選択肢にも当てはまらないときの答え。どの問いにも最後に足す（問いの側で key: 'other' を書いていればそれを使う）
+const OTHER = { key: 'other', label: 'どれでもない', desc: 'コメントに入力' }
+const optionsOf = (q) => (q.options.some((o) => o.key === OTHER.key) ? q.options : [...q.options, OTHER])
+const answers = {}
+let tab = 'open'
+let db = null
+let dbReady = false
+const drafts = {}
+
+// メモ（やりたいこと・気づいたこと）。db の memos/<id> に { text, images: [asset id], at }。
+// Claude が次の作業の始めに読み、受け取ったら done: true と reply（何にしたか）を書き足す
+const memos = []
+let assets = null // スクショを置ける人（ページを編集できる人）だけ。null なら文だけ
+const memoDraft = { text: '', files: [] } // files: [{ file, url }]
+let sending = false
+let memoNote = '' // 送った・送れなかった、の知らせ（描き直しても残す）
+const ASSET_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp']
+const MAX_SIDE = 2400 // ほかの形式の画像は、長い辺をこれまでにした JPEG にして送る
+const blobUrl = (id) => '/_blob/' + id
+
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag)
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v)
+    else if (v !== undefined && v !== false) e.setAttribute(k, v === true ? '' : v)
+  }
+  for (const kid of kids.flat()) if (kid !== null && kid !== undefined && kid !== false) e.append(kid)
+  return e
+}
+
+function eyebrow(tag, link, topic) {
+  const head = tag && (link ? el('a', { href: link, target: '_blank', rel: 'noopener' }, tag) : el('span', {}, tag))
+  return el('div', { class: 'eyebrow' }, head, topic)
+}
+
+function strips(images = []) {
+  return images.map((im) => el('div', { class: 'strip' },
+    el('div', { class: 'cap' }, im.cap),
+    el('div', { class: 'scroller' }, el('img', { src: im.src, alt: im.cap, loading: 'lazy', onclick: () => openZoom(im) })),
+  ))
+}
+
+function fmt(at) {
+  const d = new Date(at)
+  if (isNaN(d)) return ''
+  return `${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+
+function questionView(q) {
+  const a = answers[q.id]
+  const editing = drafts[q.id]?.editing || !a
+  const draft = drafts[q.id] ?? (drafts[q.id] = { choice: a?.choice ?? '', note: a?.note ?? '', editing: false })
+  const box = el('section', { class: 'q', id: q.id },
+    eyebrow(q.tag, q.link, q.topic),
+    el('h2', {}, q.title),
+    q.context && el('p', { class: 'muted' }, q.context),
+    strips(q.images),
+  )
+  if (!editing) {
+    const opt = optionsOf(q).find((o) => o.key === a.choice)
+    box.append(el('div', { class: 'answer' },
+      el('div', {}, el('b', {}, opt ? opt.label : a.choice), el('span', { class: 'when' }, fmt(a.at))),
+      a.note && el('div', { class: 'muted' }, a.note),
+    ))
+    box.append(el('div', { class: 'row' }, el('button', { class: 'btn ghost', disabled: !dbReady, onclick: () => { draft.editing = true; render() } }, '回答を変更')))
+    return box
+  }
+  box.append(el('div', { class: 'opts', role: 'radiogroup', 'aria-label': q.title },
+    optionsOf(q).map((o) => el('label', { class: 'opt' },
+      el('input', { type: 'radio', name: q.id, id: `${q.id}-${o.key}`, value: o.key, checked: draft.choice === o.key, onchange: () => { draft.choice = o.key; render() } }),
+      el('b', {}, o.label),
+      o.desc && el('span', {}, o.desc),
+    )),
+  ))
+  const ta = el('textarea', { id: `${q.id}-note`, placeholder: draft.choice === OTHER.key ? 'どうしたいかを入力' : 'コメント（任意）', 'aria-label': 'コメント' })
+  ta.value = draft.note
+  ta.addEventListener('input', () => { draft.note = ta.value })
+  box.append(ta)
+  const status = el('span', { class: 'muted', id: `${q.id}-status` })
+  box.append(el('div', { class: 'row' },
+    el('button', { class: 'btn', disabled: !dbReady || !draft.choice, onclick: () => save(q, status) }, '回答'),
+    a && el('button', { class: 'btn ghost', onclick: () => { draft.editing = false; draft.choice = a.choice; draft.note = a.note ?? ''; render() } }, 'やめる'),
+    status,
+  ))
+  return box
+}
+
+function decidedView(d) {
+  return el('section', { class: 'q', id: d.id },
+    eyebrow(d.tag, d.link, d.topic),
+    el('h2', {}, d.title),
+    el('div', { class: 'decided' }, el('ul', {}, d.points.map((p) => el('li', {}, p)))),
+    el('div', { class: 'muted' }, `${d.date.replaceAll('-', '.')} 決定`),
+    strips(d.images),
+  )
+}
+
+const canSend = () => dbReady && !sending && Boolean(memoDraft.text.trim() || memoDraft.files.length)
+const memoStatus = (text) => {
+  memoNote = text
+  const s = document.getElementById('memo-status')
+  if (s) s.textContent = text
+}
+
+function memoComposer() {
+  const ta = el('textarea', { id: 'memo-text', placeholder: 'やりたいこと・気づいたこと', 'aria-label': 'メモ' })
+  ta.value = memoDraft.text
+  const send = el('button', { class: 'btn', id: 'memo-send', disabled: !canSend(), onclick: sendMemo }, sending ? '送信中…' : '送信')
+  ta.addEventListener('input', () => { memoDraft.text = ta.value; send.disabled = !canSend(); if (memoNote && !sending) memoStatus('') })
+  const pick = el('input', { type: 'file', accept: 'image/*', multiple: true, hidden: true })
+  pick.addEventListener('change', () => {
+    for (const file of pick.files) memoDraft.files.push({ file, url: URL.createObjectURL(file) })
+    pick.value = ''
+    render()
+  })
+  return el('section', { class: 'memo-new' },
+    ta,
+    memoDraft.files.length > 0 && el('div', { class: 'thumbs' }, memoDraft.files.map((f, i) => el('div', { class: 'thumb' },
+      el('img', { src: f.url, alt: `スクリーンショット ${i + 1}`, onclick: () => openZoom({ src: f.url, cap: `スクリーンショット ${i + 1}` }) }),
+      el('button', { class: 'btn ghost', disabled: sending, onclick: () => { URL.revokeObjectURL(f.url); memoDraft.files.splice(i, 1); render() } }, '削除'),
+    ))),
+    el('div', { class: 'row' },
+      send,
+      assets && el('button', { class: 'btn ghost', id: 'memo-pick', disabled: sending, onclick: () => pick.click() }, 'スクリーンショットを追加'),
+      pick,
+      el('span', { class: 'muted', id: 'memo-status' }, memoNote),
+    ),
+  )
+}
+
+function memoView(m) {
+  const images = Array.isArray(m.images) ? m.images.filter((id) => typeof id === 'string') : []
+  return el('section', { class: 'memo', id: m.id },
+    el('div', { class: 'meta' }, fmt(m.at), m.done && el('span', { class: 'got' }, '確認済み')),
+    m.text && el('p', { class: 'text' }, String(m.text)),
+    images.length > 0 && el('div', { class: 'thumbs' }, images.map((id, i) =>
+      el('img', { src: blobUrl(id), alt: `スクリーンショット ${i + 1}`, loading: 'lazy', onclick: () => openZoom({ src: blobUrl(id), cap: `スクリーンショット ${i + 1}` }) }))),
+    m.reply && el('div', { class: 'answer' }, el('div', { class: 'muted' }, String(m.reply))),
+    el('div', { class: 'row' }, el('button', { class: 'btn ghost', id: `${m.id}-remove`, disabled: !dbReady, onclick: (e) => removeMemo(m, images, e.currentTarget) }, '削除')),
+  )
+}
+
+/** 送れる形の画像: そのままか、長い辺を MAX_SIDE までにした JPEG（HEIC などのとき） */
+async function uploadable(file) {
+  if (ASSET_TYPES.includes(file.type) && file.size <= 20 * 1024 * 1024) return file
+  const bitmap = await createImageBitmap(file)
+  const k = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height))
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.round(bitmap.width * k)
+  canvas.height = Math.round(bitmap.height * k)
+  canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+  bitmap.close()
+  return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob'))), 'image/jpeg', 0.9))
+}
+
+async function sendMemo() {
+  if (!canSend()) return
+  sending = true
+  render()
+  const ids = []
+  try {
+    for (const [i, f] of memoDraft.files.entries()) {
+      memoStatus(`スクリーンショットを送信中（${i + 1}/${memoDraft.files.length}）`)
+      ids.push((await assets.upload(await uploadable(f.file))).id)
+    }
+    await db.collection('memos').doc('m' + Date.now().toString(36)).set({ text: memoDraft.text.trim(), images: ids, at: new Date().toISOString() })
+    for (const f of memoDraft.files) URL.revokeObjectURL(f.url)
+    memoDraft.text = ''
+    memoDraft.files = []
+    sending = false
+    render()
+    memoStatus('送信しました')
+  } catch (e) {
+    for (const id of ids) assets.delete(id).catch(() => {}) // メモにならなかったスクショは残さない
+    sending = false
+    render()
+    memoStatus(e?.code === 'too_large' ? 'サイズが大きすぎるスクリーンショットがあります（20 MB まで）'
+      : e?.code === 'quota_or_state' ? 'このページに置ける量を超えました'
+      : '送信できませんでした。もう一度お試しください')
+  }
+}
+
+async function removeMemo(m, images, btn) {
+  if (!btn.dataset.armed) { // 1 回目はたしかめるだけ
+    btn.dataset.armed = '1'
+    btn.textContent = '削除を確定'
+    return
+  }
+  btn.disabled = true
+  try {
+    if (assets) for (const id of images) await assets.delete(id).catch(() => {})
+    await db.collection('memos').doc(m.id).delete()
+  } catch {
+    btn.disabled = false
+    btn.textContent = '削除できませんでした。もう一度お試しください'
+  }
+}
+
+async function save(q, status) {
+  const draft = drafts[q.id]
+  if (draft.choice === OTHER.key && !draft.note.trim()) {
+    status.textContent = 'どうしたいかをコメントに入力してください'
+    return
+  }
+  status.textContent = '保存中…'
+  try {
+    await db.collection('answers').doc(q.id).set({ choice: draft.choice, note: draft.note.trim(), at: new Date().toISOString(), question: q.title })
+    draft.editing = false
+    status.textContent = ''
+  } catch (e) {
+    status.textContent = e?.code === 'invalid_argument' ? 'このアカウントでは保存できません' : '保存できませんでした。もう一度押してください'
+  }
+}
+
+// チャットに貼る文。まだ「決まった」に移していない問いの答えのうち、まだコピーしていないものだけ。
+// 新しい答えがないときは、答えた問いを全部（2回押せば全部ほしいときに足りる）。
+// コピーした答えは、この端末に覚えておく（答えた時刻で見分けるので、答えを変えるとまた新しい答えになる）
+const COPIED_KEY = 'kimegoto:copied'
+const copied = (() => { try { return JSON.parse(localStorage.getItem(COPIED_KEY)) || {} } catch { return {} } })()
+const answeredQs = () => QUESTIONS.filter((q) => answers[q.id])
+const freshQs = () => answeredQs().filter((q) => copied[q.id] !== answers[q.id].at)
+const toCopy = () => (freshQs().length ? freshQs() : answeredQs())
+
+function answerText(qs) {
+  const lines = qs.map((q) => {
+    const a = answers[q.id]
+    const opt = optionsOf(q).find((o) => o.key === a.choice)
+    return `- ${q.tag ? q.tag + ' ' : ''}${q.title} → ${opt ? opt.label : a.choice}${a.note ? `（${a.note}）` : ''}`
+  })
+  return lines.length ? ['決めごとページの答え', ...lines].join('\n') : ''
+}
+function markCopied(qs) {
+  for (const q of qs) copied[q.id] = answers[q.id].at
+  try { localStorage.setItem(COPIED_KEY, JSON.stringify(copied)) } catch {}
+}
+
+function renderCopy() {
+  const all = answeredQs().length
+  const fresh = freshQs().length
+  document.getElementById('copybar').hidden = all === 0 || tab === 'memos'
+  document.getElementById('copy-label').textContent = fresh
+    ? `未コピーの回答 ${fresh} 件を、チャットに貼り付けられる形式でコピーします`
+    : `回答 ${all} 件はすべてコピー済みです。もう一度押すと全件をコピーします`
+}
+
+document.getElementById('copy-btn').addEventListener('click', async () => {
+  const qs = toCopy()
+  const text = answerText(qs)
+  const btn = document.getElementById('copy-btn')
+  const box = document.getElementById('copy-text')
+  try {
+    await navigator.clipboard.writeText(text)
+    markCopied(qs)
+    renderCopy()
+    box.hidden = true
+    btn.textContent = 'コピーしました'
+    btn.classList.add('done')
+    clearTimeout(btn.doneTimer)
+    btn.doneTimer = setTimeout(() => {
+      btn.textContent = '回答をコピー'
+      btn.classList.remove('done')
+    }, 1500)
+  } catch {
+    // コピーできない画面では、選んだ状態の文を出す
+    box.value = text
+    markCopied(qs)
+    renderCopy()
+    box.hidden = false
+    box.focus()
+    box.select()
+    btn.textContent = '下の文をコピーしてください'
+  }
+})
+
+function render() {
+  renderCopy()
+  const open = QUESTIONS.filter((q) => !answers[q.id] || drafts[q.id]?.editing)
+  const answered = QUESTIONS.filter((q) => answers[q.id] && !drafts[q.id]?.editing)
+  document.getElementById('n-open').textContent = open.length
+  document.getElementById('n-answered').textContent = answered.length
+  document.getElementById('n-decided').textContent = DECIDED.length
+  document.getElementById('n-memos').textContent = memos.filter((m) => !m.done).length || ''
+  for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === tab))
+  const list = document.getElementById('list')
+  const active = document.activeElement?.id
+  list.replaceChildren()
+  if (tab === 'memos') {
+    const sorted = [...memos].sort((a, b) => String(b.at).localeCompare(String(a.at)))
+    list.append(memoComposer(), ...sorted.map(memoView))
+    if (!sorted.length) list.append(el('p', { class: 'empty' }, 'まだメモはありません'))
+    const back = active ? document.getElementById(active) : null
+    back?.focus()
+    if (back?.id === 'memo-text') back.setSelectionRange(back.value.length, back.value.length) // 書いている途中に描き直しても続きから
+    return
+  }
+  const items = tab === 'open' ? open.map(questionView) : tab === 'answered' ? answered.map(questionView) : DECIDED.map(decidedView)
+  if (!items.length) list.append(el('p', { class: 'empty' }, tab === 'open' ? '未回答の質問はありません' : tab === 'answered' ? 'まだ回答はありません' : 'まだありません'))
+  list.append(...items)
+  if (active) document.getElementById(active)?.focus()
+}
+
+function openZoom(im) {
+  const z = document.getElementById('zoom')
+  const img = document.getElementById('zoom-img')
+  img.src = im.src
+  img.alt = im.cap
+  z.hidden = false
+}
+document.getElementById('zoom').addEventListener('click', () => { document.getElementById('zoom').hidden = true })
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.getElementById('zoom').hidden = true })
+for (const b of document.querySelectorAll('.tabs button')) b.addEventListener('click', () => { tab = b.dataset.tab; render() })
+
+render()
+
+;(async () => {
+  db = await window.claude?.use?.('db').catch(() => null) ?? null
+  if (!db) {
+    document.getElementById('db-off').hidden = false
+    return
+  }
+  dbReady = true
+  assets = await window.claude.use('assets').catch(() => null)
+  render()
+  db.collection('memos').onSnapshot((snap) => {
+    memos.length = 0
+    for (const d of snap.docs) if (d.exists) memos.push({ ...d.data(), id: d.id })
+    render()
+  }, () => {})
+  db.collection('answers').onSnapshot((snap) => {
+    for (const k of Object.keys(answers)) delete answers[k]
+    for (const d of snap.docs) if (d.exists) answers[d.id] = d.data()
+    render()
+  }, () => {
+    dbReady = false
+    document.getElementById('db-off').hidden = false
+    render()
+  })
+})()
+</script>

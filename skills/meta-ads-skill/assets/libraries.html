@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ad Mockup Libraries</title>
+<style>
+:root{ --bg:#f4f5f7; --panel:#ffffff; --text:#1c1e21; --sub:#606770; --line:#dadde1; --accent:#1b74e4; --ok:#1f9d55; --warn:#d97706; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#121314; --panel:#1d1f21; --text:#e4e6eb; --sub:#a0a4aa; --line:#34373a; --accent:#4a90ff; }
+}
+:root[data-theme="dark"]{ --bg:#121314; --panel:#1d1f21; --text:#e4e6eb; --sub:#a0a4aa; --line:#34373a; --accent:#4a90ff; }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:14px 16px}
+header h1{font-size:18px;margin:0}
+header p{margin:4px 0 0;color:var(--sub);font-size:13px}
+main{max-width:1100px;margin:0 auto;padding:20px 16px 40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;color:inherit;text-decoration:none;transition:border-color .15s,box-shadow .15s,transform .15s}
+/* The whole card opens the library: "Open library" stretches over it. Exported files sit above,
+   so their links still work (a link can't contain other links). */
+.card:has(.open){cursor:pointer}
+.card:has(.open):hover,.card:has(.open:focus-visible){border-color:var(--accent);box-shadow:0 6px 20px rgba(0,0,0,.18);transform:translateY(-2px)}
+.card:has(.open):hover .open{text-decoration:underline}
+.open::after{content:"";position:absolute;inset:0;z-index:1}
+.open:focus-visible{outline:none}
+.card:has(.open:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){ .card{transition:none} .card:has(.open):hover{transform:none} }
+.thumb{aspect-ratio:16/9;background:var(--line);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:12px}
+.body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.name{font-size:15px;font-weight:700;margin:0;overflow-wrap:anywhere}
+.notes{color:var(--sub);font-size:13px;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.brands{font-size:13px;margin:0;overflow-wrap:anywhere}
+.stats{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--sub);margin-top:auto;padding-top:6px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:baseline}
+.dot.actual{background:var(--ok)} .dot.simulated{background:var(--warn)}
+.open{color:var(--accent);font-weight:600;font-size:14px;text-decoration:none}
+.shares{position:relative;z-index:2;pointer-events:none;display:flex;flex-direction:column;gap:2px;font-size:12px;border-top:1px solid var(--line);padding-top:8px;margin-top:4px}
+.shares span{color:var(--sub)}
+.shares .row{display:flex;align-items:flex-start;gap:4px}
+.shares a{color:var(--accent);overflow-wrap:anywhere;pointer-events:auto}
+.shares .row > a:first-child{flex:1;min-width:0}
+.shares .fi{flex:none;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;margin-top:-4px;border-radius:6px;color:var(--sub)}
+.shares .fi:hover{background:var(--bg);color:var(--text)}
+.muted{color:var(--sub)}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--sub)}
+code{font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Ad mockup libraries</h1>
+  <p>Each library is its own set of ads, kept in its own folder here. Open one to see its mockups; inside, the Library menu switches between them.</p>
+</header>
+<main id="main"></main>
+<script>try { const p = JSON.parse(localStorage.getItem("meta-ads:prefs") || "{}"); if ("dark" in p) document.documentElement.dataset.theme = p.dark ? "dark" : "light"; } catch (e) {}</script>
+<script src="libraries.js"></script>
+<script>
+"use strict";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const L = (window.META_ADS_LIBRARIES || {}).libraries || [];
+const when = iso => { if (!iso) return ""; const d = new Date(iso); return isNaN(d) ? iso : d.toLocaleString(undefined, {dateStyle: "medium", timeStyle: "short"}); };
+const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+/* An exported file, with Open and Show folder buttons like Chrome's downloads. A browser can't
+   show a PowerPoint file, so a plain link to one downloads it again; Office's own link type
+   (ms-powerpoint:, what SharePoint's "Open in app" uses) opens it in PowerPoint instead. A page
+   can't open File Explorer, so the folder button shows the browser's list of the folder. */
+const IC_OPEN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>`;
+const IC_FOLDER = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg>`;
+function exportRow(base, f){
+  const url = new URL(base + f.split("/").map(encodeURIComponent).join("/"), location.href).href;
+  const name = f.split("/").pop(), ppt = /\.pptx?$/i.test(name);
+  const open = ppt ? `href="ms-powerpoint:ofe|u|${esc(url)}" title="Open in PowerPoint"` : `href="${esc(url)}" target="_blank" rel="noopener" title="Open in a new tab"`;
+  return `<div class="row"><a ${open}>${esc(name)}</a><a class="fi" ${open} aria-label="Open ${esc(name)}">${IC_OPEN}</a><a class="fi" href="${esc(url.slice(0, url.lastIndexOf("/") + 1))}" target="_blank" rel="noopener" title="Show the folder" aria-label="Show the folder of ${esc(name)}">${IC_FOLDER}</a></div>`;
+}
+function card(l){
+  const thumb = l.thumb ? `<div class="thumb" style="background-image:url('${encodeURI(l.thumb).replace(/'/g, "%27")}')"></div>`
+    : `<div class="thumb" style="${l.thumb_color ? `background:${esc(l.thumb_color)}` : ""}">${l.rendered ? "No image yet" : "Not rendered yet"}</div>`;
+  const brands = (l.brands || []).length ? `<p class="brands">${esc(l.brands.join(", "))}</p>` : "";
+  const c = l.counts || {};
+  const stats = l.rendered
+    ? `<span>${plural(l.ads || 0, "ad")}</span><span><span class="dot actual"></span>${c.actual || 0} actual</span><span><span class="dot simulated"></span>${c.simulated || 0} simulated</span><span>Updated ${esc(when(l.updated))}</span>`
+    : `<span>${l.has_spec ? plural(l.ads || 0, "ad") + ", not rendered yet. Ask your agent to render it." : "Empty. Ask your agent to add ads to it."}</span>`;
+  const files = l.exports || (l.shares || []).map(f => "share/" + f);
+  const shares = files.slice(0, 4).map(f => exportRow(encodeURIComponent(l.id) + "/", f)).join("");
+  const inner = `${thumb}<div class="body"><p class="name">${esc(l.name)}</p>${l.notes ? `<p class="notes">${esc(l.notes)}</p>` : ""}${brands}<div class="stats">${stats}</div>${l.rendered ? `<a class="open" href="${encodeURIComponent(l.id)}/viewer/index.html" aria-label="Open ${esc(l.name)}">Open library →</a>` : ""}${shares ? `<div class="shares"><span>Exported files:</span>${shares}</div>` : ""}</div>`;
+  return `<div class="card">${inner}</div>`;
+}
+document.getElementById("main").innerHTML = L.length
+  ? `<div class="grid">${L.map(card).join("")}</div>`
+  : `<div class="empty">No libraries yet. Ask your agent to make one, for example: <i>“Make a mockup library called My drafts from these ads.”</i></div>`;
+</script>
+</body>
+</html>

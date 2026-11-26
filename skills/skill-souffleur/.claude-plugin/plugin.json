@@ -1,0 +1,1 @@
+{ "name": "skill-souffleur", "version": "0.1.0", "description": "Keeps the skills a session needs loaded across compaction and resume.", "types": "./types/index.d.ts" }

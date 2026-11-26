@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: mixed-concerns-split
+expected_outcome: |
+  This build plugin's commit skill: how many commits, what it refuses, what it never does.

@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: azure-ci-shadow
+expected_outcome: |
+  A conductor designs an unfamiliar infrastructure migration while the human is away: a falsifiable done test, rigor set by reversibility, an independent review of third-party code, reviewed saved plans, an advisory shadow kept out of the merge path, explicit verdicts, a rollback, and reversible work that proceeds without waiting.

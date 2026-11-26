@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title id="document-title">城市运行指挥中心</title>
+<meta name="description" content="城市运行数据总览 · 示例大屏">
+<link rel="stylesheet" href="./css/screen.css">
+<script>
+  /* 外部数据接入配置：改这里即可切换 mock / REST / SSE / WebSocket / 父窗口推送。
+     详见 knowledge/data/data-contract.md */
+  window.DASHBOARD_CONFIG = {
+    mode: "mock",                 // mock | rest | sse | ws | inline | postMessage
+    endpoint: "./data/mock.json",  // rest/sse/ws 时改成你的地址
+    pollInterval: 30000,           // rest 模式轮询间隔（ms），0 = 不轮询
+    timeout: 8000,
+    retry: 3,
+    headers: {},                  // 例如 { Authorization: "Bearer ..." }
+    withCredentials: false,
+    transform: null                // 可选：window.DashboardTransforms 上的函数名
+  };
+</script>
+</head>
+<body data-theme="cyan" data-mode="mock">
+<div class="viewport">
+  <div class="stage" id="stage">
+
+    <header class="top">
+      <div class="top-brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div class="brand-text">
+          <h1 id="screen-title">城市运行指挥中心</h1>
+          <p id="screen-subtitle">CITY OPERATIONS DASHBOARD</p>
+        </div>
+      </div>
+
+      <nav class="top-nav" aria-label="页面切换">
+        <button class="nav-item is-active" data-view="overview">运行总览</button>
+        <button class="nav-item" data-view="traffic">交通态势</button>
+        <button class="nav-item" data-view="safety">安全应急</button>
+        <button class="nav-item" data-view="livelihood">民生服务</button>
+      </nav>
+
+      <div class="top-meta">
+        <div class="meta-block">
+          <span class="meta-label">数据状态</span>
+          <span class="meta-value"><i class="dot" id="data-dot" data-state="mock"></i><b id="data-state">示例数据</b></span>
+        </div>
+        <div class="meta-block">
+          <span class="meta-label" id="date-text">--</span>
+          <span class="meta-value mono" id="time-text">--:--:--</span>
+        </div>
+        <button class="icon-btn" id="btn-fullscreen" title="全屏（F11）" aria-label="全屏">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="kpi-row" aria-label="核心指标">
+      <article class="kpi" data-kpi="events">
+        <p class="kpi-label">今日事件总量<span class="kpi-unit">件</span></p>
+        <p class="kpi-value"><span data-bind="kpis.events.value" data-format="int">0</span></p>
+        <p class="kpi-foot"><span class="trend" data-bind="kpis.events.delta" data-format="pct">--</span><span class="kpi-note">较昨日</span></p>
+      </article>
+      <article class="kpi" data-kpi="resolved">
+        <p class="kpi-label">已办结<span class="kpi-unit">件</span></p>
+        <p class="kpi-value"><span data-bind="kpis.resolved.value" data-format="int">0</span></p>
+        <p class="kpi-foot"><span class="trend" data-bind="kpis.resolved.delta" data-format="pct">--</span><span class="kpi-note">办结率 <b data-bind="kpis.resolved.rate" data-format="pct1">--</b></span></p>
+      </article>
+      <article class="kpi kpi-accent" data-kpi="onsite">
+        <p class="kpi-label">现场处置中<span class="kpi-unit">起</span></p>
+        <p class="kpi-value"><span data-bind="kpis.onsite.value" data-format="int">0</span></p>
+        <p class="kpi-foot"><span class="kpi-note">平均到场 <b class="mono" data-bind="kpis.onsite.avgArrive" data-format="min">--</b> 分钟</span></p>
+      </article>
+      <article class="kpi" data-kpi="people">
+        <p class="kpi-label">在岗网格员<span class="kpi-unit">人</span></p>
+        <p class="kpi-value"><span data-bind="kpis.people.value" data-format="int">0</span></p>
+        <p class="kpi-foot"><span class="kpi-note">在线率 <b data-bind="kpis.people.rate" data-format="pct1">--</b></span></p>
+      </article>
+      <article class="kpi" data-kpi="satisfaction">
+        <p class="kpi-label">群众满意度<span class="kpi-unit">分</span></p>
+        <p class="kpi-value"><span data-bind="kpis.satisfaction.value" data-format="dec1">0</span></p>
+        <p class="kpi-foot"><span class="trend" data-bind="kpis.satisfaction.delta" data-format="pct">--</span><span class="kpi-note">近 30 天</span></p>
+      </article>
+      <article class="kpi" data-kpi="alerts">
+        <p class="kpi-label">未闭环预警<span class="kpi-unit">条</span></p>
+        <p class="kpi-value"><span data-bind="kpis.alerts.value" data-format="int">0</span></p>
+        <p class="kpi-foot"><span class="kpi-note">其中重大 <b class="danger" data-bind="kpis.alerts.critical" data-format="int">0</b> 条</span></p>
+      </article>
+    </section>
+
+    <main class="grid">
+      <!-- 左列 -->
+      <div class="col col-left">
+        <section class="panel panel-trend">
+          <header class="panel-hd">
+            <h2>事件受理趋势</h2>
+            <span class="panel-en">EVENT TREND · 7D</span>
+            <div class="panel-tools">
+              <button class="chip is-active" data-range="7">7天</button>
+              <button class="chip" data-range="30">30天</button>
+            </div>
+          </header>
+          <div class="panel-bd"><div class="chart" id="chart-trend" data-chart="trend"></div></div>
+        </section>
+
+        <section class="panel">
+          <header class="panel-hd">
+            <h2>事件类型构成</h2>
+            <span class="panel-en">CATEGORY MIX</span>
+          </header>
+          <div class="panel-bd"><div class="chart" id="chart-types" data-chart="types"></div></div>
+        </section>
+
+        <section class="panel">
+          <header class="panel-hd">
+            <h2>重点关注区域</h2>
+            <span class="panel-en">TOP AREAS</span>
+          </header>
+          <div class="panel-bd"><div class="chart" id="chart-rank" data-chart="rank"></div></div>
+        </section>
+      </div>
+
+      <!-- 中列 -->
+      <div class="col col-center">
+        <section class="panel panel-map">
+          <header class="panel-hd">
+            <h2>全域事件态势</h2>
+            <span class="panel-en">LIVE SITUATION MAP</span>
+            <div class="legend">
+              <span><i class="lg lg-1"></i>一般</span>
+              <span><i class="lg lg-2"></i>较大</span>
+              <span><i class="lg lg-3"></i>重大</span>
+            </div>
+          </header>
+          <div class="panel-bd">
+            <div class="chart" id="chart-map" data-chart="map"></div>
+            <div class="map-caption">
+              <span class="mono" id="map-updated">--</span>
+              <span>点位按事件等级着色，半径表示事件量</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="center-sub">
+          <section class="panel">
+            <header class="panel-hd">
+              <h2>处置效率</h2>
+              <span class="panel-en">EFFICIENCY</span>
+            </header>
+            <div class="panel-bd"><div class="chart" id="chart-gauge" data-chart="gauge"></div></div>
+          </section>
+
+          <section class="panel">
+            <header class="panel-hd">
+              <h2>力量调度</h2>
+              <span class="panel-en">RESOURCE</span>
+            </header>
+            <div class="panel-bd"><div class="chart" id="chart-resource" data-chart="resource"></div></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- 右列 -->
+      <div class="col col-right">
+        <section class="panel panel-tickets">
+          <header class="panel-hd">
+            <h2>实时工单</h2>
+            <span class="panel-en">LIVE TICKETS</span>
+            <span class="live-tag"><i class="dot" data-state="live"></i>LIVE</span>
+          </header>
+          <div class="panel-bd">
+            <div class="ticket-head">
+              <span>时间</span><span>事件</span><span>区域</span><span>状态</span>
+            </div>
+            <div class="ticket-viewport">
+              <div class="ticket-track" id="ticket-track"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <header class="panel-hd">
+            <h2>满意度维度</h2>
+            <span class="panel-en">SATISFACTION</span>
+          </header>
+          <div class="panel-bd"><div class="chart" id="chart-radar" data-chart="radar"></div></div>
+        </section>
+
+        <section class="panel">
+          <header class="panel-hd">
+            <h2>实时预警</h2>
+            <span class="panel-en">ALERTS</span>
+          </header>
+          <div class="panel-bd">
+            <ul class="alert-list" id="alert-list"></ul>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="bottom">
+      <div class="ticker">
+        <span class="ticker-label">值班播报</span>
+        <div class="ticker-viewport"><div class="ticker-track" id="ticker-track"></div></div>
+      </div>
+      <div class="bottom-meta">
+        <span>数据刷新 <b class="mono" id="refresh-text">--</b></span>
+        <span class="sep"></span>
+        <span>接口 <b class="mono" id="mode-text">MOCK</b></span>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script src="./vendor/echarts.min.js"></script>
+<script src="./js/adapter.js"></script>
+<script src="./js/charts.js"></script>
+<script src="./js/screen.js"></script>
+</body>
+</html>

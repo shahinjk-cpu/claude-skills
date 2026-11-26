@@ -1,0 +1,6 @@
+{
+  "paths":       ["tickets/*/DECISIONS.md", "docs/decisions/DECISIONS.md"],
+  "exclude":     ["**/_TEMPLATE/**", "archive/**"],
+  "anchor_base": ".",
+  "max_age":     90
+}

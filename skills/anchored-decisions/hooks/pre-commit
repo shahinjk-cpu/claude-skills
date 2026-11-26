@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Decision records must stay true. Copy to .git/hooks/pre-commit and chmod +x,
+# or point core.hooksPath at the directory holding this file.
+#
+# Fails the commit when a decision is STALE / BROKEN / EXPIRED / MALFORMED.
+# Bypass for a work-in-progress commit with: git commit --no-verify
+
+if command -v anchor-check >/dev/null 2>&1; then
+  CHECK=anchor-check
+elif [ -x "$HOME/.claude/skills/anchored-decisions/anchor-check.py" ]; then
+  CHECK="$HOME/.claude/skills/anchored-decisions/anchor-check.py"
+else
+  exit 0          # not installed here - never block a commit over tooling
+fi
+
+"$CHECK" --quiet || {
+  echo
+  echo "anchor-check: decisions above no longer match the code."
+  echo "Re-verify and bump 'Verified:', or supersede the record - then commit again."
+  exit 1
+}

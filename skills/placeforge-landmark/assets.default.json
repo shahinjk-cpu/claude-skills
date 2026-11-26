@@ -1,0 +1,138 @@
+{
+ "note": "Downloadable models and textures the engine uses when they are present (pf assets fetches them). All CC0 1.0: no attribution required. Add your own: role = car | van | bus | person | loco | coach | helicopter (name its rotor parts with rotor / tail_rotor); yaw = degrees to turn the model's front to +X after import; length (vehicles) or height (people) in metres. Record every licence here; credit CC-BY authors wherever the result is shown.",
+ "models": {
+  "sedan": {
+   "role": "car",
+   "file": "car_sedan_quaternius.glb",
+   "url": "https://static.poly.pizza/59a67a6c-490e-472e-bae6-5a4d2541f1c7.glb",
+   "yaw": 90,
+   "length": 4.4,
+   "author": "Quaternius",
+   "licence": "CC0 1.0",
+   "page": "https://poly.pizza/m/Cz6yDaUcM9"
+  },
+  "hatch": {
+   "role": "car",
+   "file": "car_hatchback_quaternius.glb",
+   "url": "https://static.poly.pizza/d35173c8-6078-4367-8f87-b1f2599f0bb7.glb",
+   "yaw": 90,
+   "length": 3.7,
+   "author": "Quaternius",
+   "licence": "CC0 1.0",
+   "page": "https://poly.pizza/m/unqqkULtRU"
+  },
+  "sedan2": {
+   "role": "car",
+   "file": "sedan.glb",
+   "url": "https://grab3d.com/dl/sedan/sedan.glb",
+   "yaw": 90,
+   "length": 4.6,
+   "author": "Grab3D",
+   "licence": "CC0 1.0",
+   "page": "https://grab3d.com/models/vehicles/sedan/"
+  },
+  "hatch2": {
+   "role": "car",
+   "file": "1990s-hatchback.glb",
+   "url": "https://grab3d.com/dl/1990s-hatchback/1990s-hatchback.glb",
+   "yaw": 90,
+   "length": 3.7,
+   "author": "Grab3D",
+   "licence": "CC0 1.0",
+   "page": "https://grab3d.com/models/vehicles/1990s-hatchback/"
+  },
+  "van": {
+   "role": "van",
+   "file": "1980s-van.glb",
+   "url": "https://grab3d.com/dl/1980s-van/1980s-van.glb",
+   "yaw": 90,
+   "length": 4.7,
+   "author": "Grab3D",
+   "licence": "CC0 1.0",
+   "page": "https://grab3d.com/models/vehicles/1980s-van/"
+  },
+  "bus": {
+   "role": "bus",
+   "file": "city-bus.glb",
+   "url": "https://grab3d.com/dl/city-bus/city-bus.glb",
+   "yaw": 90,
+   "length": 11.5,
+   "author": "Grab3D",
+   "licence": "CC0 1.0",
+   "page": "https://grab3d.com/models/vehicles/city-bus/"
+  },
+  "loco": {
+   "role": "loco",
+   "file": "diesel-locomotive.glb",
+   "url": "https://grab3d.com/dl/diesel-locomotive/diesel-locomotive.glb",
+   "yaw": 90,
+   "length": 18.0,
+   "author": "Grab3D",
+   "licence": "CC0 1.0",
+   "page": "https://grab3d.com/models/vehicles/diesel-locomotive/"
+  },
+  "coach": {
+   "role": "coach",
+   "file": "passenger-car.glb",
+   "url": "https://grab3d.com/dl/passenger-car/passenger-car.glb",
+   "yaw": 90,
+   "length": 19.6,
+   "author": "Grab3D",
+   "licence": "CC0 1.0",
+   "page": "https://grab3d.com/models/vehicles/passenger-car/"
+  },
+  "man": {
+   "role": "person",
+   "file": "person_man.glb",
+   "url": "https://static.poly.pizza/3746be88-6799-4817-929b-6bc067c47caa.glb",
+   "yaw": 90,
+   "height": 1.74,
+   "action": "walk",
+   "author": "Quaternius",
+   "licence": "CC0 1.0",
+   "page": "https://poly.pizza/m/HMnuH5geEG"
+  },
+  "woman": {
+   "role": "person",
+   "file": "person_woman_casual.glb",
+   "url": "https://static.poly.pizza/51d5abdd-bb87-4b8d-9967-21738ffb8437.glb",
+   "yaw": 90,
+   "height": 1.64,
+   "action": "walk",
+   "author": "Quaternius",
+   "licence": "CC0 1.0",
+   "page": "https://poly.pizza/m/jpKRgGDxhk"
+  },
+  "woman2": {
+   "role": "person",
+   "file": "person_woman_dress.glb",
+   "url": "https://static.poly.pizza/a642af96-e239-4c5f-b50d-7661ff51deec.glb",
+   "yaw": 90,
+   "height": 1.62,
+   "action": "walk",
+   "author": "Quaternius",
+   "licence": "CC0 1.0",
+   "page": "https://poly.pizza/m/zMyPlQXBzq"
+  },
+  "helicopter": {
+   "role": "helicopter",
+   "file": "helicopter.glb",
+   "url": "https://grab3d.com/dl/helicopter/helicopter.glb",
+   "yaw": 90,
+   "length": 9.5,
+   "rotor": "main_rotor",
+   "tail_rotor": "tail_rotor",
+   "author": "Grab3D",
+   "licence": "CC0 1.0",
+   "page": "https://grab3d.com/models/vehicles/helicopter/"
+  }
+ },
+ "textures": [
+  "asphalt_02",
+  "interlocking_concrete_pavers",
+  "gravel_stones",
+  "leafy_grass",
+  "sand_01"
+ ],
+ "textures_note": "Poly Haven 1K colour + roughness maps, CC0 1.0 (https://polyhaven.com)."
+}

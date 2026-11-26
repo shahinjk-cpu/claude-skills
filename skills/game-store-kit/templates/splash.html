@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="_base.css">
+<style>
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 4; }
+  .halo { position: absolute; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--accent) 55%, transparent) 0%, transparent 62%); filter: blur(10px); }
+  .icon { position: relative; overflow: hidden; box-shadow: 0 0 0 6px rgba(255,255,255,.18), 0 40px 90px rgba(0,0,0,.55); }
+  .icon img, .logo { width: 100%; height: 100%; object-fit: contain; }
+  .logo { filter: drop-shadow(0 20px 40px rgba(0,0,0,.45)); }
+  h1 { text-align: center; }
+  .sub { text-align: center; opacity: .85; }
+  .foot { position: absolute; left: 0; right: 0; text-align: center; z-index: 4; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; opacity: .55; }
+</style></head><body>
+<script src="_base.js"></script>
+<script>
+const { B, J, S, W, H, el, rich, background, decor, fit } = KIT;
+if (S.upper) document.body.classList.add('upper');
+background(document.body, { shot: J.image || B.heroShot, burstAt: '50% 42%' });
+const m = Math.min(W, H);
+const c = el('div', 'center'); c.style.gap = m * .045 + 'px';
+const halo = el('div', 'halo'); halo.style.cssText = `width:${m * 1.1}px;height:${m * 1.1}px;left:${(W - m * 1.1) / 2}px;top:${(H - m * 1.1) / 2 - m * .08}px`;
+document.body.appendChild(halo);
+if (!J.noIcon) {
+  const ic = el('div', 'icon'); const s = m * (J.iconScale || 0.36);
+  ic.style.cssText = `width:${s}px;height:${s}px;border-radius:${s * .225}px`;
+  const im = el('img'); im.src = J.icon || B.iconPng; ic.appendChild(im); c.appendChild(ic);
+}
+let h1 = null;
+if (B.logo) { const lg = el('img', 'logo'); lg.src = B.logo; lg.style.cssText = `width:${m * (J.logoScale || .78)}px;height:${m * (J.logoScale || .78) * .62}px`; c.appendChild(lg); }
+else if (!J.noTitle) { h1 = el('h1', null, rich(J.headline || B.name)); h1.style.cssText = `width:${m * .86}px;max-height:${m * .3}px;overflow:hidden`; c.appendChild(h1); }
+if (J.sub) { const s = el('div', 'sub', rich(J.sub)); s.style.fontSize = m * .04 + 'px'; c.appendChild(s); }
+document.body.appendChild(c);
+if (J.foot) { const f = el('div', 'foot', J.foot); f.style.cssText = `bottom:${H * .05}px;font-size:${m * .026}px`; document.body.appendChild(f); }
+decor(document.body);
+window.LAYOUT = () => h1 && fit(h1, m * .14, m * .06);
+</script></body></html>

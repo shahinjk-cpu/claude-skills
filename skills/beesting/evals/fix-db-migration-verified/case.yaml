@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: fix-db-migration-verified
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  A new idempotent migration file closes the database holes (orders not readable by anon, server-side order creation, staff RLS, mark_paid/set_status staff-only, view secured, promo not reusable, search_path on definer functions), existing migrations untouched, the SQL was actually executed against Postgres, the site is updated to the new API, and the final answer contains the full SQL text plus rollout order.

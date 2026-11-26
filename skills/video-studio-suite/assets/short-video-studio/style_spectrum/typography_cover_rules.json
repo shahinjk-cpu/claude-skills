@@ -1,0 +1,245 @@
+{
+  "version": "2.1.0",
+  "source_rulebooks": [
+    "builtin_typography_principles",
+    "builtin_cover_layout_rules"
+  ],
+  "golden_highlight_palette": {
+    "pure_white": {
+      "hex": "#FFFFFF",
+      "usage": "主字幕基底与常规陈述句（占比 62%）"
+    },
+    "soft_lemon_yellow": {
+      "hex": "#FFF589",
+      "usage": "高频柔和重点词高亮，适合深色/实景/美业/人文底（占比 18%）"
+    },
+    "warm_amber_gold": {
+      "hex": "#FFBF17",
+      "usage": "强商业转化/数据/金句高亮，适合门店/房产/律师/财经（占比 13%）"
+    },
+    "alert_crimson_red": {
+      "hex": "#B71C1C",
+      "usage": "避坑警示/疑问追问/核心结论印章色（占比 7%）"
+    }
+  },
+  "bundled_open_commercial_fonts": {
+    "sans_heavy_impact": {
+      "file": "AlimamaShuHeiTi-Bold.otf",
+      "family": "Alimama ShuHeiTi",
+      "license": "Alimama Free Commercial License",
+      "replaces_jianying_fonts": [
+        "DouyinSansBold",
+        "新青年体",
+        "方正超粗黑繁体",
+        "特黑体-思源黑体1号",
+        "特黑体",
+        "抖音美好体"
+      ]
+    },
+    "narrow_oblique_modern": {
+      "file": "SmileySans-Oblique.ttf",
+      "family": "Smiley Sans",
+      "license": "SIL Open Font License 1.1",
+      "replaces_jianying_fonts": [
+        "得意黑",
+        "知新体",
+        "后现代体",
+        "FZZJ-JHTJW"
+      ]
+    },
+    "editorial_serif_heavy": {
+      "file": "SourceHanSerifCN-Heavy.otf",
+      "family": "Source Han Serif CN Heavy",
+      "license": "SIL Open Font License 1.1",
+      "replaces_jianying_fonts": [
+        "SourceHanSerifCN-Heavy",
+        "FZCuJinLJW",
+        "Aa研宋"
+      ]
+    },
+    "editorial_serif_bold": {
+      "file": "SourceHanSerifCN-Bold.otf",
+      "family": "Source Han Serif CN",
+      "license": "SIL Open Font License 1.1",
+      "replaces_jianying_fonts": [
+        "思源宋体-Bold",
+        "思源粗宋",
+        "造字工房俊雅体",
+        "俊雅体",
+        "喜鹊古字典体(字节试用版)"
+      ]
+    }
+  },
+  "typography_hierarchy_principles": [
+    {
+      "id": "contrast_scale",
+      "rule": "同屏双行文字必须拉开字号阶差：主标题/核心词字号为常规底字的 1.8~2.8 倍，顶部巨字达 3.5~5.0 倍"
+    },
+    {
+      "id": "safe_y_convergence",
+      "rule": "竖屏 1080x1920 主口播字幕 Y 中心锁定在 0.643~0.760 (1235px~1460px)，水平中心死锁 540px，单行最大宽 <=640px"
+    },
+    {
+      "id": "color_restraint",
+      "rule": "单画面文字不超过 2 种颜色（白+黄 或 白+红），满屏同色等于无重点"
+    },
+    {
+      "id": "multi_zone_separation",
+      "rule": "顶部常驻标语栏(y=0.09~0.16)、中上巨字/引语卡(y=0.20~0.48)、底部主字幕(y=0.68~0.76)三区严格互斥不重叠"
+    }
+  ],
+  "cover_3x4_layouts": {
+    "jianying_poster_4zone": {
+      "name": "门店四区高低错落爆款构图（主标题+倾斜贴纸+底部双色字）",
+      "coord_base_9x16": [
+        1080,
+        1920
+      ],
+      "canvas_3x4": [
+        1080,
+        1440
+      ],
+      "crop_in_9x16_y": [
+        240,
+        1680
+      ],
+      "zones": {
+        "top_left_lead": {
+          "x": 88,
+          "y": 262,
+          "size": 46,
+          "color": "#FFFFFF"
+        },
+        "top_main_punch": {
+          "x": 84,
+          "y": 326,
+          "size": 106,
+          "color": "#FF2A24"
+        },
+        "mid_tilt_sticker": {
+          "x": 84,
+          "y": 760,
+          "size": 80,
+          "color": "#FFE234",
+          "tilt_deg": 4.5
+        },
+        "bottom_cta_split": {
+          "x": 86,
+          "y": 1296,
+          "size": 86,
+          "colors": [
+            "#FF2438",
+            "#FFFFFF"
+          ]
+        }
+      }
+    },
+    "top_giant_bottom_sub": {
+      "name": "顶部醒目双行大字 + 底部副标横条构图",
+      "coord_base_9x16": [
+        1080,
+        1920
+      ],
+      "canvas_3x4": [
+        1080,
+        1440
+      ],
+      "crop_in_9x16_y": [
+        240,
+        1680
+      ],
+      "zones": {
+        "top_pill_tag": {
+          "x_center": 540,
+          "y": 270,
+          "size": 36,
+          "color": "#FFFFFF",
+          "bg_hex": "#B71C1C"
+        },
+        "top_giant_headline": {
+          "x_center": 540,
+          "y": 344,
+          "size": 104,
+          "color": "#FFBF17"
+        },
+        "bottom_double_sub": {
+          "x_center": 540,
+          "y": 1280,
+          "size": 78,
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    "left_right_split": {
+      "name": "左右分栏黄金构图（左侧标题柱 + 右侧留白给人物主体）",
+      "coord_base_9x16": [
+        1080,
+        1920
+      ],
+      "canvas_3x4": [
+        1080,
+        1440
+      ],
+      "crop_in_9x16_y": [
+        240,
+        1680
+      ],
+      "zones": {
+        "left_headline_col": {
+          "x": 80,
+          "y": 330,
+          "max_w": 520,
+          "size": 88,
+          "color": "#FFBF17"
+        },
+        "left_aux_points": {
+          "x": 84,
+          "y": 540,
+          "max_w": 480,
+          "size": 36,
+          "color": "#FFFFFF"
+        },
+        "bottom_banner": {
+          "x": 80,
+          "y": 1270,
+          "max_w": 760,
+          "size": 68,
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    "four_corner_editorial": {
+      "name": "四角杂志留白 / 黑底画框高定构图",
+      "coord_base_9x16": [
+        1080,
+        1920
+      ],
+      "canvas_3x4": [
+        1080,
+        1440
+      ],
+      "crop_in_9x16_y": [
+        240,
+        1680
+      ],
+      "zones": {
+        "top_calligraphy_title": {
+          "x_center": 540,
+          "y": 286,
+          "size": 96,
+          "color": "#FFF589"
+        },
+        "center_photo_frame_y": [
+          460,
+          1180
+        ],
+        "bottom_quote_bilingual": {
+          "x_center": 540,
+          "y": 1252,
+          "size": 68,
+          "color": "#FFFFFF"
+        }
+      }
+    }
+  }
+}

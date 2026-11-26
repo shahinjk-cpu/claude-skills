@@ -1,0 +1,49 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: var(--W); height: var(--H); overflow: hidden; background: var(--dark); -webkit-font-smoothing: antialiased; }
+body { position: relative; font-family: var(--body); color: var(--text); }
+.bg, .bg > * { position: absolute; inset: 0; }
+.bg { overflow: hidden; }
+.bg-base { background: linear-gradient(165deg, var(--primary) 0%, color-mix(in oklab, var(--primary) 45%, var(--dark)) 45%, var(--dark) 100%); }
+.bg-shot { width: 100%; height: 100%; object-fit: cover; filter: blur(70px) saturate(1.6); opacity: .38; transform: scale(1.35); mix-blend-mode: screen; }
+.bg-blobs { mix-blend-mode: screen; }
+.blob { position: absolute; border-radius: 50%; filter: blur(30px); }
+.rays { background: repeating-linear-gradient(115deg, transparent 0 140px, rgba(255,255,255,.035) 140px 220px); mask-image: radial-gradient(ellipse at 30% 0%, #000 0%, transparent 70%); }
+.burst { mix-blend-mode: screen; }
+.grain { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode: overlay; }
+.vignette { background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0,0,0,.45) 100%); }
+.decor { position: absolute; z-index: 5; filter: drop-shadow(0 30px 40px rgba(0,0,0,.45)); }
+h1 { font-family: var(--display); font-weight: 900; -webkit-text-stroke: var(--stroke-w) var(--stroke); paint-order: stroke fill; line-height: 1.02; padding: .04em 0; letter-spacing: -.01em; color: var(--light);
+     text-shadow: 0 6px 0 rgba(0,0,0,.18), 0 18px 50px rgba(0,0,0,.35); }
+h1 em { font-style: normal; color: var(--accent); text-shadow: 0 6px 0 rgba(0,0,0,.18), 0 0 40px color-mix(in oklab, var(--accent) 60%, transparent); }
+.upper h1 { text-transform: uppercase; }
+.sub { font-family: var(--body); font-weight: 800; -webkit-text-stroke: calc(var(--stroke-w) * .45) var(--stroke); paint-order: stroke fill; color: color-mix(in oklab, var(--light) 82%, transparent); letter-spacing: .01em; }
+.card { position: absolute; overflow: hidden; background: #000;
+        box-shadow: 0 0 0 calc(var(--W) * .006) rgba(255,255,255,.22), 0 50px 120px rgba(0,0,0,.55), 0 20px 40px rgba(0,0,0,.35); }
+.card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.16) 0%, transparent 28%); pointer-events: none; }
+.badge { position: absolute; font-family: var(--display); color: var(--dark); background: var(--accent); border-radius: 999px; box-shadow: 0 10px 30px rgba(0,0,0,.35); z-index: 6; }
+/* ---- phone (iPhone-18-like proportions, unbranded) ---- */
+.phone { position: absolute; z-index: 3; box-sizing: border-box;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), inset 0 0 6px rgba(0,0,0,.6), 0 60px 120px rgba(0,0,0,.55), 0 25px 50px rgba(0,0,0,.35); }
+.pbtn { position: absolute; z-index: -1; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+.pbezel { width: 100%; height: 100%; background: #050506; box-sizing: border-box; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+.pscreen { position: relative; overflow: hidden; background: #000; }
+.pscreen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pisland { position: absolute; background: #000; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); z-index: 2; }
+.pglare { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(120deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.04) 22%, transparent 38%); }
+/* ---- chips ---- */
+.chips { display: flex; gap: .5em; justify-content: center; flex-wrap: wrap; }
+.chip { display: flex; align-items: center; gap: .4em; padding: .38em .9em .38em .5em; border-radius: 999px; font-family: var(--body); font-weight: 900; color: #fff;
+  background: color-mix(in oklab, var(--dark) 55%, transparent); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.38), 0 12px 28px rgba(0,0,0,.3); text-shadow: 0 2px 0 rgba(0,0,0,.25); white-space: nowrap; }
+.chip:not(:has(img)) { padding-left: .9em; }
+.chip img { height: 1.5em; width: auto; filter: drop-shadow(0 3px 4px rgba(0,0,0,.3)); }
+.chip em { font-style: normal; color: var(--accent); }
+/* ---- callout ---- */
+.callout { position: absolute; z-index: 8; border-radius: 50%; transform: translate(-50%,-50%); border: solid #fff; background-repeat: no-repeat;
+  box-shadow: 0 30px 60px rgba(0,0,0,.45), 0 0 0 6px rgba(0,0,0,.12); }
+.clabel { position: absolute; left: 50%; bottom: -.9em; transform: translateX(-50%); white-space: nowrap; font-family: var(--display); color: var(--dark);
+  background: var(--accent); padding: .25em .8em; border-radius: 999px; box-shadow: 0 8px 20px rgba(0,0,0,.35); text-transform: uppercase; }
+.floater { position: absolute; pointer-events: none; }
+.bokeh { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.bokeh div { position: absolute; border-radius: 50%; background: radial-gradient(circle, #fff 0%, color-mix(in oklab, var(--accent) 60%, transparent) 60%, transparent 70%); }

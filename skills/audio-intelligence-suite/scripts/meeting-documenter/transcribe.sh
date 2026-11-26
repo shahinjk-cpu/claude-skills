@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# transcribe.sh — Bootstrap environment and run transcription pipeline
+# Usage: transcribe.sh <audio-path> [--output <path>] [--context-file <path>] [--model <model>]
+#
+# Ensures:
+#   1. .venv exists (created with uv if missing)
+#   2. The trusted config is loaded before bootstrap
+#   3. Only the selected backend dependency is installed
+#   4. Delegates to transcribe_pipeline.py
+set -euo pipefail
+
+SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+export SKILL_DIR
+VENV_DIR="${SKILL_DIR}/.venv"
+
+# 3. Load the configured API keys and paths.
+# Allow override: MEETING_DOCUMENTER_ENV_FILE=/path/to/.env supports shared installs,
+# read-only mounts, multi-user hosts. Default is ${SKILL_DIR}/.env.
+# Note: bare `-` (not `:-`) so an explicit empty value opts out of file loading.
+ENV_FILE="${MEETING_DOCUMENTER_ENV_FILE-${SKILL_DIR}/.env}"
+if [[ -n "${ENV_FILE}" && -f "${ENV_FILE}" ]]; then
+  # Defense: source executes arbitrary code. Refuse files we don't own or that
+  # are group/world-writable — prevents env-file injection on shared hosts.
+  if [[ ! -O "${ENV_FILE}" ]]; then
+    echo "Refusing to source ${ENV_FILE}: not owned by current user (UID=${UID})." >&2
+    exit 1
+  fi
+  perm=$(stat -c '%a' "${ENV_FILE}" 2>/dev/null || stat -f '%Lp' "${ENV_FILE}" 2>/dev/null || true)
+  # Fail closed: if neither stat dialect could read the mode, we can't verify
+  # the file isn't world-writable, so refuse rather than source blind.
+  if [[ ! "${perm}" =~ ^[0-7]{3,4}$ ]]; then
+    echo "Refusing to source ${ENV_FILE}: could not read file permissions to verify it is not writable by others." >&2
+    exit 1
+  fi
+  if (( 8#${perm} & 022 )); then
+    echo "Refusing to source ${ENV_FILE}: group or world writable (mode=${perm}). chmod 600 ${ENV_FILE} to fix." >&2
+    exit 1
+  fi
+  set -a; source "${ENV_FILE}"; set +a
+fi
+
+# Bootstrap only after the configuration passed the safety checks.
+if [[ ! -f "${VENV_DIR}/bin/python3" ]]; then
+  echo "🔧 Creating persistent venv with uv..."
+  uv venv "${VENV_DIR}" --seed
+fi
+
+BACKEND=assemblyai
+ARGS=("$@")
+for ((i=0; i<${#ARGS[@]}; i++)); do
+  case "${ARGS[$i]}" in
+    --backend) BACKEND="${ARGS[$((i+1))]:-}" ;;
+    --backend=*) BACKEND="${ARGS[$i]#--backend=}" ;;
+    --) break ;;
+  esac
+done
+case "$BACKEND" in
+  assemblyai) MODULE=requests; PACKAGE=requests ;;
+  gemini) MODULE=google.genai; PACKAGE=google-genai ;;
+  *) echo "Invalid --backend: expected assemblyai or gemini" >&2; exit 2 ;;
+esac
+if ! "${VENV_DIR}/bin/python3" -c "import ${MODULE}" 2>/dev/null; then
+  VIRTUAL_ENV="${VENV_DIR}" uv pip install -q "$PACKAGE"
+fi
+
+# 4. Delegate to Python pipeline
+exec "${VENV_DIR}/bin/python3" "${SKILL_DIR}/scripts/transcribe_pipeline.py" "$@"

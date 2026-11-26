@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pizza Napoli</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    window.THEME = localStorage.getItem('theme') || 'light';
+    document.documentElement.dataset.theme = window.THEME;
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Pizza Napoli</h1>
+    <button onclick="toggleTheme()">Тема</button>
+  </header>
+  <main id="menu"></main>
+  <aside id="cart">
+    <h2>Корзина</h2>
+    <ul id="cartItems"></ul>
+    <p>Итого: <b id="total">0</b> ₸</p>
+    <input id="promo" placeholder="Промокод">
+    <button onclick="applyPromo()">Применить</button>
+    <form id="orderForm" onsubmit="placeOrder(event)">
+      <input id="name" placeholder="Имя" required>
+      <input id="phone" placeholder="Телефон" required>
+      <input id="address" placeholder="Адрес" required>
+      <button type="submit">Заказать</button>
+    </form>
+    <p id="msg"></p>
+  </aside>
+  <a href="javascript:void(0)" onclick="window.scrollTo(0,0)">Наверх</a>
+  <script src="app.js"></script>
+</body>
+</html>

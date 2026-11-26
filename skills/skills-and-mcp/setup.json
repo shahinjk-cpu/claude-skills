@@ -1,0 +1,370 @@
+{
+  "Dijital Pazarlama": {
+    "SEO · GEO · AEO": {
+      "geo-optimizer": {
+        "type": "mcp+skill",
+        "description": "ChatGPT, Perplexity, AI Overviews sitene atıf yapıyor mu? Tek komutla GEO/AEO karnesi.",
+        "link": "https://github.com/Auriti-Labs/geo-optimizer-skill",
+        "install": "uv tool install --python 3.13 \"geo-optimizer-skill[mcp]\" --with \"mcp<2\" && claude mcp add geo-optimizer -s user -- geo-mcp (skill: SKILL.md + references/ elle ~/.claude/skills/geo-optimizer/)"
+      },
+      "gsc": {
+        "type": "mcp",
+        "description": "Search Console verisi sohbette; hangi sorgu geliyor, hangi sayfa düşüyor, gerçek veriyle.",
+        "link": "https://github.com/AminForou/mcp-gsc",
+        "install": "claude mcp add gsc -s user -e GSC_OAUTH_CLIENT_SECRETS_FILE=/path/to/client_secrets.json -- uvx mcp-search-console"
+      },
+      "openseo": {
+        "type": "mcp+skill",
+        "description": "Semrush/Ahrefs'in açık kaynak alternatifi; kelime, rakip, backlink, YZ görünürlüğü (DataForSEO ücretli).",
+        "link": "https://github.com/every-app/open-seo",
+        "install": "claude mcp add --transport http openseo -s user https://app.openseo.so/mcp && npx skills add every-app/open-seo -g -a claude-code -y --skill seo-audit keyword-research keyword-clustering competitor-analysis competitive-landscape link-prospecting local-seo ai-visibility-audit ai-prompt-research seo-report seo-coach seo-project-setup setup-openseo"
+      },
+      "seo-auditor": {
+        "type": "skill",
+        "description": "Meta etiket, okunabilirlik, kırık link, sitemap; tek taramada SEO karnesi.",
+        "link": "https://github.com/alirezarezvani/claude-skills"
+      },
+      "geo-seo-claude": {
+        "type": "skill",
+        "description": "Google'da değil, ChatGPT/Perplexity cevaplarında da çık; GEO optimizasyonu.",
+        "link": "https://github.com/zubair-trabzada/geo-seo-claude.git"
+      },
+      "seomachine": {
+        "type": "skill",
+        "description": "Anahtar kelimeden yayına SEO içerik fabrikası.",
+        "link": "https://github.com/TheCraigHewitt/seomachine.git"
+      },
+      "jev-seo": {
+        "type": "skill",
+        "description": "Ana sayfa URL'sinden canlı SEO denetimi: 52 kural, Core Web Vitals, sayfa sayfa Jev yargısı; PDF + XLSX + MD rapor. Jev API isteğe bağlı ve ücretli (sayfa başı ~0,00015$).",
+        "link": "https://github.com/AgriciDaniel/jev-seo",
+        "install": "git clone https://github.com/AgriciDaniel/jev-seo ~/.claude/skills/jev-seo && cd ~/.claude/skills/jev-seo && uv venv --python 3.13 .venv && uv pip install --python .venv/Scripts/python.exe -r requirements.txt (PDF için Windows'ta Pango/GTK gerekir)"
+      }
+    },
+    "Reklam & Sosyal Medya": {
+      "meta-ads": {
+        "type": "mcp",
+        "description": "Facebook + Instagram reklamlarını sohbetten yönet: kampanya aç, bütçe değiştir, analiz et.",
+        "link": "https://meta-ads.mcp.pipeboard.co/",
+        "install": "claude mcp add --transport http meta-ads -s user https://meta-ads.mcp.pipeboard.co/"
+      },
+      "ads": {
+        "type": "skill",
+        "description": "Google, Meta, LinkedIn, TikTok reklamlarına 225+ kontrollü denetim; boşa giden bütçeyi bulur.",
+        "link": "https://github.com/AgriciDaniel/claude-ads"
+      },
+      "instagram-agent": {
+        "type": "skill",
+        "description": "Instagram hesabını yöneten 13 skill: viral hook'lu Reel, caption lint, carousel, story, DM, profil skoru.",
+        "link": "https://github.com/Jakeschincariol/instagram-agent-skill",
+        "install": "npx skills add Jakeschincariol/instagram-agent-skill -g -a claude-code -y"
+      }
+    }
+  },
+  "Video": {
+    "remotion-documentation": {
+      "type": "mcp",
+      "description": "Remotion'ın resmi doküman MCP'si; video kodu yazarken API'yi tahmin etme, sor.",
+      "link": "https://www.npmjs.com/package/@remotion/mcp",
+      "install": "claude mcp add remotion-documentation -s user -- npx -y @remotion/mcp@latest"
+    },
+    "remotion-skills": {
+      "type": "skill",
+      "description": "React ile video yap: Remotion ekibinin 12 resmi skill'i (create, render, captions, maps...).",
+      "link": "https://github.com/remotion-dev/skills",
+      "install": "npx skills add remotion-dev/skills -g -a claude-code -y"
+    },
+    "remotion": {
+      "type": "repo",
+      "description": "Remotion framework'ü; global kurulmaz, projede `npx create-video@latest`.",
+      "link": "https://github.com/remotion-dev/remotion"
+    }
+  },
+  "Tasarım & UI": {
+    "ui-ux-pro-max": {
+      "type": "plugin",
+      "description": "Cebindeki tasarım ajansı: 84 stil, 192 palet, 74 font eşleşmesi.",
+      "link": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git"
+    },
+    "stitch": {
+      "type": "mcp",
+      "description": "Bir cümle yaz, Google komple ekranı çizsin; tasarım sistemi ve varyantlar hazır.",
+      "link": "https://stitch.googleapis.com/mcp"
+    },
+    "21st": {
+      "type": "mcp",
+      "description": "shadcn/ui + Tailwind component'leri tek prompt'la projene düşsün.",
+      "link": "https://21st.dev/api/mcp"
+    },
+    "nanobanana": {
+      "type": "mcp",
+      "description": "Gemini'nin görsel motoru terminalinde; logo, mockup, asset üret ve düzenle.",
+      "link": "https://github.com/YCSE/nanobanana-mcp"
+    },
+    "awesome-design-systems": {
+      "type": "skill",
+      "description": "Dünyanın en iyi tasarım sistemleri tek yerde; ilham ve referans.",
+      "link": "https://github.com/alexpate/awesome-design-systems.git"
+    },
+    "editor": {
+      "type": "repo",
+      "description": "Pascal editor reposu (referans).",
+      "link": "https://github.com/pascalorg/editor.git"
+    },
+    "fal-ai": {
+      "type": "mcp",
+      "description": "Flux, Recraft, Kling gibi yüzlerce görsel/video modeli tek API'de. Ücretli, tamamen kullandıkça öde.",
+      "link": "https://fal.ai"
+    },
+    "boardui": {
+      "type": "component+mcp",
+      "description": "Yapay zekâ ürünleri ve dashboard'lar için 69 ücretsiz React bileşeni (React Aria + Tailwind v4). Proje bazlı; VisaPapers shadcn kullandığı için değil, ileride başka projede.",
+      "link": "https://github.com/BoardUI/boardui",
+      "install": "Projede: npx boardui@latest add <bileşen>"
+    }
+  },
+  "Geliştirme & Kod Kalitesi": {
+    "php-lsp": {
+      "type": "plugin",
+      "description": "PHP dil sunucusu (Intelephense): Laravel kodunda tanım/kullanım bulma. Gerekli: npm i -g intelephense",
+      "link": "https://github.com/anthropics/claude-plugins-official"
+    },
+    "typescript-lsp": {
+      "type": "plugin",
+      "description": "TypeScript/JS dil sunucusu. Gerekli: npm i -g typescript typescript-language-server",
+      "link": "https://github.com/anthropics/claude-plugins-official"
+    },
+    "security-guidance": {
+      "type": "plugin",
+      "description": "Claude kod yazarken güvenlik uyarısı (ödeme, kimlik, SQL).",
+      "link": "https://github.com/anthropics/claude-plugins-official"
+    },
+    "pr-review-toolkit": {
+      "type": "plugin",
+      "description": "PR inceleme ajanları: yorum, test, hata yönetimi, tip kontrolü.",
+      "link": "https://github.com/anthropics/claude-plugins-official"
+    },
+    "shopify-ai-toolkit": {
+      "type": "plugin",
+      "description": "Shopify resmi 18 geliştirme skill'i (tema, app, ödeme araştırması).",
+      "link": "https://github.com/anthropics/claude-plugins-official"
+    },
+    "frontend-design": {
+      "type": "plugin",
+      "description": "Arayüz işlerinde özgün tasarım rehberi (Anthropic resmi).",
+      "link": "https://github.com/anthropics/claude-plugins-official"
+    },
+    "superpowers": {
+      "type": "plugin",
+      "description": "Claude'a kıdemli mühendis disiplini: brainstorm, plan, TDD, sistematik debug.",
+      "link": "https://github.com/obra/superpowers.git"
+    },
+    "rea": {
+      "type": "mcp+skill",
+      "description": "Reverse Engineer Anything: uygulamadaki bir özelliğin nasıl çalıştığını kaynak kodsuz, binary seviyesine kadar kanıtıyla çözer. Native, Electron/JS, .NET, web.",
+      "link": "https://github.com/morluto/rea",
+      "install": "npx -y rea-agents@latest setup --yes --client claude_code --skill-client claude_code"
+    },
+    "ponytail": {
+      "type": "skill",
+      "description": "Odadaki en tembel kıdemli dev: en iyi kod hiç yazılmayan koddur. Review, audit, debt defteri dahil.",
+      "link": "https://github.com/DietrichGebert/ponytail",
+      "install": "npx skills add DietrichGebert/ponytail -g -a claude-code -y"
+    },
+    "focused-fix": {
+      "type": "skill",
+      "description": "Bozuk modülü 5 fazlı protokolle onarır; yama değil kök neden.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "review": {
+      "type": "skill",
+      "description": "Push'tan önce son kapı; hatayı CI'dan önce sen gör.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "security-scan": {
+      "type": "skill",
+      "description": "Push öncesi güvenlik taraması; sızan anahtar repoya girmesin.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "git/cm": {
+      "type": "skill",
+      "description": "Değişiklikleri Conventional Commit olarak işler.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "git/cp": {
+      "type": "skill",
+      "description": "Stage, commit, push tek komut.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "git/pr": {
+      "type": "skill",
+      "description": "Mevcut branch'ten PR açar.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "git/clean": {
+      "type": "skill",
+      "description": "Merge edilmiş branch'leri local ve remote'ta temizler.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "update-docs": {
+      "type": "skill",
+      "description": "Kod değişti, doküman da güncellensin.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "plugin-audit": {
+      "type": "skill",
+      "description": "Skill/plugin dizinine 8 fazlı denetim.",
+      "link": "https://github.com/alirezarezvani/claude-skills"
+    },
+    "simplify": {
+      "type": "skill",
+      "description": "Değişen kodu tarar, tekrarı ve gereksiz karmaşayı budar."
+    },
+    "github": {
+      "type": "mcp",
+      "description": "Repo, issue ve PR'lar Claude'un elinde; tarayıcıya geçmeden review, merge, triage.",
+      "link": "https://github.com/github/github-mcp-server.git"
+    },
+    "context7": {
+      "type": "mcp",
+      "description": "Eskimiş API bilgisine son; kütüphanenin bugünkü dokümanını anında çeker.",
+      "link": "https://github.com/upstash/context7.git"
+    },
+    "supabase": {
+      "type": "mcp",
+      "description": "Veritabanı, auth ve storage'ı sohbetten yönet; dashboard'a girmeden tablo kur.",
+      "link": "https://mcp.supabase.com/mcp"
+    },
+    "markitdown": {
+      "type": "mcp",
+      "description": "PDF, Word, Excel, HTML ne verirsen temiz Markdown'a çevirir.",
+      "link": "https://github.com/microsoft/markitdown.git"
+    },
+    "google-skills": {
+      "type": "skill",
+      "description": "Google'ın resmi 184 skill'i. Kurulu: finding-google-skills, google-analytics-data-api-basics, google-analytics-admin-api-basics, sign-in-with-google-web, gemini-api. Gerisi lazım olunca.",
+      "link": "https://github.com/google/skills",
+      "install": "npx skills add google/skills -g -a claude-code -y --skill finding-google-skills gemini-api google-analytics-data-api-basics google-analytics-admin-api-basics sign-in-with-google-web"
+    },
+    "graphify": {
+      "type": "skill+mcp",
+      "description": "Kod tabanı + doküman + SQL şeması + PDF'i sorgulanabilir bilgi grafiğine çevirir (/graphify). Kurulu, kullanıcı düzeyinde (bütün oturumlar + CLI).",
+      "link": "https://github.com/Graphify-Labs/graphify",
+      "install": "uv tool install graphifyy && graphify install"
+    }
+  },
+  "Claude İçi İşlevsel": {
+    "Token & Model Yönetimi": {
+      "omniroute": {
+        "type": "mcp+skill",
+        "description": "370+ sağlayıcı, 150+ ücretsiz tier tek endpoint'te; kota biterse otomatik fallback, kodlama durmaz. 45 skill + MCP.",
+        "link": "https://github.com/diegosouzapw/OmniRoute",
+        "install": "npm install -g omniroute && claude mcp add omniroute -s user -- omniroute --mcp && npx skills add diegosouzapw/OmniRoute -g -a claude-code -y"
+      },
+      "headroom": {
+        "type": "mcp",
+        "description": "Tool çıktısı, log ve JSON'u LLM'e gitmeden sıkıştırır; aynı cevap, %20-95 daha az token.",
+        "link": "https://github.com/headroomlabs-ai/headroom",
+        "install": "uv tool install --python 3.13 \"headroom-ai[all]\" && headroom mcp install --agent claude"
+      },
+      "codeburn": {
+        "type": "cli+plugin",
+        "description": "Token ve maliyetin nereye gittiğini gösterir: görev, araç, model ve proje bazında. CLI (codeburn today / month / report) + Claude Code eklentisi (/codeburn:cost).",
+        "link": "https://github.com/getagentseal/codeburn",
+        "install": "npm install -g codeburn && claude plugin marketplace add getagentseal/codeburn && claude plugin install codeburn@codeburn --scope user"
+      }
+    },
+    "Prompt & Agent": {
+      "prompt-master": {
+        "type": "skill",
+        "description": "Her AI aracı için nokta atışı prompt; Midjourney'den Cursor'a, boşa kredi yakma.",
+        "link": "https://github.com/nidhinjs/prompt-master",
+        "install": "npx skills add nidhinjs/prompt-master -g -a claude-code -y"
+      },
+      "task-observer": {
+        "type": "skill",
+        "description": "One Skill to Rule Them All: çalışmanı izler, diğer skill'lerini senin onayınla geliştirir.",
+        "link": "https://github.com/rebelytics/one-skill-to-rule-them-all",
+        "install": "npx skills add rebelytics/one-skill-to-rule-them-all --skill task-observer -g -a claude-code -y"
+      },
+      "agent-sdk-dev": {
+        "type": "plugin",
+        "description": "Kendi Claude agent'ını dakikalar içinde kur ve best practice'e göre doğrulat.",
+        "link": "https://github.com/anthropics/claude-plugins-official"
+      },
+      "claude-api": {
+        "type": "skill",
+        "description": "Model ID, fiyat, streaming, tool use; ezbere değil doğru bilgiyle."
+      }
+    },
+    "Ayar & Otomasyon": {
+      "update-config": {
+        "type": "skill",
+        "description": "'Bundan sonra her seferinde...' de, hook'u ve izni o yazsın."
+      },
+      "loop": {
+        "type": "skill",
+        "description": "Komutu aralıklarla tekrar çalıştırır; deploy'u, CI'ı o izlesin."
+      },
+      "schedule": {
+        "type": "skill",
+        "description": "Bulutta cron'la çalışan agent'lar; sen uyurken rapor hazır."
+      },
+      "keybindings-help": {
+        "type": "skill",
+        "description": "Kısayolları kendi parmaklarına göre yeniden bağla."
+      }
+    },
+    "Marketplace": {
+      "claude-plugins-official": {
+        "type": "marketplace",
+        "description": "Anthropic'in resmi plugin marketplace'i."
+      },
+      "anthropic-skills": {
+        "type": "marketplace",
+        "description": "Anthropic'in resmi skill paketi (docx, pdf, pptx, xlsx, frontend-design...)."
+      },
+      "ui-ux-pro-max-skill": {
+        "type": "marketplace",
+        "description": "ui-ux-pro-max plugin'inin marketplace'i.",
+        "link": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git"
+      }
+    }
+  },
+  "Köle (Free Agent)": {
+    "deepseek-harness": {
+      "type": "agent",
+      "description": "Dosya okuyup yazan, komut çalıştıran açık kaynak ajan; web arayüzü + tek seferlik headless mod. Köle olarak dsh:<sağlayıcı>/<model> ile çağrılır.",
+      "link": "https://github.com/deepseek-ai/deepseek-harness",
+      "install": "npm install -g @deepseek-ai/dsh (sağlayıcılar ~/.dsh/cordis.patch.yml, kısayol ~/.local/bin/deepseek.cmd)"
+    },
+    "hermes-agent": {
+      "type": "agent",
+      "description": "Nous Research terminal + masaüstü ajanı; --oneshot ile köle görevlerini çalıştırır, zaman aşımında sıradaki modele düşer.",
+      "link": "https://github.com/NousResearch/hermes-agent"
+    },
+    "evren": {
+      "type": "provider",
+      "description": "OpenAI uyumlu ücretsiz model kapısı: glm-5.3, deepseek-v4-flash, qwen3.8-flash-next. Anahtar Hermes .env'de (HERMES_CUSTOM_EVREN_API_KEY), repoda yok.",
+      "link": "https://evren-llmapi.ssyz.org.tr"
+    },
+    "nvidia-nim": {
+      "type": "provider",
+      "description": "80+ modelin ücretsiz API'si: kimi-k2.6, deepseek-v4.1-flash, glm-5.3, gpt-oss. Anahtar Hermes .env'de (NVIDIA_API_KEY), repoda yok.",
+      "link": "https://build.nvidia.com"
+    },
+    "freellmapi": {
+      "type": "tool",
+      "status": "dry-run (ilerisine gidilmedi)",
+      "description": "Ücretsiz modelleri tek adreste toplayıp model takılınca sıradakine geçen açık kaynak router. Güvenlik önlemi olarak dry-run aşamasında bırakıldı: Docker'da denendi, kod incelendi, Claude Code'a bağlanmadı, hiçbir anahtar girilmedi, kaldırıldı. Aynı işi kendi yerel uygulamamızda yazacağız; bu aracı kullanma.",
+      "link": "https://github.com/tashfeenahmed/freellmapi"
+    }
+  },
+  "Diğer": {
+    "fluidvoice": {
+      "type": "repo",
+      "description": "On-device sesle yazdırma uygulaması (macOS); Windows sürümü bekleniyor.",
+      "link": "https://github.com/altic-dev/FluidVoice"
+    }
+  }
+}

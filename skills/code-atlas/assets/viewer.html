@@ -1,0 +1,1308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code Atlas</title>
+<!-- copies of brand/ made by scan.mjs: some browsers block files outside this folder -->
+<!-- written by scan.mjs from theme.json; everything stays inside this folder (Safari blocks files outside it) -->
+<link rel="stylesheet" href="assets/theme.css">
+<script>(function (r) { var t = null; try { t = localStorage.getItem('code-atlas:' + location.pathname + ':theme'); } catch (e) {} r.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); })(document.documentElement)</script>
+<style>
+  :root { --shadow: 0 12px 32px rgba(15, 15, 15, .10); }
+  :root[data-theme="dark"] { --shadow: 0 12px 32px rgba(0, 0, 0, .45); }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--text); font: 400 15px/1.55 var(--font-b); display: grid; grid-template-rows: auto 1fr; grid-template-columns: minmax(0, 1fr); overflow: hidden; }
+  header > * { flex-shrink: 0; } header .crumbs { flex-shrink: 1; min-width: 0; } /* a long path shrinks; the panel never leaves the screen */
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .mono { font-family: var(--font-m); }
+
+  /* top bar */
+  header { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--border); background: var(--bg); position: relative; z-index: 5; flex-wrap: nowrap; }
+  .brand { font: 700 19px var(--font-h); letter-spacing: -.6px; white-space: nowrap; }
+  .brand .pre { color: var(--dim); font-weight: 500; }
+  .brand i { font-style: normal; color: var(--g); }
+  .crumbs { display: flex; align-items: center; gap: 4px; font: 400 13px var(--font-m); color: var(--muted); min-width: 0; flex: 0 1 auto; flex-wrap: nowrap; overflow: hidden; white-space: nowrap; }
+  .crumbs > * { flex: none; } .crumbs b { overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
+  .crumbs button { background: none; border: 0; padding: 3px 6px; border-radius: 6px; color: var(--muted); }
+  .crumbs button:hover { color: var(--text); background: var(--s2); }
+  .crumbs b { color: var(--text); font-weight: 600; padding: 3px 6px; border-radius: 6px; }
+  .crumbs b.flash { animation: crumbflash 1.2s ease-out; }
+  @keyframes crumbflash { 0% { background: var(--g); color: var(--on-g); } 100% { background: transparent; } }
+  .spacer { flex: 1; }
+  .search { position: relative; }
+  .search input { width: 210px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--s1); color: var(--text); font: 400 13px var(--font-m); }
+  .search input:focus { outline: 2px solid var(--g); outline-offset: 1px; }
+  .results { position: absolute; top: 40px; right: 0; width: 390px; max-height: 60vh; overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); display: none; list-style: none; padding: 6px; }
+  .results.on { display: block; }
+  .results li button { width: 100%; text-align: left; background: none; border: 0; padding: 8px 10px; border-radius: 8px; display: flex; gap: 10px; align-items: center; }
+  .results li button:hover, .results li button.cur { background: var(--s2); }
+  .results .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .results small { color: var(--muted); font: 400 11px var(--font-m); display: block; }
+  .tbtn { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; font: 400 12px var(--font-m); letter-spacing: .1em; text-transform: uppercase; color: var(--copy); white-space: nowrap; }
+  .tbtn:hover { border-color: var(--g); color: var(--text); }
+  .prog { display: flex; align-items: center; gap: 8px; font: 400 12px var(--font-m); color: var(--muted); white-space: nowrap; }
+  .prog .bar { width: 90px; height: 6px; border-radius: 3px; background: var(--s3); overflow: hidden; }
+  .prog .bar i { display: block; height: 100%; background: var(--g); }
+
+  /* stage */
+  main { display: grid; grid-template-columns: 1fr 430px; min-height: 0; }
+  .stage { position: relative; overflow: hidden; background-color: var(--bg); background-image: radial-gradient(var(--s3) 1px, transparent 1px); background-size: 20px 20px; cursor: grab; }
+  .stage.drag { cursor: grabbing; }
+  .stage > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .levelhint { position: absolute; left: 22px; top: 16px; right: 22px; pointer-events: none; z-index: 1; }
+  .levelhint .k { font: 400 11px var(--font-m); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .levelhint .k i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .levelhint h1 { font: 700 30px/1.15 var(--font-h); letter-spacing: -.8px; margin-top: 4px; }
+  .levelhint h1 .gchip { background: var(--g); color: var(--on-g); padding: 0 8px; border-radius: 8px; }
+  .levelhint p { color: var(--muted); font-size: 14px; max-width: 680px; margin-top: 4px; }
+  .legend { position: absolute; left: 18px; bottom: 14px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 8px 14px; font: 400 11px var(--font-m); color: var(--muted); max-width: calc(100% - 90px); z-index: 2; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .zoomctl { position: absolute; right: 14px; bottom: 14px; display: flex; flex-direction: column; gap: 6px; z-index: 2; }
+  .zoomctl button { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font: 600 16px var(--font-m); color: var(--text); }
+  .zoomctl button:hover { border-color: var(--g); }
+  #world.out { opacity: 0; }
+
+  /* lanes: the numbered columns that give each level its structure */
+  .lane rect { fill: var(--s1); stroke: var(--border); stroke-width: 1; }
+  .lane .lt { font: 600 12px var(--font-m); letter-spacing: .16em; text-transform: uppercase; fill: var(--copy); }
+  .lane .ln { font: 700 12px var(--font-m); fill: var(--on-g); }
+  .lane .lc { fill: var(--g); }
+  .lane .ls { font: 400 11px var(--font-m); fill: var(--muted); }
+  .flowarrow { fill: var(--g); }
+
+  /* cards */
+  .node { cursor: pointer; }
+  .node .box { fill: var(--bg); stroke: var(--border); stroke-width: 1.2; }
+  .node .tint { fill: var(--ac); opacity: .10; pointer-events: none; }
+  .node .edge { fill: var(--ac); }
+  .node:hover .box, .node:focus-visible .box { stroke: var(--ac); stroke-width: 2; }
+  .node:focus { outline: none; }
+  .node.sel .box { stroke: var(--g); stroke-width: 3; }
+  .node .glow { fill: var(--g); opacity: 0; filter: blur(16px); }
+  .node.sel .glow { opacity: .55; }
+  .node.ghost .box { stroke-dasharray: 5 4; fill: var(--s1); }
+  .node.ghost .edge { opacity: .5; }
+  .node.dim { opacity: .25; }
+  .node .stack { fill: var(--bg); stroke: var(--border); }
+  .node .t { font: 700 15px var(--font-h); fill: var(--text); letter-spacing: -.2px; }
+  .node.area .t { font: 700 22px var(--font-h); letter-spacing: -.5px; }
+  .node .s { font: 400 11px var(--font-m); fill: var(--muted); }
+  .node.area .s { font-size: 12px; }
+  .node .numl { font-size: 10px; }
+  .node .badge rect { fill: var(--ac); opacity: .22; }
+  .node .badge text { font: 600 10px var(--font-m); letter-spacing: .08em; fill: var(--at); }
+  .node .ico > rect { fill: var(--ac); }
+  .node .ico path, .node .ico .g { fill: none; stroke: var(--on-g); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .node .ptrack { fill: var(--s3); }
+  .node .pfill { fill: var(--ac); }
+  .node .num { font: 700 26px var(--font-h); fill: var(--at); letter-spacing: -.5px; }
+  .node .numl { font: 400 10px var(--font-m); letter-spacing: .12em; fill: var(--muted); }
+  .dot-ok { fill: var(--g); } .dot-missing { fill: none; stroke: var(--dim); stroke-width: 1.5; } .dot-stale { fill: var(--blog); }
+  .tick { fill: var(--g); } .tick-mark { stroke: var(--on-g); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* wires */
+  .wire { fill: none; stroke: var(--dim); stroke-width: 1.4; opacity: .55; }
+  .wire.imports, .wire.styles { stroke-dasharray: 2 4; }
+  .wire.runs, .wire.reads { stroke-dasharray: 7 5; }
+  .wire.hot { stroke: var(--g); stroke-width: 2.6; opacity: 1; }
+  .wire.dim { opacity: .08; }
+  .flow { fill: var(--g); }
+  @media (prefers-reduced-motion: reduce) { .flow { display: none; } }
+
+  /* side panel */
+  aside { border-left: 1px solid var(--border); overflow: auto; padding: 24px 24px 64px; background: var(--bg); }
+  .plabel { font: 400 11px var(--font-m); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); font: 400 11px var(--font-m); letter-spacing: .08em; color: var(--copy); text-transform: uppercase; }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  aside h2 { font: 700 26px/1.2 var(--font-h); letter-spacing: -.5px; margin: 10px 0 4px; word-break: break-word; }
+  aside .path { font: 400 12px var(--font-m); color: var(--muted); word-break: break-all; }
+  aside h3 { font: 400 11px var(--font-m); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 24px 0 8px; }
+  aside p { color: var(--copy); }
+  aside .what { font-size: 18px; line-height: 1.5; color: var(--text); margin-top: 16px; }
+  .example { background: var(--gbg); border: 1px solid var(--gborder); border-radius: 12px; padding: 12px 14px; color: var(--copy); }
+  .pending { background: var(--s1); border: 1px dashed var(--dim); border-radius: 12px; padding: 12px 14px; color: var(--muted); font-size: 14px; margin-top: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--s1); border-radius: 999px; padding: 4px 11px; font: 400 12px var(--font-m); color: var(--copy); }
+  .chip i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .chip:hover { border-color: var(--g); color: var(--text); }
+  .chip.lib { cursor: default; } .chip.lib:hover { border-color: var(--border); }
+  .act { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+  .btn { border: 1px solid var(--border); background: var(--bg); border-radius: 10px; padding: 9px 16px; font: 500 14px var(--font-b); color: var(--text); }
+  .btn.pri { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn.got { background: var(--g); color: var(--on-g); border-color: var(--g); }
+  .btn:hover { border-color: var(--g); }
+  .btn:disabled { opacity: .4; cursor: default; }
+  details { margin-top: 24px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  summary { cursor: pointer; padding: 10px 14px; font: 400 12px var(--font-m); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  pre { margin: 0; padding: 14px; border-top: 1px solid var(--border); background: var(--s1); font: 400 12px/1.65 var(--font-m); color: var(--text); overflow: auto; max-height: 60vh; tab-size: 2; }
+  .term { border: 0; border-bottom: 1px dashed var(--gt); cursor: help; background: none; padding: 0; color: inherit; font: inherit; }
+  /* interactive code */
+  .code { margin-top: 24px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .code .bar { position: sticky; top: 0; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .code .bar .t { font: 400 11px var(--font-m); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); flex: 1; }
+  .code .bar button { border: 1px solid var(--border); background: var(--bg); border-radius: 8px; padding: 5px 10px; font: 500 12px var(--font-m); color: var(--text); }
+  .code .bar button.nx { background: var(--g); border-color: var(--g); color: var(--on-g); }
+  .code .bar button:disabled { opacity: .35; cursor: default; }
+  .code .cap { padding: 10px 14px; font-size: 14px; color: var(--copy); background: var(--gbg); border-bottom: 1px solid var(--gborder); }
+  .code .cap b { font: 600 11px var(--font-m); color: var(--gt); letter-spacing: .08em; margin-right: 6px; }
+  .code .lines { max-height: 56vh; overflow: auto; background: var(--s1); font: 400 12px/1.7 var(--font-m); padding: 6px 0; }
+  .cl { display: flex; gap: 10px; padding: 0 10px 0 0; cursor: pointer; border-left: 3px solid transparent; }
+  .cl:hover { background: var(--s2); }
+  .cl .no { width: 38px; position: relative; flex: none; text-align: right; color: var(--dim); user-select: none; }
+  .cl .tx { white-space: pre; color: var(--text); flex: 1; }
+  .cl:has(.go) .no { color: var(--gt); font-weight: 600; }
+  .code .lines { position: relative; }
+  .cl.own { background: color-mix(in srgb, var(--g) 7%, transparent); }
+  .cl.cur { background: color-mix(in srgb, var(--g) 22%, transparent); border-left-color: var(--g); }
+  .cl { width: max-content; min-width: 100%; }
+  .cl .tx { flex: none !important; }
+  .cl .go { position: sticky; right: 6px; margin-left: auto; white-space: nowrap; flex: none; align-self: center; font: 600 10px var(--font-m); color: var(--gt); border: 1px solid var(--gborder); background: var(--gbg); border-radius: 999px; padding: 0 7px; line-height: 16px; }
+  .gloss dt { font: 700 16px var(--font-h); margin-top: 16px; color: var(--text); }
+  .gloss dd { color: var(--copy); margin: 2px 0 0; }
+  .tourlist button { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; width: 100%; text-align: left; border: 1px solid var(--border); background: var(--bg); border-radius: 12px; padding: 14px; margin-top: 10px; }
+  .tourlist button:hover { border-color: var(--g); }
+  .tourlist b { font: 700 16px var(--font-h); display: block; }
+  .tourlist span span { color: var(--muted); font-size: 13px; }
+  .num-c { width: 28px; height: 28px; border-radius: 50%; background: var(--g); color: var(--on-g); font: 700 13px var(--font-m); display: grid; place-items: center; }
+  .tourbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: 70px; width: min(680px, calc(100% - 32px)); background: var(--bg); border: 1.5px solid var(--g); border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow); display: none; z-index: 3; }
+  .tourbar.on { display: block; }
+  .tourbar p { color: var(--text); margin: 6px 0 12px; }
+  .tourbar .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .steps { display: flex; gap: 5px; flex-wrap: wrap; }
+  .steps button { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--gborder); background: var(--bg); font: 600 10px var(--font-m); color: var(--muted); padding: 0; }
+  .steps button.done { background: var(--gbg); color: var(--gt); }
+  .steps button.cur { background: var(--g); border-color: var(--g); color: var(--on-g); }
+  .warn { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--blog-bg); border: 1px solid var(--blog-border); color: var(--copy); font-size: 13px; }
+  .keygrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-top: 8px; }
+  .keygrid span { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--copy); }
+  .keygrid i { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+  /* beginner layer */
+  .tbtn.beg { display: inline-flex; align-items: center; gap: 8px; }
+  .tbtn.beg i { width: 26px; height: 14px; border-radius: 7px; background: var(--s3); position: relative; transition: background .2s; }
+  .tbtn.beg i::after { content: ''; position: absolute; left: 2px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); transition: left .2s; }
+  .tbtn.beg.on i { background: var(--g); } .tbtn.beg.on i::after { left: 14px; }
+  .lvact { display: flex; gap: 8px; margin-top: 10px; pointer-events: auto; }
+  .lvact .btn { padding: 7px 14px; font-size: 13px; }
+  .btn.play { background: var(--g); border-color: var(--g); color: var(--on-g); font-weight: 600; }
+  .wlab rect { fill: var(--bg); stroke: var(--border); }
+  .wlab text { font: 500 11px var(--font-m); fill: var(--copy); }
+  .wlab.hot rect { stroke: var(--g); fill: var(--gbg); } .wlab.hot text { fill: var(--text); }
+  .wlab.dim { opacity: .15; }
+  .node .badge.job rect { opacity: 1; fill: var(--bg); stroke: var(--ac); stroke-width: 1.5; }
+  .node .badge.job path { fill: none; stroke: var(--at); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .rowlab { font: 600 11px var(--font-m); letter-spacing: .14em; fill: var(--muted); }
+  .rowlab.me { fill: var(--gt); }
+  .io { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 16px; }
+  .io > div { border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; background: var(--s1); }
+  .io > div.mid { background: var(--gbg); border-color: var(--gborder); }
+  .io b { display: block; font: 600 11px var(--font-m); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .io .arrow { text-align: center; color: var(--gt); font: 700 14px var(--font-m); border: 0; background: none; padding: 0; margin: -4px 0; }
+  .jobline { margin-top: 10px; padding: 8px 12px; border-radius: 10px; background: var(--s1); border: 1px solid var(--border); font-size: 14px; color: var(--copy); }
+  .jobline b { color: var(--text); }
+  .plainlist li { margin: 6px 0 0 18px; color: var(--copy); }
+  .jobs dt { font: 700 15px var(--font-h); margin-top: 10px; } .jobs dd { color: var(--copy); margin: 0; font-size: 14px; }
+  .scopenote { margin-top: 10px; font: 400 12px var(--font-m); color: var(--muted); pointer-events: none; }
+  /* view switch */
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; padding: 3px; gap: 2px; background: var(--s1); }
+  .seg button { border: 0; background: none; border-radius: 7px; padding: 5px 12px; font: 500 12px var(--font-m); letter-spacing: .06em; color: var(--muted); }
+  .seg button.on { background: var(--g); color: var(--on-g); }
+  /* story mode */
+  .story { position: absolute; inset: 0; top: 150px; display: flex; flex-direction: column; background: var(--bg); z-index: 1; }
+  .story[hidden], .tbtn.beg[hidden] { display: none; }
+  .story svg { flex: 1; width: 100%; min-height: 0; }
+  .story .sbar { padding: 14px 22px 18px; border-top: 1px solid var(--border); display: grid; gap: 10px; background: var(--bg); }
+  .story .scap { font: 700 24px/1.3 var(--font-h); letter-spacing: -.4px; color: var(--text); }
+  .story .srow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .town-ground { fill: var(--s2); } .town-line { stroke: var(--bg); stroke-width: 4; stroke-dasharray: 22 18; }
+  .house { transition: opacity .5s; } .house.enter { cursor: pointer; } .house.enter:hover .body { stroke-width: 3.5; } .house.off { opacity: .28; }
+  .house .body { fill: color-mix(in srgb, var(--ac) 16%, var(--bg)); stroke: var(--ac); stroke-width: 2; }
+  .house .roof { fill: var(--ac); }
+  .house .door { fill: var(--bg); stroke: var(--ac); stroke-width: 2; }
+  .house .win { fill: var(--bg); stroke: var(--ac); stroke-width: 1.5; }
+  .house .person { fill: var(--text); } .house .face { fill: var(--bg); stroke: var(--text); stroke-width: 2.5; }
+  .house .sign { font: 700 16px var(--font-h); fill: var(--text); } .house .tag { font: 500 13px var(--font-m); fill: var(--muted); }
+  .house .badge { fill: var(--bg); stroke: var(--ac); stroke-width: 2; } .house .badge path { fill: none; stroke: var(--at); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .spot { fill: var(--g); opacity: .3; filter: blur(6px); }
+  .bubble { background: var(--bg); border: 2px solid var(--text); border-radius: 16px; padding: 10px 14px; font: 600 17px/1.35 var(--font-b); color: var(--text); position: relative; text-align: center; }
+  .bubble.reply { border-color: var(--g); background: var(--gbg); }
+  .bubble::after { content: ''; position: absolute; left: 50%; bottom: -10px; width: 16px; height: 16px; background: inherit; border-right: 2px solid; border-bottom: 2px solid; border-color: inherit; transform: translateX(-50%) rotate(45deg); }
+  .late { opacity: 0; animation: appear .5s ease forwards; animation-delay: var(--d, 2s); }
+  @keyframes appear { to { opacity: 1; } }
+  .parcel rect.env { fill: var(--bg); stroke: var(--text); stroke-width: 2; } .parcel path { fill: none; stroke: var(--text); stroke-width: 2; }
+  .parcel.back rect.env { stroke: var(--gt); fill: var(--gbg); } .parcel.back path { stroke: var(--gt); }
+  .plabel2 { display: inline-block; background: var(--text); color: var(--bg); border-radius: 999px; padding: 4px 12px; font: 500 13px var(--font-m); white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+  .parcel.back .plabel2 { background: var(--g); color: var(--on-g); }
+  .roadpath { fill: none; stroke: var(--dim); stroke-width: 2; stroke-dasharray: 3 7; }
+  .quiz { flex: 1; overflow: auto; padding: 20px 28px; display: grid; gap: 16px; align-content: start; }
+  .quiz .q { border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px; }
+  .quiz .q b { font: 700 19px var(--font-h); display: block; margin-bottom: 10px; }
+  .quiz .q button { margin: 0 8px 8px 0; border: 1.5px solid var(--border); background: var(--bg); border-radius: 12px; padding: 10px 16px; font: 500 15px var(--font-b); color: var(--text); }
+  .quiz .q button.right { background: var(--g); border-color: var(--g); color: var(--on-g); }
+  .quiz .q button.wrong { border-color: var(--ac); color: var(--at); }
+  .stars { font: 700 26px var(--font-h); color: var(--gt); }
+  .cast { display: grid; gap: 8px; margin-top: 8px; }
+  .cast div { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; padding: 8px 10px; border: 1px solid var(--border); border-radius: 12px; }
+  .cast div.on { border-color: var(--g); background: var(--gbg); }
+  .cast i { width: 34px; height: 34px; border-radius: 50%; background: var(--ac); display: grid; place-items: center; }
+  .cast i svg path { fill: none; stroke: var(--on-g); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .cast b { font: 700 15px var(--font-h); } .cast small { font: 400 11px var(--font-m); color: var(--muted); margin-left: 6px; } .cast span { display: block; color: var(--copy); font-size: 14px; }
+  .peek pre { max-height: none; } .peek .hl { background: color-mix(in srgb, var(--g) 25%, transparent); display: inline-block; width: 100%; }
+  @media (max-width: 1500px) { .prog .bar { display: none; } }
+  @media (max-width: 1250px) { header { flex-wrap: wrap; } }
+  /* graph view */
+  .graph { position: absolute; inset: 0; top: 150px; display: flex; flex-direction: column; background: var(--bg); z-index: 1; }
+  .graph[hidden] { display: none; }
+  .graph svg { flex: 1; width: 100%; min-height: 0; cursor: grab; background-image: radial-gradient(var(--s3) 1px, transparent 1px); background-size: 20px 20px; }
+  .graph .gbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 18px; border-top: 1px solid var(--border); font: 400 12px var(--font-m); color: var(--muted); background: var(--bg); }
+  .graph .gbar .btn { padding: 5px 10px; font-size: 12px; }
+  .gchk { display: inline-flex; gap: 6px; align-items: center; }
+  .gareas { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+  .garea { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--border); background: var(--bg); border-radius: 999px; padding: 2px 9px; font: 400 11px var(--font-m); color: var(--copy); }
+  .garea i { width: 8px; height: 8px; border-radius: 50%; } .garea.off { opacity: .4; text-decoration: line-through; }
+  .gk-node { cursor: pointer; }
+  .gk-node circle, .gk-node rect { fill: var(--ac); stroke: var(--bg); stroke-width: 1.5; }
+  .gk-node text { font: 500 11px var(--font-b); fill: var(--text); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; display: none; pointer-events: none; }
+  .gk-node.big text, .zoomed .gk-node text, .gk-node.on text, .gk-node.near text, .gk-node:hover text { display: block; }
+  .gk-node:hover circle, .gk-node:hover rect { stroke: var(--text); }
+  .gk-node.on circle, .gk-node.on rect { stroke: var(--g); stroke-width: 4; }
+  .gk-edge { stroke: var(--dim); stroke-width: 1; opacity: .35; }
+  .gk-edge.imports { stroke-dasharray: 3 4; } .gk-edge.runs, .gk-edge.reads { stroke-dasharray: 8 5; } .gk-edge.contains { opacity: .15; }
+  .gk.focus .gk-node:not(.on):not(.near) { opacity: .12; } .gk.focus .gk-edge { opacity: .04; }
+  .gk.focus .gk-edge.hot { stroke: var(--g); stroke-width: 2; opacity: 1; }
+  .gk-area { font: 700 20px var(--font-h); fill: var(--muted); opacity: .55; text-anchor: middle; pointer-events: none; }
+  @media (max-width: 900px) { .legend { display: none; } main { grid-template-columns: 1fr; grid-template-rows: 1fr 45vh; } aside { border-left: 0; border-top: 1px solid var(--border); } .search input { width: 160px; } .prog .bar { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand" id="brandmark"></div>
+  <nav class="crumbs" id="crumbs" aria-label="Where you are"></nav>
+  <div class="spacer"></div>
+  <div class="search">
+    <input id="q" type="search" placeholder="Search a file or function  ( / )" autocomplete="off" aria-label="Search">
+    <ul class="results" id="results"></ul>
+  </div>
+  <div class="seg" id="viewSeg" role="group" aria-label="View"><button data-mode="map">Map</button><button data-mode="beginner">Beginner</button><button data-mode="story">Story</button><button data-mode="graph">Graph</button></div>
+  <button class="tbtn beg" id="btnBeg" hidden><i></i>Beginner view</button>
+  <button class="tbtn" id="btnTours">Tours</button>
+  <button class="tbtn" id="btnGloss">Glossary</button>
+  <span class="prog" id="prog"></span>
+  <button class="tbtn" id="btnTheme" aria-label="Switch light or dark">Theme</button>
+</header>
+<main>
+  <section class="stage" id="stage" aria-label="Map">
+    <svg id="svg"><defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--dim)"/></marker>
+      <marker id="arrhot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--g)"/></marker>
+    </defs><g id="world"></g></svg>
+    <div class="levelhint"><div class="k" id="lvKind"></div><h1 id="lvTitle"></h1><p id="lvSub"></p><div class="lvact" id="lvAct"></div></div>
+    <div class="story" id="story" hidden></div>
+    <div class="graph" id="graph" hidden></div>
+    <div class="legend" id="legend"></div>
+    <div class="zoomctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit" aria-label="Fit to screen" style="font-size:11px">FIT</button></div>
+    <div class="tourbar" id="tourbar" role="dialog" aria-label="Tour">
+      <div class="plabel" id="tourStep"></div>
+      <p id="tourText"></p>
+      <div class="row"><div class="steps" id="tourDots"></div><span class="spacer"></span><button class="btn" id="tourAuto" style="display:none">Pause</button><button class="btn" id="tourPrev">Back</button><button class="btn pri" id="tourNext">Next</button><button class="btn" id="tourEnd">End</button></div>
+    </div>
+  </section>
+  <aside id="panel" aria-live="polite"></aside>
+</main>
+<script src="data.js"></script>
+<script>
+const M = window.MAP, N = new Map(M.nodes.map(n => [n.id, n]));
+const KIDS = new Map(); M.nodes.forEach(n => { if (n.parent) { if (!KIDS.has(n.parent)) KIDS.set(n.parent, []); KIDS.get(n.parent).push(n); } });
+const kids = id => KIDS.get(id) || [];
+// indexes built once, so big codebases stay quick: who points at each box, and how many files/functions sit under each container
+const INCOMING = new Map(); M.edges.forEach(e => { if (e.kind === 'styles') return; if (!INCOMING.has(e.to)) INCOMING.set(e.to, new Set()); INCOMING.get(e.to).add(e.from); });
+const DESC = new Map(); M.nodes.forEach(n => { if (n.kind !== 'file' && n.kind !== 'fn') return; for (let q = n.parent; q; q = (N.get(q) || {}).parent) { const c = DESC.get(q) || { file: 0, fn: 0 }; c[n.kind]++; DESC.set(q, c); } });
+const chain = id => { const c = []; for (let n = N.get(id); n; n = N.get(n.parent)) c.push(n); return c; };
+const areaOf = id => chain(id).at(-1);
+const areaKey = id => areaOf(id)?.id.slice(5);
+const fileOf = id => { const n = N.get(id); return !n ? null : n.kind === 'fn' ? N.get(n.parent) : n; };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const $ = s => document.querySelector(s);
+const svgEl = (t, a = {}, parent) => { const e = document.createElementNS('http://www.w3.org/2000/svg', t); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.append(e); return e; };
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const swatch = id => `background:var(--a-${areaKey(id)})`;
+
+// line icons for the eight areas (24x24 grid), drawn in near-black on the area colour
+const NS = 'code-atlas:' + location.pathname + ':'; // file:// pages share one storage: keep each project's progress apart
+const W = M.meta.world, TITLE = M.meta.title;
+// area colours from config.json: --a-<id> fills; --at-<id> text (darker on light backgrounds, the colour itself on dark)
+document.head.append(Object.assign(document.createElement('style'), { textContent:
+  `:root{${Object.entries(M.areas).map(([k, a]) => `--a-${k}:${a.color};--at-${k}:color-mix(in srgb, ${a.color} 58%, #000)`).join(';')}}` +
+  `:root[data-theme=dark]{${Object.keys(M.areas).map(k => `--at-${k}:var(--a-${k})`).join(';')}}` }));
+$('#brandmark').innerHTML = `<span class="pre">code atlas · </span>${esc(TITLE)}`; document.title = `${TITLE} · code atlas`;
+// line icons on a 24x24 grid; config.json picks one per area
+const ICONS = {
+  box: '<path d="M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8"/>',
+  code: '<path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/>',
+  book: '<path d="M4 6.5c2.8-1 5.4-.8 8 1v12c-2.6-1.8-5.2-2-8-1zM20 6.5c-2.8-1-5.4-.8-8 1v12c2.6-1.8 5.2-2 8-1z"/>',
+  server: '<rect class="g" x="4" y="4.5" width="16" height="6" rx="1.5"/><rect class="g" x="4" y="13.5" width="16" height="6" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/>',
+  database: '<path d="M5 6c0-1.7 3.1-3 7-3s7 1.3 7 3-3.1 3-7 3-7-1.3-7-3zM5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>',
+  globe: '<circle class="g" cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.5 2.5 2.5 13.5 0 16M12 4c-2.5 2.5-2.5 13.5 0 16"/>',
+  cog: '<circle class="g" cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>',
+  image: '<rect class="g" x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 16l5-5 4 4 2.5-2.5 5.5 5.5"/>',
+  film: '<rect class="g" x="7" y="3.5" width="10" height="17" rx="2"/><path d="M10.5 9.5l4 2.5-4 2.5z"/>',
+  video: '<rect class="g" x="3.5" y="6.5" width="12" height="11" rx="2"/><path d="M15.5 10.5l5-3v9l-5-3"/>',
+  wrench: '<path d="M14.5 5.5a4 4 0 0 0 4.5 5.5l-8.5 8.5a2 2 0 0 1-3-3l8.5-8.5a4 4 0 0 0-1.5-2.5z"/>',
+  upload: '<path d="M12 15V4.5M7.5 9L12 4.5 16.5 9M5 19.5h14"/>',
+  palette: '<circle class="g" cx="12" cy="12" r="7.5"/><path d="M12 4.5v15M4.5 12h15"/>',
+  user: '<circle class="g" cx="12" cy="9" r="3.5"/><path d="M5 19.5c1.2-3.4 3.8-5 7-5s5.8 1.6 7 5"/>',
+  test: '<path d="M9 3.5h6M10 3.5v6l-5 9a1.5 1.5 0 0 0 1.3 2h11.4a1.5 1.5 0 0 0 1.3-2l-5-9v-6"/>',
+  mobile: '<rect class="g" x="7" y="3.5" width="10" height="17" rx="2"/><path d="M11 17.5h2"/>',
+  chart: '<path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6"/>',
+};
+const ICON = new Proxy({}, { get: (_, k) => ICONS[M.areas[k]?.icon] || ICONS.box });
+
+// progress: boxes marked "I understand this" (kept in this browser only)
+let done = new Set(); try { done = new Set(JSON.parse(localStorage.getItem(NS + 'done') || '[]')); } catch (e) {}
+const saveDone = () => { try { localStorage.setItem(NS + 'done', JSON.stringify([...done])); } catch (e) {} showProg(); };
+const learnable = M.nodes.filter(n => n.kind === 'fn' || n.kind === 'file');
+function showProg() { const d = learnable.filter(n => done.has(n.id)).length; $('#prog').innerHTML = `<span class="bar"><i style="width:${(100 * d / learnable.length).toFixed(1)}%"></i></span><span><b style="color:var(--gt)">${d}</b> / ${learnable.length} understood</span>`; }
+const inArea = a => learnable.filter(n => areaOf(n.id)?.id === a);
+
+// ---------- what each level shows ----------
+let level = { id: null }, sel = null;
+function viewFor(levelId) {
+  const inside = levelId ? kids(levelId) : M.nodes.filter(n => n.kind === 'area');
+  const lv = levelId ? chain(levelId).map(n => n.id) : [];
+  // the box that stands for a thing at this level: the child of this level that holds it; else the closest box elsewhere
+  const rep = id => {
+    const c = chain(id); if (!c.length) return null;
+    if (!levelId) return c.at(-1).id;
+    const inner = c.find(n => n.parent === levelId); if (inner) return inner.id;
+    if (N.get(levelId).kind === 'file') return c[0].kind === 'fn' ? c[0].id : c.find(n => n.kind === 'file' || n.kind === 'content')?.id;
+    const shared = c.find(n => lv.includes(n.parent)); if (shared && shared.kind !== 'area') return shared.id;
+    return c.find(n => n.kind === 'file' || n.kind === 'content')?.id;
+  };
+  const ids = new Set(inside.map(n => n.id)), ghosts = new Set(), wires = new Map();
+  for (const e of M.edges) {
+    if (e.kind === 'styles' && !(levelId && N.get(levelId).kind === 'file')) continue; // style links stay in the side panel; on the map they cross everything
+    const a = rep(e.from), b = rep(e.to);
+    if (!a || !b || a === b || a === levelId || b === levelId) continue;
+    if (!ids.has(a) && !ids.has(b)) continue;
+    if (!ids.has(a)) ghosts.add(a); if (!ids.has(b)) ghosts.add(b);
+    const k = a + '>' + b, w = wires.get(k) || { from: a, to: b, kinds: new Set(), n: 0 }; w.kinds.add(e.kind); w.n++; wires.set(k, w);
+  }
+  return { inside, ghosts: [...ghosts].map(id => N.get(id)).filter(Boolean), wires: [...wires.values()] };
+}
+
+// ---------- lanes: every level reads left to right, one numbered column per role ----------
+const OVERVIEW_LANES = (M.lanes && M.lanes.length ? M.lanes : [['Areas', 'click one to go inside', Object.keys(M.areas)]]).map(([t, sub, ids]) => [t, sub, ids.filter(k => M.areas[k])]).filter(l => l[2].length);
+const ROLE = [
+  ['entry', 'Starts here', 'pages, commands, settings'],
+  ['group', 'Groups', 'click one to open it'],
+  ['blocks', 'Building blocks', 'components and layouts'],
+  ['logic', 'Scripts and logic', 'code that does the work'],
+  ['content', 'Content', 'words and data'],
+  ['styles', 'Styles', 'how it looks'],
+  ['outside', 'Elsewhere', 'from other areas or groups'],
+];
+function roleOf(n) {
+  if (n.kind === 'group') return 'group';
+  if (n.kind === 'content') return 'content';
+  const p = n.path || '';
+  if (p.endsWith('.css')) return 'styles';
+  if (/\/pages\/|\.html$|\.sh$|^package\.json$|^vercel\.json$|astro\.config/.test(p)) return 'entry';
+  if (p.endsWith('.astro')) return 'blocks';
+  return 'logic';
+}
+function lanesFor(levelId, v) {
+  if (scopeOn() && N.get(levelId).kind !== 'file') return jobLanes(v);
+  if (!levelId) return OVERVIEW_LANES.map(([t, s, keys]) => ({ title: t, sub: s, ids: keys.map(k => 'area:' + k) }));
+  const lanes = [];
+  if (N.get(levelId).kind === 'file') {
+    // function level: how deep each function sits in the calls inside this file
+    const ins = new Set(v.inside.map(n => n.id)), into = new Map([...ins].map(i => [i, []]));
+    v.wires.forEach(w => { if (ins.has(w.from) && ins.has(w.to)) into.get(w.to).push(w.from); });
+    const depth = new Map(), stack = new Set();
+    const d = i => { if (depth.has(i)) return depth.get(i); if (stack.has(i)) return 0; stack.add(i); const x = into.get(i).length ? 1 + Math.max(...into.get(i).map(d)) : 0; stack.delete(i); depth.set(i, x); return x; };
+    ins.forEach(d);
+    const names = ['Starts here', 'Called next', 'Called after that', 'Deeper still'];
+    const subs = ['runs by itself, or is called from outside', 'used by column 1', 'used by column 2', 'used by the column before'];
+    const max = Math.max(0, ...depth.values());
+    for (let i = 0; i <= max; i++) lanes.push({ title: names[Math.min(i, 3)], sub: subs[Math.min(i, 3)], ids: [...ins].filter(x => depth.get(x) === i) });
+    if (v.ghosts.length) lanes.push({ title: 'In other files', sub: 'what these call, or what calls them', ids: v.ghosts.map(n => n.id) });
+  } else {
+    for (const [key, t, s] of ROLE) {
+      const ids = key === 'outside' ? v.ghosts.map(n => n.id) : v.inside.filter(n => roleOf(n) === key).map(n => n.id);
+      if (ids.length) lanes.push({ title: t, sub: s, ids });
+    }
+  }
+  return lanes.filter(l => l.ids.length);
+}
+
+// ---------- layout ----------
+function layout(lanes, wires, big) {
+  const [w, h] = big ? [262, 140] : [240, 76], gy = big ? 22 : 16, gapX = big ? 56 : scopeOn() ? 170 : 60, head = 64, pad = 16, rows = big ? 4 : 7;
+  const pos = new Map(), boxes = [], into = new Map();
+  wires.forEach(x => { if (!into.has(x.to)) into.set(x.to, []); into.get(x.to).push(x.from); });
+  let x = 0, maxH = 0;
+  lanes.forEach((lane, li) => {
+    // order inside a lane by where the boxes pointing at them sit, so wires cross less
+    const avg = id => { const ys = (into.get(id) || []).map(f => pos.get(f)?.y).filter(y => y != null); return ys.length ? ys.reduce((s, y) => s + y, 0) / ys.length : 1e9; };
+    const ids = big ? lane.ids : lane.ids.slice().sort((a, b) => avg(a) - avg(b) || N.get(a).name.localeCompare(N.get(b).name));
+    const cols = Math.ceil(ids.length / rows), laneW = cols * w + (cols - 1) * 20 + pad * 2;
+    ids.forEach((id, i) => pos.set(id, { x: x + pad + Math.floor(i / rows) * (w + 20), y: head + (i % rows) * (h + gy) }));
+    const laneH = head + Math.min(ids.length, rows) * (h + gy) - gy + pad;
+    boxes.push({ ...lane, n: li + 1, x, w: laneW, h: laneH }); maxH = Math.max(maxH, laneH);
+    x += laneW + gapX;
+  });
+  boxes.forEach(b => b.h = maxH);
+  return { pos, w, h, lanes: boxes, gapX };
+}
+
+// ---------- draw ----------
+let view = { x: 0, y: 0, k: 1 };
+const world = $('#world');
+const applyView = () => world.setAttribute('transform', `translate(${view.x},${view.y}) scale(${view.k})`);
+const kindLabel = n => n.kind === 'group' ? 'GROUP' : n.kind === 'content' ? 'CONTENT' : n.kind === 'fn' ? (n.top ? 'RUNS' : n.cls ? 'CLASS' : 'FUNCTION') : (n.path.split('.').pop() || 'FILE').toUpperCase();
+function subOf(n) {
+  if (n.kind === 'group') { const c = DESC.get(n.id) || { file: 0, fn: 0 }; return `${c.file} files · ${c.fn} functions`; }
+  if (n.kind === 'file') { const k = kids(n.id).length; return `${n.lines} lines${k ? ' · ' + k + ' fns' : ''}`; }
+  if (n.kind === 'content') return `${n.files.length} files`;
+  if (n.kind === 'fn') return `lines ${n.start}-${n.end}`;
+  return '';
+}
+function fit(text, px, font) { const c = fit.c ||= document.createElement('canvas').getContext('2d'); c.font = font; if (c.measureText(text).width <= px) return text; while (text.length > 3 && c.measureText(text + '…').width > px) text = text.slice(0, -1); return text + '…'; }
+function shortName(n) { // folder hint for file names that repeat (index.html, index.astro)
+  if (n.kind !== 'file') return n.name;
+  return M.nodes.filter(x => x.kind === 'file' && x.name === n.name).length > 1 ? n.path.split('/').slice(-2).join('/') : n.name;
+}
+function card(g, n, L, ghost) {
+  const big = n.kind === 'area', w = L.w, h = L.h, a = areaKey(n.id);
+  g.setAttribute('style', `--ac:var(--a-${a});--at:var(--at-${a})`);
+  svgEl('rect', { class: 'glow', x: 10, y: 12, width: w - 20, height: h - 12, rx: 16 }, g);
+  if (n.kind === 'group' && !ghost) { svgEl('rect', { class: 'stack', x: 10, y: -9, width: w - 20, height: h, rx: 14 }, g); svgEl('rect', { class: 'stack', x: 5, y: -4.5, width: w - 10, height: h, rx: 14 }, g); }
+  svgEl('rect', { class: 'box', width: w, height: h, rx: 14 }, g);
+  if (big) svgEl('rect', { class: 'tint', width: w, height: h, rx: 14 }, g);
+  svgEl('rect', { class: 'edge', x: 0, y: 14, width: 5, height: h - 28, rx: 2.5 }, g);
+  if (big) {
+    const ic = svgEl('g', { class: 'ico', transform: 'translate(22 22)' }, g);
+    svgEl('rect', { width: 44, height: 44, rx: 12 }, ic);
+    svgEl('g', { transform: 'translate(10 10)' }, ic).innerHTML = ICON[a];
+    svgEl('text', { class: 't', x: 80, y: 42 }, g).textContent = n.name;
+    svgEl('text', { class: 's', x: 80, y: 61 }, g).textContent = fit(n.sub, w - 96, '400 12px "JetBrains Mono"');
+    const all = M.nodes.filter(x => areaOf(x.id)?.id === n.id);
+    [[all.filter(x => x.kind === 'file').length, 'FILES', 22], [all.filter(x => x.kind === 'fn').length, 'FUNCTIONS', 86]].forEach(([v, l, x]) => { svgEl('text', { class: 'num', x, y: 100 }, g).textContent = v; svgEl('text', { class: 'numl', x, y: 113 }, g).textContent = l; });
+    const ns = inArea(n.id), d = ns.filter(x => done.has(x.id)).length, tw = w - 44;
+    svgEl('rect', { class: 'ptrack', x: 22, y: 122, width: tw, height: 6, rx: 3 }, g);
+    svgEl('rect', { class: 'pfill', x: 22, y: 122, width: tw * d / Math.max(1, ns.length), height: 6, rx: 3 }, g);
+    svgEl('text', { class: 'numl', x: w - 22, y: 100, 'text-anchor': 'end' }, g).textContent = `${d} / ${ns.length} LEARNED`;
+    return;
+  }
+  const job = scopeOn() ? jobOf(n) : null, label = job ? B.jobs[job].name.toUpperCase() : kindLabel(n), bw = 12 + label.length * 6.7 + (job ? 16 : 0);
+  const bd = svgEl('g', { class: 'badge' + (job ? ' job' : ''), transform: 'translate(18 13)' }, g);
+  svgEl('rect', { width: bw, height: 18, rx: 9 }, bd);
+  if (job) svgEl('path', { d: JOBICON[job], transform: 'translate(6 3)' }, bd);
+  svgEl('text', { x: job ? 22 : 6.5, y: 12.6 }, bd).textContent = label;
+  svgEl('text', { class: 't', x: 18, y: 54 }, g).textContent = fit(shortName(n), w - 36, '700 15px "Space Grotesk"');
+  const where = ghost ? `in ${areaOf(n.id).name}${n.kind === 'fn' ? ' · ' + N.get(n.parent).name : ''}` : subOf(n);
+  svgEl('text', { class: 's', x: 18 + bw + 8, y: 26 }, g).textContent = fit(where, w - bw - 64, '400 11px "JetBrains Mono"');
+  if (done.has(n.id)) { svgEl('circle', { class: 'tick', cx: w - 20, cy: 22, r: 9 }, g); svgEl('path', { class: 'tick-mark', d: `M${w - 24.5} 22l3 3 5.5-6` }, g); }
+  else if (n.kind !== 'group') svgEl('circle', { class: 'dot-' + n.status, cx: w - 20, cy: 22, r: 4.5 }, g);
+}
+function draw(fromPoint) {
+  if (mode === 'graph') return drawGraph();
+  $('#graph').hidden = true; cancelAnimationFrame(GK.raf);
+  if (storyHere()) return drawStory();
+  $('#story').hidden = true; $('#svg').style.display = ''; $('.zoomctl').style.display = ''; $('#legend').style.display = '';
+  if (follow) return drawFollow(fromPoint);
+  const v = viewFor(level.id), big = !level.id;
+  const L = layout(lanesFor(level.id, v), v.wires, big); lastL = L; const ghostIds = new Set(v.ghosts.map(n => n.id));
+  world.replaceChildren();
+  const gL = svgEl('g', {}, world), gW = svgEl('g', {}, world), gN = svgEl('g', {}, world);
+  // numbered lane backgrounds, with green arrows between them showing the reading order
+  L.lanes.forEach((ln, i) => {
+    const g = svgEl('g', { class: 'lane' }, gL);
+    svgEl('rect', { x: ln.x, y: 0, width: ln.w, height: ln.h, rx: 18 }, g);
+    svgEl('circle', { class: 'lc', cx: ln.x + 30, cy: 30, r: 13 }, g);
+    svgEl('text', { class: 'ln', x: ln.x + 30, y: 34.5, 'text-anchor': 'middle' }, g).textContent = ln.n;
+    svgEl('text', { class: 'lt', x: ln.x + 52, y: 28 }, g).textContent = fit(ln.title.toUpperCase(), ln.w - 66, '600 12px "JetBrains Mono"');
+    svgEl('text', { class: 'ls', x: ln.x + 52, y: 44 }, g).textContent = fit(ln.sub, ln.w - 66, '400 11px "JetBrains Mono"');
+    if (i < L.lanes.length - 1) svgEl('path', { class: 'flowarrow', d: `M${ln.x + ln.w + L.gapX / 2 - 7} 22l14 8-14 8z` }, g);
+  });
+  for (const w of v.wires) {
+    const a = L.pos.get(w.from), b = L.pos.get(w.to); if (!a || !b) continue;
+    let x1 = a.x + L.w, y1 = a.y + L.h / 2, x2 = b.x, y2 = b.y + L.h / 2, d;
+    if (x2 > x1 + 20) { const dx = Math.max(50, (x2 - x1) / 2); d = `M${x1} ${y1}C${x1 + dx} ${y1} ${x2 - dx} ${y2} ${x2} ${y2}`; }
+    else if (Math.abs(a.x - b.x) < 5) { const bulge = 40 + Math.abs(y2 - y1) * .15; x2 = b.x + L.w; d = `M${x1} ${y1}C${x1 + bulge} ${y1} ${x2 + bulge} ${y2} ${x2 + 2} ${y2}`; } // same column: loop out on the right
+    else { x1 = a.x + L.w / 2; y1 = a.y + L.h; x2 = b.x + L.w / 2; y2 = b.y + L.h; const yb = Math.max(y1, y2) + 46; d = `M${x1} ${y1}C${x1} ${yb} ${x2} ${yb} ${x2} ${y2 + 2}`; } // backwards: under the boxes
+    const kind = w.kinds.has('calls') || w.kinds.has('shows') ? 'calls' : w.kinds.has('runs') ? 'runs' : w.kinds.has('reads') ? 'reads' : 'imports';
+    const p = svgEl('path', { d, class: 'wire ' + kind, 'marker-end': 'url(#arr)', 'data-from': w.from, 'data-to': w.to }, gW);
+    svgEl('title', {}, p).textContent = `${N.get(w.from).name} ${[...w.kinds].join(' / ')} ${N.get(w.to).name}${w.n > 1 ? ` (${w.n} times)` : ''}`;
+    if (scopeOn()) wireLabel(gW, p, w.from, w.to, kind);
+  }
+  for (const n of [...v.inside, ...v.ghosts]) {
+    const p = L.pos.get(n.id); if (!p) continue;
+    const ghost = ghostIds.has(n.id);
+    const g = svgEl('g', { class: `node ${n.kind}${ghost ? ' ghost' : ''}`, transform: `translate(${p.x},${p.y})`, tabindex: 0, role: 'button', 'data-id': n.id, 'aria-label': n.name }, gN);
+    card(g, n, L, ghost);
+    svgEl('title', {}, g).textContent = n.kind === 'fn' ? `${n.name} (${N.get(n.parent).path})` : (n.path || n.name);
+  }
+  fitView(fromPoint); highlight(); levelText(); legend();
+}
+function levelText() {
+  if (storyHere() || mode === 'graph') return; // the story and the graph write their own heading
+  const n = level.id && N.get(level.id);
+  $('#lvKind').innerHTML = !n ? 'Code atlas' : `<i style="${swatch(n.id)}"></i>${n.kind === 'area' ? 'Area' : (n.kind === 'group' ? 'Group' : 'File') + ' in ' + esc(areaOf(n.id).name)}`;
+  $('#lvTitle').innerHTML = !n ? `Everything in <span class="gchip">${esc(TITLE)}</span>` : esc(n.name);
+  $('#lvSub').textContent = !n ? 'Each box is one area of the codebase; wires show which area uses another. Read left to right, then click an area to go inside.'
+
+    : n.kind === 'file' ? 'Read left to right: code that starts by itself, then what it calls. Click a box to read what it does.'
+    : 'Read left to right by role. Dashed boxes live somewhere else. Click a file to see its functions.';
+  if (scopeOn() && n.kind !== 'file') $('#lvSub').textContent = 'Read left to right: the bosses start things, workers do the jobs, helpers are small shared tools. Every wire says what happens. Dashed boxes live in other areas.';
+  if (scopeOn() && n.kind === 'file') $('#lvSub').textContent = 'Read left to right: the start, then what it asks for next. Every wire says what happens. Press Play to watch it run.';
+  const act = [];
+  const pl = scopeOn() && playFor(level.id); if (pl) act.push('<button class="btn play" id="btnPlay">▶ Play: ' + esc(pl.title) + '</button>');
+  $('#lvAct').innerHTML = act.join('');
+  if (false) $('#lvAct').innerHTML = `<span class="scopenote" style="pointer-events:auto">No story here yet. Stories so far: ${Object.entries(STORY).map(([k, v]) => `<button class="btn play" data-story="${esc(k)}">${esc(v.title)}</button>`).join(' ')}</span>`;
+  else if (!beginner && B && level.id && inScope(level.id)) $('#lvAct').innerHTML = '<span class="scopenote">Beginner view is off. Turn it on (top right) to compare.</span>';
+  else if (false) {}
+}
+function legend() {
+  const line = (dash, t) => `<span><svg width="26" height="8"><path d="M0 4H26" stroke="var(--muted)" stroke-width="1.6"${dash ? ` stroke-dasharray="${dash}"` : ''}/></svg>${t}</span>`;
+  $('#legend').innerHTML = (level.id ? line('', 'calls / shows') + line('2 4', 'uses file') + line('7 5', 'runs / reads') : '')
+    + '<span><svg width="12" height="12"><circle cx="6" cy="6" r="4.5" class="dot-ok"/></svg>explained</span><span><svg width="12" height="12"><circle cx="6" cy="6" r="4" class="dot-missing"/></svg>needs explanation</span><span><svg width="12" height="12"><circle cx="6" cy="6" r="4.5" class="dot-stale"/></svg>code changed</span><span>colour = area</span>';
+}
+function fitView(from) {
+  const b = world.getBBox(), st = $('#stage').getBoundingClientRect(), top = 150, pad = 28, bottom = 74;
+  const fitK = Math.min(1.15, (st.width - pad * 2) / Math.max(b.width, 1), (st.height - top - bottom) / Math.max(b.height, 1));
+  // never smaller than readable (card titles about 12px or more); past that the map scrolls: drag or use the trackpad
+  const k = Math.max(fitK, level.id ? 0.8 : 0.6);
+  const x = b.width * k < st.width - pad * 2 ? (st.width - b.width * k) / 2 - b.x * k : pad - b.x * k;
+  const y = b.height * k < st.height - top - bottom ? top + (st.height - top - bottom - b.height * k) / 2 - b.y * k : top - b.y * k;
+  const target = { k, x, y };
+  if (from === 'target') return target;
+  view = target; applyView();
+}
+
+// ---------- selection: light the box, its wires and its neighbours; dots run along the wires ----------
+function highlight() {
+  world.querySelectorAll('.flow').forEach(e => e.remove());
+  const visible = sel && world.querySelector(`.node[data-id="${CSS.escape(sel)}"]`), near = new Set(visible ? [sel] : []);
+  world.querySelectorAll('.wire').forEach(p => {
+    const from = tour?.t.steps[tour.i]?.from ?? tour?.prev, pair = codeFocus?.b ? [codeFocus.a, codeFocus.b] : from && from !== sel ? [from, sel] : null;
+    const hot = visible && (pair ? pair.includes(p.dataset.from) && pair.includes(p.dataset.to) : (p.dataset.from === sel || p.dataset.to === sel));
+    p.classList.toggle('hot', !!hot); p.classList.toggle('dim', !!visible && !hot);
+    p.setAttribute('marker-end', hot ? 'url(#arrhot)' : 'url(#arr)');
+    if (hot) { near.add(p.dataset.from); near.add(p.dataset.to);
+      if (!reduce) { const dur = Math.max(1.2, p.getTotalLength() / 150); for (let i = 0; i < 2; i++) { const c = svgEl('circle', { r: 3.5, class: 'flow' }); svgEl('animateMotion', { dur: dur + 's', repeatCount: 'indefinite', begin: (i * dur / 2) + 's', path: p.getAttribute('d') }, c); p.parentNode.append(c); } } }
+  });
+  world.querySelectorAll('.node').forEach(g => { g.classList.toggle('sel', g.dataset.id === sel); g.classList.toggle('dim', !!visible && !near.has(g.dataset.id)); });
+  world.querySelectorAll('.wlab').forEach(l => { const hot = visible && (l.dataset.from === sel || l.dataset.to === sel); l.classList.toggle('hot', !!hot); l.classList.toggle('dim', !!visible && !hot && !follow); });
+}
+
+// ---------- navigation ----------
+function crumbs() {
+  const parts = [{ id: null, name: 'All areas' }, ...chain(level.id).reverse()];
+  $('#crumbs').innerHTML = parts.map((p, i) => i === parts.length - 1 ? `<b>${esc(p.name)}</b>` : `<button data-go="${esc(p.id ?? '')}">${esc(p.name)}</button><span>›</span>`).join('');
+}
+// ---------- moving between levels with continuity ----------
+// Going in: the camera glides to the box, then dives into it and its contents grow out of it.
+// Going out: the contents shrink away and the parent opens zoomed on the box you were in, then pulls back.
+// Jumping elsewhere: out to the level both places share, then in again, one level at a time.
+let lastL = null, busy = null, pending = null;
+const stageBox = () => $('#stage').getBoundingClientRect();
+let hurry = false; // set when you ask for another move during one: the rest of the current move speeds up
+const wait = ms => new Promise(r => setTimeout(r, reduce ? 0 : hurry ? ms * .15 : ms));
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+function tween(to, ms, fade) { // animate the camera (and optionally the opacity) to `to`
+  const from = { ...view }, o0 = +getComputedStyle(world).opacity || 1;
+  if (hurry) ms *= .2;
+  if (reduce || ms <= 0) { view = { ...to }; applyView(); if (fade != null) world.style.opacity = fade; return Promise.resolve(); }
+  return new Promise(res => { const t0 = performance.now(); const step = now => { const t = Math.min(1, (now - t0) / ms), e = ease(t);
+    view = { k: from.k + (to.k - from.k) * e, x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e }; applyView();
+    if (fade != null) world.style.opacity = o0 + (fade - o0) * e;
+    t < 1 ? requestAnimationFrame(step) : res(); }; requestAnimationFrame(step); });
+}
+function camOn(id, fill) { // camera that puts box `id` in the middle of the stage, its width filling `fill` of the stage
+  const p = lastL?.pos.get(id); if (!p) return null; const st = stageBox(), w = lastL.w, h = lastL.h;
+  const k = fill ? (st.width * fill) / w : Math.max(view.k, 0.9);
+  return { k, x: st.width / 2 - (p.x + w / 2) * k, y: (st.height + 60) / 2 - (p.y + h / 2) * k };
+}
+function shrinkCam(f) { const st = stageBox(), cx = st.width / 2, cy = (st.height + 60) / 2; return { k: view.k * f, x: cx - (cx - view.x) * f, y: cy - (cy - view.y) * f }; }
+const pathTo = id => [...chain(id).map(n => n.id).reverse()]; // root first, ending at id
+async function hopDown(child, select, quick) {
+  const t = quick ? .75 : 1;
+  sel = child; highlight();
+  const c1 = camOn(child); if (c1) { await tween(c1, 850 * t); await wait(450 * t); } // 1. glide to the box, pause on it
+  const c2 = camOn(child, .9); if (c2) await tween(c2, 750 * t, 0);    // 2. dive into it
+  level = { id: child }; sel = select ?? child; crumbs(); draw(); flashCrumb();
+  const fin = fitView('target'), st = stageBox(), cx = st.width / 2, cy = (st.height + 60) / 2;
+  view = { k: fin.k * .3, x: cx - (cx - fin.x) * .3, y: cy - (cy - fin.y) * .3 }; applyView(); // start small, where the box was
+  await tween(fin, 950 * t, 1);                                         // 3. its contents grow out of it
+}
+async function hopUp(quick) {
+  const t = quick ? .75 : 1, was = level.id, parent = N.get(was)?.parent ?? null;
+  await tween(shrinkCam(.3), 750 * t, 0);                               // 1. contents shrink away
+  level = { id: parent }; sel = was; crumbs(); draw(); flashCrumb();
+  const fin = fitView('target'), c = camOn(was, .9);                    // 2. parent opens on the box you were in
+  if (c) { view = c; applyView(); }
+  await wait(350 * t); await tween(fin, 1100 * t, 1);                   // 3. a beat on the box you left, then pull back
+}
+async function navigate(target, select) {
+  if (busy) { pending = [target, select]; hurry = true; return; }
+  follow = null;
+  const from = level.id ? pathTo(level.id) : [], to = target ? pathTo(target) : [];
+  let common = 0; while (common < from.length && common < to.length && from[common] === to[common]) common++;
+  const ups = from.length - common, downs = to.slice(common), quick = ups + downs.length > 2;
+  if (!ups && !downs.length) { sel = select ?? target; highlight(); panel(sel); return; }
+  busy = true; endHint();
+  try {
+    if (!lastL || reduce) { level = { id: target }; sel = select ?? target; crumbs(); draw(); }
+    else {
+      for (let i = 0; i < ups; i++) await hopUp(quick);
+      for (let i = 0; i < downs.length; i++) await hopDown(downs[i], i === downs.length - 1 ? select : null, quick);
+    }
+  } finally { busy = false; world.style.opacity = 1; sel = !downs.length && ups ? from[common] : (select ?? target); highlight(); panel(keepPanel || sel); } // going up: keep the box you came from selected
+  hurry = false;
+  if (pending) { const [a, b] = pending; pending = null; navigate(a, b); }
+}
+function flashCrumb() { const b = $('#crumbs b'); if (b) { b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash'); } }
+function endHint() {}
+function goLevel(id, select) { navigate(id, select); }
+const opens = n => n.kind === 'area' || n.kind === 'group' || (n.kind === 'file' && kids(n.id).length);
+function open(id) {
+  const n = N.get(id); if (!n) return;
+  if (mode === 'graph') { const t = GK.data?.nodes.some(x => x.id === id) ? id : fileOf(id)?.id; GK.focus?.(t); GK.center?.(t); return; } // in the graph, jump to the dot
+  if (opens(n)) return navigate(id, id);
+  if (level.id !== n.parent) return navigate(n.parent, id);
+  sel = id; highlight(); panel(id);
+}
+$('#crumbs').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) goLevel(b.dataset.go || null, b.dataset.go || null); });
+$('#stage').addEventListener('click', e => {
+  codeFocus = null;
+  if (moved || e.target.closest('.tourbar,.legend,.zoomctl')) return;
+  const g = e.target.closest('.node'); if (!g) { if (!follow) { sel = level.id; highlight(); panel(level.id); } return; }
+  if (follow) { if (inScope(g.dataset.id)) { follow = g.dataset.id; sel = follow; draw(); } else { follow = null; open(g.dataset.id); return; } panel(sel); return; }
+  const r = g.getBoundingClientRect(), s = $('#stage').getBoundingClientRect();
+  open(g.dataset.id, { x: r.left - s.left + r.width / 2, y: r.top - s.top + r.height / 2 });
+});
+$('#stage').addEventListener('keydown', e => { const g = e.target.closest('.node'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(g.dataset.id); } });
+let drag = null, moved = false;
+$('#stage').addEventListener('pointerdown', e => { if (e.target.closest('.legend,.zoomctl,.tourbar')) return; drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y }; moved = false; });
+addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 4) { moved = true; $('#stage').classList.add('drag'); } view.x = drag.vx + dx; view.y = drag.vy + dy; applyView(); });
+addEventListener('pointerup', () => { drag = null; $('#stage').classList.remove('drag'); setTimeout(() => moved = false, 0); });
+function zoomAt(f, cx, cy) { const s = $('#stage').getBoundingClientRect(); cx ??= s.width / 2; cy ??= s.height / 2; const k = Math.min(3, Math.max(.2, view.k * f)); view.x = cx - (cx - view.x) * k / view.k; view.y = cy - (cy - view.y) * k / view.k; view.k = k; applyView(); }
+// trackpad: two fingers scroll the map, pinch (ctrl + wheel) zooms
+$('#stage').addEventListener('wheel', e => { e.preventDefault(); const s = $('#stage').getBoundingClientRect(); if (e.ctrlKey || e.metaKey) zoomAt(Math.exp(-e.deltaY * .01), e.clientX - s.left, e.clientY - s.top); else { view.x -= e.deltaX; view.y -= e.deltaY; applyView(); } }, { passive: false });
+$('#zin').onclick = () => zoomAt(1.25); $('#zout').onclick = () => zoomAt(.8); $('#zfit').onclick = () => fitView();
+addEventListener('resize', () => fitView());
+
+// ---------- side panel ----------
+function rich(s) { return esc(s).replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, t, l) => `<button class="term" data-term="${esc(t)}">${esc(l || t)}</button>`).replace(/`([^`]+)`/g, '<code class="mono">$1</code>'); }
+function links(ids) { return ids.length ? `<div class="chips">${ids.map(id => { const n = N.get(id); return `<button class="chip" data-open="${esc(id)}" title="${esc(n.path || N.get(n.parent)?.path || '')}"><i style="${swatch(id)}"></i>${esc(shortName(n))}${n.kind === 'fn' && fileOf(id).id !== fileOf(sel)?.id ? ' · ' + esc(N.get(n.parent).name) : ''}</button>`; }).join('')}</div>` : ''; }
+function panel(id) {
+  if (storyHere()) { $('#panel').innerHTML = storyPanel(); return; }
+  if (id !== cv?.id) { cv = null; codeFocus = null; }
+  const P = $('#panel');
+  if (!id) { P.innerHTML = overviewPanel(); return; }
+  const n = N.get(id), ex = n.ex || {}, a = areaOf(id), uniq = x => [...new Set(x)];
+  const kind = { area: 'Area', group: 'Group', file: 'File', content: 'Content', fn: n.top ? 'Runs by itself' : n.cls ? 'Class' : 'Function' }[n.kind];
+  let h = `<div class="plabel"><span class="pill"><i style="${swatch(id)}"></i>${esc(a.name)}</span><span>${kind}${n.kind === 'fn' ? ' in ' + esc(N.get(n.parent).name) : ''}</span></div><h2>${esc(n.name)}</h2>`;
+  if (n.path) h += `<div class="path">${esc(n.path)}</div>`; else if (n.kind === 'fn') h += `<div class="path">${esc(N.get(n.parent).path)} · lines ${n.start}-${n.end}</div>`;
+  if (n.status === 'stale') h += `<div class="warn">This code changed after it was explained, so the text may be out of date. Ask Claude to refresh the code atlas explanations.</div>`;
+  const beg = beginner && B && inScope(id) && n.kind !== 'area' && n.kind !== 'group', job = beg ? jobOf(n) : null;
+  if (job) h += `<div class="jobline"><b>${B.jobs[job].name}.</b> ${esc(B.jobs[job].what)}</div>`;
+  if (beg && B.io[id]) h += `<div class="io"><div><b>Takes in</b>${rich(B.io[id].in)}</div><div class="arrow">↓</div><div class="mid"><b>Does</b>${rich(ex.what || n.what || '')}</div><div class="arrow">↓</div><div><b>Gives back</b>${rich(B.io[id].out)}</div></div>`;
+  else if (ex.what) h += `<p class="what">${rich(ex.what)}</p>`; else if (n.kind === 'content') h += `<p class="what">${rich(n.what)}</p>`;
+  else h += `<div class="pending">Not explained yet. Ask Claude: "refresh the code atlas explanations".</div>`;
+  if (beg) { const st = storyOf(id); if (st.length) h += `<h3>In plain words</h3><ul class="plainlist">${st.map(x => `<li>${rich(x)}</li>`).join('')}</ul>`; }
+  if (ex.does) h += `<h3>What it does</h3><p>${rich(ex.does)}</p>`;
+  if (ex.example) h += `<h3>Example</h3><div class="example">${rich(ex.example)}</div>`;
+  const act = [];
+  if (opens(n) && level.id !== id) act.push(`<button class="btn pri" data-zoom="${esc(id)}">Open it</button>`);
+  if (beginner && B && inScope(id) && n.kind !== 'area' && n.kind !== 'group') act.push(`<button class="btn" data-follow="${esc(id)}">${follow === id ? 'Exit follow' : 'Follow this'}</button>`);
+  if (n.kind === 'fn' || n.kind === 'file') act.push(`<button class="btn ${done.has(id) ? 'got' : ''}" data-done="${esc(id)}">${done.has(id) ? 'Understood' : 'I understand this'}</button>`);
+  if (act.length) h += `<div class="act">${act.join('')}</div>`;
+  const cvHtml = codeView(id); if (cvHtml) h += cvHtml;
+  if (n.kind !== 'area' && n.kind !== 'group') {
+    const label = beg ? {} : { calls: 'Calls', imports: 'Uses', styles: 'Styled by', runs: 'Runs', reads: 'Reads', shows: 'Shows', uses: 'Uses', opens: 'Opens' }, groups = {};
+    M.edges.filter(e => e.from === id).forEach(e => (groups[label[e.kind] || 'Needs these to do its job'] ??= []).push(e.to));
+    for (const [k, v] of Object.entries(groups)) h += `<h3>${k}</h3>${links(uniq(v))}`;
+    const by = uniq(M.edges.filter(e => e.to === id).map(e => e.from)); if (by.length) h += `<h3>${beg ? 'Who needs it (would break without it)' : 'Used by'}</h3>${links(by)}`;
+  }
+  if (n.kind === 'file' && n.libs?.length) h += `<h3>Libraries it borrows</h3><div class="chips">${n.libs.map(l => `<span class="chip lib">${esc(l)}</span>`).join('')}</div>`;
+  if (kids(id).length) h += `<h3>Inside</h3>${links(kids(id).map(k => k.id))}`;
+  if (n.kind === 'content') h += `<details><summary>${n.files.length} files</summary><pre>${esc(n.files.join('\n'))}</pre></details>`;
+  if (beg) h += `<details><summary>The five jobs</summary><dl class="jobs" style="padding:4px 14px 14px">${Object.values(B.jobs).map(j => `<dt>${j.name}</dt><dd>${esc(j.what)}</dd>`).join('')}</dl></details>`;
+  if (!cvHtml && n.code) h += `<details ${n.kind === 'fn' && !beg ? 'open' : ''}><summary>The code${n.kind === 'fn' ? '' : ' (whole file)'}</summary><pre>${esc(n.code)}</pre></details>`;
+  P.innerHTML = h; P.scrollTop = 0; if (cv) showPart(false);
+}
+function overviewPanel() {
+  const areas = M.nodes.filter(n => n.kind === 'area');
+  return `<div class="plabel">Start here</div><h2>How to read this map</h2>
+  <p class="what">Every box is part of this codebase. Each colour is one area. Wires show what uses what; the moving dots show the direction.</p>
+  <h3>Areas</h3><div class="keygrid">${areas.map(a => `<span><i style="${swatch(a.id)}"></i>${esc(a.name)}</span>`).join('')}</div>
+  <h3>Read left to right</h3><p>Every screen is split into numbered columns. Start at column 1 and follow the green arrows. Click a box to go one level deeper: areas, then groups, then files, then functions. The path at the top takes you back up.</p>
+  <h3>Learning</h3><p>Click a function to read what it is for, what it does and an example. When it makes sense, press "I understand this". Progress is saved in this browser.</p>
+  <h3>Tours</h3><p>Open Tours to follow one thing from start to finish, when tours have been written for this codebase.</p>
+  <h3>Map status</h3><p class="mono" style="font-size:12px">${M.counts.files} files · ${M.counts.functions} functions · ${M.counts.edges} wires<br>${M.counts.missing} not explained yet · ${M.counts.stale} changed since explained<br>scanned at commit ${esc(M.at)}</p>
+  ${M.notCovered.length ? `<div class="warn">Files not on the map: ${esc(M.notCovered.join(', '))}</div>` : ''}
+  <div class="act"><button class="btn" id="exp">Export progress</button><label class="btn">Import progress<input type="file" id="imp" accept=".json" hidden></label></div>`;
+}
+$('#panel').addEventListener('click', e => {
+  const o = e.target.closest('[data-open]'), z = e.target.closest('[data-zoom]'), d = e.target.closest('[data-done]'), t = e.target.closest('[data-term]'), tr = e.target.closest('[data-tour]');
+  if (o) open(o.dataset.open);
+  if (z) goLevel(z.dataset.zoom, z.dataset.zoom);
+  if (d) { const id = d.dataset.done; done.has(id) ? done.delete(id) : done.add(id); saveDone(); draw(); panel(id); }
+  if (t) showGloss(t.dataset.term);
+  if (tr) { tour = { t: M.tours[+tr.dataset.tour], i: 0 }; tourStep(); }
+  const fo = e.target.closest('[data-follow]'); if (fo) { follow = follow === fo.dataset.follow ? null : fo.dataset.follow; sel = fo.dataset.follow; draw(); panel(sel); }
+  if (e.target.id === 'exp') { const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([JSON.stringify([...done])], { type: 'application/json' })), download: 'code-atlas-progress.json' }); a.click(); }
+});
+$('#panel').addEventListener('change', e => { if (e.target.id === 'imp' && e.target.files[0]) e.target.files[0].text().then(t => { try { JSON.parse(t).forEach(x => done.add(x)); saveDone(); draw(); } catch (er) { alert('That file is not a progress export.'); } }); });
+
+// ---------- glossary and tours ----------
+function showGloss(term) {
+  const g = M.glossary || {};
+  $('#panel').innerHTML = `<div class="plabel">Glossary</div><h2>Words you will see</h2><dl class="gloss">${Object.keys(g).sort((a, b) => a.localeCompare(b)).map(k => `<dt id="g-${esc(k)}"${k === term ? ' style="color:var(--gt)"' : ''}>${esc(k)}</dt><dd>${rich(g[k])}</dd>`).join('')}</dl>`;
+  if (term) document.getElementById('g-' + term)?.scrollIntoView({ block: 'center' });
+}
+$('#btnGloss').onclick = () => showGloss();
+let tour = null;
+$('#btnTours').onclick = () => { $('#panel').innerHTML = `<div class="plabel">Guided tours</div><h2>Follow one thing</h2><p>Each tour walks through the boxes involved, in order.</p><div class="tourlist">${(M.tours || []).map((t, i) => `<button data-tour="${i}"><span class="num-c">${i + 1}</span><span><b>${esc(t.title)}</b><span>${esc(t.intro)} · ${t.steps.length} steps</span></span></button>`).join('')}</div>`; };
+function tourStep() {
+  const s = tour.t.steps[tour.i]; $('#tourbar').classList.add('on');
+  $('#tourStep').textContent = `${tour.t.title} · step ${tour.i + 1} of ${tour.t.steps.length}`; $('#tourText').innerHTML = rich(s.text);
+  $('#tourDots').innerHTML = tour.t.steps.map((_, i) => `<button data-step="${i}" class="${i < tour.i ? 'done' : i === tour.i ? 'cur' : ''}" aria-label="Step ${i + 1}">${i + 1}</button>`).join('');
+  $('#tourPrev').disabled = tour.i === 0; $('#tourNext').textContent = tour.i === tour.t.steps.length - 1 ? 'Finish' : 'Next';
+  const n = N.get(s.id); if (!n) return;
+  tour.prev = tour.i > 0 ? tour.t.steps[tour.i - 1].id : null;
+  const here = !follow && world.querySelector(`.node[data-id="${CSS.escape(s.id)}"]`);
+  if (here) { sel = s.id; highlight(); panel(s.id); }
+  else { follow = null; navigate(n.kind === 'area' ? null : n.parent, s.id); }
+  clearTimeout(tour.timer);
+  $('#tourAuto').style.display = tour.auto ? '' : 'none'; $('#tourAuto').textContent = tour.paused ? '▶ Play' : 'Pause';
+  if (tour.auto && !tour.paused && tour.i < tour.t.steps.length - 1) tour.timer = setTimeout(() => { if (tour) { tour.i++; tourStep(); } }, 4200);
+}
+$('#tourDots').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b) { tour.i = +b.dataset.step; tourStep(); } });
+$('#tourNext').onclick = () => { if (tour.i < tour.t.steps.length - 1) { tour.i++; tourStep(); } else endTour(); };
+$('#tourPrev').onclick = () => { if (tour.i > 0) { tour.i--; tourStep(); } };
+$('#tourEnd').onclick = endTour;
+function endTour() { if (tour) clearTimeout(tour.timer); tour = null; $('#tourbar').classList.remove('on'); highlight(); }
+
+// ---------- search ----------
+const index = M.nodes.filter(n => n.kind !== 'area').map(n => ({ id: n.id, name: n.name, where: n.kind === 'fn' ? N.get(n.parent).path : (n.path || areaOf(n.id)?.name), hay: (n.name + ' ' + (n.path || N.get(n.parent)?.path || '') + ' ' + (n.ex?.what || '')).toLowerCase() }));
+let cur = 0, hits = [];
+$('#q').addEventListener('input', () => {
+  const q = $('#q').value.trim().toLowerCase(); cur = 0;
+  hits = !q ? [] : index.map(x => ({ x, s: x.name.toLowerCase() === q ? 0 : x.name.toLowerCase().startsWith(q) ? 1 : x.name.toLowerCase().includes(q) ? 2 : x.hay.includes(q) ? 3 : 9 })).filter(r => r.s < 9).sort((a, b) => a.s - b.s).slice(0, 30).map(r => r.x);
+  renderHits();
+});
+function renderHits() { $('#results').classList.toggle('on', hits.length > 0); $('#results').innerHTML = hits.map((h, i) => `<li><button class="${i === cur ? 'cur' : ''}" data-hit="${esc(h.id)}"><span class="sw" style="${swatch(h.id)}"></span><span>${esc(h.name)}<small>${esc(h.where || '')}</small></span></button></li>`).join(''); }
+$('#results').addEventListener('click', e => { const b = e.target.closest('[data-hit]'); if (b) pick(b.dataset.hit); });
+$('#q').addEventListener('keydown', e => { if (e.key === 'ArrowDown') { cur = Math.min(cur + 1, hits.length - 1); renderHits(); e.preventDefault(); } if (e.key === 'ArrowUp') { cur = Math.max(cur - 1, 0); renderHits(); e.preventDefault(); } if (e.key === 'Enter' && hits[cur]) pick(hits[cur].id); if (e.key === 'Escape') { $('#q').value = ''; hits = []; renderHits(); } });
+function pick(id) { $('#q').value = ''; hits = []; renderHits(); $('#q').blur(); open(id); }
+addEventListener('keydown', e => { if (e.key === '/' && !e.target.closest('input')) { e.preventDefault(); $('#q').focus(); } });
+document.addEventListener('click', e => { if (!e.target.closest('.search')) $('#results').classList.remove('on'); });
+$('#btnTheme').onclick = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark'; try { localStorage.setItem(NS + 'theme', r.dataset.theme); } catch (e) {} };
+
+// ================= beginner layer ==================
+const B = M.beginner;
+let beginner = true; try { beginner = localStorage.getItem(NS + 'beginner') !== '0'; } catch (e) {}
+let follow = null;
+function inScope(id) { return !!(B && id && (B.scope.includes('*') || chain(id).some(c => B.scope.includes(c.id)))); }
+function scopeOn() { return beginner && !!B && inScope(level.id); }
+const JOBICON = { // 12x12 line icons
+  boss: 'M2.5 11V1.5M2.5 1.5h7l-1.8 2.5 1.8 2.5h-7',
+  worker: 'M6 3.6a2.4 2.4 0 1 0 .01 0M6 .8v1.4M6 9.8v1.4M.8 6h1.4M9.8 6h1.4M2.3 2.3l1 1M8.7 8.7l1 1M2.3 9.7l1-1M8.7 3.3l1-1',
+  helper: 'M8.5 1.2a2.6 2.6 0 0 0-1.8 3.6L1.4 10.1a1 1 0 0 0 1.5 1.5l5.3-5.3a2.6 2.6 0 0 0 3.6-1.8L10 6.3 8.2 5.8 7.7 4 9.5 2.2z',
+  ingredients: 'M1.5 3.5h9M1.5 6h9M1.5 8.5h9',
+  decoration: 'M1.5 10.5c2 0 3-.8 3-2.4L9.8 1.6l.6.6-5 5.4c1.4 1.4.4 2.9-3.9 2.9z',
+};
+function jobOf(n) {
+  if (B.roles[n.id]) return B.roles[n.id];
+  if (n.kind === 'content') return 'ingredients';
+  if ((n.path || '').endsWith('.css')) return 'decoration';
+  const callers = (INCOMING.get(n.id) || new Set()).size;
+  if (n.kind === 'fn') return n.top ? 'boss' : callers >= 3 ? 'helper' : 'worker';
+  // files: pages, commands and tests you run are bosses; files many others lean on are helpers
+  if (/\/pages\/|\.sh$|\.test\.js$/.test(n.path || '') || (callers === 0 && kids(n.id).some(k => k.top))) return 'boss';
+  return callers >= 3 ? 'helper' : 'worker';
+}
+function jobLanes(v) {
+  const ids = [...v.inside, ...v.ghosts];
+  return [['boss', 'Bosses', 'start things and give orders'], ['worker', 'Workers', 'do one job when asked'], ['helper', 'Helpers', 'small tools others use'], ['ingredients', 'Ingredients', 'words and data'], ['decoration', 'Decoration', 'how it looks']]
+    .map(([k, t, s]) => ({ title: t, sub: s, ids: ids.filter(n => jobOf(n) === k).map(n => n.id) })).filter(l => l.ids.length);
+}
+const VERB = { calls: 'asks', runs: 'starts', reads: 'reads', imports: 'uses', shows: 'shows', opens: 'opens', styles: 'is styled by', uses: 'uses' };
+const nm = id => { const n = N.get(id); return n.kind === 'fn' && !n.top && !n.cls && n.parent !== 'package.json' ? n.short + '()' : n.kind === 'fn' ? n.name : shortName(n); };
+// position of each call inside the caller's code, so wires and play steps can be numbered in the order they happen
+function callOrder(a) {
+  const n = N.get(a); if (!n?.code) return [];
+  const outs = [...new Set(M.edges.filter(e => e.from === a && e.kind !== 'styles').map(e => e.to))];
+  const at = id => { const t = N.get(id); const key = t.kind === 'fn' ? t.short : t.name; const i = n.code.indexOf(key + '('); return i >= 0 ? i : n.code.indexOf(key) >= 0 ? n.code.indexOf(key) : 1e9; };
+  return outs.sort((x, y) => at(x) - at(y));
+}
+function sentence(a, b) {
+  const w = B.wires[a + '>' + b]; if (w) return w;
+  const e = M.edges.find(x => (x.from === a || x.from.startsWith(a + '#')) && (x.to === b || x.to.startsWith(b + '#')))
+    || M.edges.find(x => (x.from === a || x.from.startsWith(a + '#')) && (x.to === b || fileOf(x.to)?.id === b));
+  const v = VERB[e?.kind] || 'uses', info = B.io[b] || B.io[fileOf(b)?.id] || {};
+  const order = N.get(a)?.kind === 'fn' && N.get(b)?.kind === 'fn' && N.get(a).parent === N.get(b).parent ? callOrder(a).indexOf(b) : -1;
+  const short = (order >= 0 && callOrder(a).length > 1 ? `${order + 1} · ` : '') + (info.tag || v);
+  return { short, text: `${nm(a)} ${v} ${nm(b)}${info.to ? ' ' + info.to : ''}.` };
+}
+function wireLabel(parent, p, a, b) {
+  const s = sentence(a, b), len = p.getTotalLength(), m = p.getPointAtLength(len / 2);
+  const g = svgEl('g', { class: 'wlab', 'data-from': a, 'data-to': b, transform: `translate(${m.x},${m.y})` }, parent);
+  const t = svgEl('text', { x: 0, y: 4, 'text-anchor': 'middle' }); t.textContent = s.short;
+  const wpx = 16 + s.short.length * 6.7; svgEl('rect', { x: -wpx / 2, y: -10, width: wpx, height: 20, rx: 10 }, g); g.append(t);
+  svgEl('title', {}, g).textContent = s.text;
+}
+function storyOf(id) {
+  const outs = [...new Set(M.edges.filter(e => e.from === id).map(e => e.to))], ins = [...new Set(M.edges.filter(e => e.to === id).map(e => e.from))];
+  const mapTo = x => B.wires[id + '>' + x] ? x : (N.get(x)?.kind === 'fn' && N.get(x).parent !== N.get(id)?.parent && B.wires[id + '>' + N.get(x).parent] ? N.get(x).parent : x);
+  return [...ins.map(x => sentence(x, id).text), ...outs.map(x => sentence(id, mapTo(x)).text)];
+}
+const low = s => s ? s[0].toLowerCase() + s.slice(1) : '';
+const what = id => N.get(id)?.ex?.what || N.get(id)?.what || '';
+function playFor(lv) {
+  if (!lv || !B) return null;
+  if (B.plays[lv]) return B.plays[lv];
+  const n = N.get(lv), ks = kids(lv);
+  if (n.kind === 'file') {
+    if (ks.length < 2) return null;
+    // start from code that runs by itself (or nobody in the file calls), then follow each call in the order it is written
+    const inFile = new Set(ks.map(k => k.id)), called = new Set(M.edges.filter(e => inFile.has(e.from) && inFile.has(e.to)).map(e => e.to));
+    const starts = ks.filter(k => k.top || !called.has(k.id)).sort((a, b) => (b.top - a.top) || a.start - b.start);
+    const steps = [], seen = new Set();
+    const visit = (id, from) => {
+      if (seen.has(id)) return; seen.add(id);
+      const io = B.io[id] || {};
+      const text = from ? `${sentence(from, id).text}${io.out ? ' It gives back: ' + low(io.out) : ''}`
+        : `${N.get(id).top ? 'The file starts here: ' : 'Starting point: '}${nm(id)}. ${what(id)}`;
+      steps.push({ id, from, text });
+      callOrder(id).filter(x => inFile.has(x)).forEach(x => visit(x, id));
+    };
+    starts.forEach(s0 => visit(s0.id, null));
+    if (steps.length < 2) return null;
+    steps.push({ id: steps[0].id, text: `That is the whole file, in ${steps.length} steps.${starts.length > 1 ? ` It has ${starts.length} starting points: code that runs by itself, or functions other files and events call directly.` : ''}` });
+    return { title: `${n.name}, step by step`, steps };
+  }
+  // an area or group: bosses first, then the workers they start, helpers and ingredients
+  const order = { boss: 0, worker: 1, helper: 2, ingredients: 3, decoration: 4 };
+  const items = ks.slice().sort((a, b) => order[jobOf(a)] - order[jobOf(b)]);
+  if (items.length < 2) return null;
+  return { title: `A walk through ${n.name}`, steps: items.map((k, i) => {
+    const job = B.jobs[jobOf(k)], into = M.edges.find(e => (fileOf(e.to)?.id === k.id || e.to === k.id) && items.slice(0, i).some(p => fileOf(e.from)?.id === p.id || e.from === p.id));
+    const from = into ? (items.find(p => fileOf(into.from)?.id === p.id || into.from === p.id)?.id) : null;
+    return { id: k.id, from, text: `${job.name}: ${nm(k.id)}. ${what(k.id)}` }; }) };
+}
+// "Follow this": one chain, read top to bottom: what starts it, the box, then what it sets off
+function drawFollow(fromPoint) {
+  const me = fileOf(follow)?.kind === 'file' && N.get(follow).kind === 'file' ? follow : follow;
+  const norm = x => { const f = fileOf(x); if (!f) return x; if (N.get(me).kind === 'file' && f.id === me) return me; return N.get(x).kind === 'fn' && f.id !== fileOf(me)?.id ? f.id : x; };
+  const nexts = x => [...new Set(M.edges.filter(e => norm(e.from) === x && e.kind !== 'styles').map(e => norm(e.to)))].filter(y => y !== x);
+  const prevs = x => [...new Set(M.edges.filter(e => norm(e.to) === x && e.kind !== 'styles').map(e => norm(e.from)))].filter(y => y !== x);
+  const seen = new Set([me]), rows = [{ ids: [me], label: 'THIS BOX', me: true }], links = [];
+  let up = [me];
+  for (let d = 1; d <= 2; d++) { const r = []; up.forEach(x => prevs(x).forEach(y => { links.push([y, x]); if (!seen.has(y)) { seen.add(y); r.push(y); } })); if (!r.length) break; rows.unshift({ ids: r, label: d === 1 ? 'WHAT STARTS IT' : 'BEFORE THAT' }); up = r; }
+  let down = [me];
+  for (let d = 1; d <= 3; d++) { const r = []; down.forEach(x => nexts(x).forEach(y => { links.push([x, y]); if (!seen.has(y)) { seen.add(y); r.push(y); } })); if (!r.length) break; rows.push({ ids: r, label: `${d} · ${d === 1 ? 'WHAT IT SETS OFF' : 'THEN THAT SETS OFF'}` }); down = r; }
+  world.replaceChildren();
+  const gW = svgEl('g', {}, world), gN = svgEl('g', {}, world), L = { w: 240, h: 76 }, pos = new Map();
+  const widest = Math.max(...rows.map(r => r.ids.length)), totalW = widest * 280;
+  rows.forEach((r, ri) => { const rowW = r.ids.length * 280; r.ids.forEach((id, i) => pos.set(id, { x: (totalW - rowW) / 2 + i * 280 + 20, y: ri * 170 })); const t = svgEl('text', { class: 'rowlab' + (r.me ? ' me' : ''), x: -170, y: ri * 170 + 44 }, gW); t.textContent = r.label; });
+  const drawn = new Set();
+  links.forEach(([a, b]) => { const k = a + '>' + b; if (drawn.has(k)) return; drawn.add(k); const A = pos.get(a), Bp = pos.get(b); if (!A || !Bp || Bp.y <= A.y) return;
+    const x1 = A.x + L.w / 2, y1 = A.y + L.h, x2 = Bp.x + L.w / 2, y2 = Bp.y, dy = (y2 - y1) / 2;
+    const p = svgEl('path', { d: `M${x1} ${y1}C${x1} ${y1 + dy} ${x2} ${y2 - dy} ${x2} ${y2}`, class: 'wire calls hot', 'marker-end': 'url(#arrhot)', 'data-from': a, 'data-to': b }, gW);
+    if (!reduce) { const c = svgEl('circle', { r: 3.5, class: 'flow' }, gW); svgEl('animateMotion', { dur: '1.6s', repeatCount: 'indefinite', path: p.getAttribute('d') }, c); }
+    wireLabel(gW, p, a, b); });
+  for (const [id, p] of pos) { const n = N.get(id); const g = svgEl('g', { class: `node ${n.kind}${id === me ? ' sel' : ''}${inScope(id) ? '' : ' ghost'}`, transform: `translate(${p.x},${p.y})`, tabindex: 0, role: 'button', 'data-id': id }, gN); card(g, n, L, !inScope(id)); }
+  $('#lvKind').innerHTML = `<i style="${swatch(me)}"></i>Follow this`;
+  $('#lvTitle').innerHTML = `Following <span class="gchip">${esc(N.get(me).name)}</span>`;
+  $('#lvSub').textContent = 'Read top to bottom: what starts it, the box itself, then what it sets off, in order. Click another box to follow that one instead.';
+  $('#lvAct').innerHTML = '<button class="btn" id="btnUnfollow">Exit follow</button>';
+  fitView(fromPoint);
+}
+document.addEventListener('click', e => {
+  if (e.target.id === 'btnPlay') { const pl = playFor(level.id); tour = { t: pl, i: 0, auto: true, paused: false }; tourStep(); }
+  if (e.target.id === 'btnUnfollow') { follow = null; draw(); panel(sel); }
+  if (e.target.id === 'tourAuto' && tour) { tour.paused = !tour.paused; tourStep(); }
+});
+function setBeginner(on) { beginner = on; try { localStorage.setItem(NS + 'beginner', on ? '1' : '0'); } catch (e) {} $('#btnBeg').classList.toggle('on', on); $('#btnBeg').setAttribute('aria-pressed', on); if (!on) follow = null; draw(); panel(sel); }
+$('#btnBeg').onclick = () => setBeginner(!beginner);
+$('#btnBeg').classList.toggle('on', beginner);
+if (!B) $('#btnBeg').style.display = 'none';
+
+// ================= interactive code in the side panel =================
+// Click a line: the graph points at the function it belongs to, and at the box it calls. Prev/Next walk the
+// important lines in the order they run, and the graph follows.
+let cv = null, codeFocus = null, keepPanel = null;
+const reEsc = x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function codeView(id) {
+  const n = N.get(id), file = fileOf(id);
+  if (!file?.code || !(n.kind === 'fn' || (n.kind === 'file' && kids(id).length))) return '';
+  const all = file.code.split('\n'), fns = kids(file.id);
+  const [a, b] = n.kind === 'fn' ? [n.start, Math.max(n.start, n.end)] : [1, all.length];
+  // the function each line belongs to: the smallest one around it
+  const ownerOf = ln => fns.filter(f => f.start <= ln && ln <= f.end).sort((x, y) => (x.end - x.start) - (y.end - y.start))[0]?.id || file.id;
+  const keyOf = t => { const x = N.get(t); if (!x || x.kind === 'content') return null; if (x.kind === 'fn') return x.top ? null : x.parent === 'package.json' ? x.name : x.short; return x.name; };
+  const targetOf = (ln, owner, text) => {
+    const outs = [...new Set(M.edges.filter(e => e.from === owner && e.kind !== 'styles').map(e => e.to))];
+    for (const t of outs) { const k = keyOf(t); if (!k) continue; const re = N.get(t).kind === 'fn' && N.get(t).parent !== 'package.json' ? new RegExp(`(^|[^\\w$.])${reEsc(k)}\\s*\\(`) : new RegExp(reEsc(k)); if (re.test(text)) return t; }
+    return null;
+  };
+  const lines = [];
+  for (let ln = a; ln <= b; ln++) { const text = all[ln - 1] ?? '', owner = ownerOf(ln); lines.push({ ln, text, owner, target: text.trim() && !/^\s*(\/\/|#)/.test(text) ? targetOf(ln, owner, text) : null }); }
+  // the parts Next walks through
+  let parts = [];
+  const pl = n.kind === 'file' ? playFor(id) : null;
+  // a step with no stated caller: use the closest earlier step that calls it, so Next can show the call itself
+  const callerOf = (s, i) => s.from || pl.steps.slice(0, i).reverse().find(q => q.id !== s.id && M.edges.some(e => e.from === q.id && e.to === s.id))?.id;
+  if (pl) parts = pl.steps.slice(0, -1).map((s0, i) => { const s = { ...s0, from: callerOf(s0, i) }; const call = s.from && lines.find(l => l.owner === s.from && l.target === s.id); const tgt = N.get(s.id); return { ln: call ? call.ln : (tgt.start || 1), owner: s.from || s.id, target: s.from ? s.id : null, text: s.text }; });
+  else if (n.kind === 'file') parts = fns.slice().sort((x, y) => x.start - y.start).map(f => ({ ln: f.start, owner: f.id, target: null }));
+  else parts = lines.filter(l => l.owner === id && l.target).map(l => ({ ln: l.ln, owner: id, target: l.target }));
+  if (!parts.length) parts = [{ ln: a, owner: n.kind === 'fn' ? id : ownerOf(a), target: null }];
+  parts.forEach(p => p.text ||= p.target ? sentence(p.owner, p.target).text : `${nm(p.owner)} starts here. ${what(p.owner)}`);
+  cv = { id, file: file.id, lines, parts, i: cv?.id === id ? Math.min(cv.i, parts.length - 1) : 0 };
+  return `<div class="code" id="cv"><div class="bar"><span class="t">${n.kind === 'fn' ? 'The code' : 'The whole file'} · <span id="cvPos"></span></span><button id="cvPrev">◀ Prev</button><button class="nx" id="cvNext">Next ▶</button></div>
+    <div class="cap" id="cvCap"></div>
+    <div class="lines" id="cvLines">${lines.map(l => `<div class="cl" data-cl="${l.ln}"><span class="no">${l.ln}</span><span class="tx">${esc(l.text) || ' '}</span>${l.target ? `<span class="go">→ ${esc(nm(l.target))}</span>` : ''}</div>`).join('')}</div></div>`;
+}
+// show part cv.i: mark its line, explain it, and point at it in the graph (moving into the file first if needed)
+async function showPart(move = true, part) {
+  if (!cv) return;
+  const p = part || cv.parts[cv.i];
+  $('#cvPos').textContent = part ? `line ${p.ln}` : `step ${cv.i + 1} of ${cv.parts.length}`;
+  $('#cvPrev').disabled = cv.i === 0 && !part; $('#cvNext').disabled = cv.i === cv.parts.length - 1 && !part;
+  $('#cvCap').innerHTML = `<b>LINE ${p.ln}</b>${rich(p.text)}`;
+  const box = $('#cvLines');
+  box.querySelectorAll('.cl').forEach(el => { const l = +el.dataset.cl, info = cv.lines.find(x => x.ln === l); el.classList.toggle('cur', l === p.ln); el.classList.toggle('own', !!info && info.owner === p.owner && cv.lines.length > 1 && N.get(cv.id).kind === 'file'); });
+  const cur = box.querySelector(`[data-cl="${p.ln}"]`); if (cur) box.scrollTo({ top: cur.offsetTop - box.clientHeight / 3, behavior: reduce ? 'auto' : 'smooth' }); // .lines is position:relative, so offsetTop is already inside the box
+  if (!move) return;
+  const f = fileOf(p.owner)?.id, owner = N.get(p.owner).kind === 'file' ? p.owner : p.owner;
+  if (follow) { follow = null; draw(); }
+  if (level.id !== f && N.get(owner).kind === 'fn') { keepPanel = cv.id; const keep = { ...cv }; await navigate(f, owner); keepPanel = null; if (!cv || cv.id !== keep.id) { cv = keep; } }
+  sel = world.querySelector(`.node[data-id="${CSS.escape(owner)}"]`) ? owner : sel;
+  codeFocus = { a: owner, b: p.target }; highlight();
+  // keep the pair on screen
+  const ids = [owner, p.target].filter(Boolean).map(x => lastL?.pos.get(x)).filter(Boolean), st = stageBox();
+  if (ids.length) { const xs = ids.flatMap(q => [q.x, q.x + lastL.w]), ys = ids.flatMap(q => [q.y, q.y + lastL.h]);
+    const sx = Math.min(...xs) * view.k + view.x, ex = Math.max(...xs) * view.k + view.x, sy = Math.min(...ys) * view.k + view.y, ey = Math.max(...ys) * view.k + view.y;
+    if (sx < 20 || ex > st.width - 20 || sy < 150 || ey > st.height - 80) { const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2; await tween({ k: view.k, x: st.width / 2 - cx * view.k, y: (st.height + 80) / 2 - cy * view.k }, 700); } }
+}
+$('#panel').addEventListener('click', e => {
+  if (!cv) return;
+  if (e.target.id === 'cvNext' && cv.i < cv.parts.length - 1) { cv.i++; showPart(); }
+  if (e.target.id === 'cvPrev' && cv.i > 0) { cv.i--; showPart(); }
+  const line = e.target.closest('[data-cl]');
+  if (line) { const l = cv.lines.find(x => x.ln === +line.dataset.cl); const at = cv.parts.findIndex(q => q.ln === l.ln);
+    if (at >= 0) { cv.i = at; showPart(); }
+    else showPart(true, { ln: l.ln, owner: l.owner, target: l.target, text: l.target ? sentence(l.owner, l.target).text : `This line is part of ${nm(l.owner)}. ${what(l.owner)}` }); }
+});
+addEventListener('keydown', e => { if (!cv || e.target.closest('input')) return; if (e.key === 'ArrowRight' || e.key === 'j') $('#cvNext')?.click(); if (e.key === 'ArrowLeft' || e.key === 'k') $('#cvPrev')?.click(); });
+
+// ================= story mode: the code as a town =================
+// Hand-written stories (explain/11-story.json) win; every other level gets a story built from its Play steps,
+// its jobs and its takes-in / gives-back text: files are buildings, functions the people working in them.
+const STORY = M.story || {};
+let mode = 'beginner'; try { mode = localStorage.getItem(NS + 'mode') || (localStorage.getItem(NS + 'beginner') === '0' ? 'map' : 'beginner'); } catch (e) {}
+let storyMode = mode === 'story'; beginner = mode !== 'map';
+let ss = null; // { key, i, quiz }
+const TOWN = new Proxy({}, { get: (_, k) => M.areas[k]?.place || N.get('area:' + k)?.name || W.town });
+const skey = id => id ?? 'overview';
+const storyCache = new Map();
+const storyFor = id => { const k = skey(id); if (!storyCache.has(k)) storyCache.set(k, STORY[k] || buildStory(id)); return storyCache.get(k); };
+const storyHere = () => storyMode && !!storyFor(level.id);
+const cut = (t, n = 46) => !t ? '' : t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : t;
+const words = id => { const n = N.get(id); return n.name.replace(/\.[a-z]+$/, '').replace(/[_$-]+/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').trim(); };
+const ACR = { seo: 'SEO', ics: 'ICS', og: 'OG', kg: 'KG', css: 'CSS', html: 'HTML', mdx: 'MDX', tts: 'TTS', js: 'JS', utc: 'UTC', npm: 'npm' };
+const cap = t => t.replace(/\b\w+/g, w => ACR[w.toLowerCase()] || w[0].toUpperCase() + w.slice(1));
+// 'Gets all posts.' -> 'I get all posts.'; anything else -> 'My job: ...'
+function firstPerson(t) { const m = /^([A-Z][a-z]+)s\b(.*)$/.exec(t || ''); if (m && !/ss$|ous$|is$/.test(m[1] + 's')) return `I ${m[1].toLowerCase()}${m[2]}`.replace(/\.?$/, '.'); return `My job: ${low(t || '').replace(/\.$/, '')}.`; }
+function charName(id) { // a friendly name for each part of the code
+  const n = N.get(id);
+  if (n.kind === 'fn') {
+    if (n.name === '(runs on load)') return 'The Front Door';
+    if (n.name === '(build-time setup)') return 'The Builder';
+    if (/^\(browser script (\d+)\)$/.test(n.name)) return 'Browser Helper ' + n.name.match(/\d+/)[0];
+    if (n.parent === 'package.json') return cap(n.short) + ' Command';
+    if (n.short === '$') return 'Finder';
+    if (n.short.replace(/[^a-z]/gi, '').length <= 2 && B.io[id]?.tag) return cap(B.io[id].tag); // tl, x, f, _y: name them by their job
+    return cap(words(id)) + (n.cls ? ' Workshop' : '');
+  }
+  if (n.kind === 'group') return n.name;
+  if (n.kind === 'content') return n.name.replace(/\s*\(.*\)$/, '');
+  return cap(words(id));
+}
+function callLine(from, to) { // the line where `from` asks `to` for help
+  const f = fileOf(from), fn = N.get(from), t = N.get(to); if (!f?.code || fn?.kind !== 'fn') return null;
+  const key = t.kind === 'fn' ? (t.parent === 'package.json' ? t.name : t.short) : t.name, L = f.code.split('\n');
+  for (let ln = fn.start; ln <= Math.max(fn.start, fn.end); ln++) if ((L[ln - 1] || '').includes(key)) return ln;
+  return fn.start;
+}
+function buildStory(id) {
+  if (!id) return overviewStory();
+  const n = N.get(id); if (!n) return null;
+  const pl = playFor(id), area = areaKey(id) || Object.keys(M.areas)[0];
+  let steps = pl ? pl.steps.filter((s, i, a) => !(i === a.length - 1 && s.id === a[0].id && !s.from)) : null;
+  const ks = kids(id);
+  if (!steps?.length) steps = ks.length ? ks.map(k => ({ id: k.id })) : [{ id }];
+  const castIds = [...new Set(steps.flatMap(s => [s.from, s.id]).filter(Boolean))];
+  const cast = castIds.map(cid => { const io = B.io[cid] || {}, job = jobOf(N.get(cid));
+    return { key: cid, id: cid, name: charName(cid), short: cut(charName(cid), 14), job, hello: `${firstPerson(what(cid))}${io.in && !/^(nothing|written)/i.test(io.in) ? ' I need ' + low(cut(io.in, 60)).replace(/\.$/, '') + '.' : ''}` }; });
+  const nameOf = cid => cast.find(c => c.key === cid)?.short || charName(cid);
+  const scenes = steps.map(s => {
+    const to = s.id, io = B.io[to] || {}, file = fileOf(s.from || to);
+    if (s.from && s.from !== to) {
+      const why = io.to ? io.to.replace(/^to /, '') : (io.tag || 'help');
+      return { from: s.from, to, say: `${nameOf(to)}, please ${cut(why, 40)}!`, parcel: cut(io.in, 44), reply: io.out ? `Done! Here you go.` : 'Done!', back: cut(io.out, 44),
+        caption: s.text && pl && STORY[skey(id)] ? s.text : `${nameOf(s.from)} asks ${nameOf(to)} ${io.to || 'for help'}.`, file: file?.id, line: callLine(s.from, to) };
+    }
+    return { from: to, to, say: cut(`Hi! I'm ${nameOf(to)}. ${what(to)}`, 90), caption: s.text && pl && n.kind !== 'file' ? cut(s.text, 140) : `${nameOf(to)} starts: ${low(what(to))}`, file: fileOf(to)?.code ? fileOf(to).id : null, line: N.get(to)?.start || 1 };
+  });
+  // quiz: who does each call go to?
+  const calls = scenes.filter(sc => sc.from !== sc.to), others = k => cast.filter(c => c.key !== k).map(c => c.short);
+  const quiz = (calls.length ? calls : scenes).slice(0, 3).map((sc, qi) => {
+    const right = nameOf(sc.to), wrong = [...new Set(others(sc.to))].filter(x => x !== right).slice(qi, qi + 2);
+    if (wrong.length < 2) wrong.push(...['The Front Door', 'The Post Office'].filter(x => x !== right && !wrong.includes(x)).slice(0, 2 - wrong.length));
+    const opts = [right, ...wrong]; const r = qi % opts.length; [opts[0], opts[r]] = [opts[r], opts[0]];
+    return { q: sc.from !== sc.to ? `Who does ${nameOf(sc.from)} ask ${(B.io[sc.to]?.to || 'for help').replace(/\.$/, '')}?` : `Whose job is: ${low(cut(what(sc.to), 60))}?`, options: opts, answer: r };
+  });
+  const place = n.kind === 'area' ? TOWN[area] : n.kind === 'group' ? `${n.name} block` : charName(id);
+  return { title: place, town: n.kind === 'area' ? TITLE + ' ' + W.town : TOWN[area], intro: n.kind === 'file' ? `${charName(id)} is a ${W.building} in ${TOWN[area]}. Inside ${cast.length === 1 ? 'is one ' + W.person : 'are ' + cast.length + ' of them'}, one for each part of the code.` : what(id), cast, scenes, quiz, area };
+}
+function overviewStory() { // the whole codebase as a town: each area is a neighbourhood; wires between areas are the visits
+  const ids = Object.keys(M.areas).map(k => 'area:' + k).filter(k => N.get(k)), nameOf = k => TOWN[k.slice(5)];
+  const cast = ids.map(k => ({ key: k, id: k, name: nameOf(k), short: cut(nameOf(k), 14), job: 'worker', hello: firstPerson(what(k) || N.get(k).sub || N.get(k).name) }));
+  const wires = viewFor(null).wires.slice().sort((a, b) => b.n - a.n).slice(0, 10);
+  const scenes = wires.map(w => ({ from: w.from, to: w.to, say: `${nameOf(w.to)}, I need your help!`, parcel: `${w.n} ${w.n === 1 ? 'link' : 'links'}`, caption: `${nameOf(w.from)} uses ${nameOf(w.to)} (${w.n} ${w.n === 1 ? 'link' : 'links'} in the code).` }));
+  ids.filter(k => !wires.some(w => w.from === k || w.to === k)).forEach(k => scenes.push({ from: k, to: k, say: cut(`I'm ${nameOf(k)}. ${what(k) || N.get(k).sub}`, 90), caption: `${nameOf(k)} works on its own.` }));
+  if (!scenes.length) return null;
+  const calls = scenes.filter(x => x.from !== x.to).slice(0, 3);
+  const quiz = calls.map((sc, qi) => { const right = nameOf(sc.to), wrong = cast.map(c => c.short).filter(x => x !== right && x !== nameOf(sc.from)).slice(qi, qi + 2); const opts = [right, ...wrong]; const r = qi % opts.length; [opts[0], opts[r]] = [opts[r], opts[0]]; return { q: `Which ${W.neighbourhood} does ${nameOf(sc.from)} use?`, options: opts, answer: r }; }).filter(q => q.options.length > 1);
+  return { title: `${TITLE} ${W.town}`, town: 'Everything in ' + TITLE, intro: `The whole codebase as a ${W.town.toLowerCase()}: each ${W.neighbourhood} is one area.`, cast, scenes, quiz, area: Object.keys(M.areas)[0] };
+}
+function setMode(m) {
+  mode = m; storyMode = m === 'story'; beginner = m !== 'map'; follow = null; endTour();
+  try { localStorage.setItem(NS + 'mode', m); } catch (e) {}
+  $('#viewSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+  draw(); panel(sel); levelText();
+}
+$('#viewSeg').addEventListener('click', e => { const b = e.target.closest('[data-mode]'); if (b) setMode(b.dataset.mode); });
+const STARS = () => { try { return JSON.parse(localStorage.getItem(NS + 'stars') || '{}'); } catch (e) { return {}; } };
+const stArea = st => st.area || (level.id ? areaKey(level.id) : Object.keys(M.areas)[0]);
+function drawStory() {
+  const st = storyFor(level.id), k = skey(level.id);
+  if (ss?.key !== k) ss = { key: k, i: 0, quiz: false };
+  $('#svg').style.display = 'none'; $('.zoomctl').style.display = 'none'; $('#legend').style.display = 'none';
+  const box = $('#story'); box.hidden = false; box.style.cssText = `--ac:var(--a-${stArea(st)});--at:var(--at-${stArea(st)})`;
+  $('#lvKind').innerHTML = `<i style="background:var(--a-${stArea(st)})"></i>Story · ${esc(st.town)}`;
+  const t = st.title.split(' '); $('#lvTitle').innerHTML = t.length > 1 ? `${esc(t.slice(0, -1).join(' '))} <span class="gchip">${esc(t.at(-1))}</span>` : `<span class="gchip">${esc(st.title)}</span>`;
+  $('#lvSub').textContent = st.intro;
+  // a way out: into a building, or back up the street
+  const inside = kids(level.id ?? '').filter(k2 => opens(k2)).length || !level.id;
+  $('#lvAct').innerHTML = level.id ? `<span class="scopenote" style="pointer-events:auto">${inside ? 'Click a house to go inside.' : 'Everyone in this building is in the story.'}</span>` : '<span class="scopenote">Click a neighbourhood to visit it.</span>';
+  ss.quiz ? drawQuiz(st) : drawScene(st);
+}
+function shownCast(st, sc) { // a street has room for 8 houses: keep the two in this scene and their neighbours
+  const idx = k => st.cast.findIndex(c => c.key === k), n = st.cast.length;
+  if (n <= 8) return st.cast;
+  const keep = new Set([idx(sc.from), idx(sc.to)]); let d = 1;
+  while (keep.size < 8 && d < n) { for (const i of [...keep]) { if (keep.size < 8 && i + d < n) keep.add(i + d); if (keep.size < 8 && i - d >= 0) keep.add(i - d); } d++; }
+  return [...keep].sort((a, b) => a - b).map(i => st.cast[i]);
+}
+function drawScene(st) {
+  const sc = st.scenes[ss.i], cast = shownCast(st, sc), n = cast.length, step = n > 1 ? 850 / (n - 1) : 0, x0 = n > 1 ? 75 : 500;
+  const X = k => x0 + cast.findIndex(c => c.key === k) * step;
+  const sx = X(sc.from), lx = X(sc.to), same = sc.from === sc.to;
+  const houses = cast.map((c, i) => { const x = x0 + i * step, big = c.job === 'boss', w = big ? 104 : 88, h = big ? 120 : 100, top = 420 - h;
+    const on = c.key === sc.from || c.key === sc.to, clickable = c.id && N.get(c.id) && opens(N.get(c.id));
+    return `<g class="house${on ? '' : ' off'}${clickable ? ' enter' : ''}" ${clickable ? `data-enter="${esc(c.id)}"` : ''}>
+      ${on ? `<ellipse class="spot" cx="${x}" cy="452" rx="58" ry="12"/>` : ''}
+      <path class="roof" d="M${x - w / 2 - 10} ${top} L${x} ${top - 46} L${x + w / 2 + 10} ${top} Z"/>
+      <rect class="body" x="${x - w / 2}" y="${top}" width="${w}" height="${h}" rx="4"/>
+      <rect class="win" x="${x - w / 2 + 12}" y="${top + 16}" width="22" height="22" rx="3"/><rect class="win" x="${x + w / 2 - 34}" y="${top + 16}" width="22" height="22" rx="3"/>
+      <rect class="door" x="${x - 13}" y="${top + h - 44}" width="26" height="44" rx="12"/>
+      <g transform="translate(${x - 15} ${top - 34})"><circle class="badge" cx="15" cy="15" r="15"/><path d="${JOBICON[c.job] || JOBICON.worker}" transform="translate(9 9)"/></g>
+      <circle class="face" cx="${x + w / 2 + 6}" cy="412" r="11"/><path class="person" d="M${x + w / 2 - 6} 452c0-13 6-20 12-20s12 7 12 20z"/>
+      <text class="sign" x="${x}" y="508" text-anchor="middle">${esc(c.short || c.name)}</text>
+      ${c.id && N.get(c.id) && N.get(c.id).kind !== 'area' && !['group', 'content'].includes(N.get(c.id).kind) ? `<text class="tag" x="${x}" y="530" text-anchor="middle">${esc(cut(nm(c.id), 18))}</text>` : ''}
+    </g>`; }).join('');
+  const arc = `M${sx} 300 Q${(sx + lx) / 2} ${same ? 300 : 175} ${lx} 300`, back = `M${lx} 300 Q${(sx + lx) / 2} ${same ? 300 : 230} ${sx} 300`;
+  const parcel = (cls, path, label, begin) => label && !same ? `<g class="parcel ${cls}" opacity="0">
+      <set attributeName="opacity" to="1" begin="${begin}s"/>
+      <animateMotion path="${path}" dur="${reduce ? 0.01 : 1.8}s" begin="${begin}s" fill="freeze"/>
+      <rect class="env" x="-18" y="-12" width="36" height="24" rx="3"/><path d="M-18 -12 L0 2 L18 -12"/>
+      <foreignObject x="-160" y="-52" width="320" height="34"><div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center"><span class="plabel2">${esc(label)}</span></div></foreignObject>
+    </g>` : '';
+  const close = !same && Math.abs(lx - sx) < 290, mid = (sx + lx) / 2, bs = close ? mid + (sx < lx ? -142 : 142) : sx, bl = close ? mid + (sx < lx ? 142 : -142) : lx;
+  const bubble = (x, text, cls, d) => `<foreignObject x="${Math.max(0, Math.min(1000 - 280, x - 140))}" y="92" width="280" height="120"><div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:flex-end;height:100%"><div class="bubble ${cls}" style="--d:${d}s">${esc(text)}</div></div></foreignObject>`;
+  const t2 = reduce ? 0 : 2.4;
+  $('#story').innerHTML = `<svg viewBox="0 0 1000 570" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(sc.caption)}">
+    <rect class="town-ground" x="0" y="440" width="1000" height="130"/><line class="town-line" x1="0" y1="472" x2="1000" y2="472"/>
+    ${!same ? `<path class="roadpath" d="${arc}"/>` : ''}${houses}
+    ${parcel('', arc, sc.parcel, reduce ? 0 : .7)}${parcel('back', back, sc.back, t2 + .4)}
+    ${bubble(bs, sc.say, '', 0)}${sc.reply && !same ? bubble(bl, sc.reply, 'reply late', t2) : ''}
+    ${st.cast.length > cast.length ? `<text class="tag" x="990" y="560" text-anchor="end">${st.cast.length - cast.length} more on this street</text>` : ''}
+  </svg>
+  <div class="sbar"><div class="scap">${esc(sc.caption)}</div>
+    <div class="srow"><div class="steps">${st.scenes.map((_, i) => `<button data-scene="${i}" class="${i < ss.i ? 'done' : i === ss.i ? 'cur' : ''}">${i + 1}</button>`).join('')}<button data-scene="quiz" title="Quiz">?</button></div><span class="spacer"></span>
+    <button class="btn" id="sBack" ${ss.i === 0 ? 'disabled' : ''}>Back</button><button class="btn" id="sAuto">${ss.auto ? 'Pause' : '▶ Play'}</button><button class="btn pri" id="sNext">${ss.i === st.scenes.length - 1 ? 'Quiz time' : 'Next'}</button></div></div>`;
+  if ($('#storyPeek')) { $('#storyPeek').innerHTML = peekHtml(sc); document.querySelectorAll('.cast [data-k]').forEach(d => d.classList.toggle('on', d.dataset.k === sc.from || d.dataset.k === sc.to)); }
+  clearTimeout(ss.timer); if (ss.auto) ss.timer = setTimeout(() => storyGo(ss.i + 1), 6500);
+}
+function storyGo(i) { const st = storyFor(level.id); if (i >= st.scenes.length) { ss.quiz = true; ss.auto = false; drawStory(); return; } ss.i = Math.max(0, i); ss.quiz = false; drawScene(st); }
+function peekHtml(sc) {
+  const f = N.get(sc.file || level.id);
+  if (!f?.code || !sc.line) return `<p style="font-size:14px;color:var(--muted)">This scene is about how the parts fit together, so there is no single line to show. Go inside a building to see its code.</p>`;
+  const lines = f.code.split('\n'), a = Math.max(1, sc.line - 2), b = Math.min(lines.length, sc.line + 2);
+  return `<div class="path" style="margin-bottom:6px">${esc(f.path)}</div><pre>${lines.slice(a - 1, b).map((t, j) => { const ln = a + j; return `<span class="${ln === sc.line ? 'hl' : ''}">${String(ln).padStart(3)}  ${esc(t)}</span>`; }).join('\n')}</pre>`;
+}
+function drawQuiz(st) {
+  const got = STARS()[ss.key] || 0;
+  $('#story').innerHTML = `<div class="quiz"><div class="stars">Quiz time · <span id="starN">${got}</span> / ${st.quiz.length} stars</div>${st.quiz.map((q, qi) => `<div class="q"><b>${qi + 1}. ${esc(q.q)}</b>${q.options.map((o, oi) => `<button data-q="${qi}" data-o="${oi}">${esc(o)}</button>`).join('')}</div>`).join('')}
+    <div class="srow"><button class="btn" data-scene="0">Watch the story again</button><button class="btn" id="toBeg">See the real code (Beginner view)</button></div></div>`;
+  ss.right = new Set();
+}
+$('#story').addEventListener('click', e => {
+  const st = storyFor(level.id); if (!st || !ss) return;
+  const enter = e.target.closest('[data-enter]'); if (enter) { navigate(enter.dataset.enter, enter.dataset.enter); return; }
+  const sc = e.target.closest('[data-scene]');
+  if (sc) { if (sc.dataset.scene === 'quiz') { ss.quiz = true; drawStory(); } else storyGo(+sc.dataset.scene); }
+  if (e.target.id === 'sNext') storyGo(ss.i + 1);
+  if (e.target.id === 'sBack') storyGo(ss.i - 1);
+  if (e.target.id === 'sAuto') { ss.auto = !ss.auto; drawScene(st); }
+  if (e.target.id === 'toBeg') setMode('beginner');
+  const q = e.target.closest('[data-q]');
+  if (q) { const qi = +q.dataset.q, ok = +q.dataset.o === st.quiz[qi].answer;
+    q.classList.add(ok ? 'right' : 'wrong');
+    if (ok) { ss.right.add(qi); const all = STARS(); all[ss.key] = Math.max(all[ss.key] || 0, ss.right.size); try { localStorage.setItem(NS + 'stars', JSON.stringify(all)); } catch (er) {} $('#starN').textContent = all[ss.key]; } }
+});
+function storyPanel() {
+  const st = storyFor(level.id), sc = st.scenes[ss?.key === skey(level.id) ? ss.i : 0], a = stArea(st);
+  const here = level.id ? N.get(level.id) : null, kind = !here ? 'town' : here.kind === 'file' ? 'building' : 'neighbourhood';
+  return `<div style="--ac:var(--a-${a});--at:var(--at-${a})"><div class="plabel"><span class="pill"><i style="background:var(--a-${a})"></i>${esc(st.town)}</span><span>Story</span></div><h2>Who is in ${esc(st.title)}</h2>
+  <p class="what">${kind === 'building' ? `Every ${W.person} here is one part of the code in ${esc(here.name)}. When one asks another for help, the code is calling a function.` : `Every ${W.building} here is a ${!here ? W.neighbourhood : 'file or group of files'}${!here ? ': a part of the project' : ''}. Click one to go inside.`}</p>
+  <div class="cast">${st.cast.map(c => `<div data-k="${esc(c.key)}" class="${sc && (c.key === sc.from || c.key === sc.to) ? 'on' : ''}"><i><svg width="16" height="16" viewBox="0 0 12 12"><path d="${JOBICON[c.job] || JOBICON.worker}"/></svg></i><p><b>${esc(c.name)}</b>${c.id && N.get(c.id) && !['area', 'group', 'content'].includes(N.get(c.id).kind) ? `<small>${esc(nm(c.id))}</small>` : ''}<span>"${esc(c.hello)}"</span></p></div>`).join('')}</div>
+  <h3>Peek at the real code</h3><p style="font-size:14px">The line that does what the scene shows.</p><div class="peek" id="storyPeek">${sc ? peekHtml(sc) : ''}</div>
+  ${level.id ? `<div class="act"><button class="btn" id="toBeg2">See this in Beginner view</button></div>` : ''}</div>`;
+}
+$('#panel').addEventListener('click', e => { if (e.target.id === 'toBeg2') setMode('beginner'); });
+$('#viewSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+
+// ================= graph view: the whole codebase as a knowledge graph =================
+// Every file (or every function) is a dot, coloured by its area; lines are real connections (calls, imports, runs,
+// reads). A small force layout pulls connected dots together and keeps each area in its own cluster.
+const GK = { level: 'file', onlyLinked: true, hidden: new Set(), view: { x: 0, y: 0, k: 1 }, pos: new Map(), sel: null, raf: 0, data: null };
+const gkArea = id => { const c = chain(id); return c.length ? c.at(-1).id.slice(5) : null; };
+function gkData() {
+  const fnMode = GK.level === 'fn';
+  const keep = n => (n.kind === 'file' || n.kind === 'content' || (fnMode && n.kind === 'fn')) && !GK.hidden.has(gkArea(n.id));
+  const nodes = M.nodes.filter(keep), ids = new Set(nodes.map(n => n.id));
+  const rep = id => { const n = N.get(id); if (!n) return null; if (ids.has(id)) return id; if (n.kind === 'fn') { const f = fileOf(id); return f && ids.has(f.id) ? f.id : null; } return null; };
+  const links = new Map();
+  const add = (a, b, kind) => { if (!a || !b || a === b) return; const k = a + '>' + b; const l = links.get(k) || { a, b, kinds: new Set(), n: 0 }; l.kinds.add(kind); l.n++; links.set(k, l); };
+  for (const e of M.edges) if (e.kind !== 'styles') add(rep(e.from), rep(e.to), e.kind);
+  if (fnMode) for (const n of nodes) if (n.kind === 'fn' && ids.has(n.parent)) add(n.parent, n.id, 'contains'); // functions hang off their file
+  const deg = new Map(); for (const l of links.values()) { if ([...l.kinds].every(k => k === 'contains')) continue; deg.set(l.a, (deg.get(l.a) || 0) + 1); deg.set(l.b, (deg.get(l.b) || 0) + 1); }
+  let shown = nodes;
+  if (GK.onlyLinked) { const linked = new Set([...links.values()].flatMap(l => [l.a, l.b])); shown = nodes.filter(n => fnMode ? linked.has(n.id) : deg.get(n.id)); }
+  const sid = new Set(shown.map(n => n.id));
+  return { nodes: shown, links: [...links.values()].filter(l => sid.has(l.a) && sid.has(l.b)), deg, total: nodes.length };
+}
+function gkRand(s) { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return ((h >>> 0) % 10000) / 10000; }
+function drawGraph() {
+  cancelAnimationFrame(GK.raf);
+  ['#svg', '.zoomctl'].forEach(s => $(s).style.display = 'none'); $('#legend').style.display = 'none'; $('#story').hidden = true;
+  const box = $('#graph'); box.hidden = false;
+  const D = GK.data = gkData(), areas = M.nodes.filter(n => n.kind === 'area').map(n => n.id.slice(5));
+  $('#lvKind').innerHTML = 'Knowledge graph';
+  $('#lvTitle').innerHTML = `How everything <span class="gchip">connects</span>`;
+  $('#lvSub').textContent = `Each dot is a ${GK.level === 'fn' ? 'function (or the file it lives in)' : 'file'}, coloured by its area; bigger dots have more connections. Click a dot to light up its neighbours. Double-click to open it in the map.`;
+  $('#lvAct').innerHTML = '';
+  // layout: areas start on a circle, each node near its area's centre
+  const R = 70 + 22 * areas.length + 5 * Math.sqrt(D.nodes.length), centre = {};
+  areas.forEach((a, i) => { const t = (i / areas.length) * Math.PI * 2 - Math.PI / 2; centre[a] = { x: Math.cos(t) * R, y: Math.sin(t) * R * 0.75 }; });
+  const P = D.nodes.map(n => { const a = gkArea(n.id), c = centre[a] || { x: 0, y: 0 }, old = GK.pos.get(n.id); const p = old ? { ...old } : { x: c.x + (gkRand(n.id) - .5) * 160, y: c.y + (gkRand(n.id + '#') - .5) * 160 }; p.vx = 0; p.vy = 0; p.n = n; p.a = a; p.d = D.deg.get(n.id) || 0; p.r = (n.kind === 'fn' ? 4.5 : 7) + Math.sqrt(p.d) * (n.kind === 'fn' ? 1.8 : 2.6); return p; });
+  const at = new Map(P.map(p => [p.n.id, p])), L = D.links.map(l => ({ s: at.get(l.a), t: at.get(l.b), l }));
+  const big = new Set(P.slice().sort((x, y) => y.d - x.d).slice(0, Math.max(8, Math.round(P.length * .12))).map(p => p.n.id));
+  const kindOf = l => l.kinds.has('calls') || l.kinds.has('shows') ? 'calls' : l.kinds.has('runs') || l.kinds.has('opens') ? 'runs' : l.kinds.has('reads') ? 'reads' : l.kinds.has('contains') && l.kinds.size === 1 ? 'contains' : 'imports';
+  box.innerHTML = `<svg id="gsvg" class="gk" role="img" aria-label="Knowledge graph of the codebase"><g id="gworld">
+      <g id="gareas">${areas.map(a => `<text class="gk-area" data-a="${a}">${esc(TOWNNAME(a))}</text>`).join('')}</g>
+      <g>${L.map((e, i) => `<line class="gk-edge ${kindOf(e.l)}${e.l.kinds.size === 1 && e.l.kinds.has('contains') ? '' : ''}" data-i="${i}"/>`).join('')}</g>
+      <g>${P.map((p, i) => `<g class="gk-node${big.has(p.n.id) ? ' big' : ''}" data-i="${i}" data-id="${esc(p.n.id)}" style="--ac:var(--a-${p.a})">${p.n.kind === 'content' ? `<rect x="${-p.r}" y="${-p.r}" width="${p.r * 2}" height="${p.r * 2}" rx="3"/>` : `<circle r="${p.r}"/>`}<text x="${p.r + 4}" y="4">${esc(p.n.kind === 'fn' ? nm(p.n.id) : shortName(p.n))}</text><title>${esc(p.n.kind === 'fn' ? `${p.n.name} (${N.get(p.n.parent).path})` : (p.n.path || p.n.name))}</title></g>`).join('')}</g>
+    </g></svg>
+    <div class="gbar">
+      <div class="seg" role="group" aria-label="Detail"><button data-gl="file" class="${GK.level === 'file' ? 'on' : ''}">Files</button><button data-gl="fn" class="${GK.level === 'fn' ? 'on' : ''}">Functions</button></div>
+      <label class="gchk"><input type="checkbox" id="gLinked" ${GK.onlyLinked ? 'checked' : ''}> only connected</label>
+      <span class="gareas">${areas.map(a => `<button class="garea${GK.hidden.has(a) ? ' off' : ''}" data-ga="${a}"><i style="background:var(--a-${a})"></i>${esc(N.get('area:' + a).name)}</button>`).join('')}</span>
+      <span class="spacer"></span>
+      <span>${P.length} dots · ${L.length} lines${D.total > P.length ? ` · ${D.total - P.length} hidden with no connections` : ''}</span>
+      <button class="btn" id="gFit">Fit</button><button class="btn" id="gJson">Download JSON</button><button class="btn" id="gGraphml">GraphML</button>
+    </div>`;
+  const world = $('#gworld'), nodesEl = [...world.querySelectorAll('.gk-node')], linesEl = [...world.querySelectorAll('.gk-edge')], areaEl = [...world.querySelectorAll('.gk-area')];
+  const paint = () => {
+    P.forEach((p, i) => nodesEl[i].setAttribute('transform', `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`));
+    L.forEach((e, i) => { const el = linesEl[i]; el.setAttribute('x1', e.s.x.toFixed(1)); el.setAttribute('y1', e.s.y.toFixed(1)); el.setAttribute('x2', e.t.x.toFixed(1)); el.setAttribute('y2', e.t.y.toFixed(1)); });
+    areaEl.forEach(el => { const ps = P.filter(p => p.a === el.dataset.a); if (!ps.length) { el.style.display = 'none'; return; } el.style.display = ''; const minY = Math.min(...ps.map(p => p.y)); el.setAttribute('x', (ps.reduce((s, p) => s + p.x, 0) / ps.length).toFixed(0)); el.setAttribute('y', (minY - 28).toFixed(0)); });
+  };
+  const applyG = () => { world.setAttribute('transform', `translate(${GK.view.x},${GK.view.y}) scale(${GK.view.k})`); $('#gsvg').classList.toggle('zoomed', GK.view.k > 1.6); };
+  const fitG = () => { const b = world.getBBox(), s = $('#gsvg').getBoundingClientRect(); if (!b.width) return; const k = Math.min(2.4, (s.width - 40) / b.width, (s.height - 40) / b.height); GK.view = { k, x: (s.width - b.width * k) / 2 - b.x * k, y: (s.height - b.height * k) / 2 - b.y * k }; applyG(); };
+  // force layout: repulsion between nearby dots (grid buckets keep it fast), springs along lines, a pull to the area centre
+  let alpha = 1; const fnMode = GK.level === 'fn';
+  const tick = () => {
+    const cell = 90, grid = new Map(); P.forEach(p => { const k = Math.floor(p.x / cell) + ',' + Math.floor(p.y / cell); if (!grid.has(k)) grid.set(k, []); grid.get(k).push(p); });
+    for (const p of P) { const cx = Math.floor(p.x / cell), cy = Math.floor(p.y / cell); for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const q of grid.get((cx + dx) + ',' + (cy + dy)) || []) { if (q === p) continue; let x = p.x - q.x, y = p.y - q.y, d2 = x * x + y * y || .01; if (d2 > cell * cell * 4) continue; const f = Math.min(8, (900 + (p.r + q.r) * 40) / d2) * alpha; p.vx += x * f / Math.sqrt(d2); p.vy += y * f / Math.sqrt(d2); } }
+    for (const e of L) { const x = e.t.x - e.s.x, y = e.t.y - e.s.y, d = Math.sqrt(x * x + y * y) || .01, want = e.l.kinds.has('contains') && e.l.kinds.size === 1 ? 26 : fnMode ? 60 : 85, f = (d - want) * .035 * alpha * Math.min(3, 1 + Math.log(e.l.n)); e.s.vx += x / d * f; e.s.vy += y / d * f; e.t.vx -= x / d * f; e.t.vy -= y / d * f; }
+    for (const p of P) { const c = centre[p.a] || { x: 0, y: 0 }; p.vx += (c.x - p.x) * .02 * alpha; p.vy += (c.y - p.y) * .02 * alpha; p.vx *= .82; p.vy *= .82; p.x += Math.max(-30, Math.min(30, p.vx)); p.y += Math.max(-30, Math.min(30, p.vy)); }
+    alpha *= .985;
+  };
+  const frame = () => { for (let i = 0; i < (P.length > 1500 ? 2 : 5); i++) tick(); paint(); P.forEach(p => GK.pos.set(p.n.id, { x: p.x, y: p.y })); if (alpha > .02) GK.raf = requestAnimationFrame(frame); else { fitG(); } };
+  if (reduce) { for (let i = 0; i < 260; i++) tick(); paint(); P.forEach(p => GK.pos.set(p.n.id, { x: p.x, y: p.y })); }
+  paint(); fitG(); if (!reduce) GK.raf = requestAnimationFrame(frame);
+  // focus: a dot, its neighbours and the lines between them
+  const nb = new Map(P.map(p => [p.n.id, new Set()])); L.forEach(e => { nb.get(e.s.n.id).add(e.t.n.id); nb.get(e.t.n.id).add(e.s.n.id); });
+  GK.focus = id => {
+    GK.sel = id; const svg = $('#gsvg'); svg.classList.toggle('focus', !!id);
+    nodesEl.forEach(el => { el.classList.toggle('on', el.dataset.id === id); el.classList.toggle('near', !!id && nb.get(id)?.has(el.dataset.id)); });
+    linesEl.forEach((el, i) => el.classList.toggle('hot', !!id && (L[i].s.n.id === id || L[i].t.n.id === id)));
+    if (id) { sel = id; panel(id); }
+  };
+  GK.center = id => { const p = at.get(id); if (!p) return; const s = $('#gsvg').getBoundingClientRect(), k = Math.max(GK.view.k, 1.2); GK.view = { k, x: s.width / 2 - p.x * k, y: s.height / 2 - p.y * k }; applyG(); };
+  if (GK.sel && at.has(GK.sel)) GK.focus(GK.sel);
+  // pan, zoom, click, double-click (kept inside the graph so the map underneath does not react)
+  const svg = $('#gsvg'); let drag = null, moved = false;
+  svg.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, vx: GK.view.x, vy: GK.view.y }; moved = false; e.stopPropagation(); });
+  svg.addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 4) moved = true; GK.view.x = drag.vx + dx; GK.view.y = drag.vy + dy; applyG(); });
+  addEventListener('pointerup', () => { drag = null; });
+  svg.addEventListener('wheel', e => { e.preventDefault(); e.stopPropagation(); const s = svg.getBoundingClientRect(), cx = e.clientX - s.left, cy = e.clientY - s.top; if (e.ctrlKey || e.metaKey || !e.deltaX) { const k = Math.min(6, Math.max(.1, GK.view.k * Math.exp(-e.deltaY * (e.ctrlKey ? .01 : .0015)))); GK.view.x = cx - (cx - GK.view.x) * k / GK.view.k; GK.view.y = cy - (cy - GK.view.y) * k / GK.view.k; GK.view.k = k; } else { GK.view.x -= e.deltaX; GK.view.y -= e.deltaY; } applyG(); }, { passive: false });
+  svg.addEventListener('click', e => { e.stopPropagation(); if (moved) return; const g = e.target.closest('.gk-node'); GK.focus(g ? g.dataset.id : null); if (!g) panel(null); });
+  svg.addEventListener('dblclick', e => { const g = e.target.closest('.gk-node'); if (!g) return; e.stopPropagation(); const id = g.dataset.id; setMode('beginner'); open(id); });
+  box.querySelector('.gbar').addEventListener('click', e => {
+    e.stopPropagation();
+    const gl = e.target.closest('[data-gl]'), ga = e.target.closest('[data-ga]');
+    if (gl) { GK.level = gl.dataset.gl; drawGraph(); }
+    if (ga) { GK.hidden.has(ga.dataset.ga) ? GK.hidden.delete(ga.dataset.ga) : GK.hidden.add(ga.dataset.ga); drawGraph(); }
+    if (e.target.id === 'gFit') fitG();
+    if (e.target.id === 'gJson') gkDownload('json'); if (e.target.id === 'gGraphml') gkDownload('graphml');
+  });
+  $('#gLinked').addEventListener('change', e => { GK.onlyLinked = e.target.checked; drawGraph(); });
+}
+const TOWNNAME = a => N.get('area:' + a)?.name || a;
+// the whole map as a knowledge graph file: every box is a node; "contains" links each box to its parent
+function gkDownload(fmt) {
+  const areaOf2 = n => gkArea(n.id);
+  const nodes = M.nodes.map(n => ({ id: n.id, label: n.name, kind: n.kind, parent: n.parent || null, area: areaOf2(n), path: n.path || (n.kind === 'fn' ? n.parent : null), what: n.ex?.what || n.what || undefined }));
+  const edges = [...M.edges.map(e => ({ source: e.from, target: e.to, kind: e.kind, approx: !!e.approx })), ...M.nodes.filter(n => n.parent).map(n => ({ source: n.parent, target: n.id, kind: 'contains', approx: false }))];
+  const title = (typeof TITLE !== 'undefined' ? TITLE : document.title).replace(/\W+/g, '-').toLowerCase();
+  let blob;
+  if (fmt === 'json') blob = new Blob([JSON.stringify({ title, nodes, edges }, null, 1)], { type: 'application/json' });
+  else { const x = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n<graphml xmlns="http://graphml.graphdrawing.org/xmlns">\n<key id="label" for="node" attr.name="label" attr.type="string"/><key id="kind" for="node" attr.name="kind" attr.type="string"/><key id="area" for="node" attr.name="area" attr.type="string"/><key id="what" for="node" attr.name="what" attr.type="string"/><key id="ekind" for="edge" attr.name="kind" attr.type="string"/>\n<graph edgedefault="directed">\n${nodes.map(n => `<node id="${x(n.id)}"><data key="label">${x(n.label)}</data><data key="kind">${n.kind}</data><data key="area">${x(n.area)}</data>${n.what ? `<data key="what">${x(n.what)}</data>` : ''}</node>`).join('\n')}\n${edges.map((e, i) => `<edge id="e${i}" source="${x(e.source)}" target="${x(e.target)}"><data key="ekind">${e.kind}</data></edge>`).join('\n')}\n</graph>\n</graphml>\n`], { type: 'application/xml' }); }
+  Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `${title}-graph.${fmt}` }).click();
+}
+
+showProg(); level = { id: null }; sel = null; crumbs(); draw(); panel(null);
+</script>
+</body>
+</html>
