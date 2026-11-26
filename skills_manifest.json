@@ -168,6 +168,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/abstract-automation/SKILL.md"
   },
   {
+    "name": "abstraction",
+    "description": "An OOP principle of hiding complex implementation details and showing only the essential features of an object, commonly achieved in C# using interfaces and abstract classes.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/abstraction/SKILL.md"
+  },
+  {
     "name": "abuselpdb-automation",
     "description": "Automate Abuselpdb tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -576,6 +582,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/adobe-automation/SKILL.md"
   },
   {
+    "name": "adobe-photoshop",
+    "description": "Professional image editing software that now incorporates Generative AI capabilities for creative workflows.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/adobe-photoshop/SKILL.md"
+  },
+  {
     "name": "adopt",
     "description": "Brownfield audit — do existing artifacts actually work? Numbered migration plan. Unlike /project-stage-detect, checks compliance not existence.",
     "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
@@ -742,6 +754,12 @@
     "description": "Automate Adyntel tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/adyntel-automation/SKILL.md"
+  },
+  {
+    "name": "adzuna-api",
+    "description": "A job search engine API used for retrieving job data.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/adzuna-api/SKILL.md"
   },
   {
     "name": "aeo",
@@ -1152,6 +1170,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-act-readiness/SKILL.md"
   },
   {
+    "name": "ai-agent",
+    "description": "An autonomous software entity designed to perform tasks, make decisions, and interact with various tools and environments.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-agent/SKILL.md"
+  },
+  {
     "name": "ai-agents",
     "description": "Software entities that use AI models to perform tasks and make autonomous decisions.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -1164,10 +1188,22 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-agents-architect/SKILL.md"
   },
   {
+    "name": "ai-automation",
+    "description": "The practice of creating automated systems using AI tools.",
+    "category": "⚡ Automation, Workflows & Tools",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-automation/SKILL.md"
+  },
+  {
     "name": "ai-behavior-trees-utility-ai",
     "description": "Build a production behavior-tree runtime (Blackboard, action/condition leaves, sequence/selector/parallel composites, decorators) and a Utility AI system (response curves — linear, exponential, sigmoid, quadratic — considerations, and action evaluators), plus hybrid BT-drives-Utility agents. Use whe",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-behavior-trees-utility-ai/SKILL.md"
+  },
+  {
+    "name": "ai-connectors",
+    "description": "A framework or system enabling AI models (like Claude) to connect and utilize external services and APIs.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-connectors/SKILL.md"
   },
   {
     "name": "ai-debt-detector",
@@ -1284,6 +1320,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-release-hunter/SKILL.md"
   },
   {
+    "name": "ai-reverse-engineering-agent-rea",
+    "description": "A type of AI agent that BLA is designed to counteract, aiming to reverse-engineer software.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-reverse-engineering-agent-rea/SKILL.md"
+  },
+  {
     "name": "ai-security",
     "description": "Use when assessing an AI/ML system or LLM agent for prompt injection, jailbreaks, model inversion, data poisoning or tool abuse. Maps findings to MITRE ATLAS and scores robustness with ai_threat_scanner.py.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -1306,6 +1348,12 @@
     "description": "Claude Code and LLM session timing tricks, 5-hour window maximization, peak-hours routing, and cost-reduction heuristics.",
     "category": "🧠 Core System, Memory & Optimization Guardrails",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-session-optimizer/SKILL.md"
+  },
+  {
+    "name": "ai-skills",
+    "description": "The ability to develop and apply artificial intelligence concepts and techniques.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ai-skills/SKILL.md"
   },
   {
     "name": "ai-tools",
@@ -1500,6 +1548,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/amcards-automation/SKILL.md"
   },
   {
+    "name": "amp",
+    "description": "An AI coding agent.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/amp/SKILL.md"
+  },
+  {
     "name": "ampere",
     "description": "A utility app that measures the charging and discharging current of a battery, useful for troubleshooting power management.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -1686,6 +1740,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ant/SKILL.md"
   },
   {
+    "name": "anthropic",
+    "description": "The AI safety and research company behind Claude, also responsible for verifying connectors for their AI models.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/anthropic/SKILL.md"
+  },
+  {
     "name": "anthropic-administrator-automation",
     "description": "Automate Anthropic Admin tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -1716,6 +1776,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/anti-slop-ui/SKILL.md"
   },
   {
+    "name": "antigravity",
+    "description": "An experimental tool featured on Google Labs.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/antigravity/SKILL.md"
+  },
+  {
     "name": "antigravity-cli",
     "description": "Operate/delegate to the Google Antigravity CLI (agy): one-shot -p prompts for a Gemini second opinion, models, permissions, plugins, auth. Use when the user mentions Antigravity/agy.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
@@ -1744,6 +1810,12 @@
     "description": "Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/api-and-interface-design/SKILL.md"
+  },
+  {
+    "name": "api-application-programming-interface",
+    "description": "A set of rules allowing different software applications to communicate, often used by AI agents to integrate external tools and services.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/api-application-programming-interface/SKILL.md"
   },
   {
     "name": "api-architecture-rest-graphql",
@@ -1860,6 +1932,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/apify-automation/SKILL.md"
   },
   {
+    "name": "apilayer",
+    "description": "A marketplace for APIs that offers various data services and integrations.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/apilayer/SKILL.md"
+  },
+  {
     "name": "apilio-automation",
     "description": "Automate Apilio tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -1894,6 +1972,12 @@
     "description": "End-to-end Android APK red-team pipeline — automated APK acquisition (Play Store + apkpure + apkmirror fallback), jadx decompilation, secret/URL/JWT/Firebase grep, pinned-cert extraction, exported-component enumeration, Frida runtime instrumentation templates, intent-injection probes. Built from an ",
     "category": "☁️ Backend, APIs, Cloud & Databases",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/apk-redteam-pipeline/SKILL.md"
+  },
+  {
+    "name": "apksmok-com",
+    "description": "A website likely serving as a platform or resource for information and possibly distribution of Android Package Kit (APK) files, which are used for installing applications on Android devices.",
+    "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/apksmok-com/SKILL.md"
   },
   {
     "name": "apkstart",
@@ -2062,6 +2146,12 @@
     "description": "Improve Archify diagram accuracy, visual quality and complete authoring speed with fewer repairs. Use for generation experiments or evaluating changes to layout, routing, diagnostics, authoring instructions and acceptance rules against actual diagrams and agent traces.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/archify-tuning/SKILL.md"
+  },
+  {
+    "name": "architectural-design",
+    "description": "The process of defining a structured solution that meets all technical and operational requirements, while optimizing for common qualities such as performance, security, and manageability.",
+    "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/architectural-design/SKILL.md"
   },
   {
     "name": "architecture",
@@ -2520,6 +2610,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/avoid-ai-writing/SKILL.md"
   },
   {
+    "name": "awesome-ai-agents",
+    "description": "A GitHub repository that curates a list of AI agent frameworks, platforms, and resources.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/awesome-ai-agents/SKILL.md"
+  },
+  {
     "name": "awesome-harness-engineering",
     "description": "Comprehensive harness engineering patterns for AI agents: sandbox isolation, deterministic verification, context trimming, test-driven self-correction, maker-checker loops, and long-running agent reliability.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -2536,6 +2632,12 @@
     "description": "Submit a software tool to Awesome Tools using the JSON API or browser WebMCP tools, and complete the free backlink path or review the paid listing options.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/awesome-tools/SKILL.md"
+  },
+  {
+    "name": "aws",
+    "description": "Amazon Web Services cloud platform.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/aws/SKILL.md"
   },
   {
     "name": "aws-patterns",
@@ -3106,6 +3208,12 @@
     "description": "Automate Bitwarden tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/bitwarden-automation/SKILL.md"
+  },
+  {
+    "name": "bla-blind-llm-agents",
+    "description": "A shield that makes AI reverse-engineering agents waste tokens and resources, ensuring original runtime behavior for users.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/bla-blind-llm-agents/SKILL.md"
   },
   {
     "name": "blackbaud-automation",
@@ -4062,6 +4170,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/cantera/SKILL.md"
   },
   {
+    "name": "canva",
+    "description": "Graphic design platform with AI features",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/canva/SKILL.md"
+  },
+  {
     "name": "canva-ai",
     "description": "AI-powered design tools within the Canva platform.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -4740,6 +4854,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/claude-code-ping-start-5h-quota/SKILL.md"
   },
   {
+    "name": "claude-code-plugin",
+    "description": "A plugin intended to enhance Claude's coding capabilities, often associated with AI-assisted software development.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/claude-code-plugin/SKILL.md"
+  },
+  {
     "name": "claude-code-sessions",
     "description": "Search, analyze, and manage Claude Code session history. Use when the user wants to find past sessions, check token usage, review tool breakdowns, resume previous work, or manage tasks across sessions. Provides 11 skills and a web dashboard.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -4878,6 +4998,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/claude-seendance-skill/SKILL.md"
   },
   {
+    "name": "claude-seo",
+    "description": "An open-source SEO analysis plugin designed for Claude Code that runs 19 specialist AI agents for various SEO audits.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/claude-seo/SKILL.md"
+  },
+  {
     "name": "claude-shorts",
     "description": "Interactive longform-to-shortform video creator. Extracts viral-ready short clips from long videos using Claude as the orchestrator. Transcribes with faster-whisper (GPU), Claude scores and presents candidate segments interactively, user picks and adjusts, Remotion renders premium animated captions ",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -4924,6 +5050,12 @@
     "description": "Autonomous recursive agent loop (Ralph loop / Claude execution loop). Implements goal-driven iterative cycles: analyze, generate, test, critique, and self-heal until goal passes.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/claudex-loop/SKILL.md"
+  },
+  {
+    "name": "clawdbot",
+    "description": "An automation bot used for sending automated messages.",
+    "category": "⚡ Automation, Workflows & Tools",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/clawdbot/SKILL.md"
   },
   {
     "name": "clawhub",
@@ -5280,6 +5412,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/codacy-automation/SKILL.md"
   },
   {
+    "name": "code-academy",
+    "description": "An educational institution specializing in programming and IT skills training.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/code-academy/SKILL.md"
+  },
+  {
     "name": "code-import",
     "description": "Read an existing repository's structure into the project cwd as a normalised snapshot the agent can analyse without re-walking the tree on every turn.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -5356,6 +5494,12 @@
     "description": "Analyze an unfamiliar codebase and generate a structured onboarding guide with architecture map, key entry points, conventions, and a starter CLAUDE.md. Use when joining a new project or setting up Claude Code for the first time in a repo.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/codebase-onboarding/SKILL.md"
+  },
+  {
+    "name": "codeburn",
+    "description": "A coding-focused tool or utility featured as part of a set of Claude Code plugins.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/codeburn/SKILL.md"
   },
   {
     "name": "codehealth-mcp",
@@ -5542,6 +5686,12 @@
     "description": "This skill should be used when the user asks to \"create a slash command\", \"add a command\", \"write a custom command\", \"define command arguments\", \"use command frontmatter\", \"organize commands\", \"create command with file references\", \"interactive command\", \"use AskUserQuestion in command\", or needs gu",
     "category": "🔬 Data Science, ML & Specialized Engineering",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/command-development/SKILL.md"
+  },
+  {
+    "name": "command-prompt-cmd-exe",
+    "description": "A Windows command-line interpreter used for executing administrative networking commands.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/command-prompt-cmd-exe/SKILL.md"
   },
   {
     "name": "comment-checker",
@@ -6294,10 +6444,22 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/copilot/SKILL.md"
   },
   {
+    "name": "copilot-cli",
+    "description": "An AI coding agent.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/copilot-cli/SKILL.md"
+  },
+  {
     "name": "copilotkit",
     "description": "A developer framework used for building AI copilots and agents that integrate into applications.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/copilotkit/SKILL.md"
+  },
+  {
+    "name": "copy-ai",
+    "description": "AI-powered writing and marketing content tool",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/copy-ai/SKILL.md"
   },
   {
     "name": "copy-editing",
@@ -7866,6 +8028,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/deprecation-and-migration/SKILL.md"
   },
   {
+    "name": "descript",
+    "description": "AI audio and video editing software",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/descript/SKILL.md"
+  },
+  {
     "name": "design-brief",
     "description": "Parse a structured design brief written in I-Lang protocol format into a concrete design spec. Eliminates ambiguity from vague requests like \"make it professional\" by requiring explicit dimensions: palette, typography, layout, mood, density, and constraints. Trigger keywords: \"design brief\", \"create",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -8424,6 +8592,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/dithered/SKILL.md"
   },
   {
+    "name": "ditto",
+    "description": "A website cloning service that allows users to replicate existing websites.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ditto/SKILL.md"
+  },
+  {
     "name": "dividend-growth-pullback-screener",
     "description": "Use this skill to find high-quality dividend growth stocks (12%+ annual dividend growth, 1.5%+ yield) that are experiencing temporary pullbacks, identified by RSI oversold conditions (RSI ≤40). This skill combines fundamental dividend analysis with technical timing indicators to identify buying oppo",
     "category": "📈 Trading, Finance & Algorithmic Markets",
@@ -8934,6 +9108,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/drizzle-orm-expert/SKILL.md"
   },
   {
+    "name": "droid",
+    "description": "An AI coding agent.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/droid/SKILL.md"
+  },
+  {
     "name": "dromo-automation",
     "description": "Automate Dromo tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -8992,6 +9172,12 @@
     "description": "Dynamics 365 Automation: manage CRM contacts, accounts, leads, opportunities, sales orders, invoices, and cases via the Dynamics CRM Web API",
     "category": "☁️ Backend, APIs, Cloud & Databases",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/dynamics365-automation/SKILL.md"
+  },
+  {
+    "name": "e-kassa",
+    "description": "An electronic cash register system in Azerbaijan for automating and reporting sales transactions to government authorities.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/e-kassa/SKILL.md"
   },
   {
     "name": "e2e-testing",
@@ -9394,6 +9580,12 @@
     "description": "Access European Nucleotide Archive via API/FTP. Retrieve DNA/RNA sequences, raw reads (FASTQ), genome assemblies by accession, for genomics and bioinformatics pipelines. Supports multiple formats.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ena-database/SKILL.md"
+  },
+  {
+    "name": "encapsulation",
+    "description": "An OOP principle that bundles data and methods that operate on the data within a single unit, and restricts direct access to some of an object's components, often using private fields and public properties (get/set) in C#.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/encapsulation/SKILL.md"
   },
   {
     "name": "encode-ccres-database",
@@ -9966,6 +10158,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/extracta-ai-automation/SKILL.md"
   },
   {
+    "name": "fable-5-2",
+    "description": "A motion design studio tool often used for web animations.",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/fable-5-2/SKILL.md"
+  },
+  {
     "name": "fable-goal",
     "description": "Use when the user wants a /goal prompt rather than the build itself ('/fable-goal', 'turn this into a goal prompt', 'write the prompt that builds X'). Turns their ramble into one copy-paste prompt checked by goal_prompt_self_check.py.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -9994,6 +10192,12 @@
     "description": "Automate Factorial tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/factorial-automation/SKILL.md"
+  },
+  {
+    "name": "faiss",
+    "description": "A library for efficient similarity search and clustering of dense vectors, often used for benchmarking vector indexes.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/faiss/SKILL.md"
   },
   {
     "name": "fal-3d",
@@ -11154,6 +11358,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/front-automation/SKILL.md"
   },
   {
+    "name": "front-end-design",
+    "description": "Core discipline focused on the visual and functional aspects of user-facing web interfaces.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/front-end-design/SKILL.md"
+  },
+  {
     "name": "frontend",
     "description": "Builds, styles, and polishes anything drawn with HTML, CSS, or SVG: web UI, pages, components, HTML reports rendered to PDF or print, figures, PNG/SVG diagrams, slides, and images for Notion or Slack. Use for any styling, layout, animation, or visual-quality task, or when asked to make something loo",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -11362,6 +11572,12 @@
     "description": "Automate Gagelist tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/gagelist-automation/SKILL.md"
+  },
+  {
+    "name": "gambo-ai",
+    "description": "An AI-powered platform for gaming as indicated by the overlay text 'The World's First Gam...'.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/gambo-ai/SKILL.md"
   },
   {
     "name": "game-ai",
@@ -11898,6 +12114,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/get-available-resources/SKILL.md"
   },
   {
+    "name": "get-job-details",
+    "description": "A specific function or API call available to the AI agent for retrieving detailed information about a job listing via the Indeed connector.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/get-job-details/SKILL.md"
+  },
+  {
     "name": "get-unpublished-changes",
     "description": "Compare HEAD with the latest published npm versions and list all unpublished changes by release layer. Triggers: unpublished changes, changelog, what changed, whats new.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -12030,6 +12252,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/git-context-controller/SKILL.md"
   },
   {
+    "name": "git-fetch",
+    "description": "A Git command that downloads commits, files, and refs from a remote repository into the local repository without integrating them into the current working files.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/git-fetch/SKILL.md"
+  },
+  {
     "name": "git-guardrails-claude-code",
     "description": "Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -12046,6 +12274,12 @@
     "description": "MUST USE for ANY git operations: atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load it before running git yourself, or pass load_skills=['git-master'] to the task that commits. Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find t",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/git-master/SKILL.md"
+  },
+  {
+    "name": "git-pull",
+    "description": "A Git command that fetches changes from a remote repository and integrates them into the current local branch.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/git-pull/SKILL.md"
   },
   {
     "name": "git-pushing",
@@ -12276,6 +12510,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/go-to-webinar-automation/SKILL.md"
   },
   {
+    "name": "god-s-eye-view",
+    "description": "An open-source visualization tool, likely involving geolocation or mapping data, shared by the account bilawal.ai.",
+    "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/god-s-eye-view/SKILL.md"
+  },
+  {
     "name": "godial-automation",
     "description": "Automate Godial tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -12456,6 +12696,18 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/google-admin-automation/SKILL.md"
   },
   {
+    "name": "google-ai-essentials",
+    "description": "A specialization certificate from Coursera by Google, indicating proficiency in building AI skills and using AI tools responsibly to improve productivity.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/google-ai-essentials/SKILL.md"
+  },
+  {
+    "name": "google-ai-models",
+    "description": "Models capable of processing up to a million tokens and benchmarked against GPT-4/Astra.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/google-ai-models/SKILL.md"
+  },
+  {
     "name": "google-ai-pro",
     "description": "A subscription service offering expanded access to Google's AI capabilities and storage.",
     "category": "🔬 Data Science, ML & Specialized Engineering",
@@ -12544,6 +12796,12 @@
     "description": "Generates security-focused guidance for Google Cloud workloads based on the Google Cloud Well-Architected Framework (WAF). Use to evaluate a workload, identify security requirements, and provide actionable recommendations for IAM, network security, data protection, and operational security.",
     "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/google-cloud-waf-security/SKILL.md"
+  },
+  {
+    "name": "google-labs",
+    "description": "A platform for testing experimental projects and AI tools from Google.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/google-labs/SKILL.md"
   },
   {
     "name": "google-maps-api",
@@ -12678,6 +12936,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/gosquared-automation/SKILL.md"
   },
   {
+    "name": "gpai-ai-made-for-stem-visualization",
+    "description": "An AI-powered tool used for STEM visualization, advertised in the overlay.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/gpai-ai-made-for-stem-visualization/SKILL.md"
+  },
+  {
     "name": "gpt-5-5",
     "description": "A proprietary AI model used as a performance benchmark.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -12694,6 +12958,12 @@
     "description": "Elite UX/UI & Advanced GSAP Motion Engineer. Enforces Python-driven true randomization for layout variance, strict AIDA page structure, wide editorial typography (bans 6-line wraps), gapless bento grids, strict GSAP ScrollTriggers (pinning, stacking, scrubbing), inline micro-images, and massive sect",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/gpt-tasteskill/SKILL.md"
+  },
+  {
+    "name": "gpt-tools",
+    "description": "A branding or project umbrella referencing generative AI tools.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/gpt-tools/SKILL.md"
   },
   {
     "name": "grade-iterate",
@@ -12718,6 +12988,12 @@
     "description": "Automate Grafbase tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/grafbase-automation/SKILL.md"
+  },
+  {
+    "name": "grammarly",
+    "description": "AI-powered writing assistant",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/grammarly/SKILL.md"
   },
   {
     "name": "granola",
@@ -12820,6 +13096,12 @@
     "description": "Generative AI chatbot developed by xAI.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/grok/SKILL.md"
+  },
+  {
+    "name": "grok-bot",
+    "description": "An AI personal assistant.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/grok-bot/SKILL.md"
   },
   {
     "name": "groqcloud-automation",
@@ -13008,6 +13290,24 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/hads/SKILL.md"
   },
   {
+    "name": "hailuo-02-fast",
+    "description": "Video generation AI model.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/hailuo-02-fast/SKILL.md"
+  },
+  {
+    "name": "hailuo-02-pro",
+    "description": "Video generation AI model.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/hailuo-02-pro/SKILL.md"
+  },
+  {
+    "name": "hailuo-02-standard",
+    "description": "Video generation AI model.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/hailuo-02-standard/SKILL.md"
+  },
+  {
     "name": "hair-groom",
     "description": "Hair and fur grooming in Blender using curves, particle hair, geometry nodes, and game hair-card workflows. Use for characters, creatures, and real-time hair cards via MCP.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
@@ -13072,6 +13372,12 @@
     "description": "AAA hard surface modeling for sci-fi, industrial, military, vehicles, weapons, robotics, and mechanical props. Use for boolean/bevel workflows, panel lines, greebles, chamfers, and manufacturing-accurate surfaces in Blender via MCP.",
     "category": "⚡ Automation, Workflows & Tools",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/hard-surface/SKILL.md"
+  },
+  {
+    "name": "harness",
+    "description": "An AI coding agent.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/harness/SKILL.md"
   },
   {
     "name": "harvest-automation",
@@ -13236,6 +13542,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/hexagonal-architecture/SKILL.md"
   },
   {
+    "name": "heygen",
+    "description": "AI video generation platform using avatars",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/heygen/SKILL.md"
+  },
+  {
     "name": "heygen-automation",
     "description": "Automate AI video generation, avatar browsing, template-based video creation, and video status tracking through HeyGen's platform via Composio",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -13258,6 +13570,12 @@
     "description": "Automate Heyzine tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/heyzine-automation/SKILL.md"
+  },
+  {
+    "name": "higgsfield-ai",
+    "description": "An AI-powered video generation and editing platform that features tools for character creation and visual effects.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/higgsfield-ai/SKILL.md"
   },
   {
     "name": "higgsfield-skill",
@@ -13890,6 +14208,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/hub-status/SKILL.md"
   },
   {
+    "name": "hubspot",
+    "description": "CRM platform with AI-powered marketing and sales tools",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/hubspot/SKILL.md"
+  },
+  {
     "name": "hubspot-integration",
     "description": "Expert patterns for HubSpot CRM integration including OAuth authentication, CRM objects, associations, batch operations, webhooks, and custom objects. Covers Node.js and Python SDKs. Use when: hubspot, hubspot api, hubspot crm, hubspot integration, contacts api.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
@@ -14490,6 +14814,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/image/SKILL.md"
   },
   {
+    "name": "image-converter",
+    "description": "An automated product built for image processing/conversion.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/image-converter/SKILL.md"
+  },
+  {
     "name": "image-enhancer",
     "description": "Improve image and screenshot quality by enhancing resolution, sharpness, and clarity for professional presentations and documentation.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -14506,6 +14836,12 @@
     "description": "Single-image generation skill for posters, key art, and editorial illustrations. Defaults to gpt-image-2 but is provider-agnostic — the same workflow drives Flux, Imagen, or Midjourney via the active upstream tooling. Output is one or more PNG/JPEG files saved to the project folder.",
     "category": "🎬 Media, Video, Audio & Image AI",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/image-poster/SKILL.md"
+  },
+  {
+    "name": "image-to-3d-model",
+    "description": "An artificial intelligence capability that generates three-dimensional models from two-dimensional images, leveraging computer vision and generative AI.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/image-to-3d-model/SKILL.md"
   },
   {
     "name": "image-to-code",
@@ -14688,6 +15024,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/incremental-implementation/SKILL.md"
   },
   {
+    "name": "indeed-connector",
+    "description": "A connector that allows the Claude AI to interact with the Indeed job search platform to find and retrieve job details.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/indeed-connector/SKILL.md"
+  },
+  {
     "name": "index-refresh",
     "description": "Use when an LLM Wiki operation issue requests an index refresh. Rebuild `wiki/index.md` from the actual wiki tree, reconcile missing/deleted entries, and log counts without editing page bodies.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -14782,6 +15124,12 @@
     "description": "Prevent AI style drift on legacy projects by scanning the codebase for implicit conventions, resolving conflicts with the operator one at a time, and writing an enforceable .ai-style-rules.md (Golden Files, naming rules, DONTs) plus an optional CLAUDE.md hook. Use when onboarding an AI agent onto a ",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/inherit-legacy-style/SKILL.md"
+  },
+  {
+    "name": "inheritance",
+    "description": "An OOP principle where a new class (derived class) is created from an existing class (base class), inheriting its properties and methods.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/inheritance/SKILL.md"
   },
   {
     "name": "init-deep",
@@ -15150,6 +15498,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/iron-proxy-gateway/SKILL.md"
   },
   {
+    "name": "iservicescopefactory",
+    "description": "An interface in .NET for creating IServiceScope instances, which are used to resolve scoped services, particularly useful in multithreaded scenarios or when managing service lifetimes manually.",
+    "category": "📱 Mobile & Multiplatform Development",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/iservicescopefactory/SKILL.md"
+  },
+  {
     "name": "isms-audit-expert",
     "description": "Senior ISMS Audit Expert for internal and external information security management system auditing. Provides ISO 27001 audit expertise, security audit program management, security control assessment, and compliance verification. Use for ISMS internal auditing, external audit preparation, security co",
     "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
@@ -15276,6 +15630,18 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/jaspar-database/SKILL.md"
   },
   {
+    "name": "jasper",
+    "description": "AI marketing copywriting tool",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/jasper/SKILL.md"
+  },
+  {
+    "name": "java",
+    "description": "Object-oriented programming language used for enterprise applications.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/java/SKILL.md"
+  },
+  {
     "name": "java-coding-standards",
     "description": "Java coding standards for Spring Boot and Quarkus services: naming, immutability, Optional usage, streams, exceptions, generics, CDI, reactive patterns, and project layout. Automatically applies framework-specific conventions. Use when writing or reviewing Java in a Spring Boot or Quarkus service.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -15286,6 +15652,12 @@
     "description": "Master Java 21+ with modern features like virtual threads, pattern matching, and Spring Boot 3.x. Expert in the latest Java ecosystem including GraalVM, Project Loom, and cloud-native patterns.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/java-pro/SKILL.md"
+  },
+  {
+    "name": "javascript",
+    "description": "A programming language mentioned in the context of the user's coding abilities.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/javascript/SKILL.md"
   },
   {
     "name": "javascript-mastery",
@@ -15304,6 +15676,12 @@
     "description": "Comprehensive guide for implementing robust testing strategies in JavaScript/TypeScript applications using modern testing frameworks and best practices.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/javascript-testing-patterns/SKILL.md"
+  },
+  {
+    "name": "jenkins",
+    "description": "CI/CD automation server.",
+    "category": "⚡ Automation, Workflows & Tools",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/jenkins/SKILL.md"
   },
   {
     "name": "jetbrains",
@@ -15546,6 +15924,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/kimi-use/SKILL.md"
   },
   {
+    "name": "kin",
+    "description": "An AI coding agent.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/kin/SKILL.md"
+  },
+  {
     "name": "kinetic-typography",
     "description": "This skill should be used when the user asks to \"animate a headline\", \"make a kinetic typography video\", \"do a split-text reveal\", \"stagger text by character/word/line\", \"make a lyric or caption video\", \"animate a variable font weight\", \"put text on a path\", or \"create an animated title card\". Cover",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -15570,6 +15954,24 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/kling/SKILL.md"
   },
   {
+    "name": "kling-2-0",
+    "description": "Video generation AI model by Kuaishou.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/kling-2-0/SKILL.md"
+  },
+  {
+    "name": "kling-2-1-master",
+    "description": "Video generation AI model by Kuaishou.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/kling-2-1-master/SKILL.md"
+  },
+  {
+    "name": "kling-2-1-pro",
+    "description": "Video generation AI model by Kuaishou.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/kling-2-1-pro/SKILL.md"
+  },
+  {
     "name": "klipfolio-automation",
     "description": "Automate Klipfolio tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -15586,6 +15988,12 @@
     "description": "Build and query AI-powered knowledge bases from claude-mem observations. Use when users want to create focused \"brains\" from their observation history, ask questions about past work patterns, or compile expertise on specific topics.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/knowledge-agent/SKILL.md"
+  },
+  {
+    "name": "knowledge-graph",
+    "description": "A structured representation of information that stores entities and their relationships, enabling complex querying and reasoning, particularly useful in advanced RAG systems.",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/knowledge-graph/SKILL.md"
   },
   {
     "name": "knowledge-ops",
@@ -15826,6 +16234,12 @@
     "description": "Verification loop for Laravel projects: env checks, linting, static analysis, tests with coverage, security scans, and deployment readiness. Use when verifying a Laravel project before merge or deploy — lint, static analysis, tests, coverage, security.",
     "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/laravel-verification/SKILL.md"
+  },
+  {
+    "name": "large-language-model-llm",
+    "description": "A type of artificial intelligence model trained on vast amounts of text data, capable of understanding and generating human-like text.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/large-language-model-llm/SKILL.md"
   },
   {
     "name": "large-language-models-glm-deepseek-kimi-qwen-gemma-gpt-oss-claude-gemini-grok-mistral",
@@ -17178,6 +17592,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/mcp-servers/SKILL.md"
   },
   {
+    "name": "mcp-tool-catalog",
+    "description": "A catalog or platform for tools, specifically mentioned in the context of BLA.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/mcp-tool-catalog/SKILL.md"
+  },
+  {
     "name": "mcporter",
     "description": "List, configure, authenticate, call, and inspect MCP servers/tools with mcporter over HTTP or stdio.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
@@ -17430,6 +17850,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/merge/SKILL.md"
   },
   {
+    "name": "merge-conflict-resolution",
+    "description": "The ability to resolve conflicting changes when merging different versions of code in a version control system like Git.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/merge-conflict-resolution/SKILL.md"
+  },
+  {
     "name": "mermaid-diagram-specialist",
     "description": "Mermaid diagram specialist for creating flowcharts, sequence diagrams, ERDs, and architecture visualizations",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -17458,6 +17884,18 @@
     "description": "A tool featured in the list mentioned by the creator.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/meshllm/SKILL.md"
+  },
+  {
+    "name": "meshy-7",
+    "description": "An AI tool or platform that offers an Image-to-3D model capability, allowing users to generate 3D models from images.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/meshy-7/SKILL.md"
+  },
+  {
+    "name": "meshy-ai",
+    "description": "An AI-powered platform for 3D asset generation and image-to-3D conversion.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/meshy-ai/SKILL.md"
   },
   {
     "name": "messages-ops",
@@ -17572,6 +18010,12 @@
     "description": "An AI image generation tool.",
     "category": "🎬 Media, Video, Audio & Image AI",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/midjourney/SKILL.md"
+  },
+  {
+    "name": "midjourney-v1",
+    "description": "Video generation AI model by Midjourney.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/midjourney-v1/SKILL.md"
   },
   {
     "name": "migrate",
@@ -17712,6 +18156,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/mit-license/SKILL.md"
   },
   {
+    "name": "mixboard",
+    "description": "An experimental tool featured on Google Labs.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/mixboard/SKILL.md"
+  },
+  {
     "name": "mixroute-ai",
     "description": "An AI-powered design tool likely capable of automating or assisting with web design tasks.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -17782,6 +18232,12 @@
     "description": "A mobile-app screen rendered inside a pixel-accurate iPhone 15 Pro frame on the page. Built by copying the seed `assets/template.html` and pasting one screen archetype from `references/layouts.md`. Use when the brief asks for \"mobile app\", \"iOS app\", \"Android app\", \"phone screen\", or \"app UI\".",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/mobile-app/SKILL.md"
+  },
+  {
+    "name": "mobile-application-development",
+    "description": "The image clearly shows a mobile application user interface, indicating the use of mobile application development skills to create and implement its functionality.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/mobile-application-development/SKILL.md"
   },
   {
     "name": "mobile-design",
@@ -18768,6 +19224,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/news-reaction-failure-analyzer/SKILL.md"
   },
   {
+    "name": "next-js",
+    "description": "A React framework for production-grade web applications.",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/next-js/SKILL.md"
+  },
+  {
     "name": "next-step",
     "description": "Names the one next step: make a game, change it after play, grow it, or the next studio-mode step. Use when asked what to do next, or stuck.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -18870,6 +19332,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/node-inspect-debugger/SKILL.md"
   },
   {
+    "name": "node-js",
+    "description": "A JavaScript runtime environment that BLA is compatible with (versions ^22.23.4 || 24.x).",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/node-js/SKILL.md"
+  },
+  {
     "name": "nodejs-backend-patterns",
     "description": "Comprehensive guidance for building scalable, maintainable, and production-ready Node.js backend applications with modern frameworks, architectural patterns, and best practices.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
@@ -18942,6 +19410,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/notion/SKILL.md"
   },
   {
+    "name": "notion-ai",
+    "description": "AI integrated workspace and productivity assistant",
+    "category": "⚡ Automation, Workflows & Tools",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/notion-ai/SKILL.md"
+  },
+  {
     "name": "notion-knowledge-capture",
     "description": "Capture conversations and decisions into structured Notion pages; use when turning chats/notes into wiki entries, how-tos, decisions, or FAQs with proper linking.",
     "category": "⚡ Automation, Workflows & Tools",
@@ -18982,6 +19456,12 @@
     "description": "Automate NPM tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/npm-automation/SKILL.md"
+  },
+  {
+    "name": "npm-bla-agents",
+    "description": "Node.js package manager and the specific package for BLA.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/npm-bla-agents/SKILL.md"
   },
   {
     "name": "nutrient-document-processing",
@@ -19902,6 +20382,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ontology-term-resolution/SKILL.md"
   },
   {
+    "name": "opal",
+    "description": "An experimental tool featured on Google Labs.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/opal/SKILL.md"
+  },
+  {
     "name": "open-banking-io",
     "description": "Read bank account balances and transactions from EU/UK banks via the open-banking.io PSD2 API. Use when the user wants to check balances, list recent transactions, categorise spending, or reconcile payments across European bank accounts — without eIDAS certificates or an AISP licence.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
@@ -19956,6 +20442,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/open-sea-automation/SKILL.md"
   },
   {
+    "name": "open-source-large-model-china",
+    "description": "Mention of a trillion-parameter open-source model originating from China.",
+    "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/open-source-large-model-china/SKILL.md"
+  },
+  {
     "name": "open-webui",
     "description": "A user-friendly web interface designed to interact with LLMs, similar to ChatGPT.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -19966,6 +20458,12 @@
     "description": "An AI research and deployment company providing various AI models and tools.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/openai/SKILL.md"
+  },
+  {
+    "name": "openai-agents",
+    "description": "Autonomous agents capable of running in cloud environments 24/7.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/openai-agents/SKILL.md"
   },
   {
     "name": "openai-automation",
@@ -20040,6 +20538,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/openclaw-persona-forge/SKILL.md"
   },
   {
+    "name": "opencode",
+    "description": "An AI coding agent.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/opencode/SKILL.md"
+  },
+  {
     "name": "opencode-manager",
     "description": "Self-hosted command center for managing OpenCode AI coding agents. Isolates tasks in git worktrees, manages scheduled runs, and provides a multi-session web dashboard.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -20080,6 +20584,12 @@
     "description": "An open-source proactive AI agent designed to execute tasks while keeping users informed and in the loop.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/openduet/SKILL.md"
+  },
+  {
+    "name": "openfang",
+    "description": "An open-source operating system built in Rust for autonomous agents, designed to run agents independently rather than as a chatbot framework.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/openfang/SKILL.md"
   },
   {
     "name": "openfda-database",
@@ -20418,6 +20928,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/org-health-diagnostic/SKILL.md"
   },
   {
+    "name": "orm-object-relational-mapping",
+    "description": "A programming technique for converting data between incompatible type systems using object-oriented programming languages.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/orm-object-relational-mapping/SKILL.md"
+  },
+  {
     "name": "osint-autopilot",
     "description": "End-to-end external OSINT engagement autopilot. Run the FULL osint-methodology pipeline to completion in ONE go for an authorized domain — engagement folder, Stages 1-5 (seed, expansion, enrichment, exposure, convergence), multi-agent per-host content+JS fan-out, headline verification, auto-generate",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -20452,6 +20968,12 @@
     "description": "Overrides default LLM truncation behavior. Enforces complete code generation, bans placeholder patterns, and handles token-limit splits cleanly. Apply to any task requiring exhaustive, unabridged output.",
     "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/output-skill/SKILL.md"
+  },
+  {
+    "name": "outreach-agent",
+    "description": "An AI-powered agent designed to automate lead generation outreach.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/outreach-agent/SKILL.md"
   },
   {
     "name": "ov-experience-memory",
@@ -21156,6 +21678,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/perplexity/SKILL.md"
   },
   {
+    "name": "perplexity-ai",
+    "description": "AI-powered search engine and research tool",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/perplexity-ai/SKILL.md"
+  },
+  {
     "name": "perplexity-search",
     "description": "Perform AI-powered web searches with real-time information using Perplexity models via LiteLLM and OpenRouter. This skill should be used when conducting web searches for current information, finding recent scientific literature, getting grounded answers with source citations, or accessing informatio",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -21270,6 +21798,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/physics-tuning/SKILL.md"
   },
   {
+    "name": "pi",
+    "description": "An AI coding agent.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/pi/SKILL.md"
+  },
+  {
     "name": "pi-agent",
     "description": "Builds with and operates Pi, the minimal terminal coding harness. Use for installing Pi, configuring providers/models/settings/environment variables, creating Pi skills/extensions/packages/themes/prompt templates, embedding Pi through the SDK, integrating over RPC or JSON event streams, parsing sess",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -21286,6 +21820,12 @@
     "description": "Pick the right library for a given frontend task from a curated, opinionated list — numbers, OTP inputs, charts, command menus, virtualization, drag and drop, toasts, state, styling, and more. Only runs when explicitly invoked; it does not trigger on its own.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/pick-ui-library/SKILL.md"
+  },
+  {
+    "name": "pictory",
+    "description": "AI video creation and editing tool",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/pictory/SKILL.md"
   },
   {
     "name": "piggy-automation",
@@ -21346,6 +21886,12 @@
     "description": "Build a PixiJS v8 render layer: create the async Application, load textures with Assets, compose the scene graph with Container and Sprite, drive the ticker loop, wire pointer events, and group draws with render groups. Use when building or debugging PixiJS v8 — when the user mentions PixiJS, Pixi, ",
     "category": "☁️ Backend, APIs, Cloud & Databases",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/pixijs-rendering/SKILL.md"
+  },
+  {
+    "name": "pixverse-v5",
+    "description": "Video generation AI model.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/pixverse-v5/SKILL.md"
   },
   {
     "name": "pkpd-modeling",
@@ -21448,6 +21994,12 @@
     "description": "Implements Manus-style file-based planning for complex tasks. Creates task_plan.md, findings.md, and progress.md. Use when starting complex multi-step tasks, research projects, or any task requiring >5 tool calls.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/planning-with-files/SKILL.md"
+  },
+  {
+    "name": "plannotator",
+    "description": "A review surface for annotating plans, specs, and code produced by AI agents.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/plannotator/SKILL.md"
   },
   {
     "name": "plasmic-automation",
@@ -21598,6 +22150,18 @@
     "description": "Automate Polygon IO tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/polygon-io-automation/SKILL.md"
+  },
+  {
+    "name": "polymorphism",
+    "description": "An OOP principle allowing objects of different classes to be treated as objects of a common type, often implemented in C# using virtual/override methods or interfaces.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/polymorphism/SKILL.md"
+  },
+  {
+    "name": "pomelli",
+    "description": "An experimental tool featured on Google Labs.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/pomelli/SKILL.md"
   },
   {
     "name": "ponytail",
@@ -21808,6 +22372,12 @@
     "description": "High-end dark aesthetic with bold headings, monochromatic palette, and premium feel for premium brand experiences.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/power/SKILL.md"
+  },
+  {
+    "name": "powercfg-batteryreport",
+    "description": "A Windows command-line utility used to generate a detailed report on the battery health and usage of a device, indicating system administration or diagnostic skills.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/powercfg-batteryreport/SKILL.md"
   },
   {
     "name": "powershell-windows",
@@ -22578,6 +23148,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/pufferlib/SKILL.md"
   },
   {
+    "name": "pull-request-pr-bug-hunt",
+    "description": "The process of actively searching for and identifying bugs within a pull request before it is merged into the main codebase.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/pull-request-pr-bug-hunt/SKILL.md"
+  },
+  {
     "name": "pulse",
     "description": "Use for what people are saying right now about a topic (trends, sentiment, complaints, tool comparisons) across Reddit, Hacker News and the web in a recent window. Returns a cited briefing with engagement signals.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -23224,6 +23800,12 @@
     "description": "Automate Ravenseotools tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ravenseotools-automation/SKILL.md"
+  },
+  {
+    "name": "ray-ban-meta-wayfarer-gen-2",
+    "description": "Smart glasses equipped with built-in AI capabilities, cameras, and audio for voice-activated assistance and content capture.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ray-ban-meta-wayfarer-gen-2/SKILL.md"
   },
   {
     "name": "rdkit",
@@ -23922,6 +24504,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/report-writing/SKILL.md"
   },
   {
+    "name": "repository-to-prompt",
+    "description": "A web application that takes a GitHub repository URL and converts the codebase into a structured prompt.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/repository-to-prompt/SKILL.md"
+  },
+  {
     "name": "request-progress",
     "description": "Group recent conversations into overall requests, review each one's progress from memory, sort each into one of the owner's focus areas, and write the build story, so My Work shows progress meters, shipping velocity and learned working preferences. Use when asked to \"group requests\", \"group by overa",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -24106,6 +24694,12 @@
     "description": "Production retopology for animation-ready, low-poly, quad-dominant meshes with proper edge loops and efficient polygon flow. Use after sculpting or high-poly modeling before rigging and UV work in Blender via MCP.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/retopology/SKILL.md"
+  },
+  {
+    "name": "retrieval-augmented-generation-rag",
+    "description": "An AI framework that enhances Large Language Models by retrieving relevant information from external data sources.",
+    "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/retrieval-augmented-generation-rag/SKILL.md"
   },
   {
     "name": "retro",
@@ -24520,6 +25114,12 @@
     "description": "A creative AI video platform.",
     "category": "🎬 Media, Video, Audio & Image AI",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/runway/SKILL.md"
+  },
+  {
+    "name": "runwayml",
+    "description": "A web-based platform for AI-powered video, image, and creative media generation and editing.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/runwayml/SKILL.md"
   },
   {
     "name": "rust",
@@ -25092,6 +25692,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/search-first/SKILL.md"
   },
   {
+    "name": "search-jobs",
+    "description": "A specific function or API call available to the AI agent for searching job listings via the Indeed connector.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/search-jobs/SKILL.md"
+  },
+  {
     "name": "seat-geek-automation",
     "description": "Automate Seat Geek tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -25216,6 +25822,12 @@
     "description": "Automate Securitytrails tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/securitytrails-automation/SKILL.md"
+  },
+  {
+    "name": "seedance-1-0",
+    "description": "Video generation AI model.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/seedance-1-0/SKILL.md"
   },
   {
     "name": "sega",
@@ -25438,6 +26050,12 @@
     "description": "Ahrefs API analyst (extension). Reads referring domains, backlinks, organic keywords, and content explorer data via the tested @ahrefs/mcp@0.0.11 server. Pairs with seo-backlinks for multi-source confidence weighting.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/seo-ahrefs/SKILL.md"
+  },
+  {
+    "name": "seo-analysis",
+    "description": "Technical and content SEO auditing and optimization.",
+    "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/seo-analysis/SKILL.md"
   },
   {
     "name": "seo-audit",
@@ -25842,6 +26460,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/shadcn/SKILL.md"
   },
   {
+    "name": "shadcn-mcp",
+    "description": "An MCP (Model Context Protocol) server designed to facilitate AI interaction with ShadCN UI components.",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/shadcn-mcp/SKILL.md"
+  },
+  {
     "name": "shadcn-ui",
     "description": "shadcn/ui component system — setup, theming, dark mode, Radix primitives, customization",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -26050,6 +26674,12 @@
     "description": "Voice Activity Detection library used to identify speech segments in audio.",
     "category": "🎬 Media, Video, Audio & Image AI",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/silero-vad/SKILL.md"
+  },
+  {
+    "name": "simd-single-instruction-multiple-data",
+    "description": "Instruction set architectures (like NEON and AVX-512BW) used to optimize search performance in the library.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/simd-single-instruction-multiple-data/SKILL.md"
   },
   {
     "name": "similarity-search-patterns",
@@ -26308,6 +26938,12 @@
     "description": "Runtime Tool-Search-Tool for local cold/hot Skills and configured local repositories before searching CCPM. Use BEFORE improvising whenever a task needs an external service, platform workflow, media/doc tool, or domain SOP not covered by preloaded Skills/Routers, and when discovering, inspecting, or",
     "category": "⚡ Automation, Workflows & Tools",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/skills-search/SKILL.md"
+  },
+  {
+    "name": "skills-team-management",
+    "description": "The concept of professional capabilities and expertise, explicitly referenced by the 'SKILLS TEAM' section within the virtual office, suggesting a focus on developing or leveraging team members' abilities.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/skills-team-management/SKILL.md"
   },
   {
     "name": "skipper-ui",
@@ -26610,6 +27246,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/solid/SKILL.md"
   },
   {
+    "name": "solid-principles",
+    "description": "A set of five design principles intended to make software designs more understandable, flexible, and maintainable. (Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion).",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/solid-principles/SKILL.md"
+  },
+  {
     "name": "solidity-security",
     "description": "Master smart contract security best practices to prevent common vulnerabilities and implement secure Solidity patterns. Use when writing smart contracts, auditing existing contracts, or implementing security measures for blockchain applications.",
     "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
@@ -26856,10 +27498,22 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/sql-optimization-patterns/SKILL.md"
   },
   {
+    "name": "sql-performance",
+    "description": "The ability to optimize SQL queries and database operations for efficiency and speed.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/sql-performance/SKILL.md"
+  },
+  {
     "name": "sql-pro",
     "description": "Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query techniques. Expert in performance tuning, data modeling, and hybrid analytical systems.",
     "category": "☁️ Backend, APIs, Cloud & Databases",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/sql-pro/SKILL.md"
+  },
+  {
+    "name": "sql-structured-query-language",
+    "description": "A standard language for managing and querying relational databases, mentioned as a tool an AI agent can utilize for data access.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/sql-structured-query-language/SKILL.md"
   },
   {
     "name": "sqlmap-database-pentesting",
@@ -26884,6 +27538,12 @@
     "description": "Run massive 70B-405B Mixture-of-Experts (MoE) LLMs directly on consumer hardware by streaming expert weights dynamically from fast NVMe SSDs with minimal VRAM/RAM.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ssd-moe-engine/SKILL.md"
+  },
+  {
+    "name": "ssd-trim",
+    "description": "A feature that allows an operating system to inform an SSD which blocks of data are no longer considered in use and can be wiped internally.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ssd-trim/SKILL.md"
   },
   {
     "name": "sse-server-sent-events",
@@ -27414,6 +28074,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/supportivekoala-automation/SKILL.md"
   },
   {
+    "name": "surveillance-technology",
+    "description": "The text describes a dystopian future featuring rampant surveillance and drones as central themes.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/surveillance-technology/SKILL.md"
+  },
+  {
     "name": "survey-monkey-automation",
     "description": "Automate SurveyMonkey survey creation, response collection, collector management, and survey discovery through natural language commands",
     "category": "⚡ Automation, Workflows & Tools",
@@ -27540,6 +28206,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/sync-gbrain/SKILL.md"
   },
   {
+    "name": "synthesia",
+    "description": "AI video generation platform for professional presentations",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/synthesia/SKILL.md"
+  },
+  {
     "name": "synthflow-ai-automation",
     "description": "Automate Synthflow AI tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -27664,6 +28336,12 @@
     "description": "Write or revise a useful Paperclip plan with a clear outcome and verification. Use when a plan is requested or uncertainty needs resolving before execution.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/task-planning/SKILL.md"
+  },
+  {
+    "name": "task-whenall",
+    "description": "A method in C# (System.Threading.Tasks namespace) used to wait for all the supplied tasks to complete.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/task-whenall/SKILL.md"
   },
   {
     "name": "taste",
@@ -27868,6 +28546,12 @@
     "description": "Automate Teamcamp tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/teamcamp-automation/SKILL.md"
+  },
+  {
+    "name": "teamly",
+    "description": "A virtual office and team collaboration platform, presented as an interactive multi-floor building, likely used for project management, communication, and team organization.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/teamly/SKILL.md"
   },
   {
     "name": "teammode",
@@ -28240,6 +28924,12 @@
     "description": "Use when the user describes a problem, decision or stuck situation but names no method: \"how should I approach this?\", \"help me think this through\", \"we can't decide\", \"where do I start?\". Picks the best-fit thinking method and runs it. Skip for plain execution tasks or when a method is named.",
     "category": "⚙️ Specialized Engineering & Utilities",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/thinking-method-selector/SKILL.md"
+  },
+  {
+    "name": "thread-safe-multithreading",
+    "description": "The ability to design and implement code that functions correctly when multiple threads access shared data concurrently.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/thread-safe-multithreading/SKILL.md"
   },
   {
     "name": "threat-detection",
@@ -28650,6 +29340,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/transition/SKILL.md"
   },
   {
+    "name": "transitions",
+    "description": "Designing animations and motion flow between digital states or interfaces.",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/transitions/SKILL.md"
+  },
+  {
     "name": "transitions-dev",
     "description": "Modern CSS View Transitions and fluid layout choreography from Transitions.dev. Page transitions, shared element morphing, and smooth React/Next.js page swaps.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -28746,6 +29442,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/tunnel-doctor/SKILL.md"
   },
   {
+    "name": "turboquant",
+    "description": "Google Research algorithm for data-oblivious vector quantization used as the foundation for TurboVec.",
+    "category": "🔬 Data Science, ML & Specialized Engineering",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/turboquant/SKILL.md"
+  },
+  {
     "name": "turborepo-caching",
     "description": "Configure Turborepo for efficient monorepo builds with local and remote caching. Use when setting up Turborepo, optimizing build pipelines, or implementing distributed caching.",
     "category": "⚙️ Specialized Engineering & Utilities",
@@ -28756,6 +29458,12 @@
     "description": "Automate Turbot Pipes tasks via Rube MCP (Composio). Always search tools first for current schemas.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/turbot-pipes-automation/SKILL.md"
+  },
+  {
+    "name": "turbovec",
+    "description": "An open-source vector index library providing high-performance, compressed vector search.",
+    "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/turbovec/SKILL.md"
   },
   {
     "name": "turso-automation",
@@ -28930,6 +29638,12 @@
     "description": "Use when the user has UI screenshots or design exports that need batch conversion into Vue 3 components, especially with Vant, Element Plus, or Ant Design Vue.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ui-to-vue/SKILL.md"
+  },
+  {
+    "name": "ui-ux-design",
+    "description": "The structured layout, interactive form elements (radio buttons, text input fields), and clear navigation buttons demonstrate principles of user interface and user experience design.",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/ui-ux-design/SKILL.md"
   },
   {
     "name": "ui-ux-pro-max",
@@ -29304,6 +30018,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/uptrend-analyzer/SKILL.md"
   },
   {
+    "name": "upwork-api",
+    "description": "API for accessing freelance job board and management systems.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/upwork-api/SKILL.md"
+  },
+  {
     "name": "us-market-bubble-detector",
     "description": "Evaluates market bubble risk through quantitative data-driven analysis using the revised Minsky/Kindleberger framework v2.1. Prioritizes objective metrics (Put/Call, VIX, margin debt, breadth, IPO data) over subjective impressions. Features strict qualitative adjustment criteria with confirmation bi",
     "category": "🔬 Data Science, ML & Specialized Engineering",
@@ -29328,10 +30048,22 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/usability-test-plan/SKILL.md"
   },
   {
+    "name": "usajobs-api",
+    "description": "An API for searching U.S. government job listings.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/usajobs-api/SKILL.md"
+  },
+  {
     "name": "usd-cli",
     "description": "Run explicit low-level USD scene inspection, editing, rendering, material binding, physics authoring, and raw validation with the in-tree usd-cli package. Use when the user asks for direct scene mechanics on a USD/USDA/USDC/USDZ asset or asks to set up usd-cli. Domain workflows must route to their c",
     "category": "🤖 AI Agents, Swarms & Orchestration",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/usd-cli/SKILL.md"
+  },
+  {
+    "name": "use-ai-responsibly",
+    "description": "A course focusing on the ethical and responsible implementation of artificial intelligence.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/use-ai-responsibly/SKILL.md"
   },
   {
     "name": "user-interviews",
@@ -29490,6 +30222,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/ve-terminal-mono/SKILL.md"
   },
   {
+    "name": "vector-database",
+    "description": "A specialized database optimized for storing and querying vector embeddings, essential for semantic search and retrieval in AI applications.",
+    "category": "☁️ Backend, APIs, Cloud & Databases",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/vector-database/SKILL.md"
+  },
+  {
     "name": "vector-db",
     "description": "ChromaDB/Pinecone/Weaviate — collection design, hybrid search, metadata filters",
     "category": "🔬 Data Science, ML & Specialized Engineering",
@@ -29578,6 +30316,12 @@
     "description": "Access comprehensive LaTeX templates, formatting requirements, and submission guidelines for major scientific publication venues (Nature, Science, PLOS, IEEE, ACM), academic conferences (NeurIPS, ICML, CVPR, CHI), research posters, and grant proposals (NSF, NIH, DOE, DARPA). This skill should be use",
     "category": "🔬 Data Science, ML & Specialized Engineering",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/venue-templates/SKILL.md"
+  },
+  {
+    "name": "veo",
+    "description": "A generative video model by Google, mentioned as the engine powering the UGC Builder feature.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/veo/SKILL.md"
   },
   {
     "name": "veo-3",
@@ -29698,6 +30442,12 @@
     "description": "Maintainer release workflow for the thedotmack/claude-mem repository only. Handles version increments across package.json, marketplace.json, plugin.json manifests, build verification, git tagging, GitHub releases, and changelog generation. npm publishing is done by the tag-triggered GitHub Actions w",
     "category": "⚡ Automation, Workflows & Tools",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/version-bump/SKILL.md"
+  },
+  {
+    "name": "version-control",
+    "description": "The management of changes to documents, computer programs, large websites, and other collections of information. It's a fundamental concept and skill in software development.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/version-control/SKILL.md"
   },
   {
     "name": "vertical-slice",
@@ -29934,6 +30684,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/voice-ai-development/SKILL.md"
   },
   {
+    "name": "voicebox",
+    "description": "An open-source AI voice studio that allows users to clone voices, generate speech, and interface with agents using local machine resources.",
+    "category": "🤖 AI Agents, Swarms & Orchestration",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/voicebox/SKILL.md"
+  },
+  {
     "name": "voicestudio",
     "description": "An open-source AI voice synthesis and voice generation studio platform.",
     "category": "🛡️ Cybersecurity, Pentesting & Vulnerability Audits",
@@ -30042,6 +30798,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/wave-accounting-automation/SKILL.md"
   },
   {
+    "name": "waver-1-0",
+    "description": "Video generation AI model from Bytedance.",
+    "category": "🎬 Media, Video, Audio & Image AI",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/waver-1-0/SKILL.md"
+  },
+  {
     "name": "wayfinder",
     "description": "Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.",
     "category": "🤖 AI Agents, Swarms & Orchestration",
@@ -30090,6 +30852,12 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/web-app-asset-generator/SKILL.md"
   },
   {
+    "name": "web-artifacts",
+    "description": "Creating and managing digital components, design systems, or reusable assets for web projects.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/web-artifacts/SKILL.md"
+  },
+  {
     "name": "web-artifacts-builder",
     "description": "Build complex claude.ai HTML artifacts with React and Tailwind. Anthropic's reference workflow for shipping rich, embeddable artifacts.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
@@ -30112,6 +30880,12 @@
     "description": "Master React, Vue, and Svelte component patterns including CSS-in-JS, composition strategies, and reusable component architecture. Use when building UI component libraries, designing component APIs, or implementing frontend design systems.",
     "category": "🎨 Web Frontend, UI/UX & Design Systems",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/web-component-design/SKILL.md"
+  },
+  {
+    "name": "web-design-guidance",
+    "description": "Expertise in best practices and principles for creating effective web designs.",
+    "category": "🎨 Web Frontend, UI/UX & Design Systems",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/web-design-guidance/SKILL.md"
   },
   {
     "name": "web-design-guidelines",
@@ -30444,10 +31218,22 @@
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/wiki-query/SKILL.md"
   },
   {
+    "name": "windows-command-prompt",
+    "description": "Used to execute the command 'fsutil behavior query DisableDeleteNotify' to check the status of the TRIM feature.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/windows-command-prompt/SKILL.md"
+  },
+  {
     "name": "windows-desktop-e2e",
     "description": "E2E testing for Windows native desktop apps (WPF, WinForms, Win32/MFC, Qt) using pywinauto and Windows UI Automation. Use when writing E2E tests for a Windows native desktop app with pywinauto or UI Automation.",
     "category": "⚡ Automation, Workflows & Tools",
     "path": "C:/Users/shahin.karimov/.gemini/config/skills/windows-desktop-e2e/SKILL.md"
+  },
+  {
+    "name": "windows-networking-commands",
+    "description": "Knowledge of network troubleshooting commands like 'netsh int ip reset' and 'ipconfig /flushdns'.",
+    "category": "⚙️ Specialized Engineering & Utilities",
+    "path": "C:/Users/shahin.karimov/.gemini/config/skills/windows-networking-commands/SKILL.md"
   },
   {
     "name": "windows-power-management",
