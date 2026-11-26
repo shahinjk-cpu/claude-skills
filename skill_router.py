@@ -1,9 +1,15 @@
+import os
 import sys
 import json
 import re
 from pathlib import Path
 
-MANIFEST_PATH = Path("C:/Users/shahin.karimov/.gemini/config/skills_manifest.json")
+# Look for manifest locally in current directory, parent, or standard user paths
+MANIFEST_PATH = Path(__file__).resolve().parent / "skills_manifest.json"
+if not MANIFEST_PATH.exists():
+    fallback = Path.home() / ".gemini" / "config" / "skills_manifest.json"
+    if fallback.exists():
+        MANIFEST_PATH = fallback
 
 def search_skills(query: str, top_k: int = 5):
     if not MANIFEST_PATH.exists():
@@ -58,17 +64,17 @@ def main():
         top_k = int(sys.argv[-1])
         query = " ".join(sys.argv[1:-1])
         
-    results = search_skills(query, top_k)
+    results = search_skills(query, top_k=top_k)
     
     if not results:
-        print(f"No specific skills found for query: '{query}'")
+        print(f"No matching skills found for: '{query}'")
         return
         
-    print(f"\n--- Top {len(results)} Skill Recommendations for: '{query}' ---")
+    print(f"\nTop {len(results)} matching skills for '{query}':\n")
     for idx, item in enumerate(results, 1):
-        print(f"\n{idx}. [{item['name']}] ({item['category']})")
+        print(f"{idx}. [{item['category']}] {item['name']}")
         print(f"   Description: {item['description']}")
-        print(f"   Path: {item['path']}")
+        print(f"   Path: {item['path']}\n")
 
 if __name__ == "__main__":
     main()
