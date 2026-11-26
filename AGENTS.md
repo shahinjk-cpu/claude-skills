@@ -1,6 +1,6 @@
 # Universal Skill Router & Auto-Activation Rules
 
-The workstation hosts a curated suite of **5,101 expert skills**.
+The workstation hosts a curated suite of **4,089 expert skills**.
 
 ## 🛡️ Core 22 Mandatory Always-Active Skills (Enforced on Every Operation)
 

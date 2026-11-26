@@ -155,3 +155,279 @@ Expert Python developer mastering Python 3.12+ features, modern tooling, and pro
 - "Create a production-ready Dockerfile for a Python application"
 - "Design a scalable background task system with Celery"
 - "Implement modern authentication patterns in FastAPI"
+
+
+## Comprehensive Python Engineering Patterns
+
+### Section: python-anti-patterns
+---
+name: python-anti-patterns
+description: Use this skill when reviewing Python code for common anti-patterns to avoid. Use as a checklist when reviewing code, before finalizing implementations, or when debugging issues that might stem from known bad practices.
+---
+
+# Python Anti-Patterns Checklist
+
+A reference checklist of common mistakes and anti-patterns in Python code. Review this before finalizing implementations to catch issues early.
+
+## When to Use This Skill
+
+- Reviewing code before merge
+- Debugging mysterious issues
+- Teaching or learning Python best practices
+- Establishing team c
+
+### Section: python-background-jobs
+---
+name: python-background-jobs
+description: Python background job patterns including task queues, workers, and event-driven architecture. Use when implementing async task processing, job queues, long-running operations, or decoupling work from request/response cycles.
+---
+
+# Python Background Jobs & Task Queues
+
+Decouple long-running or unreliable work from request/response cycles. Return immediately to the user while background workers handle the heavy lifting asynchronously.
+
+## When to Use This Skill
+
+- Processing tasks that take longer than a few seconds
+- Sending emails, notifications, 
+
+### Section: python-code-style
+---
+name: python-code-style
+description: Python code style, linting, formatting, naming conventions, and documentation standards. Use when writing new code, reviewing style, configuring linters, writing docstrings, or establishing project standards.
+---
+
+# Python Code Style & Documentation
+
+Consistent code style and clear documentation make codebases maintainable and collaborative. This skill covers modern Python tooling, naming conventions, and documentation standards.
+
+## When to Use This Skill
+
+- Setting up linting and formatting for a new project
+- Writing or reviewing docstrings
+- Establi
+
+### Section: python-configuration
+---
+name: python-configuration
+description: Python configuration management via environment variables and typed settings. Use when externalizing config, setting up pydantic-settings, managing secrets, or implementing environment-specific behavior.
+---
+
+# Python Configuration Management
+
+Externalize configuration from code using environment variables and typed settings. Well-managed configuration enables the same code to run in any environment without modification.
+
+## When to Use This Skill
+
+- Setting up a new project's configuration system
+- Migrating from hardcoded values to environment vari
+
+### Section: python-debugpy
+---
+name: python-debugpy
+description: Debug Python with pdb, breakpoint(), post-mortem inspection, and debugpy remote attach.
+metadata: { "openclaw": { "requires": { "bins": ["python3"] } } }
+---
+
+# Python Debugpy
+
+Use when Python code needs interactive debugging: hidden locals, confusing state mutation, failing tests, subprocesses, long-running services, or remote/headless attach.
+
+Pick the smallest debugger that reaches the bad frame.
+
+## Choose
+
+- `breakpoint()`: local code, source edits ok, fastest path.
+- `python3 -m pdb`: no source edit, launch from the beginning.
+- `python3 -m pdb -c co
+
+### Section: python-design-patterns
+---
+name: python-design-patterns
+description: Python design patterns including KISS, Separation of Concerns, Single Responsibility, and composition over inheritance. Use this skill when designing a new service or component from scratch and choosing how to layer responsibilities, when refactoring a God class or monolithic function that has grown too large, when deciding whether to add a new abstraction or live with duplication, when evaluating a pull request for structural issues like tight coupling or leaking internal types, when choosing between inheritance and composition for a new class hie
+
+### Section: python-error-handling
+---
+name: python-error-handling
+description: Python error handling patterns including input validation, exception hierarchies, and partial failure handling. Use when implementing validation logic, designing exception strategies, handling batch processing failures, or building robust APIs.
+---
+
+# Python Error Handling
+
+Build robust Python applications with proper input validation, meaningful exceptions, and graceful failure handling. Good error handling makes debugging easier and systems more reliable.
+
+## When to Use This Skill
+
+- Validating user input and API parameters
+- Designing exception 
+
+### Section: python-observability
+---
+name: python-observability
+description: Python observability patterns including structured logging, metrics, and distributed tracing. Use when adding logging, implementing metrics collection, setting up tracing, or debugging production systems.
+---
+
+# Python Observability
+
+Instrument Python applications with structured logs, metrics, and traces. When something breaks in production, you need to answer "what, where, and why" without deploying new code.
+
+## When to Use This Skill
+
+- Adding structured logging to applications
+- Implementing metrics collection with Prometheus
+- Setting up distri
+
+### Section: python-packaging
+---
+name: python-packaging
+description: Create distributable Python packages with proper project structure, setup.py/pyproject.toml, and publishing to PyPI. Use when packaging Python libraries, creating CLI tools, or distributing Python code.
+---
+
+# Python Packaging
+
+Comprehensive guide to creating, structuring, and distributing Python packages using modern packaging tools, pyproject.toml, and publishing to PyPI.
+
+## When to Use This Skill
+
+- Creating Python libraries for distribution
+- Building command-line tools with entry points
+- Publishing packages to PyPI or private repositories
+- Settin
+
+### Section: python-patterns
+---
+name: python-patterns
+description: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications. Use when writing or reviewing Python code and idiomatic structure, typing, or PEP 8 is in question.
+metadata:
+  origin: ECC
+---
+
+# Python Development Patterns
+
+Idiomatic Python patterns and best practices for building robust, efficient, and maintainable applications.
+
+## When to Activate
+
+- Writing new Python code
+- Reviewing Python code
+- Refactoring existing Python code
+- Designing Python packages/modules
+
+## Core Princi
+
+### Section: python-performance-optimization
+---
+name: python-performance-optimization
+description: Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow Python code, optimizing bottlenecks, or improving application performance.
+---
+
+# Python Performance Optimization
+
+Comprehensive guide to profiling, analyzing, and optimizing Python code for better performance, including CPU profiling, memory optimization, and implementation best practices.
+
+## When to Use This Skill
+
+- Identifying performance bottlenecks in Python applications
+- Reducing application latency and respon
+
+### Section: python-project-structure
+---
+name: python-project-structure
+description: Python project organization, module architecture, and public API design. Use when setting up new projects, organizing modules, defining public interfaces with __all__, or planning directory layouts.
+---
+
+# Python Project Structure & Module Architecture
+
+Design well-organized Python projects with clear module boundaries, explicit public interfaces, and maintainable directory structures. Good organization makes code discoverable and changes predictable.
+
+## When to Use This Skill
+
+- Starting a new Python project from scratch
+- Reorganizing an exist
+
+### Section: python-resilience
+---
+name: python-resilience
+description: Python resilience patterns including automatic retries, exponential backoff, timeouts, and fault-tolerant decorators. Use when adding retry logic, implementing timeouts, building fault-tolerant services, or handling transient failures.
+---
+
+# Python Resilience Patterns
+
+Build fault-tolerant Python applications that gracefully handle transient failures, network issues, and service outages. Resilience patterns keep systems running when dependencies are unreliable.
+
+## When to Use This Skill
+
+- Adding retry logic to external service calls
+- Implementing ti
+
+### Section: python-resource-management
+---
+name: python-resource-management
+description: Python resource management with context managers, cleanup patterns, and streaming. Use when managing connections, file handles, implementing cleanup logic, or building streaming responses with accumulated state.
+---
+
+# Python Resource Management
+
+Manage resources deterministically using context managers. Resources like database connections, file handles, and network sockets should be released reliably, even when exceptions occur.
+
+## When to Use This Skill
+
+- Managing database connections and connection pools
+- Working with file handles and I/O
+
+### Section: python-testing
+---
+name: python-testing
+description: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements. Use when writing pytest tests — fixtures, mocks, parametrization, or coverage.
+metadata:
+  origin: ECC
+---
+
+# Python Testing Patterns
+
+Comprehensive testing strategies for Python applications using pytest, TDD methodology, and best practices.
+
+## When to Activate
+
+- Writing new Python code (follow TDD: red, green, refactor)
+- Designing test suites for Python projects
+- Reviewing Python test coverage
+- Setting up testing infrastructure
+
+##
+
+### Section: python-testing-patterns
+---
+name: python-testing-patterns
+description: "Implement comprehensive testing strategies with pytest, fixtures, mocking, and test-driven development. Use when writing Python tests, setting up test suites, or implementing testing best practices."
+metadata:
+  risk: safe
+  source: community
+  date_added: "2026-02-27"
+---
+
+# Python Testing Patterns
+
+Comprehensive guide to implementing robust testing strategies in Python using pytest, fixtures, mocking, parameterization, and test-driven development practices.
+
+## Use this skill when
+
+- Writing unit tests for Python code
+- Setting up test suites a
+
+### Section: python-type-safety
+---
+name: python-type-safety
+description: Python type safety with type hints, generics, protocols, and strict type checking. Use when adding type annotations, implementing generic classes, defining structural interfaces, or configuring mypy/pyright.
+---
+
+# Python Type Safety
+
+Leverage Python's type system to catch errors at static analysis time. Type annotations serve as enforced documentation that tooling validates automatically.
+
+## When to Use This Skill
+
+- Adding type hints to existing code
+- Creating generic, reusable classes
+- Defining structural interfaces with protocols
+- Configuring m
